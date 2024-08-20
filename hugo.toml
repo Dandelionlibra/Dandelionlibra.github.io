@@ -1,6 +1,6 @@
 baseURL = 'https://Dandelionlibra.github.io/'
 languageCode = 'zh-Hant-TW'
-title = 'Dandelion'
+title = 'YuChen'
 theme = 'stack'
 
 [permalinks]
