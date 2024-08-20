@@ -1,0 +1,44 @@
+baseURL = 'https://Dandelionlibra.github.io/'
+languageCode = 'zh-Hant-TW'
+title = 'Dandelion'
+theme = 'stack'
+
+[permalinks]
+posts = "/posts/:year/:filename/"
+
+[menu]
+[[menu.main]]
+name = "Home"
+url = "/"
+weight = 1
+identifier = "home"
+[menu.main.params]
+icon = "home"
+newTab = false
+
+[[menu.social]]
+name = "Twitter"
+url = "https://x.com/"
+weight = 1
+identifier = "twitter"
+[menu.social.params]
+icon = "brand-twitter"
+newTab = true
+
+[[menu.social]]
+name = "Github"
+url = "https://github.com/Dandelionlibra"
+weight = 1
+identifier = "github"
+[menu.social.params]
+icon = "brand-github"
+newTab = true
+
+[[menu.main]]
+name = "About"
+url = "/about"
+weight = 2
+identifier = "about"
+[menu.main.params]
+icon = "user"
+newTab = false
