@@ -1,8 +1,8 @@
 ---
 title: 微表情(Micro Facial Expression)
-# image: "/unsplash.jpg"
+image: "/unsplash.jpg"
 description: Welcome to Hugo Theme Stack
-slug: hello-world
+slug: Micro_Facial_Expression
 date: 2024-10-20 00:00:00+0000
 categories:
     - note
