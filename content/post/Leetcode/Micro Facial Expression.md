@@ -1,0 +1,97 @@
+---
+title: 29. Divide Two Integers
+image: "/unsplash.jpg"
+description: Welcome to Hugo Theme Stack
+slug: Leetcode
+date: 2024-10-20 00:00:00+0000
+categories:
+    - note
+tags:
+    - AI
+weight: 1       # You can add weight to some posts to override the default sorting (date descending)
+---
+
+## 題目
+Given two integers dividend and divisor, divide two integers without using multiplication, division, and mod operator.
+
+The integer division should truncate toward zero, which means losing its fractional part. For example, 8.345 would be truncated to 8, and -2.7335 would be truncated to -2.
+
+Return the quotient after dividing dividend by divisor.
+
+Note: Assume we are dealing with an environment that could only store integers within the 32-bit signed integer range: $[−2^{31}, 2^{31} − 1]$. For this problem, if the quotient is strictly greater than $2^{31} - 1$, then return $2^{31} - 1$, and if the quotient is strictly less than $-2^{31}$, then return $-2^{31}$.
+
+### Constraints:
+* $-2^{31}$ <= dividend, divisor <= $-2^{31}-1$
+* divisor != 0
+
+### Example 1:
+>Input: dividend = 10, divisor = 3  
+Output: 3  
+Explanation: 10/3 = 3.33333.. which is truncated to 3.
+### Example 2:
+>Input: dividend = 7, divisor = -3  
+Output: -2  
+Explanation: 7/-3 = -2.33333.. which is truncated to -2.
+
+## 解題方法
+
+## 程式
+
+``` C
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int divide(int dividend, int divisor) {
+        // 特殊情況處理，避免溢出
+        if (dividend == INT_MIN && divisor == -1) return INT_MAX;
+        if (dividend == INT_MIN && divisor == 1) return INT_MIN;
+
+        // 計算商的正負
+        bool positive = (dividend > 0) == (divisor > 0);
+
+        // 使用 long long 來避免 INT_MIN 的溢出
+        long divd = labs(dividend);
+        long div = labs(divisor);
+
+        long result = 0;
+
+        // 當被除數大於除數時，進行除法
+        while (divd >= div) {
+            long temp = div, multiple = 1;
+
+            // 進行倍增操作，找到最大的倍數
+            while (divd >= (temp << 1)) {
+                temp <<= 1;
+                multiple <<= 1;
+            }
+
+            // 減去倍數對應的部分，並將商加到結果中
+            divd -= temp;
+            result += multiple;
+        }
+
+        // 根據正負符號調整結果
+        result = positive ? result : -result;
+
+        // 最後檢查是否溢出
+        return result > INT_MAX ? INT_MAX : (result < INT_MIN ? INT_MIN : result);
+    }
+};
+
+int main(){
+    Solution sol;
+    cout << sol.divide(-2147483648, 3) << endl;
+    
+    return 0;
+}
+```
+<!-- > 臺師大邱美虹：「我希望用新興科技找到學生在學習科學知識時的難點，改善科學學習時的困境。而其中的一步，就是用辨識微表情的AI系統，找出學生面對非預期的科學現象和多重表徵的解釋所出現的某些特定微表情時所代表的意義，以瞭解學生面對這些情況時的反應與效益，以便設計有意義的學習和教學策略。」  
+> [文章報導](<https://humanityisland.nccu.edu.tw/qiumeihong_a/>)
+
+
+## 參考內容
+淺談為表情心理學：https://www.thenewslens.com/article/128732 -->
+
+> Photo by [Pawel Czerwinski](https://unsplash.com/@pawel_czerwinski) on [Unsplash](https://unsplash.com/)
