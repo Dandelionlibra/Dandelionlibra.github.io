@@ -1,4 +1,144 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>YuChen</title><link>https://Dandelionlibra.github.io/</link><description>Recent content on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Sun, 20 Oct 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>微表情(Micro Facial Expression)</title><link>https://Dandelionlibra.github.io/post/note/micro_facial_expression/</link><pubDate>Sun, 20 Oct 2024 00:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/note/micro_facial_expression/</guid><description>&lt;img src="https://Dandelionlibra.github.io/unsplash.jpg" alt="Featured image of post 微表情(Micro Facial Expression)" />&lt;h2 id="臉部表情種類">臉部表情種類
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>YuChen</title><link>https://Dandelionlibra.github.io/</link><description>Recent content on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Sun, 02 Feb 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>31. Next Permutation</title><link>https://Dandelionlibra.github.io/post/leetcode/leetcode/</link><pubDate>Sun, 02 Feb 2025 00:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/leetcode/leetcode/</guid><description>&lt;img src="https://Dandelionlibra.github.io/unsplash.jpg" alt="Featured image of post 31. Next Permutation" />&lt;h2 id="題目">題目
+&lt;/h2>&lt;p>A permutation of an array of integers is an arrangement of its members into a sequence or linear order.&lt;/p>
+&lt;p>For example, for arr = [1,2,3], the following are all the permutations of arr: [1,2,3], [1,3,2], [2, 1, 3], [2, 3, 1], [3,1,2], [3,2,1].
+The next permutation of an array of integers is the next lexicographically greater permutation of its integer. More formally, if all the permutations of the array are sorted in one container according to their lexicographical order, then the next permutation of that array is the permutation that follows it in the sorted container. If such arrangement is not possible, the array must be rearranged as the lowest possible order (i.e., sorted in ascending order).&lt;/p>
+&lt;p>For example, the next permutation of arr = [1,2,3] is [1,3,2].
+Similarly, the next permutation of arr = [2,3,1] is [3,1,2].
+While the next permutation of arr = [3,2,1] is [1,2,3] because [3,2,1] does not have a lexicographical larger rearrangement.
+Given an array of integers nums, find the next permutation of nums.&lt;/p>
+&lt;p>The replacement must be in place and use only constant extra memory.&lt;/p>
+&lt;h3 id="constraints">Constraints:
+&lt;/h3>&lt;ul>
+&lt;li>1 &amp;lt;= nums.length &amp;lt;= 100&lt;/li>
+&lt;li>0 &amp;lt;= nums[i] &amp;lt;= 100&lt;/li>
+&lt;/ul>
+&lt;h3 id="example-1">Example 1:
+&lt;/h3>&lt;blockquote>
+&lt;p>Input: nums = [1,2,3]&lt;br>
+Output: [1,3,2]&lt;/p>&lt;/blockquote>
+&lt;h3 id="example-2">Example 2:
+&lt;/h3>&lt;blockquote>
+&lt;p>Input: nums = [3,2,1]&lt;br>
+Output: [1,2,3]&lt;/p>&lt;/blockquote>
+&lt;h3 id="example-2-1">Example 2:
+&lt;/h3>&lt;blockquote>
+&lt;p>Input: nums = [1,1,5]&lt;br>
+Output: [1,5,1]&lt;/p>&lt;/blockquote>
+&lt;h2 id="解題方法">解題方法
+&lt;/h2>&lt;ol>
+&lt;li>
+&lt;p>從右向左尋找遞減序列的轉折點：
+找到第一個位置 i，使得 nums[i] &amp;lt; nums[i + 1]。這表示從 i 之後的數字是遞減的。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>如果找不到，說明當前排列是最大的，直接反轉陣列：
+如果整個陣列是遞減的（如 [3, 2, 1]），則直接反轉整個陣列變為最小排列（如 [1, 2, 3]）。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>找到比 nums[i] 大的最小數字並交換：
+在 i 右邊的數字中，找到最接近且比 nums[i] 大的數字 nums[j]，然後交換 nums[i] 和 nums[j]。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>反轉 i + 1 之後的子陣列：
+這樣能保證轉折點後的數字變為最小排列，確保整體是下一個排列。&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="程式">程式
+&lt;/h2>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-C" data-lang="C">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;bits/stdc++.h&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>using namespace std;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>class Solution {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>public:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">void&lt;/span> &lt;span style="color:#a6e22e">nextPermutation&lt;/span>(vector&lt;span style="color:#f92672">&amp;lt;&lt;/span>&lt;span style="color:#66d9ef">int&lt;/span>&lt;span style="color:#f92672">&amp;gt;&amp;amp;&lt;/span> nums) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">int&lt;/span> size &lt;span style="color:#f92672">=&lt;/span> nums.&lt;span style="color:#a6e22e">size&lt;/span>();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> cout &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> size ;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>};
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>(){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Solution sol;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> cout &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> sol.&lt;span style="color:#a6e22e">divide&lt;/span>(&lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#ae81ff">2147483648&lt;/span>, &lt;span style="color:#ae81ff">3&lt;/span>) &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> endl;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
+&lt;p>Photo by &lt;a class="link" href="https://unsplash.com/@pawel_czerwinski" target="_blank" rel="noopener"
+>Pawel Czerwinski&lt;/a> on &lt;a class="link" href="https://unsplash.com/" target="_blank" rel="noopener"
+>Unsplash&lt;/a>&lt;/p>&lt;/blockquote></description></item><item><title>29. Divide Two Integers</title><link>https://Dandelionlibra.github.io/post/leetcode/leetcode/</link><pubDate>Sat, 01 Feb 2025 00:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/leetcode/leetcode/</guid><description>&lt;img src="https://Dandelionlibra.github.io/unsplash.jpg" alt="Featured image of post 29. Divide Two Integers" />&lt;h2 id="題目">題目
+&lt;/h2>&lt;p>Given two integers dividend and divisor, divide two integers without using multiplication, division, and mod operator.&lt;/p>
+&lt;p>The integer division should truncate toward zero, which means losing its fractional part. For example, 8.345 would be truncated to 8, and -2.7335 would be truncated to -2.&lt;/p>
+&lt;p>Return the quotient after dividing dividend by divisor.&lt;/p>
+&lt;p>Note: Assume we are dealing with an environment that could only store integers within the 32-bit signed integer range: $[−2^{31}, 2^{31} − 1]$. For this problem, if the quotient is strictly greater than $2^{31} - 1$, then return $2^{31} - 1$, and if the quotient is strictly less than $-2^{31}$, then return $-2^{31}$.&lt;/p>
+&lt;h3 id="constraints">Constraints:
+&lt;/h3>&lt;ul>
+&lt;li>$-2^{31}$ &amp;lt;= dividend, divisor &amp;lt;= $-2^{31}-1$&lt;/li>
+&lt;li>divisor != 0&lt;/li>
+&lt;/ul>
+&lt;h3 id="example-1">Example 1:
+&lt;/h3>&lt;blockquote>
+&lt;p>Input: dividend = 10, divisor = 3&lt;br>
+Output: 3&lt;br>
+Explanation: 10/3 = 3.33333.. which is truncated to 3.&lt;/p>&lt;/blockquote>
+&lt;h3 id="example-2">Example 2:
+&lt;/h3>&lt;blockquote>
+&lt;p>Input: dividend = 7, divisor = -3&lt;br>
+Output: -2&lt;br>
+Explanation: 7/-3 = -2.33333.. which is truncated to -2.&lt;/p>&lt;/blockquote>
+&lt;h2 id="解題方法">解題方法
+&lt;/h2>&lt;h2 id="程式">程式
+&lt;/h2>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-C" data-lang="C">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;bits/stdc++.h&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>using namespace std;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>class Solution {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>public:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#a6e22e">divide&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> dividend, &lt;span style="color:#66d9ef">int&lt;/span> divisor) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// 特殊情況處理，避免溢出
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">if&lt;/span> (dividend &lt;span style="color:#f92672">==&lt;/span> INT_MIN &lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span> divisor &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>) &lt;span style="color:#66d9ef">return&lt;/span> INT_MAX;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> (dividend &lt;span style="color:#f92672">==&lt;/span> INT_MIN &lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span> divisor &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>) &lt;span style="color:#66d9ef">return&lt;/span> INT_MIN;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// 計算商的正負
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">bool&lt;/span> positive &lt;span style="color:#f92672">=&lt;/span> (dividend &lt;span style="color:#f92672">&amp;gt;&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>) &lt;span style="color:#f92672">==&lt;/span> (divisor &lt;span style="color:#f92672">&amp;gt;&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// 使用 long long 來避免 INT_MIN 的溢出
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">long&lt;/span> divd &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">labs&lt;/span>(dividend);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">long&lt;/span> div &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">labs&lt;/span>(divisor);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">long&lt;/span> result &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// 當被除數大於除數時，進行除法
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">while&lt;/span> (divd &lt;span style="color:#f92672">&amp;gt;=&lt;/span> div) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">long&lt;/span> temp &lt;span style="color:#f92672">=&lt;/span> div, multiple &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// 進行倍增操作，找到最大的倍數
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">while&lt;/span> (divd &lt;span style="color:#f92672">&amp;gt;=&lt;/span> (temp &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>)) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> temp &lt;span style="color:#f92672">&amp;lt;&amp;lt;=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> multiple &lt;span style="color:#f92672">&amp;lt;&amp;lt;=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// 減去倍數對應的部分，並將商加到結果中
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> divd &lt;span style="color:#f92672">-=&lt;/span> temp;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> result &lt;span style="color:#f92672">+=&lt;/span> multiple;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// 根據正負符號調整結果
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> result &lt;span style="color:#f92672">=&lt;/span> positive &lt;span style="color:#f92672">?&lt;/span> result : &lt;span style="color:#f92672">-&lt;/span>result;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// 最後檢查是否溢出
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">return&lt;/span> result &lt;span style="color:#f92672">&amp;gt;&lt;/span> INT_MAX &lt;span style="color:#f92672">?&lt;/span> INT_MAX : (result &lt;span style="color:#f92672">&amp;lt;&lt;/span> INT_MIN &lt;span style="color:#f92672">?&lt;/span> INT_MIN : result);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>};
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>(){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Solution sol;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> cout &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> sol.&lt;span style="color:#a6e22e">divide&lt;/span>(&lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#ae81ff">2147483648&lt;/span>, &lt;span style="color:#ae81ff">3&lt;/span>) &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> endl;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
+&lt;p>Photo by &lt;a class="link" href="https://unsplash.com/@pawel_czerwinski" target="_blank" rel="noopener"
+>Pawel Czerwinski&lt;/a> on &lt;a class="link" href="https://unsplash.com/" target="_blank" rel="noopener"
+>Unsplash&lt;/a>&lt;/p>&lt;/blockquote></description></item><item><title>微表情(Micro Facial Expression)</title><link>https://Dandelionlibra.github.io/post/note/micro_facial_expression/</link><pubDate>Sun, 20 Oct 2024 00:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/note/micro_facial_expression/</guid><description>&lt;img src="https://Dandelionlibra.github.io/unsplash.jpg" alt="Featured image of post 微表情(Micro Facial Expression)" />&lt;h2 id="臉部表情種類">臉部表情種類
 &lt;/h2>&lt;p>&lt;a class="link" href="https://zh.wikipedia.org/zh-tw/%E4%BF%9D%E7%BD%97%C2%B7%E8%89%BE%E5%85%8B%E6%9B%BC" target="_blank" rel="noopener"
 >保羅·艾克曼&lt;/a>（Paul Ekman）從1970年代以來的研究，把臉部微表情分成：&lt;/p>
 &lt;ul>
@@ -15,30 +155,25 @@
 &lt;/h2>&lt;blockquote>
 &lt;p>臺師大邱美虹：「我希望用新興科技找到學生在學習科學知識時的難點，改善科學學習時的困境。而其中的一步，就是用辨識微表情的AI系統，找出學生面對非預期的科學現象和多重表徵的解釋所出現的某些特定微表情時所代表的意義，以瞭解學生面對這些情況時的反應與效益，以便設計有意義的學習和教學策略。」&lt;br>
 &lt;a class="link" href="https://humanityisland.nccu.edu.tw/qiumeihong_a/" target="_blank" rel="noopener"
->文章報導&lt;/a>&lt;/p>
-&lt;/blockquote>
+>文章報導&lt;/a>&lt;/p>&lt;/blockquote>
 &lt;blockquote>
 &lt;p>迪士尼研究中心(FVAE – 深度學習觀眾表情，安排劇情走向)，在黑暗的影廳內觀察觀眾的臉部表情，並學習分辨微笑、大笑等不同程度的情緒。這樣的神經網絡學習，不只要調查你有多喜歡當下的劇情，更要預測你是否可能喜歡接下來的走向，它能根據過去學習的結果，在開演的前十分鐘就預測觀眾之後的情緒！&lt;br>
 &lt;a class="link" href="https://mile.cloud/zh/resources/blog/facial-detection-technology-is-popular-quantifying-micro-expressions-into-big-data_39" target="_blank" rel="noopener"
->文章報導&lt;/a>&lt;/p>
-&lt;/blockquote>
+>文章報導&lt;/a>&lt;/p>&lt;/blockquote>
 &lt;blockquote>
 &lt;p>將微表情應用於面試上，也能準確抓出應徵者的職場性格與溝通能力，提前協助面試官篩除不適任的員工。&lt;br>
 &lt;a class="link" href="https://www.ithome.com.tw/news/143000" target="_blank" rel="noopener"
->文章報導&lt;/a>&lt;/p>
-&lt;/blockquote>
+>文章報導&lt;/a>&lt;/p>&lt;/blockquote>
 &lt;blockquote>
 &lt;p>監控升級：人臉識別系統能讀出情緒和威脅性&lt;br>
 &lt;a class="link" href="https://www.bbc.com/zhongwen/trad/world-44859007" target="_blank" rel="noopener"
->文章報導&lt;/a>&lt;/p>
-&lt;/blockquote>
+>文章報導&lt;/a>&lt;/p>&lt;/blockquote>
 &lt;h2 id="參考內容">參考內容
 &lt;/h2>&lt;p>淺談為表情心理學：https://www.thenewslens.com/article/128732&lt;/p>
 &lt;blockquote>
 &lt;p>Photo by &lt;a class="link" href="https://unsplash.com/@pawel_czerwinski" target="_blank" rel="noopener"
 >Pawel Czerwinski&lt;/a> on &lt;a class="link" href="https://unsplash.com/" target="_blank" rel="noopener"
->Unsplash&lt;/a>&lt;/p>
-&lt;/blockquote></description></item><item><title>Example content</title><link>https://Dandelionlibra.github.io/post/hello-world/</link><pubDate>Sun, 06 Mar 2022 00:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/hello-world/</guid><description>&lt;img src="https://Dandelionlibra.github.io/post/hello-world/unsplash.jpg" alt="Featured image of post Example content" />&lt;p>Welcome to Hugo theme Stack. This is your first post. Edit or delete it, then start writing!&lt;/p>
+>Unsplash&lt;/a>&lt;/p>&lt;/blockquote></description></item><item><title>Example content</title><link>https://Dandelionlibra.github.io/post/hello-world/</link><pubDate>Sun, 06 Mar 2022 00:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/hello-world/</guid><description>&lt;img src="https://Dandelionlibra.github.io/post/hello-world/unsplash.jpg" alt="Featured image of post Example content" />&lt;p>Welcome to Hugo theme Stack. This is your first post. Edit or delete it, then start writing!&lt;/p>
 &lt;p>For more information about this theme, check the documentation: &lt;a class="link" href="https://stack.jimmycai.com/" target="_blank" rel="noopener"
 >https://stack.jimmycai.com/&lt;/a>&lt;/p>
 &lt;p>Want a site like this? Check out &lt;a class="link" href="https://github.com/CaiJimmy/hugo-theme-stack-starter" target="_blank" rel="noopener"
@@ -46,5 +181,4 @@
 &lt;blockquote>
 &lt;p>Photo by &lt;a class="link" href="https://unsplash.com/@pawel_czerwinski" target="_blank" rel="noopener"
 >Pawel Czerwinski&lt;/a> on &lt;a class="link" href="https://unsplash.com/" target="_blank" rel="noopener"
->Unsplash&lt;/a>&lt;/p>
-&lt;/blockquote></description></item><item><title>Profile</title><link>https://Dandelionlibra.github.io/about/</link><pubDate>Sun, 06 Mar 2022 00:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/about/</guid><description>&lt;p>你好:)&lt;/p></description></item></channel></rss>
+>Unsplash&lt;/a>&lt;/p>&lt;/blockquote></description></item><item><title>Profile</title><link>https://Dandelionlibra.github.io/about/</link><pubDate>Sun, 06 Mar 2022 00:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/about/</guid><description>&lt;p>你好:)&lt;/p></description></item></channel></rss>
