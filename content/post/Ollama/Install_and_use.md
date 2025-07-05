@@ -3,9 +3,9 @@ title: How to install and use Ollama?
 # image: "/unsplash.jpg"
 description: Welcome to Hugo Theme Stack
 slug: Ollama
-date: 2025-07-05 16:30:00+0000
+date: 2025-07-05 00:00:00+0000
 categories:
-    - Ollama
+    - tutorial
 tags:
     - Ollama
     - AI
