@@ -56,12 +56,21 @@ WARNING: Package(s) not found: ooop
 pip install --upgrade openai
 ```
 
+<!-- > 
+若發生套件衝突，不管當前有沒有裝 openai，也不管目前版本是否是最新版，都會重新下載最新版本並完整重新安裝覆蓋掉原本的 openai 套件。
+```
+pip install --upgrade --force-reinstall openai
+```
+-->
 
-<!-- > 臺師大邱美虹：「我希望用新興科技找到學生在學習科學知識時的難點，改善科學學習時的困境。而其中的一步，就是用辨識微表情的AI系統，找出學生面對非預期的科學現象和多重表徵的解釋所出現的某些特定微表情時所代表的意義，以瞭解學生面對這些情況時的反應與效益，以便設計有意義的學習和教學策略。」  
+
+
+<!-- > 
 > [文章報導](<https://humanityisland.nccu.edu.tw/qiumeihong_a/>)
 
 
 ## 參考內容
-淺談為表情心理學：https://www.thenewslens.com/article/128732 -->
+淺談為表情心理學：https://www.thenewslens.com/article/128732 
+-->
 
 > Photo by [Pawel Czerwinski](https://unsplash.com/@pawel_czerwinski) on [Unsplash](https://unsplash.com/)
