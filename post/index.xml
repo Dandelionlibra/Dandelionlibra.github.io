@@ -1,4 +1,36 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on YuChen</title><link>https://Dandelionlibra.github.io/post/</link><description>Recent content in Posts on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Sun, 02 Feb 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/post/index.xml" rel="self" type="application/rss+xml"/><item><title>31. Next Permutation</title><link>https://Dandelionlibra.github.io/post/leetcode/31/leetcode/</link><pubDate>Sun, 02 Feb 2025 00:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/leetcode/31/leetcode/</guid><description>&lt;img src="https://Dandelionlibra.github.io/unsplash.jpg" alt="Featured image of post 31. Next Permutation" />&lt;h2 id="題目">題目
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on YuChen</title><link>https://Dandelionlibra.github.io/post/</link><description>Recent content in Posts on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Sat, 05 Jul 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/post/index.xml" rel="self" type="application/rss+xml"/><item><title>How to install and use Ollama?</title><link>https://Dandelionlibra.github.io/post/ollama/ollama/</link><pubDate>Sat, 05 Jul 2025 00:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/ollama/ollama/</guid><description>&lt;h2 id="題目">題目
+&lt;/h2>&lt;p>Given two integers dividend and divisor, divide two integers without using multiplication, division, and mod operator.&lt;/p>
+&lt;p>The integer division should truncate toward zero, which means losing its fractional part. For example, 8.345 would be truncated to 8, and -2.7335 would be truncated to -2.&lt;/p>
+&lt;p>Return the quotient after dividing dividend by divisor.&lt;/p>
+&lt;p>Note: Assume we are dealing with an environment that could only store integers within the 32-bit signed integer range: $[−2^{31}, 2^{31} − 1]$. For this problem, if the quotient is strictly greater than $2^{31} - 1$, then return $2^{31} - 1$, and if the quotient is strictly less than $-2^{31}$, then return $-2^{31}$.&lt;/p>
+&lt;h3 id="constraints">Constraints:
+&lt;/h3>&lt;ul>
+&lt;li>$-2^{31}$ &amp;lt;= dividend, divisor &amp;lt;= $-2^{31}-1$&lt;/li>
+&lt;li>divisor != 0&lt;/li>
+&lt;/ul>
+&lt;h3 id="example-1">Example 1:
+&lt;/h3>&lt;blockquote>
+&lt;p>Input: dividend = 10, divisor = 3&lt;br>
+Output: 3&lt;br>
+Explanation: 10/3 = 3.33333.. which is truncated to 3.&lt;/p>&lt;/blockquote>
+&lt;h3 id="example-2">Example 2:
+&lt;/h3>&lt;blockquote>
+&lt;p>Input: dividend = 7, divisor = -3&lt;br>
+Output: -2&lt;br>
+Explanation: 7/-3 = -2.33333.. which is truncated to -2.&lt;/p>&lt;/blockquote>
+&lt;h2 id="解題方法">解題方法
+&lt;/h2>&lt;h2 id="程式">程式
+&lt;/h2>&lt;p>安裝 openai&lt;/p>
+&lt;pre tabindex="0">&lt;code>pip install openai
+&lt;/code>&lt;/pre>&lt;p>查看安裝版本 &amp;amp; 是否已安裝過&lt;/p>
+&lt;pre tabindex="0">&lt;code>pip show openai
+&lt;/code>&lt;/pre>&lt;pre tabindex="0">&lt;code>WARNING: Package(s) not found: ooop
+&lt;/code>&lt;/pre>&lt;p>若已安裝過且版本小於 1.0.0，更新 openai 套件&lt;/p>
+&lt;pre tabindex="0">&lt;code>pip install --upgrade openai
+&lt;/code>&lt;/pre>&lt;blockquote>
+&lt;p>Photo by &lt;a class="link" href="https://unsplash.com/@pawel_czerwinski" target="_blank" rel="noopener"
+>Pawel Czerwinski&lt;/a> on &lt;a class="link" href="https://unsplash.com/" target="_blank" rel="noopener"
+>Unsplash&lt;/a>&lt;/p>&lt;/blockquote></description></item><item><title>31. Next Permutation</title><link>https://Dandelionlibra.github.io/post/leetcode/31/leetcode/</link><pubDate>Sun, 02 Feb 2025 00:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/leetcode/31/leetcode/</guid><description>&lt;h2 id="題目">題目
 &lt;/h2>&lt;p>A permutation of an array of integers is an arrangement of its members into a sequence or linear order.&lt;/p>
 &lt;p>For example, for arr = [1,2,3], the following are all the permutations of arr: [1,2,3], [1,3,2], [2, 1, 3], [2, 3, 1], [3,1,2], [3,2,1].
 The next permutation of an array of integers is the next lexicographically greater permutation of its integer. More formally, if all the permutations of the array are sorted in one container according to their lexicographical order, then the next permutation of that array is the permutation that follows it in the sorted container. If such arrangement is not possible, the array must be rearranged as the lowest possible order (i.e., sorted in ascending order).&lt;/p>
@@ -65,7 +97,7 @@ Output: [1,5,1]&lt;/p>&lt;/blockquote>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
 &lt;p>Photo by &lt;a class="link" href="https://unsplash.com/@pawel_czerwinski" target="_blank" rel="noopener"
 >Pawel Czerwinski&lt;/a> on &lt;a class="link" href="https://unsplash.com/" target="_blank" rel="noopener"
->Unsplash&lt;/a>&lt;/p>&lt;/blockquote></description></item><item><title>29. Divide Two Integers</title><link>https://Dandelionlibra.github.io/post/leetcode/29/leetcode/</link><pubDate>Sat, 01 Feb 2025 00:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/leetcode/29/leetcode/</guid><description>&lt;img src="https://Dandelionlibra.github.io/unsplash.jpg" alt="Featured image of post 29. Divide Two Integers" />&lt;h2 id="題目">題目
+>Unsplash&lt;/a>&lt;/p>&lt;/blockquote></description></item><item><title>29. Divide Two Integers</title><link>https://Dandelionlibra.github.io/post/leetcode/29/leetcode/</link><pubDate>Sat, 01 Feb 2025 00:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/leetcode/29/leetcode/</guid><description>&lt;h2 id="題目">題目
 &lt;/h2>&lt;p>Given two integers dividend and divisor, divide two integers without using multiplication, division, and mod operator.&lt;/p>
 &lt;p>The integer division should truncate toward zero, which means losing its fractional part. For example, 8.345 would be truncated to 8, and -2.7335 would be truncated to -2.&lt;/p>
 &lt;p>Return the quotient after dividing dividend by divisor.&lt;/p>
