@@ -9,7 +9,7 @@
 </code></pre><p>安裝 LangChain 與本地 Ollama 模型整合專用驅動，
 可以在 LangChain 中使用本地 Ollama 模型作為 LLM。
 LangChain 官方維護的專門用於整合本地 Ollama LLM 的插件套件。</p><p>因為 LangChain 在 0.3.1 後將原本內建於 <code>langchain_community.llms.Ollama</code> 的 Ollama 整合模組 拆分為獨立的 <code>langchain-ollama</code> 套件。</p><pre tabindex=0><code>pip install langchain-ollama
-</code></pre><h1 id=簡單應用>簡單應用</h1><h2 id=文本生成>文本生成</h2><p>LangChain 中 LLM 的最基本功能是根據輸入的文本生成新的文本。</p><p>註:不清楚 Ollama 如何使用的可以去看我關於 Ollama 的基礎使用文章。</p><pre tabindex=0><code>from langchain_ollama import OllamaLLM
+</code></pre><h1 id=簡單應用>簡單應用</h1><p>本文所有範例程式碼都可以在 <a class=link href=https://github.com/Dandelionlibra/Dandelionlibra.github.io/blob/main/content/post/langchain/LangChain_code.ipynb target=_blank rel=noopener>Jupyter Notebook</a> 中找到。</p><h2 id=文本生成>文本生成</h2><p>LangChain 中 LLM 的最基本功能是根據輸入的文本生成新的文本。</p><p>註:不清楚 Ollama 如何使用的可以去看我關於 Ollama 的基礎使用文章。</p><pre tabindex=0><code>from langchain_ollama import OllamaLLM
 
 llm = OllamaLLM(model=&#34;llama3.1:8b&#34;)
 response = llm.invoke(&#34;幫我取一個文雅的中國男孩名&#34;)
