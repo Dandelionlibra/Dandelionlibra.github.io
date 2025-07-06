@@ -44,7 +44,7 @@
 >https://www.youtube.com/watch?v=feFp5TbrVMo&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="https://www.youtube.com/playlist?list=PLAr9oL1AT4OElxInUijCzCgU3CpgHTjTI" target="_blank" rel="noopener"
 >https://www.youtube.com/playlist?list=PLAr9oL1AT4OElxInUijCzCgU3CpgHTjTI&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>LangChain 安裝與基本使用</title><link>https://Dandelionlibra.github.io/post/langchain/uselangchain/</link><pubDate>Thu, 25 Jul 2024 23:33:11 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/langchain/uselangchain/</guid><description>&lt;h1 id="安裝-langchain">安裝 LangChain
+&lt;/ul></description></item><item><title>LangChain 安裝與基本使用</title><link>https://Dandelionlibra.github.io/post/langchain/uselangchain/</link><pubDate>Thu, 25 Jul 2024 15:33:11 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/langchain/uselangchain/</guid><description>&lt;h1 id="安裝-langchain">安裝 LangChain
 &lt;/h1>&lt;p>使用 pip 指令安裝 LangChain 核心套件，其中提供各組件與基本框架。&lt;/p>
 &lt;pre tabindex="0">&lt;code>pip install langchain
 &lt;/code>&lt;/pre>&lt;p>安裝 LangChain 與本地 Ollama 模型整合專用驅動，

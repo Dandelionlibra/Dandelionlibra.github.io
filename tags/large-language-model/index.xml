@@ -272,7 +272,7 @@ ps.若沒有 pip 我未來再寫一篇安裝與使用 pip 的文章 ;)&lt;/p>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>print(response&lt;span style="color:#f92672">.&lt;/span>choices[&lt;span style="color:#ae81ff">0&lt;/span>]&lt;span style="color:#f92672">.&lt;/span>message&lt;span style="color:#f92672">.&lt;/span>content)
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>LangChain 安裝與基本使用</title><link>https://Dandelionlibra.github.io/post/langchain/uselangchain/</link><pubDate>Thu, 25 Jul 2024 23:33:11 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/langchain/uselangchain/</guid><description>&lt;h1 id="安裝-langchain">安裝 LangChain
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>LangChain 安裝與基本使用</title><link>https://Dandelionlibra.github.io/post/langchain/uselangchain/</link><pubDate>Thu, 25 Jul 2024 15:33:11 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/langchain/uselangchain/</guid><description>&lt;h1 id="安裝-langchain">安裝 LangChain
 &lt;/h1>&lt;p>使用 pip 指令安裝 LangChain 核心套件，其中提供各組件與基本框架。&lt;/p>
 &lt;pre tabindex="0">&lt;code>pip install langchain
 &lt;/code>&lt;/pre>&lt;p>安裝 LangChain 與本地 Ollama 模型整合專用驅動，
