@@ -30,6 +30,7 @@ pip install langchain-ollama
 ```
 
 # 簡單應用
+本文所有範例程式碼都可以在 [Jupyter Notebook](https://github.com/Dandelionlibra/Dandelionlibra.github.io/blob/main/content/post/langchain/LangChain_code.ipynb) 中找到。
 ## 文本生成
 LangChain 中 LLM 的最基本功能是根據輸入的文本生成新的文本。
 
