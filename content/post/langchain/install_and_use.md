@@ -30,7 +30,10 @@ pip install langchain-ollama
 ```
 
 # 簡單應用
-LangChain 中 LLM 的最基本功能是根據輸入的文本生成新的文本
+## 文本生成
+LangChain 中 LLM 的最基本功能是根據輸入的文本生成新的文本。
+
+註:不清楚 Ollama 如何使用的可以去看我關於 Ollama 的基礎使用文章。
 ```
 from langchain_ollama import OllamaLLM
 
@@ -52,9 +55,32 @@ temperature 用於控制 LLM 生成回答的隨機性與創造性。
 response = llm.invoke("幫我取一個文雅的中國男孩名", options={"temperature": 0})
 ```
 
+## 聊天模組
 
+```
+from langchain_ollama import ChatOllama
+from langchain.schema  import HumanMessage
 
+Chatllm = ChatOllama(model="llama3.1:8b")
 
+test = "幫我取一個文雅的中國男孩名"
+messages = [HumanMessage(content=test)]
+response = Chatllm.invoke(messages)
+print(response)
+```
+
+### OllamaLLM vs.ChatOllama
+| 項目               | **OllamaLLM**                            | **ChatOllama**                                                       |                     |
+| ---------------- | ---------------------------------------- | -------------------------------------------------------------------- | ------------------- |
+| **來源**           | `from langchain_ollama import OllamaLLM` | `from langchain_ollama import ChatOllama`                            |                     |
+| **用途**           | 單輪文字生成（Single-turn LLM）                  | 多輪對話（Chat-based LLM）                                                 |                     |
+| **典型應用場景**       | 單次回答、批次生成資料、文字生成工具                       | 聊天機器人、多輪上下文對話、Memory 結合                                              |                     |
+| **輸入型態**         | `str`（純文字 prompt）                        | `List[BaseMessage]`（包含 `SystemMessage`, `HumanMessage`, `AIMessage`） |                     |
+| **回傳型態**         | `str`（文字回應）                              | `AIMessage(content='...')`                                           |                     |
+| **回傳內容存取**       | 直接使用 `print(response)`                   | 使用 `print(response.content)`                                         |                     |
+| **是否支援多輪上下文**    | X                                  | O                                                          |                     |
+| **適合結合 Agent**   | 作為推論引擎                                | 作為 Chat Agent 對話引擎                                                 |                     |
+| **可搭配 Memory**   | X                                 | 可搭配 Memory 實現上下文持續對話                                               |                     |
 
 
 # Reference
