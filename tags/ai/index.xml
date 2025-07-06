@@ -7,7 +7,9 @@ LangChain 官方維護的專門用於整合本地 Ollama LLM 的插件套件。&
 &lt;p>因為 LangChain 在 0.3.1 後將原本內建於 &lt;code>langchain_community.llms.Ollama&lt;/code> 的 Ollama 整合模組 拆分為獨立的 &lt;code>langchain-ollama&lt;/code> 套件。&lt;/p>
 &lt;pre tabindex="0">&lt;code>pip install langchain-ollama
 &lt;/code>&lt;/pre>&lt;h1 id="簡單應用">簡單應用
-&lt;/h1>&lt;p>LangChain 中 LLM 的最基本功能是根據輸入的文本生成新的文本&lt;/p>
+&lt;/h1>&lt;h2 id="文本生成">文本生成
+&lt;/h2>&lt;p>LangChain 中 LLM 的最基本功能是根據輸入的文本生成新的文本。&lt;/p>
+&lt;p>註:不清楚 Ollama 如何使用的可以去看我關於 Ollama 的基礎使用文章。&lt;/p>
 &lt;pre tabindex="0">&lt;code>from langchain_ollama import OllamaLLM
 llm = OllamaLLM(model=&amp;#34;llama3.1:8b&amp;#34;)
 response = llm.invoke(&amp;#34;幫我取一個文雅的中國男孩名&amp;#34;)
@@ -41,7 +43,82 @@ print(response)
 &lt;/table>
 &lt;p>例如可以在剛剛的 response 中使用 options 將 temperature 設為 0，使輸出每次都會得到一樣的答案。&lt;/p>
 &lt;pre tabindex="0">&lt;code>response = llm.invoke(&amp;#34;幫我取一個文雅的中國男孩名&amp;#34;, options={&amp;#34;temperature&amp;#34;: 0})
-&lt;/code>&lt;/pre>&lt;h1 id="reference">Reference
+&lt;/code>&lt;/pre>&lt;h2 id="聊天模組">聊天模組
+&lt;/h2>&lt;pre tabindex="0">&lt;code>from langchain_ollama import ChatOllama
+from langchain.schema import HumanMessage
+Chatllm = ChatOllama(model=&amp;#34;llama3.1:8b&amp;#34;)
+test = &amp;#34;幫我取一個文雅的中國男孩名&amp;#34;
+messages = [HumanMessage(content=test)]
+response = Chatllm.invoke(messages)
+print(response)
+&lt;/code>&lt;/pre>&lt;h3 id="ollamallm-vschatollama">OllamaLLM vs.ChatOllama
+&lt;/h3>&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>項目&lt;/th>
+&lt;th>&lt;strong>OllamaLLM&lt;/strong>&lt;/th>
+&lt;th>&lt;strong>ChatOllama&lt;/strong>&lt;/th>
+&lt;th>&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>&lt;strong>來源&lt;/strong>&lt;/td>
+&lt;td>&lt;code>from langchain_ollama import OllamaLLM&lt;/code>&lt;/td>
+&lt;td>&lt;code>from langchain_ollama import ChatOllama&lt;/code>&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>用途&lt;/strong>&lt;/td>
+&lt;td>單輪文字生成（Single-turn LLM）&lt;/td>
+&lt;td>多輪對話（Chat-based LLM）&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>典型應用場景&lt;/strong>&lt;/td>
+&lt;td>單次回答、批次生成資料、文字生成工具&lt;/td>
+&lt;td>聊天機器人、多輪上下文對話、Memory 結合&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>輸入型態&lt;/strong>&lt;/td>
+&lt;td>&lt;code>str&lt;/code>（純文字 prompt）&lt;/td>
+&lt;td>&lt;code>List[BaseMessage]&lt;/code>（包含 &lt;code>SystemMessage&lt;/code>, &lt;code>HumanMessage&lt;/code>, &lt;code>AIMessage&lt;/code>）&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>回傳型態&lt;/strong>&lt;/td>
+&lt;td>&lt;code>str&lt;/code>（文字回應）&lt;/td>
+&lt;td>&lt;code>AIMessage(content='...')&lt;/code>&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>回傳內容存取&lt;/strong>&lt;/td>
+&lt;td>直接使用 &lt;code>print(response)&lt;/code>&lt;/td>
+&lt;td>使用 &lt;code>print(response.content)&lt;/code>&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>是否支援多輪上下文&lt;/strong>&lt;/td>
+&lt;td>X&lt;/td>
+&lt;td>O&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>適合結合 Agent&lt;/strong>&lt;/td>
+&lt;td>作為推論引擎&lt;/td>
+&lt;td>作為 Chat Agent 對話引擎&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>可搭配 Memory&lt;/strong>&lt;/td>
+&lt;td>X&lt;/td>
+&lt;td>可搭配 Memory 實現上下文持續對話&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h1 id="reference">Reference
 &lt;/h1>&lt;ul>
 &lt;li>&lt;a class="link" href="https://www.youtube.com/playlist?list=PLAr9oL1AT4OElxInUijCzCgU3CpgHTjTI" target="_blank" rel="noopener"
 >https://www.youtube.com/playlist?list=PLAr9oL1AT4OElxInUijCzCgU3CpgHTjTI&lt;/a>&lt;/li>

@@ -9,13 +9,22 @@
 </code></pre><p>安裝 LangChain 與本地 Ollama 模型整合專用驅動，
 可以在 LangChain 中使用本地 Ollama 模型作為 LLM。
 LangChain 官方維護的專門用於整合本地 Ollama LLM 的插件套件。</p><p>因為 LangChain 在 0.3.1 後將原本內建於 <code>langchain_community.llms.Ollama</code> 的 Ollama 整合模組 拆分為獨立的 <code>langchain-ollama</code> 套件。</p><pre tabindex=0><code>pip install langchain-ollama
-</code></pre><h1 id=簡單應用>簡單應用</h1><p>LangChain 中 LLM 的最基本功能是根據輸入的文本生成新的文本</p><pre tabindex=0><code>from langchain_ollama import OllamaLLM
+</code></pre><h1 id=簡單應用>簡單應用</h1><h2 id=文本生成>文本生成</h2><p>LangChain 中 LLM 的最基本功能是根據輸入的文本生成新的文本。</p><p>註:不清楚 Ollama 如何使用的可以去看我關於 Ollama 的基礎使用文章。</p><pre tabindex=0><code>from langchain_ollama import OllamaLLM
 
 llm = OllamaLLM(model=&#34;llama3.1:8b&#34;)
 response = llm.invoke(&#34;幫我取一個文雅的中國男孩名&#34;)
 print(response)
 </code></pre><p>temperature 用於控制 LLM 生成回答的隨機性與創造性。</p><div class=table-wrapper><table><thead><tr><th><code>temperature</code> 值</th><th>行為特性</th></tr></thead><tbody><tr><td><code>0</code></td><td>完全可重現，幾乎總是給出相同回答，適合需要準確且穩定輸出時使用</td></tr><tr><td><code>0.3 ~ 0.7</code></td><td>中度創造性，適合一般應用</td></tr><tr><td><code>1.0</code></td><td>高度創造性，回答可能更多樣化與隨機</td></tr><tr><td><code>>1</code></td><td>非常隨機，回答可能跳脫常規</td></tr></tbody></table></div><p>例如可以在剛剛的 response 中使用 options 將 temperature 設為 0，使輸出每次都會得到一樣的答案。</p><pre tabindex=0><code>response = llm.invoke(&#34;幫我取一個文雅的中國男孩名&#34;, options={&#34;temperature&#34;: 0})
-</code></pre><h1 id=reference>Reference</h1><ul><li><a class=link href="https://www.youtube.com/playlist?list=PLAr9oL1AT4OElxInUijCzCgU3CpgHTjTI" target=_blank rel=noopener>https://www.youtube.com/playlist?list=PLAr9oL1AT4OElxInUijCzCgU3CpgHTjTI</a></li></ul></section><footer class=article-footer><section class=article-tags><a href=/tags/langchain/>Langchain</a>
+</code></pre><h2 id=聊天模組>聊天模組</h2><pre tabindex=0><code>from langchain_ollama import ChatOllama
+from langchain.schema  import HumanMessage
+
+Chatllm = ChatOllama(model=&#34;llama3.1:8b&#34;)
+
+test = &#34;幫我取一個文雅的中國男孩名&#34;
+messages = [HumanMessage(content=test)]
+response = Chatllm.invoke(messages)
+print(response)
+</code></pre><h3 id=ollamallm-vschatollama>OllamaLLM vs.ChatOllama</h3><div class=table-wrapper><table><thead><tr><th>項目</th><th><strong>OllamaLLM</strong></th><th><strong>ChatOllama</strong></th><th></th></tr></thead><tbody><tr><td><strong>來源</strong></td><td><code>from langchain_ollama import OllamaLLM</code></td><td><code>from langchain_ollama import ChatOllama</code></td><td></td></tr><tr><td><strong>用途</strong></td><td>單輪文字生成（Single-turn LLM）</td><td>多輪對話（Chat-based LLM）</td><td></td></tr><tr><td><strong>典型應用場景</strong></td><td>單次回答、批次生成資料、文字生成工具</td><td>聊天機器人、多輪上下文對話、Memory 結合</td><td></td></tr><tr><td><strong>輸入型態</strong></td><td><code>str</code>（純文字 prompt）</td><td><code>List[BaseMessage]</code>（包含 <code>SystemMessage</code>, <code>HumanMessage</code>, <code>AIMessage</code>）</td><td></td></tr><tr><td><strong>回傳型態</strong></td><td><code>str</code>（文字回應）</td><td><code>AIMessage(content='...')</code></td><td></td></tr><tr><td><strong>回傳內容存取</strong></td><td>直接使用 <code>print(response)</code></td><td>使用 <code>print(response.content)</code></td><td></td></tr><tr><td><strong>是否支援多輪上下文</strong></td><td>X</td><td>O</td><td></td></tr><tr><td><strong>適合結合 Agent</strong></td><td>作為推論引擎</td><td>作為 Chat Agent 對話引擎</td><td></td></tr><tr><td><strong>可搭配 Memory</strong></td><td>X</td><td>可搭配 Memory 實現上下文持續對話</td><td></td></tr></tbody></table></div><h1 id=reference>Reference</h1><ul><li><a class=link href="https://www.youtube.com/playlist?list=PLAr9oL1AT4OElxInUijCzCgU3CpgHTjTI" target=_blank rel=noopener>https://www.youtube.com/playlist?list=PLAr9oL1AT4OElxInUijCzCgU3CpgHTjTI</a></li></ul></section><footer class=article-footer><section class=article-tags><a href=/tags/langchain/>Langchain</a>
 <a href=/tags/ai/>AI</a>
 <a href=/tags/large-language-model/>Large Language Model</a>
 <a href=/tags/llm/>LLM</a></section><section class=article-lastmod><svg class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
