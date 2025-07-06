@@ -1,50 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Langchain on YuChen</title><link>https://Dandelionlibra.github.io/tags/langchain/</link><description>Recent content in Langchain on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Sun, 06 Jul 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/tags/langchain/index.xml" rel="self" type="application/rss+xml"/><item><title>Introduction langchain</title><link>https://Dandelionlibra.github.io/post/langchain/introlangchain/</link><pubDate>Sun, 06 Jul 2025 00:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/langchain/introlangchain/</guid><description>&lt;h1 id="介紹-langchain">介紹 LangChain
-&lt;/h1>&lt;p>LangChain 為 2022 年發布的開源框架，主要用於開發由語言模型驅動的應用程式，可連接多種語言模型與外部工具。&lt;/p>
-&lt;p>&lt;a class="link" href="https://www.langchain.com" target="_blank" rel="noopener"
->LangChain 官方網站&lt;/a>&lt;/p>
-&lt;h2 id="優點">優點
-&lt;/h2>&lt;ul>
-&lt;li>開源工具&lt;/li>
-&lt;li>支持多種開源模型&lt;/li>
-&lt;li>可整合多項外部服務&lt;/li>
-&lt;/ul>
-&lt;h2 id="主要組件">主要組件
-&lt;/h2>&lt;ul>
-&lt;li>模型 (Models)
-&lt;ul>
-&lt;li>語言模型、文本嵌入模型等等&amp;hellip;&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>記憶體 (Memory)
-&lt;ul>
-&lt;li>短期與長期記憶，用於儲存與檢索聊天歷史&lt;/li>
-&lt;li>包含對話緩衝記憶體、實體記憶體、向量儲存記憶體&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>代理 (Agents)
-&lt;ul>
-&lt;li>推理引擎&lt;/li>
-&lt;li>可以根據給定的情境與數據做出合理的決策與推理&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;p>LangChain 藉由這些組件連結各種模型與工具，以達成檢索與分析數據，並可進行個性化的訂製。&lt;/p>
-&lt;h2 id="主要解決問題">主要解決問題
-&lt;/h2>&lt;ul>
-&lt;li>如何格式化輸出?&lt;/li>
-&lt;li>如何輸出很長的文本?&lt;/li>
-&lt;li>如何呼叫多次 api?&lt;/li>
-&lt;li>如何使 api 能呼叫外部的服務、工具?&lt;/li>
-&lt;li>如何進行標準化的開發?&lt;/li>
-&lt;li>&amp;hellip;&lt;/li>
-&lt;/ul>
-&lt;h1 id="reference">Reference
-&lt;/h1>&lt;ul>
-&lt;li>&lt;a class="link" href="https://www.youtube.com/watch?v=feFp5TbrVMo" target="_blank" rel="noopener"
->https://www.youtube.com/watch?v=feFp5TbrVMo&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://www.youtube.com/playlist?list=PLAr9oL1AT4OElxInUijCzCgU3CpgHTjTI" target="_blank" rel="noopener"
->https://www.youtube.com/playlist?list=PLAr9oL1AT4OElxInUijCzCgU3CpgHTjTI&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>LangChain 安裝與基本使用</title><link>https://Dandelionlibra.github.io/post/langchain/uselangchain/</link><pubDate>Thu, 25 Jul 2024 15:33:11 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/langchain/uselangchain/</guid><description>&lt;h1 id="安裝-langchain">安裝 LangChain
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Langchain on YuChen</title><link>https://Dandelionlibra.github.io/tags/langchain/</link><description>Recent content in Langchain on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Sun, 06 Jul 2025 15:33:11 +0000</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/tags/langchain/index.xml" rel="self" type="application/rss+xml"/><item><title>LangChain 安裝與基本使用</title><link>https://Dandelionlibra.github.io/post/langchain/uselangchain/</link><pubDate>Sun, 06 Jul 2025 15:33:11 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/langchain/uselangchain/</guid><description>&lt;h1 id="安裝-langchain">安裝 LangChain
 &lt;/h1>&lt;p>使用 pip 指令安裝 LangChain 核心套件，其中提供各組件與基本框架。&lt;/p>
 &lt;pre tabindex="0">&lt;code>pip install langchain
 &lt;/code>&lt;/pre>&lt;p>安裝 LangChain 與本地 Ollama 模型整合專用驅動，
@@ -89,6 +43,52 @@ print(response)
 &lt;pre tabindex="0">&lt;code>response = llm.invoke(&amp;#34;幫我取一個文雅的中國男孩名&amp;#34;, options={&amp;#34;temperature&amp;#34;: 0})
 &lt;/code>&lt;/pre>&lt;h1 id="reference">Reference
 &lt;/h1>&lt;ul>
+&lt;li>&lt;a class="link" href="https://www.youtube.com/playlist?list=PLAr9oL1AT4OElxInUijCzCgU3CpgHTjTI" target="_blank" rel="noopener"
+>https://www.youtube.com/playlist?list=PLAr9oL1AT4OElxInUijCzCgU3CpgHTjTI&lt;/a>&lt;/li>
+&lt;/ul></description></item><item><title>Introduction langchain</title><link>https://Dandelionlibra.github.io/post/langchain/introlangchain/</link><pubDate>Sun, 06 Jul 2025 00:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/langchain/introlangchain/</guid><description>&lt;h1 id="介紹-langchain">介紹 LangChain
+&lt;/h1>&lt;p>LangChain 為 2022 年發布的開源框架，主要用於開發由語言模型驅動的應用程式，可連接多種語言模型與外部工具。&lt;/p>
+&lt;p>&lt;a class="link" href="https://www.langchain.com" target="_blank" rel="noopener"
+>LangChain 官方網站&lt;/a>&lt;/p>
+&lt;h2 id="優點">優點
+&lt;/h2>&lt;ul>
+&lt;li>開源工具&lt;/li>
+&lt;li>支持多種開源模型&lt;/li>
+&lt;li>可整合多項外部服務&lt;/li>
+&lt;/ul>
+&lt;h2 id="主要組件">主要組件
+&lt;/h2>&lt;ul>
+&lt;li>模型 (Models)
+&lt;ul>
+&lt;li>語言模型、文本嵌入模型等等&amp;hellip;&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>記憶體 (Memory)
+&lt;ul>
+&lt;li>短期與長期記憶，用於儲存與檢索聊天歷史&lt;/li>
+&lt;li>包含對話緩衝記憶體、實體記憶體、向量儲存記憶體&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>代理 (Agents)
+&lt;ul>
+&lt;li>推理引擎&lt;/li>
+&lt;li>可以根據給定的情境與數據做出合理的決策與推理&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>LangChain 藉由這些組件連結各種模型與工具，以達成檢索與分析數據，並可進行個性化的訂製。&lt;/p>
+&lt;h2 id="主要解決問題">主要解決問題
+&lt;/h2>&lt;ul>
+&lt;li>如何格式化輸出?&lt;/li>
+&lt;li>如何輸出很長的文本?&lt;/li>
+&lt;li>如何呼叫多次 api?&lt;/li>
+&lt;li>如何使 api 能呼叫外部的服務、工具?&lt;/li>
+&lt;li>如何進行標準化的開發?&lt;/li>
+&lt;li>&amp;hellip;&lt;/li>
+&lt;/ul>
+&lt;h1 id="reference">Reference
+&lt;/h1>&lt;ul>
+&lt;li>&lt;a class="link" href="https://www.youtube.com/watch?v=feFp5TbrVMo" target="_blank" rel="noopener"
+>https://www.youtube.com/watch?v=feFp5TbrVMo&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="https://www.youtube.com/playlist?list=PLAr9oL1AT4OElxInUijCzCgU3CpgHTjTI" target="_blank" rel="noopener"
 >https://www.youtube.com/playlist?list=PLAr9oL1AT4OElxInUijCzCgU3CpgHTjTI&lt;/a>&lt;/li>
 &lt;/ul></description></item></channel></rss>
