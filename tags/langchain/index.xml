@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Langchain on YuChen</title><link>https://Dandelionlibra.github.io/tags/langchain/</link><description>Recent content in Langchain on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Sun, 06 Jul 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/tags/langchain/index.xml" rel="self" type="application/rss+xml"/><item><title>Introduction langchain</title><link>https://Dandelionlibra.github.io/post/langchain/introlangchain/</link><pubDate>Sun, 06 Jul 2025 00:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/langchain/introlangchain/</guid><description>&lt;h1 id="介紹-langchain">介紹 LangChain
 &lt;/h1>&lt;p>LangChain 為 2022 年發布的開源框架，主要用於開發由語言模型驅動的應用程式，可連接多種語言模型與外部工具。&lt;/p>
+&lt;p>&lt;a class="link" href="https://www.langchain.com" target="_blank" rel="noopener"
+>LangChain 官方網站&lt;/a>&lt;/p>
 &lt;h2 id="優點">優點
 &lt;/h2>&lt;ul>
 &lt;li>開源工具&lt;/li>
@@ -40,6 +42,53 @@
 &lt;/h1>&lt;ul>
 &lt;li>&lt;a class="link" href="https://www.youtube.com/watch?v=feFp5TbrVMo" target="_blank" rel="noopener"
 >https://www.youtube.com/watch?v=feFp5TbrVMo&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://www.youtube.com/playlist?list=PLAr9oL1AT4OElxInUijCzCgU3CpgHTjTI" target="_blank" rel="noopener"
+>https://www.youtube.com/playlist?list=PLAr9oL1AT4OElxInUijCzCgU3CpgHTjTI&lt;/a>&lt;/li>
+&lt;/ul></description></item><item><title>LangChain 安裝與基本使用</title><link>https://Dandelionlibra.github.io/post/langchain/uselangchain/</link><pubDate>Thu, 25 Jul 2024 23:33:11 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/langchain/uselangchain/</guid><description>&lt;h1 id="安裝-langchain">安裝 LangChain
+&lt;/h1>&lt;p>使用 pip 指令安裝 LangChain 核心套件，其中提供各組件與基本框架。&lt;/p>
+&lt;pre tabindex="0">&lt;code>pip install langchain
+&lt;/code>&lt;/pre>&lt;p>安裝 LangChain 與本地 Ollama 模型整合專用驅動，
+可以在 LangChain 中使用本地 Ollama 模型作為 LLM。
+LangChain 官方維護的專門用於整合本地 Ollama LLM 的插件套件。&lt;/p>
+&lt;p>因為 LangChain 在 0.3.1 後將原本內建於 &lt;code>langchain_community.llms.Ollama&lt;/code> 的 Ollama 整合模組 拆分為獨立的 &lt;code>langchain-ollama&lt;/code> 套件。&lt;/p>
+&lt;pre tabindex="0">&lt;code>pip install langchain-ollama
+&lt;/code>&lt;/pre>&lt;h1 id="簡單應用">簡單應用
+&lt;/h1>&lt;p>LangChain 中 LLM 的最基本功能是根據輸入的文本生成新的文本&lt;/p>
+&lt;pre tabindex="0">&lt;code>from langchain_ollama import OllamaLLM
+llm = OllamaLLM(model=&amp;#34;llama3.1:8b&amp;#34;)
+response = llm.invoke(&amp;#34;幫我取一個文雅的中國男孩名&amp;#34;)
+print(response)
+&lt;/code>&lt;/pre>&lt;p>temperature 用於控制 LLM 生成回答的隨機性與創造性。&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>&lt;code>temperature&lt;/code> 值&lt;/th>
+&lt;th>行為特性&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>&lt;code>0&lt;/code>&lt;/td>
+&lt;td>完全可重現，幾乎總是給出相同回答，適合需要準確且穩定輸出時使用&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>0.3 ~ 0.7&lt;/code>&lt;/td>
+&lt;td>中度創造性，適合一般應用&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>1.0&lt;/code>&lt;/td>
+&lt;td>高度創造性，回答可能更多樣化與隨機&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>&amp;gt;1&lt;/code>&lt;/td>
+&lt;td>非常隨機，回答可能跳脫常規&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>例如可以在剛剛的 response 中使用 options 將 temperature 設為 0，使輸出每次都會得到一樣的答案。&lt;/p>
+&lt;pre tabindex="0">&lt;code>response = llm.invoke(&amp;#34;幫我取一個文雅的中國男孩名&amp;#34;, options={&amp;#34;temperature&amp;#34;: 0})
+&lt;/code>&lt;/pre>&lt;h1 id="reference">Reference
+&lt;/h1>&lt;ul>
 &lt;li>&lt;a class="link" href="https://www.youtube.com/playlist?list=PLAr9oL1AT4OElxInUijCzCgU3CpgHTjTI" target="_blank" rel="noopener"
 >https://www.youtube.com/playlist?list=PLAr9oL1AT4OElxInUijCzCgU3CpgHTjTI&lt;/a>&lt;/li>
 &lt;/ul></description></item></channel></rss>
