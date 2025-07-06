@@ -10,10 +10,10 @@ client = OpenAI(
 response = client.chat.completions.create(
     model="llama3.1:8b",
     messages=[ # 設定對話內容
-        # {
-        #     "role": "system", # 設定模型行為
-        #     "content": "You are a helpful assistant.",
-        # },
+        {
+            "role": "system", # 設定模型行為
+            "content": "You are a helpful assistant.",
+        },
         {
             "role": "user", # 使用者輸入的問題
             "content": "What is the capital of France?",
