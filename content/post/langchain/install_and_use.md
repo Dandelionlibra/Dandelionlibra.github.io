@@ -3,7 +3,7 @@ title: LangChain 安裝與基本使用
 # image: "/unsplash.jpg"
 description: 本文介紹如何安裝 LangChain，並透過簡單的範例來展示其基本用法。
 slug: uselangchain
-date: 2024-07-25 15:33:11+0000
+date: 2025-07-06 15:33:11+0000
 categories:
     - tutorial
 tags:
