@@ -16,8 +16,9 @@ weight: 1       # You can add weight to some posts to override the default sorti
 
 # 介紹 LangChain
 LangChain 為 2022 年發布的開源框架，主要用於開發由語言模型驅動的應用程式，可連接多種語言模型與外部工具。  
-
 [LangChain 官方網站](<https://www.langchain.com>)
+![LLMChain](./image/ecosystem_packages-32943b32657e7a187770c9b585f22a64.png)
+
 
 ## 優點
 * 開源工具
@@ -47,5 +48,6 @@ LangChain 藉由這些組件連結各種模型與工具，以達成檢索與分�
 * ...
 
 # Reference
+* https://python.langchain.com/docs/introduction/
 * https://www.youtube.com/watch?v=feFp5TbrVMo
 * https://www.youtube.com/playlist?list=PLAr9oL1AT4OElxInUijCzCgU3CpgHTjTI
