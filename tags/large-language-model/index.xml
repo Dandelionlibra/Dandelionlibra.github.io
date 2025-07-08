@@ -1,4 +1,242 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Large Language Model on YuChen</title><link>https://Dandelionlibra.github.io/tags/large-language-model/</link><description>Recent content in Large Language Model on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Sun, 06 Jul 2025 15:33:11 +0000</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/tags/large-language-model/index.xml" rel="self" type="application/rss+xml"/><item><title>LangChain 安裝與基本使用</title><link>https://Dandelionlibra.github.io/post/langchain/uselangchain/</link><pubDate>Sun, 06 Jul 2025 15:33:11 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/langchain/uselangchain/</guid><description>&lt;h1 id="安裝-langchain">安裝 LangChain
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Large Language Model on YuChen</title><link>https://Dandelionlibra.github.io/tags/large-language-model/</link><description>Recent content in Large Language Model on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Tue, 08 Jul 2025 08:06:00 +0000</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/tags/large-language-model/index.xml" rel="self" type="application/rss+xml"/><item><title>LangChain 基本使用-2</title><link>https://Dandelionlibra.github.io/post/langchain/uselangchain/</link><pubDate>Tue, 08 Jul 2025 08:06:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/langchain/uselangchain/</guid><description>&lt;h1 id="提示模板">提示模板
+&lt;/h1>&lt;ul>
+&lt;li>對語言模型的指令&lt;/li>
+&lt;li>提供簡單的事例給語言模型使模型接近理想結果&lt;/li>
+&lt;li>提給語言模型的問題&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> langchain &lt;span style="color:#f92672">import&lt;/span> PromptTemplate
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 使用 PromptTemplate 來定義對話的提示模板&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>no_input_prompt_template &lt;span style="color:#f92672">=&lt;/span> PromptTemplate(
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> input_variables&lt;span style="color:#f92672">=&lt;/span>[],
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> template&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;說個故事&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>multi_input_prompt_template &lt;span style="color:#f92672">=&lt;/span> PromptTemplate(
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> input_variables&lt;span style="color:#f92672">=&lt;/span>[&lt;span style="color:#e6db74">&amp;#34;主題&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;風格&amp;#34;&lt;/span>],
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> template&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;請講一個關於&lt;/span>&lt;span style="color:#e6db74">{主題}&lt;/span>&lt;span style="color:#e6db74">的故事，風格是&lt;/span>&lt;span style="color:#e6db74">{風格}&lt;/span>&lt;span style="color:#e6db74">。&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># other example，由 from_template 將 string 轉成 PromptTemplate&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>template &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;請講一個關於&lt;/span>&lt;span style="color:#e6db74">{主題}&lt;/span>&lt;span style="color:#e6db74">的故事，風格是&lt;/span>&lt;span style="color:#e6db74">{風格}&lt;/span>&lt;span style="color:#e6db74">。&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>prompt_template &lt;span style="color:#f92672">=&lt;/span> PromptTemplate&lt;span style="color:#f92672">.&lt;/span>from_template(template)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 此時輸出 [&amp;#34;主題&amp;#34;, &amp;#34;風格&amp;#34;]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>prompt_template&lt;span style="color:#f92672">.&lt;/span>input_variables
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="接收部分參數">接收部分參數
+&lt;/h2>&lt;p>在所有參數無法同步獲取時，可以先用舊有參數傳入原始模板，以獲得新的模板，再將由其他語言模型中取的的新參數傳入新的模板中。
+&lt;img src="https://Dandelionlibra.github.io/image/prompt_template_1.JPG"
+loading="lazy"
+alt="partial_prompt_template"
+>&lt;/p>
+&lt;h2 id="">
+&lt;/h2>&lt;p>使用 pip 指令安裝 LangChain 核心套件，其中提供各組件與基本框架。&lt;br>
+LangChain 相關套件的詳細資訊可以參考&lt;a class="link" href="https://python.langchain.com/api_reference/" target="_blank" rel="noopener"
+>langchain 官方文件&lt;/a>。&lt;/p>
+&lt;pre tabindex="0">&lt;code>pip install langchain
+&lt;/code>&lt;/pre>&lt;p>安裝 LangChain 社群套件，其中包含由社群維護的第三方整合模組。&lt;br>
+隨著 LangChain 的模組化，許多原本內建於核心套件的整合功能被轉移到此套件中，以保持核心套件的輕量化。&lt;/p>
+&lt;pre tabindex="0">&lt;code>pip install langchain_community
+&lt;/code>&lt;/pre>&lt;p>安裝 LangChain 與本地 Ollama 模型整合專用驅動，
+可以在 LangChain 中使用本地 Ollama 模型作為 LLM。
+LangChain 官方維護的專門用於整合本地 Ollama LLM 的插件套件。&lt;/p>
+&lt;p>因為 LangChain 在 0.3.1 後將原本內建於 &lt;code>langchain_community.llms.Ollama&lt;/code> 的 Ollama 整合模組 拆分為獨立的 &lt;code>langchain-ollama&lt;/code> 套件。&lt;br>
+詳細資訊可以參考&lt;a class="link" href="https://python.langchain.com/api_reference/ollama/index.html" target="_blank" rel="noopener"
+>langchain 官方文件&lt;/a>。&lt;/p>
+&lt;pre tabindex="0">&lt;code>pip install langchain-ollama
+&lt;/code>&lt;/pre>&lt;h1 id="簡單應用">簡單應用
+&lt;/h1>&lt;p>本文所有範例程式碼都可以在 &lt;a class="link" href="https://github.com/Dandelionlibra/Dandelionlibra.github.io/blob/main/content/post/langchain/LangChain_code.ipynb" target="_blank" rel="noopener"
+>Jupyter Notebook&lt;/a> 中找到。&lt;/p>
+&lt;h2 id="文本生成">文本生成
+&lt;/h2>&lt;p>LangChain 中 LLM 的最基本功能是根據輸入的文本生成新的文本。&lt;/p>
+&lt;p>註:不清楚 Ollama 如何使用的可以去看我關於 Ollama 的基礎使用文章。&lt;/p>
+&lt;pre tabindex="0">&lt;code>from langchain_ollama import OllamaLLM
+llm = OllamaLLM(model=&amp;#34;llama3.1:8b&amp;#34;)
+response = llm.invoke(&amp;#34;幫我取一個文雅的中國男孩名&amp;#34;)
+print(response)
+&lt;/code>&lt;/pre>&lt;p>temperature 用於控制 LLM 生成回答的隨機性與創造性。&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>&lt;code>temperature&lt;/code> 值&lt;/th>
+&lt;th>行為特性&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>&lt;code>0&lt;/code>&lt;/td>
+&lt;td>完全可重現，幾乎總是給出相同回答，適合需要準確且穩定輸出時使用&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>0.3 ~ 0.7&lt;/code>&lt;/td>
+&lt;td>中度創造性，適合一般應用&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>1.0&lt;/code>&lt;/td>
+&lt;td>高度創造性，回答可能更多樣化與隨機&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>&amp;gt;1&lt;/code>&lt;/td>
+&lt;td>非常隨機，回答可能跳脫常規&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>例如可以在剛剛的 response 中使用 options 將 temperature 設為 0，使輸出每次都會得到一樣的答案。&lt;/p>
+&lt;pre tabindex="0">&lt;code>response = llm.invoke(&amp;#34;幫我取一個文雅的中國男孩名&amp;#34;, options={&amp;#34;temperature&amp;#34;: 0})
+&lt;/code>&lt;/pre>&lt;h2 id="聊天模組">聊天模組
+&lt;/h2>&lt;pre tabindex="0">&lt;code>from langchain_ollama import ChatOllama
+from langchain.schema import HumanMessage
+Chatllm = ChatOllama(model=&amp;#34;llama3.1:8b&amp;#34;)
+test = &amp;#34;幫我取一個文雅的中國男孩名&amp;#34;
+messages = [HumanMessage(content=test)]
+response = Chatllm.invoke(messages)
+print(response)
+&lt;/code>&lt;/pre>&lt;h3 id="ollamallm-vschatollama">OllamaLLM vs.ChatOllama
+&lt;/h3>&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>項目&lt;/th>
+&lt;th>&lt;strong>OllamaLLM&lt;/strong>&lt;/th>
+&lt;th>&lt;strong>ChatOllama&lt;/strong>&lt;/th>
+&lt;th>&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>&lt;strong>來源&lt;/strong>&lt;/td>
+&lt;td>&lt;code>from langchain_ollama import OllamaLLM&lt;/code>&lt;/td>
+&lt;td>&lt;code>from langchain_ollama import ChatOllama&lt;/code>&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>用途&lt;/strong>&lt;/td>
+&lt;td>單輪文字生成（Single-turn LLM）&lt;/td>
+&lt;td>多輪對話（Chat-based LLM）&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>典型應用場景&lt;/strong>&lt;/td>
+&lt;td>單次回答、批次生成資料、文字生成工具&lt;/td>
+&lt;td>聊天機器人、多輪上下文對話、Memory 結合&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>輸入型態&lt;/strong>&lt;/td>
+&lt;td>&lt;code>str&lt;/code>（純文字 prompt）&lt;/td>
+&lt;td>&lt;code>List[BaseMessage]&lt;/code>（包含 &lt;code>SystemMessage&lt;/code>, &lt;code>HumanMessage&lt;/code>, &lt;code>AIMessage&lt;/code>）&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>回傳型態&lt;/strong>&lt;/td>
+&lt;td>&lt;code>str&lt;/code>（文字回應）&lt;/td>
+&lt;td>&lt;code>AIMessage(content='...')&lt;/code>&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>回傳內容存取&lt;/strong>&lt;/td>
+&lt;td>直接使用 &lt;code>print(response)&lt;/code>&lt;/td>
+&lt;td>使用 &lt;code>print(response.content)&lt;/code>&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>是否支援多輪上下文&lt;/strong>&lt;/td>
+&lt;td>X&lt;/td>
+&lt;td>O&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>適合結合 Agent&lt;/strong>&lt;/td>
+&lt;td>作為推論引擎&lt;/td>
+&lt;td>作為 Chat Agent 對話引擎&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>可搭配 Memory&lt;/strong>&lt;/td>
+&lt;td>X&lt;/td>
+&lt;td>可搭配 Memory 實現上下文持續對話&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h2 id="鏈式結構">鏈式結構
+&lt;/h2>&lt;p>連接多個 LLM 模組。
+&lt;img src="https://Dandelionlibra.github.io/image/LLMChain.png"
+loading="lazy"
+alt="LLMChain"
+>&lt;/p>
+&lt;h3 id="如何避免重複定義相似的-llm-模組">如何避免重複定義相似的 LLM 模組?
+&lt;/h3>&lt;p>使用提示模板(prompt template)去避免重複定義功能相似的組件。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> langchain_ollama &lt;span style="color:#f92672">import&lt;/span> OllamaLLM
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> langchain.prompts &lt;span style="color:#f92672">import&lt;/span> PromptTemplate
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>llm_model &lt;span style="color:#f92672">=&lt;/span> OllamaLLM(model&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;llama3.1:8b&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>user_prompt &lt;span style="color:#f92672">=&lt;/span> PromptTemplate&lt;span style="color:#f92672">.&lt;/span>from_template(&lt;span style="color:#e6db74">&amp;#34;幫我取一個&lt;/span>&lt;span style="color:#e6db74">{形容詞}{對象}&lt;/span>&lt;span style="color:#e6db74">名, 並對應一個小名。&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>print(user_prompt&lt;span style="color:#f92672">.&lt;/span>format(對象 &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#39;寵物&amp;#39;&lt;/span>, 形容詞 &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#39;可愛的&amp;#39;&lt;/span>))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>print(user_prompt&lt;span style="color:#f92672">.&lt;/span>format(對象 &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#39;男孩&amp;#39;&lt;/span>, 形容詞 &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#39;文雅的&amp;#39;&lt;/span>))
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> langchain.chains &lt;span style="color:#f92672">import&lt;/span> LLMChain
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>chain &lt;span style="color:#f92672">=&lt;/span> LLMChain(llm&lt;span style="color:#f92672">=&lt;/span>llm_model, prompt&lt;span style="color:#f92672">=&lt;/span>user_prompt)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>print(chain&lt;span style="color:#f92672">.&lt;/span>run(對象 &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#39;小狗&amp;#39;&lt;/span>, 形容詞 &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#39;有趣的&amp;#39;&lt;/span>))
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="代理人">代理人
+&lt;/h2>&lt;p>主要用於處理鏈式結構無法處理的問題，並可達成動態決策。
+舉例而言，一般大型語言模型是無法聯網的，而為了讓 LangChain 去獲得最新的內容或者現有資料庫中不存在的資訊，就需要使用代理人 (Agents) 組件達成聯網。&lt;/p>
+&lt;h3 id="行為方式">行為方式
+&lt;/h3>&lt;p>代理人可以使用一系列預設的工具&lt;/p>
+&lt;ul>
+&lt;li>選擇工具&lt;/li>
+&lt;li>使用工具&lt;/li>
+&lt;li>觀測並處理工具使用結果&lt;/li>
+&lt;li>重複以上步驟&lt;/li>
+&lt;/ul>
+&lt;h3 id="範例">範例
+&lt;/h3>&lt;p>使代理人能完成數學運算任務。&lt;/p>
+&lt;p>&lt;strong>step1: 定義底層 LLM 模組&lt;/strong>&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> langchain_ollama &lt;span style="color:#f92672">import&lt;/span> OllamaLLM
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>llm_model &lt;span style="color:#f92672">=&lt;/span> OllamaLLM(model&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;llama3.1:8b&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;strong>step2: 定義允許代理人使用的工具&lt;/strong>&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> langchain.agents &lt;span style="color:#f92672">import&lt;/span> initialize_agent, load_tools
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>tools &lt;span style="color:#f92672">=&lt;/span> load_tools([&lt;span style="color:#e6db74">&amp;#34;llm-math&amp;#34;&lt;/span>], llm&lt;span style="color:#f92672">=&lt;/span>llm_model)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;strong>step3: 初始化代理人&lt;/strong>&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>agent &lt;span style="color:#f92672">=&lt;/span> initialize_agent(tools, llm_model, agent&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;zero-shot-react-description&amp;#34;&lt;/span>, verbose&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">True&lt;/span>)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;strong>step4: 運行代理人&lt;/strong>&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>agent&lt;span style="color:#f92672">.&lt;/span>invoke(&lt;span style="color:#e6db74">&amp;#34;如果我有 100 元，買了 3 個蘋果，每個蘋果 10 元，剩下多少錢？&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="聊天紀錄">聊天紀錄
+&lt;/h2>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> langchain_ollama &lt;span style="color:#f92672">import&lt;/span> OllamaLLM
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>llm_model &lt;span style="color:#f92672">=&lt;/span> OllamaLLM(model&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;llama3.1:8b&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> langchain.chains &lt;span style="color:#f92672">import&lt;/span> ConversationChain
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>conversation &lt;span style="color:#f92672">=&lt;/span> ConversationChain(llm&lt;span style="color:#f92672">=&lt;/span>llm_model, verbose&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">True&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>conversation&lt;span style="color:#f92672">.&lt;/span>run(&lt;span style="color:#e6db74">&amp;#34;我想養一隻聽話又好照顧的動物，你有甚麼推薦嗎?&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>輸出&lt;/p>
+&lt;pre tabindex="0">&lt;code>&amp;gt; Entering new ConversationChain chain...
+Prompt after formatting:
+The following is a friendly conversation between a human and an AI. The AI is talkative and provides lots of specific details from its context. If the AI does not know the answer to a question, it truthfully says it does not know.
+Current conversation:
+Human: 我想養一隻聽話又好照顧的動物，你有甚麼推薦嗎?
+AI:
+&amp;gt; Finished chain.
+&lt;/code>&lt;/pre>&lt;pre tabindex="0">&lt;code>&amp;#39;啊哈！你想要一個聰明又可愛的伴侶嗎？我有一些超好的建議！基於你的描述，我推測你可能是新手狗主人，所以我要首先介紹一下最適合初學者的犬種。有了這些犬種，你就能輕鬆地培養起一個聽話又善良的伴侶。\n\n其中，拉布拉多犬和金氏體型小獵犬（Cavalier King Charles Spaniel）都很受人喜愛，.......你對於犬種的偏好是什麼？你想要一隻大犬還是一隻小犬呢？&amp;#39;
+&lt;/code>&lt;/pre>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>conversation&lt;span style="color:#f92672">.&lt;/span>run(&lt;span style="color:#e6db74">&amp;#34;那貓呢?&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>輸出&lt;/p>
+&lt;pre tabindex="0">&lt;code>&amp;gt; Entering new ConversationChain chain...
+Prompt after formatting:
+The following is a friendly conversation between a human and an AI. The AI is talkative and provides lots of specific details from its context. If the AI does not know the answer to a question, it truthfully says it does not know.
+Current conversation:
+Human: 我想養一隻聽話又好照顧的動物，你有甚麼推薦嗎?
+AI: 啊哈！你想要一個聰明又可愛的伴侶嗎？我有一些超好的建議！基於你的描述，我推測你可能是新手狗主人，所以我要首先介紹一下最適合初學者的犬種。有了這些犬種，你就能輕鬆地培養起一個聽話又善良的伴侶。
+...省略...
+最後，我想問一下，你對於犬種的偏好是什麼？你想要一隻大犬還是一隻小犬呢？
+Human: 那貓呢?
+AI:
+&amp;gt; Finished chain.
+&lt;/code>&lt;/pre>&lt;pre tabindex="0">&lt;code>&amp;#39;貓！我很樂意幫助你找一個適合你的貓伴侶！但是，值得注意的是，我之前主要是在說狗的話題，因為我的訓練資料集中在犬類上。\n\n但是在貓類方面，我可以提供一些基本信息。...省略...或者你對貓的需求和生活方式是否有所變化？&amp;#39;
+&lt;/code>&lt;/pre>&lt;h1 id="reference">Reference
+&lt;/h1>&lt;ul>
+&lt;li>&lt;a class="link" href="https://www.youtube.com/playlist?list=PLAr9oL1AT4OElxInUijCzCgU3CpgHTjTI" target="_blank" rel="noopener"
+>https://www.youtube.com/playlist?list=PLAr9oL1AT4OElxInUijCzCgU3CpgHTjTI&lt;/a>&lt;/li>
+&lt;/ul></description></item><item><title>LangChain 安裝與基本使用</title><link>https://Dandelionlibra.github.io/post/langchain/uselangchain/</link><pubDate>Sun, 06 Jul 2025 15:33:11 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/langchain/uselangchain/</guid><description>&lt;h1 id="安裝-langchain">安裝 LangChain
 &lt;/h1>&lt;p>使用 pip 指令安裝 LangChain 核心套件，其中提供各組件與基本框架。&lt;br>
 LangChain 相關套件的詳細資訊可以參考&lt;a class="link" href="https://python.langchain.com/api_reference/" target="_blank" rel="noopener"
 >langchain 官方文件&lt;/a>。&lt;/p>
