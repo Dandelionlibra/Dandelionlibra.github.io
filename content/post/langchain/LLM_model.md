@@ -2,7 +2,7 @@
 title: LangChain 基本使用-2
 # image: "/unsplash.jpg"
 description: 本文介紹 LangChain，LLM。
-slug: uselangchain
+slug: uselangchain-2
 date: 2025-07-08 08:06:00+0000
 categories:
     - tutorial
