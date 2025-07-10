@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on YuChen</title><link>https://Dandelionlibra.github.io/post/</link><description>Recent content in Posts on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Tue, 08 Jul 2025 08:06:00 +0000</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/post/index.xml" rel="self" type="application/rss+xml"/><item><title>LangChain 基本使用-2</title><link>https://Dandelionlibra.github.io/post/langchain/uselangchain/</link><pubDate>Tue, 08 Jul 2025 08:06:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/langchain/uselangchain/</guid><description>&lt;h1 id="提示模板">提示模板
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on YuChen</title><link>https://Dandelionlibra.github.io/post/</link><description>Recent content in Posts on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Tue, 08 Jul 2025 08:06:00 +0000</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/post/index.xml" rel="self" type="application/rss+xml"/><item><title>LangChain 基本使用-2</title><link>https://Dandelionlibra.github.io/post/langchain/uselangchain-2/</link><pubDate>Tue, 08 Jul 2025 08:06:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/langchain/uselangchain-2/</guid><description>&lt;h1 id="提示模板">提示模板
 &lt;/h1>&lt;ul>
 &lt;li>對語言模型的指令&lt;/li>
 &lt;li>提供簡單的事例給語言模型使模型接近理想結果&lt;/li>
@@ -34,7 +34,7 @@ alt="partial_prompt_template"
 &lt;/h1>&lt;ul>
 &lt;li>&lt;a class="link" href="https://www.youtube.com/playlist?list=PLAr9oL1AT4OElxInUijCzCgU3CpgHTjTI" target="_blank" rel="noopener"
 >https://www.youtube.com/playlist?list=PLAr9oL1AT4OElxInUijCzCgU3CpgHTjTI&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>LangChain 安裝與基本使用</title><link>https://Dandelionlibra.github.io/post/langchain/uselangchain/</link><pubDate>Sun, 06 Jul 2025 15:33:11 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/langchain/uselangchain/</guid><description>&lt;h1 id="安裝-langchain">安裝 LangChain
+&lt;/ul></description></item><item><title>LangChain 安裝與基本使用</title><link>https://Dandelionlibra.github.io/post/langchain/uselangchain-1/</link><pubDate>Sun, 06 Jul 2025 15:33:11 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/langchain/uselangchain-1/</guid><description>&lt;h1 id="安裝-langchain">安裝 LangChain
 &lt;/h1>&lt;p>使用 pip 指令安裝 LangChain 核心套件，其中提供各組件與基本框架。&lt;br>
 LangChain 相關套件的詳細資訊可以參考&lt;a class="link" href="https://python.langchain.com/api_reference/" target="_blank" rel="noopener"
 >langchain 官方文件&lt;/a>。&lt;/p>
