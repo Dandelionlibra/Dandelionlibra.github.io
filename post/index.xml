@@ -1,4 +1,185 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on YuChen</title><link>https://Dandelionlibra.github.io/post/</link><description>Recent content in Posts on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Thu, 10 Jul 2025 16:56:00 +0000</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/post/index.xml" rel="self" type="application/rss+xml"/><item><title>使用 Docker 快速建立 Jupyter Notebook 環境教學</title><link>https://Dandelionlibra.github.io/post/virtual-environment/setup-jupyter-notebook-with-docker/</link><pubDate>Thu, 10 Jul 2025 16:56:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/virtual-environment/setup-jupyter-notebook-with-docker/</guid><description>&lt;h2 id="內容大綱">內容大綱
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on YuChen</title><link>https://Dandelionlibra.github.io/post/</link><description>Recent content in Posts on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Sun, 13 Jul 2025 08:06:00 +0000</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/post/index.xml" rel="self" type="application/rss+xml"/><item><title>LangChain 基本使用-2</title><link>https://Dandelionlibra.github.io/post/langchain/uselangchain-2/</link><pubDate>Sun, 13 Jul 2025 08:06:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/langchain/uselangchain-2/</guid><description>&lt;h1 id="提示模板">提示模板
+&lt;/h1>&lt;ul>
+&lt;li>對語言模型的指令&lt;/li>
+&lt;li>提供簡單的事例給語言模型使模型接近理想結果&lt;/li>
+&lt;li>提給語言模型的問題&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> langchain &lt;span style="color:#f92672">import&lt;/span> PromptTemplate
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 使用 PromptTemplate 來定義對話的提示模板&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>no_input_prompt_template &lt;span style="color:#f92672">=&lt;/span> PromptTemplate(
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> input_variables&lt;span style="color:#f92672">=&lt;/span>[],
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> template&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;說個故事&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>multi_input_prompt_template &lt;span style="color:#f92672">=&lt;/span> PromptTemplate(
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> input_variables&lt;span style="color:#f92672">=&lt;/span>[&lt;span style="color:#e6db74">&amp;#34;主題&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;風格&amp;#34;&lt;/span>],
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> template&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;請講一個關於&lt;/span>&lt;span style="color:#e6db74">{主題}&lt;/span>&lt;span style="color:#e6db74">的故事，風格是&lt;/span>&lt;span style="color:#e6db74">{風格}&lt;/span>&lt;span style="color:#e6db74">。&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>multi_input_prompt_template&lt;span style="color:#f92672">.&lt;/span>format(主題&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;勇氣&amp;#34;&lt;/span>, 風格&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;童話&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># other example，由 from_template 將 string 轉成 PromptTemplate&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>template &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;請講一個關於&lt;/span>&lt;span style="color:#e6db74">{主題}&lt;/span>&lt;span style="color:#e6db74">的故事，風格是&lt;/span>&lt;span style="color:#e6db74">{風格}&lt;/span>&lt;span style="color:#e6db74">。&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>prompt_template &lt;span style="color:#f92672">=&lt;/span> PromptTemplate&lt;span style="color:#f92672">.&lt;/span>from_template(template)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 此時輸出 [&amp;#34;主題&amp;#34;, &amp;#34;風格&amp;#34;]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>prompt_template&lt;span style="color:#f92672">.&lt;/span>input_variables
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="接收部分參數">接收部分參數
+&lt;/h2>&lt;ol>
+&lt;li>
+&lt;p>在所有參數無法同步獲取時，可以先用現有參數傳入第一個模板，以獲得新的參數，再將新參數傳入新的模板中，以得到最終想問的問題。&lt;br>
+&lt;img src="https://Dandelionlibra.github.io/image/prompt_template_1.JPG"
+loading="lazy"
+alt="partial_prompt_template"
+>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>有些參數要用特定方式獲取 (ex.函式呼叫)
+&lt;img src="https://Dandelionlibra.github.io/image/prompt_template_2.JPG"
+loading="lazy"
+alt="partial_prompt_template"
+>&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> langchain &lt;span style="color:#f92672">import&lt;/span> PromptTemplate
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> datetime &lt;span style="color:#f92672">import&lt;/span> datetime
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">get_date&lt;/span>():
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> now &lt;span style="color:#f92672">=&lt;/span> datetime&lt;span style="color:#f92672">.&lt;/span>now()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> now&lt;span style="color:#f92672">.&lt;/span>strftime(&lt;span style="color:#e6db74">&amp;#34;%m月&lt;/span>&lt;span style="color:#e6db74">%d&lt;/span>&lt;span style="color:#e6db74">日&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>prompt &lt;span style="color:#f92672">=&lt;/span> PromptTemplate(template&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;告訴我&lt;/span>&lt;span style="color:#e6db74">{城市}&lt;/span>&lt;span style="color:#e6db74">在&lt;/span>&lt;span style="color:#e6db74">{年份}&lt;/span>&lt;span style="color:#e6db74">年&lt;/span>&lt;span style="color:#e6db74">{日期}&lt;/span>&lt;span style="color:#e6db74">的平均氣溫是多少？&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> input_variables&lt;span style="color:#f92672">=&lt;/span>[&lt;span style="color:#e6db74">&amp;#34;城市&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;年份&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;日期&amp;#34;&lt;/span>])
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>PromptTemplate_2 &lt;span style="color:#f92672">=&lt;/span> prompt&lt;span style="color:#f92672">.&lt;/span>partial(城市&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;台北&amp;#34;&lt;/span>, 日期&lt;span style="color:#f92672">=&lt;/span>get_date())
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>print(PromptTemplate_2&lt;span style="color:#f92672">.&lt;/span>format(年份&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;2023&amp;#34;&lt;/span>))
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>輸出:&lt;/p>
+&lt;pre tabindex="0">&lt;code>告訴我台北在2023年07月13日的平均氣溫是多少？
+&lt;/code>&lt;/pre>&lt;h2 id="少樣本學習-few-shot">少樣本學習 (few-shot)
+&lt;/h2>&lt;ul>
+&lt;li>藉由少量的樣本、範例，使語言模型能處理特定問題&lt;/li>
+&lt;li>不同於微調 (fine-tuning)，微調會使用大量樣本，最終會改變模型本身&lt;/li>
+&lt;/ul>
+&lt;blockquote>
+&lt;p>例子:&lt;br>
+&amp;ldquo;你好嗎?&amp;rdquo; - &amp;ldquo;主人，我很好。&amp;rdquo;&lt;br>
+&amp;ldquo;今天禮拜幾?&amp;rdquo; - &amp;ldquo;主人，今天禮拜日。&amp;rdquo;&lt;br>
+&amp;ldquo;天氣真好呀。&amp;rdquo; - &amp;ldquo;主人，是的，今天天氣非常好。&amp;rdquo;&lt;/p>
+&lt;p>希望模型學會&amp;quot;主人&amp;quot;的前綴。&lt;/p>&lt;/blockquote>
+&lt;h3 id="fewshot-prompt-template">FewShot Prompt Template
+&lt;/h3>&lt;p>利用提示模板，將樣本數據加載成完整的提示詞，接著將樣本連同提示詞一併送給樣本提示模板，最終得到完整的提示詞。&lt;/p>
+&lt;p>&lt;img src="https://Dandelionlibra.github.io/image/prompt_template_3.JPG"
+loading="lazy"
+alt="partial_prompt_template"
+>&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> langchain.prompts.few_shot &lt;span style="color:#f92672">import&lt;/span> FewShotPromptTemplate
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> langchain.prompts.prompt &lt;span style="color:#f92672">import&lt;/span> PromptTemplate
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># FewShot examples&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>examples &lt;span style="color:#f92672">=&lt;/span> [
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;question&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;你好嗎?&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;answer&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;主人，我很好。&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;question&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;今天禮拜幾?&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;answer&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;主人，今天禮拜日。&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;question&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;天氣真好呀。&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;answer&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;主人，是的，今天天氣非常好。&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># FewShotPromptTemplate-樣本提示模板&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 提示模板以 Question:開頭&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>example_prompt &lt;span style="color:#f92672">=&lt;/span> PromptTemplate(input_variables&lt;span style="color:#f92672">=&lt;/span>[&lt;span style="color:#e6db74">&amp;#34;question&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;answer&amp;#34;&lt;/span>], template&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;Question: &lt;/span>&lt;span style="color:#e6db74">{question}&lt;/span>&lt;span style="color:#ae81ff">\n&lt;/span>&lt;span style="color:#e6db74">Answer: &lt;/span>&lt;span style="color:#e6db74">{answer}&lt;/span>&lt;span style="color:#e6db74">&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>few_shot_prompt &lt;span style="color:#f92672">=&lt;/span> FewShotPromptTemplate(
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> examples&lt;span style="color:#f92672">=&lt;/span>examples, &lt;span style="color:#75715e"># 傳入樣本&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> example_prompt&lt;span style="color:#f92672">=&lt;/span>example_prompt, &lt;span style="color:#75715e"># 傳入樣本模板&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> suffix&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;Question: &lt;/span>&lt;span style="color:#e6db74">{input}&lt;/span>&lt;span style="color:#e6db74">&amp;#34;&lt;/span>, &lt;span style="color:#75715e"># 問題的提示詞&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> input_variables&lt;span style="color:#f92672">=&lt;/span>[&lt;span style="color:#e6db74">&amp;#34;input&amp;#34;&lt;/span>],
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>print(few_shot_prompt&lt;span style="color:#f92672">.&lt;/span>format(input&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;你今天過得怎麼樣?&amp;#34;&lt;/span>))
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>輸出完整提示詞如下，但前面三組為提供的範例案例，最後一組是輸入的提問。&lt;/p>
+&lt;pre tabindex="0">&lt;code>Question: 你好嗎?
+Answer: 主人，我很好。
+Question: 今天禮拜幾?
+Answer: 主人，今天禮拜日。
+Question: 天氣真好呀。
+Answer: 主人，是的，今天天氣非常好。
+Question: 你今天過得怎麼樣?
+&lt;/code>&lt;/pre>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> langchain_ollama &lt;span style="color:#f92672">import&lt;/span> OllamaLLM
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>llm &lt;span style="color:#f92672">=&lt;/span> OllamaLLM(model&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;llama3.1:8b&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>response &lt;span style="color:#f92672">=&lt;/span> llm&lt;span style="color:#f92672">.&lt;/span>invoke(few_shot_prompt&lt;span style="color:#f92672">.&lt;/span>format(input&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;你今天過得怎麼樣?&amp;#34;&lt;/span>))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>print(response)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>輸出結果：&lt;/p>
+&lt;pre tabindex="0">&lt;code>你的問題是問你今天過得怎麼樣？我可以回答說：您也很好。或者，我可以詢問一下您今天過得怎麼樣？
+如果你想知道我的答案，那就是：主人，今天我很好，謝謝您的關心！
+&lt;/code>&lt;/pre>&lt;h3 id="樣本篩選器-exampleselector">樣本篩選器 (ExampleSelector)
+&lt;/h3>&lt;ul>
+&lt;li>樣本數量太多時&lt;/li>
+&lt;li>不是所有樣本都能幫助提升輸出質量
+&lt;img src="https://Dandelionlibra.github.io/image/ExampleSelector.JPG"
+loading="lazy"
+alt="partial_prompt_template"
+>&lt;/li>
+&lt;li>舉例: SemanticSimilarityExampleSelector (語意相似度篩選器)，依據最終提的問題，在所有樣本中尋找語意最為接近的樣本。&lt;/li>
+&lt;/ul>
+&lt;h2 id="大型語言模型的封裝">大型語言模型的封裝
+&lt;/h2>&lt;ul>
+&lt;li>Langchain 不提供現成的大型語言模型&lt;/li>
+&lt;li>Langchain 提供的是針對不同語言模型的標準化接口&lt;/li>
+&lt;/ul>
+&lt;h3 id="大型語言模型llm-模塊的基本用法">大型語言模型(LLM) 模塊的基本用法
+&lt;/h3>&lt;ul>
+&lt;li>直接呼叫
+&lt;ul>
+&lt;li>類似直接呼叫.invoke()，讓語言模型根據輸入回答內容。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> langchain_ollama &lt;span style="color:#f92672">import&lt;/span> OllamaLLM
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>llm &lt;span style="color:#f92672">=&lt;/span> OllamaLLM(model&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;llama3.1:8b&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>print(llm(&lt;span style="color:#e6db74">&amp;#34;跟我說一個笑話，盡量簡短。&amp;#34;&lt;/span>))
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>輸出：&lt;/p>
+&lt;pre tabindex="0">&lt;code>為什麼電池走路去了? 因為它想充電
+&lt;/code>&lt;/pre>&lt;ul>
+&lt;li>批量生成
+&lt;ul>
+&lt;li>generate()&lt;/li>
+&lt;li>輸入：文本的列表&lt;/li>
+&lt;li>輸出：文本的列表&lt;/li>
+&lt;li>ex. 輸入問題的列表，輸出回答的列表。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>generate_res &lt;span style="color:#f92672">=&lt;/span> llm&lt;span style="color:#f92672">.&lt;/span>generate([&lt;span style="color:#e6db74">&amp;#34;跟我說一個笑話，盡量簡短。&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;跟我說一個悲傷的故事，盡量簡短。&amp;#34;&lt;/span>])
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>print(generate_res)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>輸出：&lt;/p>
+&lt;pre tabindex="0">&lt;code>generations=[[GenerationChunk(text=&amp;#39;為什麼人類會走路?\n\n因為鳥不喜歡吃路上的東西!&amp;#39;, generation_info={&amp;#39;model&amp;#39;: &amp;#39;llama3.1:8b&amp;#39;, &amp;#39;created_at&amp;#39;: &amp;#39;2025-07-13T14:22:01.5478452Z&amp;#39;, &amp;#39;done&amp;#39;: True, &amp;#39;done_reason&amp;#39;: &amp;#39;stop&amp;#39;, &amp;#39;total_duration&amp;#39;: 2588937700, &amp;#39;load_duration&amp;#39;: 39039000, &amp;#39;prompt_eval_count&amp;#39;: 23, &amp;#39;prompt_eval_duration&amp;#39;: 335147300, &amp;#39;eval_count&amp;#39;: 22, &amp;#39;eval_duration&amp;#39;: 2214149200, &amp;#39;response&amp;#39;: &amp;#39;&amp;#39;, &amp;#39;thinking&amp;#39;: None, &amp;#39;context&amp;#39;: [128006, 882, 128007, 271, 104142, 37046, 106336, 114634, 49838, 87177, 3922, 16555, 94, 33857, 112825, 106649, 1811, 128009, 128006, 78191, 128007, 271, 101399, 101567, 114064, 17792, 104770, 101835, 102149, 47095, 1980, 63212, 101399, 116750, 16937, 104940, 125741, 105271, 47095, 106583, 101778, 61786, 0]})], [GenerationChunk(text=&amp;#39;有一個年輕女孩，她與自己的父親非常相愛。可是因為工作太忙，爸爸長期外出，並且忽略了女兒。直到一天，一場重大事故讓爸爸去世。在悲痛中，女孩發現了之前父親給她的信，裡面有對她的溫暖告白和深情懷念。這個消息使她心痛欲裂，從此女孩再也沒有恢復過。&amp;#39;, generation_info={&amp;#39;model&amp;#39;: &amp;#39;llama3.1:8b&amp;#39;, &amp;#39;created_at&amp;#39;: &amp;#39;2025-07-13T14:22:16.1064263Z&amp;#39;, &amp;#39;done&amp;#39;: True, &amp;#39;done_reason&amp;#39;: &amp;#39;stop&amp;#39;, &amp;#39;total_duration&amp;#39;: 14556868200, &amp;#39;load_duration&amp;#39;: 39856500, &amp;#39;prompt_eval_count&amp;#39;: 25, &amp;#39;prompt_eval_duration&amp;#39;: 516644200, &amp;#39;eval_count&amp;#39;: 104, &amp;#39;eval_duration&amp;#39;: 13999594200, &amp;#39;response&amp;#39;: &amp;#39;&amp;#39;, &amp;#39;thinking&amp;#39;: None, &amp;#39;context&amp;#39;: [128006, 882, 128007, 271, 104142, 37046, 106336, 114634, 116292, 114218, 9554, 117625, 3922, 16555, 94, 33857, 112825, 106649, 1811, 128009, 128006, 78191, 128007, 271, 108830, 102159, 8107, 125063, 58850, 105989, 105902, 102789, 107924, 104503, 106759, 108008, 50021, 103926, 1811, 113426, 63212, 101399, 102301, 101402, 112008, 3922, 117283, 117283, 101544, 23538, 48915, 20834, 113415, 103786, 120994, 105838, 35287, 58850, 114763, 1811, 74245, 28037, 15120, 36827, 104295, 75267, 125478, 123429, 114816, 117283, 117283, 86436, 101083, 107644, 116292, 108631, 16325, 3922, 58850, 105989, 103106, 102321, 35287, 112065, 104503, 106759, 110698, 109506, 22023, 3922, 115556, 28190, 19361, 104314, 109506, 117986, 118937, 58655, 101828, 34208, 102987, 40474, 103435, 115, 104611, 1811, 103864, 102159, 65305, 33655, 100911, 64209, 108631, 111654, 117068, 3922, 110039, 33091, 58850, 105989, 88356, 75863, 116721, 123843, 109095, 103188, 1811]})]] llm_output=None run=[RunInfo(run_id=UUID(&amp;#39;bc24e5b6-0c3f-4d2c-afb4-95f477e81adf&amp;#39;)), RunInfo(run_id=UUID(&amp;#39;f8f5fe28-4c1d-4b6f-8a74-fdcc6f397f7a&amp;#39;))] type=&amp;#39;LLMResult&amp;#39;
+&lt;/code>&lt;/pre>&lt;p>可用陣列獲取特定輸出。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>print(generate_res&lt;span style="color:#f92672">.&lt;/span>generations[&lt;span style="color:#ae81ff">0&lt;/span>][&lt;span style="color:#ae81ff">0&lt;/span>]&lt;span style="color:#f92672">.&lt;/span>text)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>print(generate_res&lt;span style="color:#f92672">.&lt;/span>generations[&lt;span style="color:#ae81ff">1&lt;/span>][&lt;span style="color:#ae81ff">0&lt;/span>]&lt;span style="color:#f92672">.&lt;/span>text)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;pre tabindex="0">&lt;code>為什麼人類會走路?
+因為鳥不喜歡吃路上的東西!
+有一個年輕女孩，她與自己的父親非常相愛。可是因為工作太忙，爸爸長期外出，並且忽略了女兒。直到一天，一場重大事故讓爸爸去世。在悲痛中，女孩發現了之前父親給她的信，裡面有對她的溫暖告白和深情懷念。這個消息使她心痛欲裂，從此女孩再也沒有恢復過。
+&lt;/code>&lt;/pre>&lt;h3 id="自定義-llm-模組">自定義 LLM 模組
+&lt;/h3>&lt;ul>
+&lt;li>用於封裝 Langchain 尚未支持的大型語言模型&lt;/li>
+&lt;li>可以用來模擬測試&lt;/li>
+&lt;li>自行定義當 LLM 被調用時，如何根據輸入的文本內容來輸出&lt;/li>
+&lt;/ul>
+&lt;p>&lt;a class="link" href="https://github.com/Dandelionlibra/Dandelionlibra.github.io/blob/main/content/post/langchain/LangChain_code.ipynb" target="_blank" rel="noopener"
+>詳細程式請參閱&lt;/a>&lt;/p>
+&lt;h1 id="reference">Reference
+&lt;/h1>&lt;ul>
+&lt;li>&lt;a class="link" href="https://www.youtube.com/playlist?list=PLAr9oL1AT4OElxInUijCzCgU3CpgHTjTI" target="_blank" rel="noopener"
+>https://www.youtube.com/playlist?list=PLAr9oL1AT4OElxInUijCzCgU3CpgHTjTI&lt;/a>&lt;/li>
+&lt;/ul></description></item><item><title>使用 Docker 快速建立 Jupyter Notebook 環境教學</title><link>https://Dandelionlibra.github.io/post/virtual-environment/setup-jupyter-notebook-with-docker/</link><pubDate>Thu, 10 Jul 2025 16:56:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/virtual-environment/setup-jupyter-notebook-with-docker/</guid><description>&lt;h2 id="內容大綱">內容大綱
 &lt;/h2>&lt;ol>
 &lt;li>為什麼用 Docker 建立 Jupyter Notebook？&lt;/li>
 &lt;li>安裝 Docker
@@ -229,43 +410,7 @@ user@remote_host [-p port_number]
 >GitHub SSH 教學&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="https://code.visualstudio.com/docs/remote/ssh" target="_blank" rel="noopener"
 >VSCode Remote SSH 官方說明&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>LangChain 基本使用-2</title><link>https://Dandelionlibra.github.io/post/langchain/uselangchain-2/</link><pubDate>Tue, 08 Jul 2025 08:06:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/langchain/uselangchain-2/</guid><description>&lt;h1 id="提示模板">提示模板
-&lt;/h1>&lt;ul>
-&lt;li>對語言模型的指令&lt;/li>
-&lt;li>提供簡單的事例給語言模型使模型接近理想結果&lt;/li>
-&lt;li>提給語言模型的問題&lt;/li>
-&lt;/ul>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> langchain &lt;span style="color:#f92672">import&lt;/span> PromptTemplate
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 使用 PromptTemplate 來定義對話的提示模板&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>no_input_prompt_template &lt;span style="color:#f92672">=&lt;/span> PromptTemplate(
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> input_variables&lt;span style="color:#f92672">=&lt;/span>[],
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> template&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;說個故事&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>multi_input_prompt_template &lt;span style="color:#f92672">=&lt;/span> PromptTemplate(
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> input_variables&lt;span style="color:#f92672">=&lt;/span>[&lt;span style="color:#e6db74">&amp;#34;主題&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;風格&amp;#34;&lt;/span>],
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> template&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;請講一個關於&lt;/span>&lt;span style="color:#e6db74">{主題}&lt;/span>&lt;span style="color:#e6db74">的故事，風格是&lt;/span>&lt;span style="color:#e6db74">{風格}&lt;/span>&lt;span style="color:#e6db74">。&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># other example，由 from_template 將 string 轉成 PromptTemplate&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>template &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;請講一個關於&lt;/span>&lt;span style="color:#e6db74">{主題}&lt;/span>&lt;span style="color:#e6db74">的故事，風格是&lt;/span>&lt;span style="color:#e6db74">{風格}&lt;/span>&lt;span style="color:#e6db74">。&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>prompt_template &lt;span style="color:#f92672">=&lt;/span> PromptTemplate&lt;span style="color:#f92672">.&lt;/span>from_template(template)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 此時輸出 [&amp;#34;主題&amp;#34;, &amp;#34;風格&amp;#34;]&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>prompt_template&lt;span style="color:#f92672">.&lt;/span>input_variables
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="接收部分參數">接收部分參數
-&lt;/h2>&lt;p>在所有參數無法同步獲取時，可以先用舊有參數傳入原始模板，以獲得新的模板，再將由其他語言模型中取的的新參數傳入新的模板中。
-&lt;img src="https://Dandelionlibra.github.io/image/prompt_template_1.JPG"
-loading="lazy"
-alt="partial_prompt_template"
->&lt;/p>
-&lt;h2 id="">
-&lt;/h2>&lt;h1 id="reference">Reference
-&lt;/h1>&lt;ul>
-&lt;li>&lt;a class="link" href="https://www.youtube.com/playlist?list=PLAr9oL1AT4OElxInUijCzCgU3CpgHTjTI" target="_blank" rel="noopener"
->https://www.youtube.com/playlist?list=PLAr9oL1AT4OElxInUijCzCgU3CpgHTjTI&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>LangChain 安裝與基本使用</title><link>https://Dandelionlibra.github.io/post/langchain/uselangchain-1/</link><pubDate>Sun, 06 Jul 2025 15:33:11 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/langchain/uselangchain-1/</guid><description>&lt;h1 id="安裝-langchain">安裝 LangChain
+&lt;/ul></description></item><item><title>LangChain 安裝與基本使用-1</title><link>https://Dandelionlibra.github.io/post/langchain/uselangchain-1/</link><pubDate>Sun, 06 Jul 2025 15:33:11 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/langchain/uselangchain-1/</guid><description>&lt;h1 id="安裝-langchain">安裝 LangChain
 &lt;/h1>&lt;p>使用 pip 指令安裝 LangChain 核心套件，其中提供各組件與基本框架。&lt;br>
 LangChain 相關套件的詳細資訊可以參考&lt;a class="link" href="https://python.langchain.com/api_reference/" target="_blank" rel="noopener"
 >langchain 官方文件&lt;/a>。&lt;/p>
