@@ -1,5 +1,5 @@
 ---
-title: LangChain 安裝與基本使用
+title: LangChain 安裝與基本使用-1
 # image: "/unsplash.jpg"
 description: 本文介紹如何安裝 LangChain，並透過簡單的範例來展示其基本用法。
 slug: uselangchain-1
