@@ -1,7 +1,7 @@
 ---
 title: LangChain 基本使用-2
 # image: "/unsplash.jpg"
-description: 本文介紹 LangChain，LLM。
+description: 本文介紹 LangChain 中 Template 的用法。
 slug: uselangchain-2
 date: 2025-07-13 08:06:00+0000
 categories:
@@ -156,7 +156,7 @@ print(response)
 * Langchain 不提供現成的大型語言模型
 * Langchain 提供的是針對不同語言模型的標準化接口
 
-### 大型語言模型(LLM) 模塊的基本用法
+### 大型語言模型(LLM)模塊的基本用法
 * 直接呼叫
     * 類似直接呼叫.invoke()，讓語言模型根據輸入回答內容。
 
