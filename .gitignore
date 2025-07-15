@@ -1,0 +1,65 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+*.db
+*.log
+
+# Virtual environments
+venv/
+env/
+.venv/
+.env/
+.python-version
+
+# VSCode settings
+.vscode/
+
+# Jupyter Notebooks checkpoints
+.ipynb_checkpoints/
+
+# LangChain Chroma Vector Store 資料夾（避免提交超大向量檔）
+chroma_langchain_db/
+*/chroma_langchain_db/
+
+# Ollama 本地模型資料夾（若有）
+.ollama/
+
+# LangChain Cache
+langchain_cache/
+
+# dotenv 環境變數檔
+.env
+.env.local
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Pytest cache
+.pytest_cache/
+
+# Coverage reports
+htmlcov/
+.coverage
+.tox/
+
+# Local config
+*.bak
+*.tmp
+*.swp
+
+# VSCode Python lint/mypy cache
+.mypy_cache/
+.pyre/
+.pytype/
+
+# Logs & reports
+*.log
+logs/
+reports/
+
+# GitHub LFS (optional, if you use it)
+*.lfs

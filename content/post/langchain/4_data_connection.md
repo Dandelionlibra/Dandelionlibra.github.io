@@ -1,8 +1,8 @@
 ---
-title: LangChain 基本使用-4
+title: LangChain 基本使用-3
 # image: "/unsplash.jpg"
 description: 本文介紹 LangChain 中 Data Connection 的定義、方法。
-slug: uselangchain-2
+slug: uselangchain-3
 date: 2025-07-14 10:56:00+0000
 categories:
     - tutorial
