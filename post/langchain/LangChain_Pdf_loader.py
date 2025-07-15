@@ -4,6 +4,9 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_ollama import OllamaEmbeddings
 from langchain_chroma import Chroma
 
+import chromadb
+
+
 # 載入 PDF 文件
 loader = PyPDFLoader('./data/PDF_file.pdf')
 documents = loader.load()
@@ -23,16 +26,26 @@ pages = loader.load_and_split(text_splitter=text_splitter)
 embeddings_model = OllamaEmbeddings(model="llama3.1:8b")
 
 
-# 將第100頁的內容轉換為詞嵌入
-# embeddings = embeddings_model.embed_documents([pages[100].page_content])
+# 將文檔寫入 ChromaDB
+vector_store = Chroma.from_documents(
+    documents=pages,
+    embedding=embeddings_model,
+    persist_directory="./chroma_langchain_db",  # Where to save data locally, remove if not necessary
+)
 
-# db 即是向量儲存庫，可用於相似度檢索
-db = Chroma.from_documents(pages, embeddings_model)
 
-query = "狐狸"
+# 持久化
+# vector_store.persist()
+
+
+# # db 即是向量儲存庫，可用於相似度檢索
+# db = Chroma.from_documents(pages, embeddings_model)
+
+
+query = "小王子"
 
 # k=3 表示返回最相似的3個文檔
-results = db.similarity_search(query, k=3)
+results = vector_store.similarity_search(query, k=3)
 
 print(f"找到 {len(results)} 個相關文檔\n")
 
