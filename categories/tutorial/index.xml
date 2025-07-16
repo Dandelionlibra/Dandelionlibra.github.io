@@ -1,4 +1,101 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Tutorial on YuChen</title><link>https://Dandelionlibra.github.io/categories/tutorial/</link><description>Recent content in Tutorial on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Mon, 14 Jul 2025 10:56:00 +0000</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/categories/tutorial/index.xml" rel="self" type="application/rss+xml"/><item><title>LangChain 基本使用-3</title><link>https://Dandelionlibra.github.io/post/langchain/uselangchain-3/</link><pubDate>Mon, 14 Jul 2025 10:56:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/langchain/uselangchain-3/</guid><description>&lt;h1 id="data-connection">Data Connection
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Tutorial on YuChen</title><link>https://Dandelionlibra.github.io/categories/tutorial/</link><description>Recent content in Tutorial on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Tue, 15 Jul 2025 21:12:00 +0000</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/categories/tutorial/index.xml" rel="self" type="application/rss+xml"/><item><title>LangChain 基本使用-4</title><link>https://Dandelionlibra.github.io/post/langchain/uselangchain-4/</link><pubDate>Tue, 15 Jul 2025 21:12:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/langchain/uselangchain-4/</guid><description>&lt;h1 id="甚麼是-langchain-的鏈結構">甚麼是 Langchain 的鏈結構?
+&lt;/h1>&lt;h2 id="定義">定義
+&lt;/h2>&lt;p>將小的模組串起來，而形成的串列結構。&lt;br>
+舉例: 定義提示詞 -&amp;gt; 選擇 LLM -&amp;gt; 運行 inferencing(呼叫 function) -&amp;gt; 得到結果。&lt;/p>
+&lt;ul>
+&lt;li>優點:
+&lt;ul>
+&lt;li>模組化更容易修改個別功能，而不影響其他部分&lt;/li>
+&lt;li>提高了模組的標準化、可再用性&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h1 id="鏈結構分類">鏈結構分類
+&lt;/h1>&lt;ul>
+&lt;li>
+&lt;p>基礎鏈結構&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>LLM chain (單鏈)&lt;br>
+對應直接調用大型語言模型，最少 1 次 LLM call。&lt;br>
+ex. llm.invoke()&lt;/p>
+&lt;ol>
+&lt;li>定義 prompt&lt;/li>
+&lt;li>定義 llm&lt;/li>
+&lt;li>定義 chain&lt;/li>
+&lt;li>運行 predict&lt;/li>
+&lt;/ol>
+&lt;/li>
+&lt;li>
+&lt;p>Router chain (多鏈)&lt;br>
+判斷要使用哪個鏈，最少 2 次 LLM call，第一次呼叫是為了決定使用哪條鏈，第二次是為了得到回答。&lt;/p>
+&lt;ol>
+&lt;li>定義 prompt&lt;/li>
+&lt;li>定義 llm/emdeddings&lt;/li>
+&lt;li>定義 chain (多鏈併行，選一條鏈處理)&lt;/li>
+&lt;li>運行 predict
+&lt;img src="https://Dandelionlibra.github.io/image/Router_chain.JPG"
+loading="lazy"
+alt="Data_Connection"
+>&lt;/li>
+&lt;/ol>
+&lt;/li>
+&lt;li>
+&lt;p>Sequential chain (多鏈)&lt;br>
+上一個語言模型的調用結果是下一個語言模型調用的輸入。&lt;/p>
+&lt;ol>
+&lt;li>定義 prompt&lt;/li>
+&lt;li>定義 llm/emdeddings&lt;/li>
+&lt;li>定義 chain (多鏈併行，依照順序執行)&lt;/li>
+&lt;li>運行 predict&lt;/li>
+&lt;/ol>
+&lt;/li>
+&lt;li>
+&lt;p>Transformation chain (文本處理鏈)&lt;br>
+將輸入文本處理後。
+&lt;img src="https://Dandelionlibra.github.io/image/Transformation_chain.JPG"
+loading="lazy"
+alt="Data_Connection"
+>&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>應用鏈結構&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>Document chains type (長文本處理鏈): 總結、向量數據庫&lt;/p>
+&lt;ul>
+&lt;li>Stuff:
+當要詢問模型沒有訓練過的訊息時，要透過 prompt 將資訊傳入，但若輸入長度超過模型可接受的最大 token 會無法運行。
+&lt;img src="https://Dandelionlibra.github.io/image/Stuff.JPG"
+loading="lazy"
+alt="Data_Connection"
+>&lt;/li>
+&lt;li>Refine:
+調用多次語言模型，將原本的長上下文分段落，避免輸入超過最大 token 的問題，將上一輪的輸出作為中間回答放到第三部分中
+&lt;img src="https://Dandelionlibra.github.io/image/Refine.JPG"
+loading="lazy"
+alt="Data_Connection"
+>&lt;/li>
+&lt;li>Map reduce&lt;/li>
+&lt;li>Map rerank&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Retrieval QA&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="程式事例">程式事例
+&lt;/h2>&lt;p>&lt;a class="link" href="https://github.com/Dandelionlibra/Dandelionlibra.github.io/blob/main/content/post/langchain/LangChain_link.ipynb" target="_blank" rel="noopener"
+>詳細程式請參閱&lt;/a>&lt;/p>
+&lt;h1 id="reference">Reference
+&lt;/h1>&lt;ul>
+&lt;li>&lt;a class="link" href="https://www.youtube.com/playlist?list=PLAr9oL1AT4OElxInUijCzCgU3CpgHTjTI" target="_blank" rel="noopener"
+>https://www.youtube.com/playlist?list=PLAr9oL1AT4OElxInUijCzCgU3CpgHTjTI&lt;/a>&lt;/li>
+&lt;/ul></description></item><item><title>LangChain 基本使用-3</title><link>https://Dandelionlibra.github.io/post/langchain/uselangchain-3/</link><pubDate>Mon, 14 Jul 2025 10:56:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/langchain/uselangchain-3/</guid><description>&lt;h1 id="data-connection">Data Connection
 &lt;/h1>&lt;h2 id="定義">定義
 &lt;/h2>&lt;p>許多基於大型語言模型而執行的應用常會用到模型數據集中沒有的數據。而針對這類需求，Langchain 提供了許多工具使用戶可以從各類數據源中加載新的數據、轉換數據、儲存數據、訪問數據。&lt;/p>
 &lt;p>※大型語言模型不可能在訓練階段就涵蓋所有數據，且每時每刻都有新的數據產生。&lt;/p>
