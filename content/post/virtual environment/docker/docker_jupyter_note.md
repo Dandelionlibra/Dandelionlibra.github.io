@@ -2,7 +2,7 @@
 title: 使用 Docker 快速建立 Jupyter Notebook 環境教學
 description: 本文介紹如何利用 Docker 建立可用於資料科學與開發的 Jupyter Notebook 容器環境，包含安裝、設定與常見應用情境。
 slug: setup-jupyter-notebook-with-docker
-date: 2025-07-10 16:56:00+0000
+date: 2025-07-17 10:00:00+0000
 categories:
     - tutorial
 tags:

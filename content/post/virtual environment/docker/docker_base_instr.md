@@ -2,7 +2,7 @@
 title: Docker 基本使用指令
 description: 本文介紹 Docker 基本指令。
 slug: Docker
-date: 2025-07-10 16:56:00+0000
+date: 2025-07-10 10:00:00+0000
 categories:
     - tutorial
 tags:
@@ -91,5 +91,5 @@ docker run --env-file .env ubuntu env
 - [Docker 官方文件](https://docs.docker.com/)
 - [Docker 指令參考](https://docs.docker.com/engine/reference/commandline/docker/)
 - [Docker Hub](https://hub.docker.com/)
-- [Docker 安裝教學（延伸閱讀）](https://dandelionlibra.github.io/post/virtual-environment/setup-jupyter-notebook-with-docker/)
+- [Docker 安裝教學（延伸閱讀）](https://dandelionlibra.github.io/post/virtual-environment/docker/setup-jupyter-notebook-with-docker/)
 

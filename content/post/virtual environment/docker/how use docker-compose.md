@@ -2,7 +2,7 @@
 title: 使用 Docker-compose 快速建立多個關聯的 container
 description: 本文介紹基於 Docker，旨在說明如何撰寫 Docker-compose。
 slug: Docker-compose
-date: 2025-07-10 16:56:00+0000
+date: 2025-07-17 10:00:00+0000
 categories:
     - tutorial
 tags:
@@ -113,5 +113,5 @@ docker-compose down
 
 - [Docker Compose 官方文件](https://docs.docker.com/compose/)
 - [Docker 官方網站](https://www.docker.com/)
-- [如何安裝 Docker（延伸閱讀）](https://dandelionlibra.github.io/post/virtual-environment/setup-jupyter-notebook-with-docker/)
+- [如何安裝 Docker（延伸閱讀）](https://dandelionlibra.github.io/post/virtual-environment/docker/setup-jupyter-notebook-with-docker/)
 
