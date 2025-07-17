@@ -1,0 +1,59 @@
+name: dandelion
+
+networks:
+  ollama_net:
+    driver: bridge
+    
+services:
+  jupyter:
+    image: pytorch/pytorch:2.3.0-cuda12.1-cudnn8-devel
+    tty: true
+      #entrypoint: [/bin/bash]
+      #command: jupyter lab --ip=0.0.0.0 --port=8888 --allow-root --no-browser
+    ports:
+      - "8888:8888"
+    volumes:
+      - ~/yuchen:/workspace/yuchen
+    networks:
+      - ollama_net
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    healthcheck:
+      test: /usr/local/bin/docker-healthcheck.sh
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    
+  ollama:
+    tty: true
+    image: ollama/ollama
+                #  # container_name: ${APP_OLLAMA_CONTAINER_NAME}
+                #  # restart: always
+    networks:
+      - ollama_net
+    volumes:
+      - ~/yuchen/ollama:/root/.ollama
+    ports:
+      - "11435:11434"
+
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    healthcheck:
+      test: /usr/local/bin/docker-healthcheck.sh
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+  
+
