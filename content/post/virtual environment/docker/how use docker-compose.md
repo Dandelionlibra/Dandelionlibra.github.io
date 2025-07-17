@@ -8,15 +8,16 @@ categories:
 tags:
     - docker
     - Docker-compose
+
+---
+
 ## 內容大綱
 
-1. 為什麼要用 Docker-compose？
+1. 為什麼要用 Docker-compose?
 2. Docker-compose 基本語法與結構
 3. 建立多個關聯容器的範例
 4. 常用指令與管理方式
 5. 參考資料
-
----
 
 ## 1. 為什麼要用 Docker-compose？
 
