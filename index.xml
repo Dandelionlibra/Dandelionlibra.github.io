@@ -1,4 +1,112 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>YuChen</title><link>https://Dandelionlibra.github.io/</link><description>Recent content on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Tue, 15 Jul 2025 21:12:00 +0000</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>LangChain 基本使用-4</title><link>https://Dandelionlibra.github.io/post/langchain/uselangchain-4/</link><pubDate>Tue, 15 Jul 2025 21:12:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/langchain/uselangchain-4/</guid><description>&lt;h1 id="甚麼是-langchain-的鏈結構">甚麼是 Langchain 的鏈結構?
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>YuChen</title><link>https://Dandelionlibra.github.io/</link><description>Recent content on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Thu, 17 Jul 2025 10:00:00 +0000</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>使用 Docker 快速建立 Jupyter Notebook 環境教學</title><link>https://Dandelionlibra.github.io/post/virtual-environment/docker/setup-jupyter-notebook-with-docker/</link><pubDate>Thu, 17 Jul 2025 10:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/virtual-environment/docker/setup-jupyter-notebook-with-docker/</guid><description>&lt;h2 id="內容大綱">內容大綱
+&lt;/h2>&lt;ol>
+&lt;li>為什麼用 Docker 建立 Jupyter Notebook？&lt;/li>
+&lt;li>安裝 Docker
+&lt;ul>
+&lt;li>Linux&lt;/li>
+&lt;li>Mac&lt;/li>
+&lt;li>Windows&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>下載與執行 Jupyter Notebook Docker 映像檔&lt;/li>
+&lt;li>設定 Notebook 存取與資料掛載&lt;/li>
+&lt;li>使用 GPU&lt;/li>
+&lt;li>參考資料&lt;/li>
+&lt;/ol>
+&lt;hr>
+&lt;h2 id="1-為什麼用-docker-建立-jupyter-notebook">1. 為什麼用 Docker 建立 Jupyter Notebook？
+&lt;/h2>&lt;p>Docker 可讓你快速建立隔離的開發環境，避免本機安裝衝突。Jupyter Notebook 是資料科學常用的互動式開發工具，透過 Docker 可輕鬆部署、移植與分享。&lt;/p>
+&lt;hr>
+&lt;h2 id="2-安裝-docker">2. 安裝 Docker
+&lt;/h2>&lt;h3 id="linux">Linux
+&lt;/h3>&lt;p>大多數 Linux 發行版可透過套件管理器安裝 Docker：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 更新套件清單&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo apt update
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 安裝 Docker&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo apt install docker.io
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 啟動 Docker 服務&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo systemctl start docker
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 設定開機自動啟動&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo systemctl enable docker
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="mac">Mac
+&lt;/h3>&lt;p>前往 &lt;a class="link" href="https://www.docker.com/products/docker-desktop/" target="_blank" rel="noopener"
+>Docker Desktop for Mac&lt;/a> 下載並安裝。&lt;/p>
+&lt;h3 id="windows">Windows
+&lt;/h3>&lt;p>前往 &lt;a class="link" href="https://www.docker.com/products/docker-desktop/" target="_blank" rel="noopener"
+>Docker Desktop for Windows&lt;/a> 下載並安裝。&lt;/p>
+&lt;hr>
+&lt;h2 id="3-下載與執行-jupyter-notebook-docker-映像檔">3. 下載與執行 Jupyter Notebook Docker 映像檔
+&lt;/h2>&lt;p>官方映像檔推薦使用 &lt;a class="link" href="https://hub.docker.com/r/jupyter/base-notebook" target="_blank" rel="noopener"
+>&lt;code>jupyter/base-notebook&lt;/code>&lt;/a> 或 &lt;a class="link" href="https://hub.docker.com/r/jupyter/scipy-notebook" target="_blank" rel="noopener"
+>&lt;code>jupyter/scipy-notebook&lt;/code>&lt;/a>：&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>拉取映像檔&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>docker pull jupyter/base-notebook
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>建立容器&lt;br>
+&lt;code>docker run [OPTIONS] IMAGE [COMMAND] [ARG...]&lt;/code>&lt;/p>
+&lt;p>啟動容器並開啟本機 8888 端口：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>docker run -p 8888:8888 jupyter/base-notebook
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>啟動後，終端機會顯示一組 token，複製網址（如 &lt;code>http://127.0.0.1:8888/?token=...&lt;/code>）在瀏覽器開啟即可進入 Jupyter Notebook。&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;p>※ &lt;a class="link" href="https://hub.docker.com" target="_blank" rel="noopener"
+>&lt;code>DockerHub&lt;/code>&lt;/a>: DockerHub 是官方的 Docker 映像檔集中平台，提供各種應用程式的映像檔下載與分享，可以在這裡搜尋、取得映像檔，快速部署環境。&lt;/p>
+&lt;hr>
+&lt;h2 id="4-設定-notebook-存取與資料掛載">4. 設定 Notebook 存取與資料掛載
+&lt;/h2>&lt;p>若要將本機資料夾掛載到容器，方便存取與保存 notebook 檔案：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>docker run -p 8888:8888 -v /your/local/path:/home/jovyan/work --name my-jupyter jupyter/base-notebook
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>&lt;code>-p&lt;/code>: Assigns the internal port to the external port&lt;/li>
+&lt;li>&lt;code>-v&lt;/code>: Assigns a local directory to a container directory (mounts a volume)&lt;/li>
+&lt;li>&lt;code>/your/local/path&lt;/code>：本機資料夾路徑&lt;/li>
+&lt;li>&lt;code>/home/jovyan/work&lt;/code>：容器內預設工作目錄&lt;/li>
+&lt;li>&lt;code>--name&lt;/code>: Sets the container name; otherwise, a random name will be assigned&lt;/li>
+&lt;/ul>
+&lt;p>可自訂密碼或 token，詳見 &lt;a class="link" href="https://jupyter-docker-stacks.readthedocs.io/en/latest/using/common.html#docker-options" target="_blank" rel="noopener"
+>官方文件&lt;/a>。&lt;/p>
+&lt;h2 id="5-使用-gpu">5. 使用 GPU
+&lt;/h2>&lt;p>若你的主機支援 NVIDIA GPU，可利用 &lt;a class="link" href="https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html" target="_blank" rel="noopener"
+>NVIDIA Container Toolkit&lt;/a> 讓 Docker 容器存取 GPU 資源。&lt;/p>
+&lt;h3 id="步驟">步驟
+&lt;/h3>&lt;ol>
+&lt;li>
+&lt;p>&lt;strong>安裝 NVIDIA 驅動程式&lt;/strong>&lt;br>
+請先安裝對應作業系統的 NVIDIA 顯示卡驅動。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>安裝 NVIDIA Container Toolkit&lt;/strong>&lt;br>
+依照官方文件安裝 &lt;code>nvidia-docker&lt;/code>：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo apt-get install -y nvidia-docker2
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo systemctl restart docker
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>啟動支援 GPU 的 Jupyter Notebook 容器&lt;/strong>&lt;br>
+使用 &lt;code>--gpus all&lt;/code> 參數啟動容器：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>docker run --gpus all -p 8888:8888 --name gpu_note -v ~/name:/tf/name tensorflow/tensorflow:latest-gpu-jupyter
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>驗證 GPU 是否可用&lt;/strong>&lt;br>
+在 Notebook 中執行下列程式碼，確認 GPU 是否被偵測到：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> tensorflow &lt;span style="color:#66d9ef">as&lt;/span> tf
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>print(tf&lt;span style="color:#f92672">.&lt;/span>config&lt;span style="color:#f92672">.&lt;/span>list_physical_devices(&lt;span style="color:#e6db74">&amp;#39;GPU&amp;#39;&lt;/span>))
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;/ol>
+&lt;blockquote>
+&lt;p>注意：部分映像檔可能需額外安裝 CUDA、cuDNN 或深度學習框架，請參考 &lt;a class="link" href="https://jupyter-docker-stacks.readthedocs.io/en/latest/using/recipes.html#using-gpus" target="_blank" rel="noopener"
+>Jupyter Docker Stacks 官方說明&lt;/a>。&lt;/p>&lt;/blockquote>
+&lt;hr>
+&lt;h2 id="6-參考資料">6. 參考資料
+&lt;/h2>&lt;ul>
+&lt;li>&lt;a class="link" href="https://jupyter-docker-stacks.readthedocs.io/" target="_blank" rel="noopener"
+>Jupyter Docker Stacks 官方文件&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://www.docker.com/" target="_blank" rel="noopener"
+>Docker 官方網站&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://jupyter.org/" target="_blank" rel="noopener"
+>Jupyter Notebook 官方網站&lt;/a>&lt;/li>
+&lt;/ul></description></item><item><title>LangChain 基本使用-4</title><link>https://Dandelionlibra.github.io/post/langchain/uselangchain-4/</link><pubDate>Tue, 15 Jul 2025 21:12:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/langchain/uselangchain-4/</guid><description>&lt;h1 id="甚麼是-langchain-的鏈結構">甚麼是 Langchain 的鏈結構?
 &lt;/h1>&lt;h2 id="定義">定義
 &lt;/h2>&lt;p>將小的模組串起來，而形成的串列結構。&lt;br>
 舉例: 定義提示詞 -&amp;gt; 選擇 LLM -&amp;gt; 運行 inferencing(呼叫 function) -&amp;gt; 得到結果。&lt;/p>
@@ -1146,7 +1254,91 @@ Explanation: 7/-3 = -2.33333.. which is truncated to -2.&lt;/p>&lt;/blockquote>
 &lt;blockquote>
 &lt;p>Photo by &lt;a class="link" href="https://unsplash.com/@pawel_czerwinski" target="_blank" rel="noopener"
 >Pawel Czerwinski&lt;/a> on &lt;a class="link" href="https://unsplash.com/" target="_blank" rel="noopener"
->Unsplash&lt;/a>&lt;/p>&lt;/blockquote></description></item><item><title>Profile</title><link>https://Dandelionlibra.github.io/about/</link><pubDate>Sun, 06 Mar 2022 00:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/about/</guid><description>&lt;p>你好:)&lt;/p></description></item><item><title>Docker 基本使用指令</title><link>https://Dandelionlibra.github.io/post/virtual-environment/docker/docker/</link><pubDate>Thu, 10 Jul 2025 10:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/virtual-environment/docker/docker/</guid><description>&lt;h2 id="內容大綱">內容大綱
+>Unsplash&lt;/a>&lt;/p>&lt;/blockquote></description></item><item><title>Profile</title><link>https://Dandelionlibra.github.io/about/</link><pubDate>Sun, 06 Mar 2022 00:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/about/</guid><description>&lt;p>你好:)&lt;/p></description></item><item><title>使用 Docker-compose 快速建立多個關聯的 container</title><link>https://Dandelionlibra.github.io/post/virtual-environment/docker/docker-compose/</link><pubDate>Thu, 17 Jul 2025 10:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/virtual-environment/docker/docker-compose/</guid><description>&lt;h2 id="內容大綱">內容大綱
+&lt;/h2>&lt;ol>
+&lt;li>為什麼要用 Docker-compose?&lt;/li>
+&lt;li>Docker-compose 基本語法與結構&lt;/li>
+&lt;li>建立多個關聯容器的範例&lt;/li>
+&lt;li>常用指令與管理方式&lt;/li>
+&lt;li>參考資料&lt;/li>
+&lt;/ol>
+&lt;h2 id="1-為什麼要用-docker-compose">1. 為什麼要用 Docker-compose？
+&lt;/h2>&lt;p>當專案需要多個服務（如資料庫、後端、前端）協同運作時，單靠 &lt;code>docker run&lt;/code> 指令管理多個容器會變得複雜。Docker-compose 讓你能用一份 YAML 設定檔，定義多個 container 的建置、網路、資料掛載與依賴關係，一鍵啟動或關閉整個應用環境，提升開發效率與可維護性。&lt;/p>
+&lt;hr>
+&lt;h2 id="2-docker-compose-基本語法與結構">2. Docker-compose 基本語法與結構
+&lt;/h2>&lt;p>Docker-compose 使用 &lt;code>docker-compose.yml&lt;/code> 檔案描述多個服務。基本結構如下：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">version&lt;/span>: &lt;span style="color:#e6db74">&amp;#39;3.8&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">services&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">web&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">image&lt;/span>: &lt;span style="color:#ae81ff">nginx:latest&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">ports&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#e6db74">&amp;#34;8080:80&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">db&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">image&lt;/span>: &lt;span style="color:#ae81ff">mysql:8&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">environment&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">MYSQL_ROOT_PASSWORD&lt;/span>: &lt;span style="color:#ae81ff">example&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">volumes&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#ae81ff">db_data:/var/lib/mysql&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">volumes&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">db_data&lt;/span>:
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>&lt;code>services&lt;/code>: 定義多個容器服務&lt;/li>
+&lt;li>&lt;code>image&lt;/code>: 指定映像檔&lt;/li>
+&lt;li>&lt;code>ports&lt;/code>: 對應主機與容器的 port&lt;/li>
+&lt;li>&lt;code>environment&lt;/code>: 設定環境變數&lt;/li>
+&lt;li>&lt;code>volumes&lt;/code>: 掛載資料卷&lt;/li>
+&lt;/ul>
+&lt;hr>
+&lt;h2 id="3-建立多個關聯容器的範例">3. 建立多個關聯容器的範例
+&lt;/h2>&lt;p>以下以一個簡單的 Web + 資料庫應用為例：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">version&lt;/span>: &lt;span style="color:#e6db74">&amp;#39;3.8&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">services&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">app&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">image&lt;/span>: &lt;span style="color:#ae81ff">python:3.10&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">volumes&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#ae81ff">./app:/app&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">working_dir&lt;/span>: &lt;span style="color:#ae81ff">/app&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">command&lt;/span>: &lt;span style="color:#ae81ff">python app.py&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">depends_on&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#ae81ff">db&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">db&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">image&lt;/span>: &lt;span style="color:#ae81ff">postgres:15&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">environment&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">POSTGRES_PASSWORD&lt;/span>: &lt;span style="color:#ae81ff">example&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">volumes&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#ae81ff">pg_data:/var/lib/postgresql/data&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">volumes&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">pg_data&lt;/span>:
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>&lt;code>depends_on&lt;/code>: 指定啟動順序，app 依賴 db&lt;/li>
+&lt;li>&lt;code>volumes&lt;/code>: 保持資料持久化&lt;/li>
+&lt;/ul>
+&lt;p>啟動所有服務：&lt;/p>
+&lt;p>&lt;code>-d&lt;/code> 參數代表「detached mode」，也就是讓 Docker-Compose 在背景執行所有服務，而不佔用目前的終端視窗，不會顯示即時日誌。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>docker-compose up -d
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>停止並移除所有服務：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>docker-compose down
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;hr>
+&lt;h2 id="4-常用指令與管理方式">4. 常用指令與管理方式
+&lt;/h2>&lt;ul>
+&lt;li>啟動所有服務：&lt;code>docker-compose up&lt;/code>&lt;/li>
+&lt;li>背景執行：&lt;code>docker-compose up -d&lt;/code>&lt;/li>
+&lt;li>停止服務：&lt;code>docker-compose down&lt;/code>&lt;/li>
+&lt;li>查看日誌：&lt;code>docker-compose logs&lt;/code>&lt;/li>
+&lt;li>進入容器：&lt;code>docker-compose exec &amp;lt;service&amp;gt; bash&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;p>更多指令可參考 &lt;a class="link" href="https://docs.docker.com/compose/reference/overview/" target="_blank" rel="noopener"
+>官方文件&lt;/a>。&lt;/p>
+&lt;hr>
+&lt;h2 id="5-參考資料">5. 參考資料
+&lt;/h2>&lt;ul>
+&lt;li>&lt;a class="link" href="https://docs.docker.com/compose/" target="_blank" rel="noopener"
+>Docker Compose 官方文件&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://www.docker.com/" target="_blank" rel="noopener"
+>Docker 官方網站&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://dandelionlibra.github.io/post/virtual-environment/docker/setup-jupyter-notebook-with-docker/" target="_blank" rel="noopener"
+>如何安裝 Docker（延伸閱讀）&lt;/a>&lt;/li>
+&lt;/ul></description></item><item><title>Docker 基本使用指令</title><link>https://Dandelionlibra.github.io/post/virtual-environment/docker/docker/</link><pubDate>Thu, 10 Jul 2025 10:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/virtual-environment/docker/docker/</guid><description>&lt;h2 id="內容大綱">內容大綱
 &lt;/h2>&lt;ol>
 &lt;li>Docker 是什麼？&lt;/li>
 &lt;li>Docker 常用指令與參數說明&lt;/li>
