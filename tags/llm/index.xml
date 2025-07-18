@@ -1,4 +1,76 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>LLM on YuChen</title><link>https://Dandelionlibra.github.io/tags/llm/</link><description>Recent content in LLM on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Fri, 18 Jul 2025 02:59:00 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/tags/llm/index.xml" rel="self" type="application/rss+xml"/><item><title>使用 Langchain 框架進行檢索提問</title><link>https://Dandelionlibra.github.io/post/langchain/retrieverqa-1/</link><pubDate>Fri, 18 Jul 2025 02:59:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/langchain/retrieverqa-1/</guid><description>&lt;h2 id="程式運行詳細步驟">程式運行詳細步驟
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>LLM on YuChen</title><link>https://Dandelionlibra.github.io/tags/llm/</link><description>Recent content in LLM on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Fri, 18 Jul 2025 08:39:00 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/tags/llm/index.xml" rel="self" type="application/rss+xml"/><item><title>LangChain 記憶型檢索問答：《小王子》文本互動實踐</title><link>https://Dandelionlibra.github.io/post/langchain/retrieverqa-2/</link><pubDate>Fri, 18 Jul 2025 08:39:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/langchain/retrieverqa-2/</guid><description>&lt;h2 id="以-langchain-記憶型檢索問答實現小王子文本互動">以 LangChain 記憶型檢索問答實現《小王子》文本互動
+&lt;/h2>&lt;p>本文介紹如何利用 LangChain 框架，結合 Ollama Embeddings、ChromaDB 與記憶型問答鏈（RunnableWithMessageHistory），實現能記住上下文的互動式檢索問答。以《小王子》文本為例，展示記憶型問答與一般檢索問答的差異。&lt;/p>
+&lt;h3 id="一記憶型問答鏈設計">一、記憶型問答鏈設計
+&lt;/h3>&lt;p>LangChain 提供 &lt;code>RunnableWithMessageHistory&lt;/code>，可根據 session_id 保存對話歷程，讓模型具備「記憶」功能。核心流程如下：&lt;/p>
+&lt;ol>
+&lt;li>&lt;strong>建立 InMemoryHistory 類&lt;/strong>：用於儲存每個 session 的訊息。&lt;/li>
+&lt;li>&lt;strong>載入 PDF 並分割文本&lt;/strong>：使用 &lt;code>PyPDFLoader&lt;/code> 和 &lt;code>RecursiveCharacterTextSplitter&lt;/code>。&lt;/li>
+&lt;li>&lt;strong>建立向量資料庫&lt;/strong>：用 Ollama Embeddings 將文本轉向量，存入 ChromaDB。&lt;/li>
+&lt;li>&lt;strong>設計 Prompt 與 Chain&lt;/strong>：結合歷史訊息與提問，串接 LLM。&lt;/li>
+&lt;li>&lt;strong>啟動記憶型問答鏈&lt;/strong>：每次提問都能保留上下文，實現多輪互動。&lt;/li>
+&lt;/ol>
+&lt;h4 id="主要程式片段">主要程式片段
+&lt;/h4>&lt;p>完整程式碼請參考：&lt;a class="link" href="https://github.com/Dandelionlibra/Dandelionlibra.github.io/blob/main/content/post/langchain/example/LangChain_memory_ask_via_pdf.ipynb" target="_blank" rel="noopener"
+>GitHub 範例程式&lt;/a>&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 建立記憶管理器&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">InMemoryHistory&lt;/span>(BaseChatMessageHistory, BaseModel):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> messages: list[BaseMessage] &lt;span style="color:#f92672">=&lt;/span> Field(default_factory&lt;span style="color:#f92672">=&lt;/span>list)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">add_messages&lt;/span>(self, messages: list[BaseMessage]) &lt;span style="color:#f92672">-&amp;gt;&lt;/span> &lt;span style="color:#66d9ef">None&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> self&lt;span style="color:#f92672">.&lt;/span>messages&lt;span style="color:#f92672">.&lt;/span>extend(messages)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">clear&lt;/span>(self) &lt;span style="color:#f92672">-&amp;gt;&lt;/span> &lt;span style="color:#66d9ef">None&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> self&lt;span style="color:#f92672">.&lt;/span>messages &lt;span style="color:#f92672">=&lt;/span> []
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>store &lt;span style="color:#f92672">=&lt;/span> {}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">get_by_session_id&lt;/span>(session_id: str) &lt;span style="color:#f92672">-&amp;gt;&lt;/span> BaseChatMessageHistory:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> session_id &lt;span style="color:#f92672">not&lt;/span> &lt;span style="color:#f92672">in&lt;/span> store:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> store[session_id] &lt;span style="color:#f92672">=&lt;/span> InMemoryHistory()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> store[session_id]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 啟動記憶型問答鏈&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>chain_with_history &lt;span style="color:#f92672">=&lt;/span> RunnableWithMessageHistory(
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> chain,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> get_by_session_id,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> input_messages_key&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;question&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> history_messages_key&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;history&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="二互動範例">二、互動範例
+&lt;/h3>&lt;h4 id="問答一你看過經典故事小王子嗎">問答一：你看過經典故事小王子嗎？
+&lt;/h4>&lt;p>模型回答：&lt;/p>
+&lt;blockquote>
+&lt;p>我看過《小王子》！這是個非常著名的小說，作者是安托瓦內·德·聖-埃克絮佩里。故事充滿哲理與寓意，讓人思考生命、愛情和友誼。&lt;/p>&lt;/blockquote>
+&lt;h4 id="問答二啟蒙了你什麼">問答二：啟蒙了你什麼？
+&lt;/h4>&lt;p>模型回答：&lt;/p>
+&lt;blockquote>
+&lt;p>小王子和這個故事都啟蒙了我對生命、愛情和友誼的看法。它教會我要珍惜生命、關心他人和追求夢想。&lt;/p>&lt;/blockquote>
+&lt;h4 id="問答三你覺得小王子是個怎樣的人">問答三：你覺得小王子是個怎樣的人？
+&lt;/h4>&lt;p>模型回答：&lt;/p>
+&lt;blockquote>
+&lt;p>小王子是一個獨特、敏感和浪漫的年輕人。他能看到世界的美麗和價值，願意為之付出努力，但也有些缺乏勇氣承認自己的情感。&lt;/p>&lt;/blockquote>
+&lt;h4 id="問答四續寫第二部小王子">問答四：續寫第二部小王子
+&lt;/h4>&lt;p>模型回答：&lt;/p>
+&lt;blockquote>
+&lt;p>根據小王子的故事，我們可以繼續他的冒險旅程。他想探索更大的世界，沿途遇到許多新奇的生物和景色，對每件事都充滿好奇和興趣。&lt;/p>&lt;/blockquote>
+&lt;h3 id="三記憶型問答-vs-一般檢索問答">三、記憶型問答 VS 一般檢索問答
+&lt;/h3>&lt;ul>
+&lt;li>&lt;strong>記憶型問答&lt;/strong>：能保留上下文，支持多輪互動，回答更貼合對話脈絡。&lt;/li>
+&lt;li>&lt;strong>一般檢索問答&lt;/strong>：每次提問獨立，無法記住前文，回答較為片段。&lt;/li>
+&lt;/ul>
+&lt;h4 id="一般檢索問答範例">一般檢索問答範例
+&lt;/h4>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>qa_chain &lt;span style="color:#f92672">=&lt;/span> RetrievalQA&lt;span style="color:#f92672">.&lt;/span>from_chain_type(
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> llm&lt;span style="color:#f92672">=&lt;/span>ollama_llm,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> retriever&lt;span style="color:#f92672">=&lt;/span>vector_db&lt;span style="color:#f92672">.&lt;/span>as_retriever(),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>qa_chain&lt;span style="color:#f92672">.&lt;/span>invoke(&lt;span style="color:#e6db74">&amp;#39;你看過經典故事小王子嘛？&amp;#39;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 回答：是的，我看過《小王子》。&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="四總結">四、總結
+&lt;/h3>&lt;p>結合 LangChain 記憶型問答鏈，可針對文本進行多輪互動，模型能記住上下文，回答更自然且具延續性。適合用於深入文本探索、故事續寫等場景。&lt;/p>
+&lt;h2 id="參考資料">參考資料
+&lt;/h2>&lt;ul>
+&lt;li>&lt;a class="link" href="https://python.langchain.com/api_reference/core/runnables/langchain_core.runnables.history.RunnableWithMessageHistory.html" target="_blank" rel="noopener"
+>LangChain RunnableWithMessageHistory 官方文件&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://dandelionlibra.github.io/post/langchain/retrieverqa-1/" target="_blank" rel="noopener"
+>LangChain 檢索問答基礎篇&lt;/a>&lt;/li>
+&lt;/ul></description></item><item><title>使用 Langchain 框架進行檢索提問</title><link>https://Dandelionlibra.github.io/post/langchain/retrieverqa-1/</link><pubDate>Fri, 18 Jul 2025 02:59:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/langchain/retrieverqa-1/</guid><description>&lt;h2 id="程式運行詳細步驟">程式運行詳細步驟
 &lt;/h2>&lt;p>以下以 Jupyter Notebook 格式，記錄如何使用 LangChain 框架結合 Ollama Embeddings 與 ChromaDB，實現 PDF 文件的檢索式問答。&lt;br>
 詳細程式參考：&lt;a class="link" href="https://github.com/Dandelionlibra/Dandelionlibra.github.io/blob/main/content/post/langchain/example/LangChain_ask_via_pdf.ipynb" target="_blank" rel="noopener"
 >GitHub 範例程式&lt;/a>&lt;/p>
