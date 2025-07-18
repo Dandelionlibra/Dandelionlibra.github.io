@@ -3,7 +3,7 @@ title: 使用 Langchain 框架進行檢索提問
 # image: "/unsplash.jpg"
 description: 以小王子的文本為例，進行檢索提問。
 slug: retrieverQA-1
-date: 2025-07-18 10:59:00+0000
+date: 2025-07-18 02:59:00+0800
 categories:
     - example
 tags:
