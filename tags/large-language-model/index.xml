@@ -1,4 +1,76 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Large Language Model on YuChen</title><link>https://Dandelionlibra.github.io/tags/large-language-model/</link><description>Recent content in Large Language Model on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Tue, 15 Jul 2025 21:12:00 +0000</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/tags/large-language-model/index.xml" rel="self" type="application/rss+xml"/><item><title>LangChain 基本使用-4</title><link>https://Dandelionlibra.github.io/post/langchain/uselangchain-4/</link><pubDate>Tue, 15 Jul 2025 21:12:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/langchain/uselangchain-4/</guid><description>&lt;h1 id="甚麼是-langchain-的鏈結構">甚麼是 Langchain 的鏈結構?
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Large Language Model on YuChen</title><link>https://Dandelionlibra.github.io/tags/large-language-model/</link><description>Recent content in Large Language Model on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Fri, 18 Jul 2025 02:59:00 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/tags/large-language-model/index.xml" rel="self" type="application/rss+xml"/><item><title>使用 Langchain 框架進行檢索提問</title><link>https://Dandelionlibra.github.io/post/langchain/retrieverqa-1/</link><pubDate>Fri, 18 Jul 2025 02:59:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/langchain/retrieverqa-1/</guid><description>&lt;h2 id="程式運行詳細步驟">程式運行詳細步驟
+&lt;/h2>&lt;p>以下以 Jupyter Notebook 格式，記錄如何使用 LangChain 框架結合 Ollama Embeddings 與 ChromaDB，實現 PDF 文件的檢索式問答。&lt;br>
+詳細程式參考：&lt;a class="link" href="https://github.com/Dandelionlibra/Dandelionlibra.github.io/blob/main/content/post/langchain/example/LangChain_ask_via_pdf.ipynb" target="_blank" rel="noopener"
+>GitHub 範例程式&lt;/a>&lt;/p>
+&lt;h3 id="1-載入必要套件與初始化-embedding-模型">1. 載入必要套件與初始化 Embedding 模型
+&lt;/h3>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> langchain_community.document_loaders &lt;span style="color:#f92672">import&lt;/span> PyPDFLoader
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> langchain_text_splitters &lt;span style="color:#f92672">import&lt;/span> RecursiveCharacterTextSplitter
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> langchain_ollama &lt;span style="color:#f92672">import&lt;/span> OllamaEmbeddings
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> langchain_chroma &lt;span style="color:#f92672">import&lt;/span> Chroma
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 初始化 Ollama Embeddings&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>embeddings_model &lt;span style="color:#f92672">=&lt;/span> OllamaEmbeddings(
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> base_url&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#39;http://dandelion-ollama-1:11434&amp;#39;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> model&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;bge-m3:567m&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="2-載入-pdf-文件並分割文本">2. 載入 PDF 文件並分割文本
+&lt;/h3>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 載入 PDF&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>loader &lt;span style="color:#f92672">=&lt;/span> PyPDFLoader(&lt;span style="color:#e6db74">&amp;#39;./data/PDF_file.pdf&amp;#39;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>docs &lt;span style="color:#f92672">=&lt;/span> loader&lt;span style="color:#f92672">.&lt;/span>load_and_split()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 設定分段參數&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>chunk_size &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">256&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>chunk_overlap &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">128&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>text_splitter &lt;span style="color:#f92672">=&lt;/span> RecursiveCharacterTextSplitter(chunk_size&lt;span style="color:#f92672">=&lt;/span>chunk_size, chunk_overlap&lt;span style="color:#f92672">=&lt;/span>chunk_overlap)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>documents &lt;span style="color:#f92672">=&lt;/span> text_splitter&lt;span style="color:#f92672">.&lt;/span>split_documents(docs)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="3-建立-chroma-向量資料庫">3. 建立 Chroma 向量資料庫
+&lt;/h3>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>db &lt;span style="color:#f92672">=&lt;/span> Chroma&lt;span style="color:#f92672">.&lt;/span>from_documents(
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> documents,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> embedding&lt;span style="color:#f92672">=&lt;/span>embeddings_model,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> persist_directory&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;./story-db&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="4-啟動檢索式問答鏈-retrievalqa-chain">4. 啟動檢索式問答鏈 (RetrievalQA Chain)
+&lt;/h3>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> langchain_ollama &lt;span style="color:#f92672">import&lt;/span> OllamaLLM
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> langchain.chains &lt;span style="color:#f92672">import&lt;/span> RetrievalQA
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ollama_llm &lt;span style="color:#f92672">=&lt;/span> OllamaLLM(
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> base_url&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#39;http://dandelion-ollama-1:11434&amp;#39;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> model&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;llama3.1:8b&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> temperature&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">0.0&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> num_predict&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">512&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>qa_chain &lt;span style="color:#f92672">=&lt;/span> RetrievalQA&lt;span style="color:#f92672">.&lt;/span>from_chain_type(
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> llm&lt;span style="color:#f92672">=&lt;/span>ollama_llm,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> retriever&lt;span style="color:#f92672">=&lt;/span>db&lt;span style="color:#f92672">.&lt;/span>as_retriever(),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="5-問答範例及模型回答">5. 問答範例及模型回答
+&lt;/h3>&lt;p>以下僅列出部分問答範例，其餘可自行嘗試：&lt;/p>
+&lt;hr>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>query &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;玫瑰是誰？&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>result &lt;span style="color:#f92672">=&lt;/span> qa_chain&lt;span style="color:#f92672">.&lt;/span>invoke(query)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>print(result)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;strong>模型回答：&lt;/strong>&lt;/p>
+&lt;pre tabindex="0">&lt;code>{&amp;#39;query&amp;#39;: &amp;#39;玫瑰是誰？&amp;#39;, &amp;#39;result&amp;#39;: &amp;#39;玫瑰是小王子的玫瑰花，還有園中其他五千朵玫瑰花（但小王子的玫瑰花是獨一無二的）。&amp;#39;}
+&lt;/code>&lt;/pre>&lt;hr>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>qa_chain&lt;span style="color:#f92672">.&lt;/span>invoke(&lt;span style="color:#e6db74">&amp;#39;小王子的來歷是什？&amp;#39;&lt;/span>)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;strong>模型回答：&lt;/strong>&lt;/p>
+&lt;pre tabindex="0">&lt;code>{&amp;#39;query&amp;#39;: &amp;#39;小王子的來歷是什？&amp;#39;, &amp;#39;result&amp;#39;: &amp;#39;小王子所來自的那個星球是小行星B612。&amp;#39;}
+&lt;/code>&lt;/pre>&lt;hr>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>qa_chain&lt;span style="color:#f92672">.&lt;/span>invoke(&lt;span style="color:#e6db74">&amp;#39;你覺得小王子是個怎樣的人？&amp;#39;&lt;/span>)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;strong>模型回答：&lt;/strong>&lt;/p>
+&lt;pre tabindex="0">&lt;code>{&amp;#39;query&amp;#39;: &amp;#39;你覺得小王子是個怎樣的人？&amp;#39;, &amp;#39;result&amp;#39;: &amp;#39;根據文中描述，小王子的性格可以看出來。他似乎是一個敏感、浪漫、獨立的年輕人。他對他所遇到的陌生人的評價很細致，能夠看穿別人的真實面目。他也顯示出對自由和自主的渴望。&amp;#39;}
+&lt;/code>&lt;/pre>&lt;hr>
+&lt;blockquote>
+&lt;p>更多問題可依據文本內容自由發揮，探索不同答案。&lt;/p>&lt;/blockquote>
+&lt;h3 id="筆記重點">筆記重點
+&lt;/h3>&lt;ul>
+&lt;li>透過 &lt;code>PyPDFLoader&lt;/code> 讀取 PDF，並用 &lt;code>RecursiveCharacterTextSplitter&lt;/code> 分割文本，利於後續檢索。&lt;/li>
+&lt;li>使用 Ollama Embeddings 將文本轉為向量，存入 ChromaDB。&lt;/li>
+&lt;li>結合 Ollama LLM 與 RetrievalQA Chain，實現自然語言問答。&lt;/li>
+&lt;li>可針對文本內容進行多樣化提問，快速獲得答案。&lt;/li>
+&lt;/ul></description></item><item><title>LangChain 基本使用-4</title><link>https://Dandelionlibra.github.io/post/langchain/uselangchain-4/</link><pubDate>Tue, 15 Jul 2025 21:12:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/langchain/uselangchain-4/</guid><description>&lt;h1 id="甚麼是-langchain-的鏈結構">甚麼是 Langchain 的鏈結構?
 &lt;/h1>&lt;h2 id="定義">定義
 &lt;/h2>&lt;p>將小的模組串起來，而形成的串列結構。&lt;br>
 舉例: 定義提示詞 -&amp;gt; 選擇 LLM -&amp;gt; 運行 inferencing(呼叫 function) -&amp;gt; 得到結果。&lt;/p>
