@@ -6,13 +6,13 @@ date: 2025-07-20 08:50:00+0800
 categories:
     - note
 tags:
-  - AI
-  - Large Language Model
-  - Retrieval-Augmented Generation
-  - RAG
-  - LLM
-  - Research Summary
-weight: 1       # You can add weight to some posts to override the default sorting (date descending)
+    - AI
+    - Large Language Model
+    - Retrieval-Augmented Generation
+    - RAG
+    - LLM
+    - Research Summary
+weight: 1
 ---
 
 > 本文整理自：[A Survey on RAG Meeting LLMs: Towards Retrieval-Augmented Large Language Models](https://arxiv.org/abs/2405.06211)  
