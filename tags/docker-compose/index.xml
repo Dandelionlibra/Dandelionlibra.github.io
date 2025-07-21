@@ -112,12 +112,8 @@
 &lt;li>&lt;code>volumes&lt;/code> 保持資料持久化。&lt;/li>
 &lt;/ul>
 &lt;p>這樣設定後，只需一行指令即可同時啟動、管理多個容器，並確保它們能互相連線與資料共享。&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>depends_on&lt;/code>: 指定啟動順序，app 依賴 db&lt;/li>
-&lt;li>&lt;code>volumes&lt;/code>: 保持資料持久化&lt;/li>
-&lt;/ul>
-&lt;p>啟動所有服務：&lt;/p>
-&lt;p>&lt;code>-d&lt;/code> 參數代表「detached mode」，也就是讓 Docker-Compose 在背景執行所有服務，而不佔用目前的終端視窗，不會顯示即時日誌。&lt;/p>
+&lt;p>啟動所有服務：&lt;br>
+&lt;code>-d&lt;/code> 參數代表「detached mode」，也就是讓 Docker-Compose 在背景執行所有服務，而不佔用目前的終端視窗，不會顯示即時日誌。&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>docker-compose up -d
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>停止並移除所有服務：&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>docker-compose down
