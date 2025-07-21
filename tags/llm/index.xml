@@ -1,4 +1,17 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>LLM on YuChen</title><link>https://Dandelionlibra.github.io/tags/llm/</link><description>Recent content in LLM on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Fri, 18 Jul 2025 08:39:00 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/tags/llm/index.xml" rel="self" type="application/rss+xml"/><item><title>LangChain 記憶型檢索問答：《小王子》文本互動實踐</title><link>https://Dandelionlibra.github.io/post/langchain/retrieverqa-2/</link><pubDate>Fri, 18 Jul 2025 08:39:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/langchain/retrieverqa-2/</guid><description>&lt;h2 id="以-langchain-記憶型檢索問答實現小王子文本互動">以 LangChain 記憶型檢索問答實現《小王子》文本互動
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>LLM on YuChen</title><link>https://Dandelionlibra.github.io/tags/llm/</link><description>Recent content in LLM on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Sun, 20 Jul 2025 08:50:00 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/tags/llm/index.xml" rel="self" type="application/rss+xml"/><item><title>檢索增強大型語言模型綜述 — RA-LLMs 系統性回顧與應用解析</title><link>https://Dandelionlibra.github.io/post/note/rag-llms-survey-note/</link><pubDate>Sun, 20 Jul 2025 08:50:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/rag-llms-survey-note/</guid><description>&lt;blockquote>
+&lt;p>本文整理自：&lt;a class="link" href="https://arxiv.org/abs/2405.06211" target="_blank" rel="noopener"
+>A Survey on RAG Meeting LLMs: Towards Retrieval-Augmented Large Language Models&lt;/a>&lt;br>
+作者：Ting-Rui Chiang, Xiangyu Zhang, Tianyu Zhao, Xiangyang Xue, Xipeng Qiu&lt;br>
+發佈於 arXiv，2024年5月&lt;/p>&lt;/blockquote>
+&lt;h1 id="摘要">摘要
+&lt;/h1>&lt;p>大型語言模型（LLMs）雖展現強大生成能力，但受限於內部知識與幻覺問題。檢索增強生成（Retrieval-Augmented Generation;RAG）透過即時檢索外部資訊，提升回應的可靠性與時效性。本文整理 RA-LLMs 的架構、訓練策略與應用，並探討其面臨的挑戰與未來發展，展現檢索對提升 LLM 實用性的關鍵價值。&lt;/p>
+&lt;h1 id="前言">前言
+&lt;/h1>&lt;p>檢索增強生成（RAG）技術透過結合資訊檢索與大型語言模型（LLMs），補足模型知識不足與幻覺問題，近年受到廣泛關注。LLMs 雖具強大生成能力，卻常受限於知識時效與專領域應用，而 RA-LLMs 則透過檢索外部資料提升生成品質。&lt;/p>
+&lt;h1 id="內文">內文
+&lt;/h1>&lt;h2 id="檢索retrieval">檢索（Retrieval）
+&lt;/h2>&lt;h2 id="生成generation">生成（Generation）
+&lt;/h2>&lt;h2 id="整合augmentation">整合（Augmentation）
+&lt;/h2></description></item><item><title>LangChain 記憶型檢索問答：《小王子》文本互動實踐</title><link>https://Dandelionlibra.github.io/post/langchain/retrieverqa-2/</link><pubDate>Fri, 18 Jul 2025 08:39:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/langchain/retrieverqa-2/</guid><description>&lt;h2 id="以-langchain-記憶型檢索問答實現小王子文本互動">以 LangChain 記憶型檢索問答實現《小王子》文本互動
 &lt;/h2>&lt;p>本文介紹如何利用 LangChain 框架，結合 Ollama Embeddings、ChromaDB 與記憶型問答鏈（RunnableWithMessageHistory），實現能記住上下文的互動式檢索問答。以《小王子》文本為例，展示記憶型問答與一般檢索問答的差異。&lt;/p>
 &lt;h3 id="一記憶型問答鏈設計">一、記憶型問答鏈設計
 &lt;/h3>&lt;p>LangChain 提供 &lt;code>RunnableWithMessageHistory&lt;/code>，可根據 session_id 保存對話歷程，讓模型具備「記憶」功能。核心流程如下：&lt;/p>
