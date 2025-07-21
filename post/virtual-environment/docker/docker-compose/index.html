@@ -5,39 +5,81 @@
 <svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
 <span>Dark Mode</span></li></ol></li></ol></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><header class=article-category><a href=/categories/tutorial/>Tutorial</a></header><div class=article-title-wrapper><h2 class=article-title><a href=/post/virtual-environment/docker/docker-compose/>使用 Docker-compose 快速建立多個關聯的 container</a></h2><h3 class=article-subtitle>本文介紹基於 Docker，旨在說明如何撰寫 Docker-compose。</h3></div><footer class=article-time><div><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
 <time class=article-time--published>Jul 17, 2025</time></div><div><svg class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
-<time class=article-time--reading>1 minute read</time></div></footer></div></header><section class=article-content><h2 id=內容大綱>內容大綱</h2><ol><li>為什麼要用 Docker-compose?</li><li>Docker-compose 基本語法與結構</li><li>建立多個關聯容器的範例</li><li>常用指令與管理方式</li><li>參考資料</li></ol><h2 id=1-為什麼要用-docker-compose>1. 為什麼要用 Docker-compose？</h2><p>當專案需要多個服務（如資料庫、後端、前端）協同運作時，單靠 <code>docker run</code> 指令管理多個容器會變得複雜。Docker-compose 讓你能用一份 YAML 設定檔，定義多個 container 的建置、網路、資料掛載與依賴關係，一鍵啟動或關閉整個應用環境，提升開發效率與可維護性。</p><hr><h2 id=2-docker-compose-基本語法與結構>2. Docker-compose 基本語法與結構</h2><p>Docker-compose 使用 <code>docker-compose.yml</code> 檔案描述多個服務。基本結構如下：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#f92672>version</span>: <span style=color:#e6db74>&#39;3.8&#39;</span>
+<time class=article-time--reading>2 minute read</time></div></footer></div></header><section class=article-content><h2 id=內容大綱>內容大綱</h2><ol><li>為什麼要用 Docker-compose?</li><li>Docker-compose 基本語法與結構</li><li>建立多個關聯容器的範例</li><li>常用指令與管理方式</li><li>參考資料</li></ol><h2 id=1-為什麼要用-docker-compose>1. 為什麼要用 Docker-compose？</h2><p>當專案需要多個服務（如資料庫、後端、前端）協同運作時，單靠 <code>docker run</code> 指令管理多個容器會變得複雜。Docker-compose 讓你能用一份 YAML 設定檔，定義多個 container 的建置、網路、資料掛載與依賴關係，一鍵啟動或關閉整個應用環境，提升開發效率與可維護性。</p><hr><h2 id=2-docker-compose-基本語法與結構>2. Docker-compose 基本語法與結構</h2><p>Docker-compose 透過 <code>docker-compose.yml</code> 檔案描述多個服務、網路、資料卷，並可設定健康檢查與指定 GPU。基本結構如下：</p><p>詳細說明可參考官方文件：<a class=link href=https://docs.docker.com/reference/compose-file/services/ target=_blank rel=noopener>Docker Compose</a></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#f92672>version</span>: <span style=color:#e6db74>&#39;3.8&#39;</span>
+</span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span><span style=color:#f92672>services</span>:
-</span></span><span style=display:flex><span>    <span style=color:#f92672>web</span>:
-</span></span><span style=display:flex><span>        <span style=color:#f92672>image</span>: <span style=color:#ae81ff>nginx:latest</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>服務名稱</span>:
+</span></span><span style=display:flex><span>        <span style=color:#f92672>image</span>: <span style=color:#ae81ff>映像檔名稱</span>
 </span></span><span style=display:flex><span>        <span style=color:#f92672>ports</span>:
-</span></span><span style=display:flex><span>            - <span style=color:#e6db74>&#34;8080:80&#34;</span>
-</span></span><span style=display:flex><span>    <span style=color:#f92672>db</span>:
-</span></span><span style=display:flex><span>        <span style=color:#f92672>image</span>: <span style=color:#ae81ff>mysql:8</span>
-</span></span><span style=display:flex><span>        <span style=color:#f92672>environment</span>:
-</span></span><span style=display:flex><span>            <span style=color:#f92672>MYSQL_ROOT_PASSWORD</span>: <span style=color:#ae81ff>example</span>
+</span></span><span style=display:flex><span>            - <span style=color:#e6db74>&#34;主機port:容器port&#34;</span>
 </span></span><span style=display:flex><span>        <span style=color:#f92672>volumes</span>:
-</span></span><span style=display:flex><span>            - <span style=color:#ae81ff>db_data:/var/lib/mysql</span>
-</span></span><span style=display:flex><span><span style=color:#f92672>volumes</span>:
-</span></span><span style=display:flex><span>    <span style=color:#f92672>db_data</span>:
-</span></span></code></pre></div><ul><li><code>services</code>: 定義多個容器服務</li><li><code>image</code>: 指定映像檔</li><li><code>ports</code>: 對應主機與容器的 port</li><li><code>environment</code>: 設定環境變數</li><li><code>volumes</code>: 掛載資料卷</li></ul><hr><h2 id=3-建立多個關聯容器的範例>3. 建立多個關聯容器的範例</h2><p>以下以一個簡單的 Web + 資料庫應用為例：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#f92672>version</span>: <span style=color:#e6db74>&#39;3.8&#39;</span>
+</span></span><span style=display:flex><span>            - <span style=color:#ae81ff>主機路徑:容器路徑</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>networks</span>:
+</span></span><span style=display:flex><span>            - <span style=color:#ae81ff>自訂網路名稱</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>deploy</span>:
+</span></span><span style=display:flex><span>            <span style=color:#f92672>resources</span>:
+</span></span><span style=display:flex><span>                <span style=color:#f92672>reservations</span>:
+</span></span><span style=display:flex><span>                    <span style=color:#f92672>devices</span>:
+</span></span><span style=display:flex><span>                        - <span style=color:#f92672>driver</span>: <span style=color:#ae81ff>nvidia</span>
+</span></span><span style=display:flex><span>                          <span style=color:#f92672>count</span>: <span style=color:#ae81ff>all</span>
+</span></span><span style=display:flex><span>                          <span style=color:#f92672>capabilities</span>: [<span style=color:#ae81ff>gpu]</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>healthcheck</span>:
+</span></span><span style=display:flex><span>            <span style=color:#f92672>test</span>: [<span style=color:#e6db74>&#34;CMD&#34;</span>, <span style=color:#e6db74>&#34;你的健康檢查指令&#34;</span>]
+</span></span><span style=display:flex><span>            <span style=color:#f92672>interval</span>: <span style=color:#ae81ff>30s</span>
+</span></span><span style=display:flex><span>            <span style=color:#f92672>timeout</span>: <span style=color:#ae81ff>10s</span>
+</span></span><span style=display:flex><span>            <span style=color:#f92672>retries</span>: <span style=color:#ae81ff>3</span>
+</span></span><span style=display:flex><span>            <span style=color:#f92672>start_period</span>: <span style=color:#ae81ff>60s</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>networks</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>自訂網路名稱</span>:
+</span></span><span style=display:flex><span>        <span style=color:#f92672>driver</span>: <span style=color:#ae81ff>bridge</span>
+</span></span></code></pre></div><ul><li><code>services</code>: 定義多個容器服務。</li><li><code>image</code>: 指定映像檔。</li><li><code>ports</code>: 對應主機與容器的 port。</li><li><code>volumes</code>: 掛載主機資料夾到容器。</li><li><code>networks</code>: 定義自訂網路，讓服務間可互通。</li><li><code>deploy.resources.reservations.devices</code>: 指定 GPU 資源。</li><li><code>healthcheck</code>: 健康檢查設定，確保服務正常運作。</li></ul><hr><h2 id=3-建立多個關聯容器的範例>3. 建立多個關聯容器的範例</h2><p>以下範例說明如何用 Docker-compose 同時啟動 Jupyter（支援 GPU）與 Ollama 兩個服務，並讓它們透過自訂網路 <code>ollama_net</code> 互相溝通：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#f92672>name</span>: <span style=color:#ae81ff>dandelion</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>networks</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>ollama_net</span>:
+</span></span><span style=display:flex><span>        <span style=color:#f92672>driver</span>: <span style=color:#ae81ff>bridge</span>
+</span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span><span style=color:#f92672>services</span>:
-</span></span><span style=display:flex><span>    <span style=color:#f92672>app</span>:
-</span></span><span style=display:flex><span>        <span style=color:#f92672>image</span>: <span style=color:#ae81ff>python:3.10</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>jupyter</span>:
+</span></span><span style=display:flex><span>        <span style=color:#f92672>image</span>: <span style=color:#ae81ff>pytorch/pytorch:2.3.0-cuda12.1-cudnn8-devel</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>tty</span>: <span style=color:#66d9ef>true</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>ports</span>:
+</span></span><span style=display:flex><span>            - <span style=color:#e6db74>&#34;8888:8888&#34;</span>
 </span></span><span style=display:flex><span>        <span style=color:#f92672>volumes</span>:
-</span></span><span style=display:flex><span>            - <span style=color:#ae81ff>./app:/app</span>
-</span></span><span style=display:flex><span>        <span style=color:#f92672>working_dir</span>: <span style=color:#ae81ff>/app</span>
-</span></span><span style=display:flex><span>        <span style=color:#f92672>command</span>: <span style=color:#ae81ff>python app.py</span>
-</span></span><span style=display:flex><span>        <span style=color:#f92672>depends_on</span>:
-</span></span><span style=display:flex><span>            - <span style=color:#ae81ff>db</span>
-</span></span><span style=display:flex><span>    <span style=color:#f92672>db</span>:
-</span></span><span style=display:flex><span>        <span style=color:#f92672>image</span>: <span style=color:#ae81ff>postgres:15</span>
-</span></span><span style=display:flex><span>        <span style=color:#f92672>environment</span>:
-</span></span><span style=display:flex><span>            <span style=color:#f92672>POSTGRES_PASSWORD</span>: <span style=color:#ae81ff>example</span>
+</span></span><span style=display:flex><span>            - <span style=color:#ae81ff>~/yuchen:/workspace/yuchen</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>networks</span>:
+</span></span><span style=display:flex><span>            - <span style=color:#ae81ff>ollama_net</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>deploy</span>:
+</span></span><span style=display:flex><span>            <span style=color:#f92672>resources</span>:
+</span></span><span style=display:flex><span>                <span style=color:#f92672>reservations</span>:
+</span></span><span style=display:flex><span>                    <span style=color:#f92672>devices</span>:
+</span></span><span style=display:flex><span>                        - <span style=color:#f92672>driver</span>: <span style=color:#ae81ff>nvidia</span>
+</span></span><span style=display:flex><span>                          <span style=color:#f92672>count</span>: <span style=color:#ae81ff>all</span>
+</span></span><span style=display:flex><span>                          <span style=color:#f92672>capabilities</span>: [<span style=color:#ae81ff>gpu]</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>ollama</span>:
+</span></span><span style=display:flex><span>        <span style=color:#f92672>tty</span>: <span style=color:#66d9ef>true</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>image</span>: <span style=color:#ae81ff>ollama/ollama</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>networks</span>:
+</span></span><span style=display:flex><span>            - <span style=color:#ae81ff>ollama_net</span>
 </span></span><span style=display:flex><span>        <span style=color:#f92672>volumes</span>:
-</span></span><span style=display:flex><span>            - <span style=color:#ae81ff>pg_data:/var/lib/postgresql/data</span>
-</span></span><span style=display:flex><span><span style=color:#f92672>volumes</span>:
-</span></span><span style=display:flex><span>    <span style=color:#f92672>pg_data</span>:
-</span></span></code></pre></div><ul><li><code>depends_on</code>: 指定啟動順序，app 依賴 db</li><li><code>volumes</code>: 保持資料持久化</li></ul><p>啟動所有服務：</p><p><code>-d</code> 參數代表「detached mode」，也就是讓 Docker-Compose 在背景執行所有服務，而不佔用目前的終端視窗，不會顯示即時日誌。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>docker-compose up -d
+</span></span><span style=display:flex><span>            - <span style=color:#ae81ff>~/yuchen/ollama:/root/.ollama</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>ports</span>:
+</span></span><span style=display:flex><span>            - <span style=color:#e6db74>&#34;11435:11434&#34;</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>deploy</span>:
+</span></span><span style=display:flex><span>            <span style=color:#f92672>resources</span>:
+</span></span><span style=display:flex><span>                <span style=color:#f92672>reservations</span>:
+</span></span><span style=display:flex><span>                    <span style=color:#f92672>devices</span>:
+</span></span><span style=display:flex><span>                        - <span style=color:#f92672>driver</span>: <span style=color:#ae81ff>nvidia</span>
+</span></span><span style=display:flex><span>                            <span style=color:#f92672>count</span>: <span style=color:#ae81ff>all</span>
+</span></span><span style=display:flex><span>                            <span style=color:#f92672>capabilities</span>: [<span style=color:#ae81ff>gpu]</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>healthcheck</span>:
+</span></span><span style=display:flex><span>            <span style=color:#f92672>test</span>: <span style=color:#ae81ff>/usr/local/bin/docker-healthcheck.sh</span>
+</span></span><span style=display:flex><span>            <span style=color:#f92672>interval</span>: <span style=color:#ae81ff>30s</span>
+</span></span><span style=display:flex><span>            <span style=color:#f92672>timeout</span>: <span style=color:#ae81ff>10s</span>
+</span></span><span style=display:flex><span>            <span style=color:#f92672>retries</span>: <span style=color:#ae81ff>3</span>
+</span></span><span style=display:flex><span>            <span style=color:#f92672>start_period</span>: <span style=color:#ae81ff>60s</span>
+</span></span></code></pre></div><ul><li><code>networks</code> 讓 jupyter 與 ollama 服務可互通。</li><li><code>port</code><ul><li>&ldquo;11435:11434&rdquo; 表示將主機（對外）上的 11435 端口映射到容器（對內）中的 11434 端口。</li><li>外部訪問主機的 11435 端口時，實際會轉發到容器內部的 11434 端口。</li></ul></li><li><code>deploy.resources.reservations.devices</code> 指定兩個服務都可使用所有 GPU。</li><li><code>healthcheck</code> 可自動檢查服務健康狀態。</li><li><code>volumes</code> 保持資料持久化。</li></ul><p>這樣設定後，只需一行指令即可同時啟動、管理多個容器，並確保它們能互相連線與資料共享。</p><ul><li><code>depends_on</code>: 指定啟動順序，app 依賴 db</li><li><code>volumes</code>: 保持資料持久化</li></ul><p>啟動所有服務：</p><p><code>-d</code> 參數代表「detached mode」，也就是讓 Docker-Compose 在背景執行所有服務，而不佔用目前的終端視窗，不會顯示即時日誌。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>docker-compose up -d
 </span></span></code></pre></div><p>停止並移除所有服務：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>docker-compose down
 </span></span></code></pre></div><hr><h2 id=4-常用指令與管理方式>4. 常用指令與管理方式</h2><ul><li>啟動所有服務：<code>docker-compose up</code></li><li>背景執行：<code>docker-compose up -d</code></li><li>停止服務：<code>docker-compose down</code></li><li>查看日誌：<code>docker-compose logs</code></li><li>進入容器：<code>docker-compose exec &lt;service> bash</code></li></ul><p>更多指令可參考 <a class=link href=https://docs.docker.com/compose/reference/overview/ target=_blank rel=noopener>官方文件</a>。</p><hr><h2 id=5-參考資料>5. 參考資料</h2><ul><li><a class=link href=https://docs.docker.com/compose/ target=_blank rel=noopener>Docker Compose 官方文件</a></li><li><a class=link href=https://www.docker.com/ target=_blank rel=noopener>Docker 官方網站</a></li><li><a class=link href=https://dandelionlibra.github.io/post/virtual-environment/docker/setup-jupyter-notebook-with-docker/ target=_blank rel=noopener>如何安裝 Docker（延伸閱讀）</a></li></ul></section><footer class=article-footer><section class=article-tags><a href=/tags/docker/>Docker</a>
 <a href=/tags/docker-compose/>Docker-Compose</a></section><section class=article-lastmod><svg class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
