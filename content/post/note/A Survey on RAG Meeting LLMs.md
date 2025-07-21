@@ -1,6 +1,6 @@
 ---
 title: 檢索增強大型語言模型綜述 — RA-LLMs 系統性回顧與應用解析
-description: A Survey on RAG Meeting LLMs: Towards Retrieval-Augmented Large Language Models
+description: A Survey on RAG Meeting LLMs Towards Retrieval-Augmented Large Language Models
 slug: rag-llms-survey-note
 date: 2025-07-20 08:50:00+0800
 categories:
