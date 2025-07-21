@@ -27,57 +27,126 @@ tags:
 
 ## 2. Docker-compose 基本語法與結構
 
-Docker-compose 使用 `docker-compose.yml` 檔案描述多個服務。基本結構如下：
+Docker-compose 透過 `docker-compose.yml` 檔案描述多個服務、網路、資料卷，並可設定健康檢查與指定 GPU。基本結構如下：
+
+詳細說明可參考官方文件：[Docker Compose](https://docs.docker.com/reference/compose-file/services/)
 
 ```yaml
 version: '3.8'
+
 services:
-    web:
-        image: nginx:latest
+    服務名稱:
+        image: 映像檔名稱
         ports:
-            - "8080:80"
-    db:
-        image: mysql:8
-        environment:
-            MYSQL_ROOT_PASSWORD: example
+            - "主機port:容器port"
         volumes:
-            - db_data:/var/lib/mysql
-volumes:
-    db_data:
+            - 主機路徑:容器路徑
+        networks:
+            - 自訂網路名稱
+        deploy:
+            resources:
+                reservations:
+                    devices:
+                        - driver: nvidia
+                          count: all
+                          capabilities: [gpu]
+        healthcheck:
+            test: ["CMD", "你的健康檢查指令"]
+            interval: 30s
+            timeout: 10s
+            retries: 3
+            start_period: 60s
+
+
+networks:
+    自訂網路名稱:
+        driver: bridge
 ```
 
-- `services`: 定義多個容器服務
-- `image`: 指定映像檔
-- `ports`: 對應主機與容器的 port
-- `environment`: 設定環境變數
-- `volumes`: 掛載資料卷
+- `services`: 定義多個容器服務。
+- `image`: 指定映像檔。
+- `ports`: 對應主機與容器的 port。
+- `volumes`: 掛載主機資料夾到容器。
+- `networks`: 定義自訂網路，讓服務間可互通。
+- `deploy.resources.reservations.devices`: 指定 GPU 資源。
+- `healthcheck`: 健康檢查設定，確保服務正常運作。
+
+<!--
+healthcheck 區塊用於設定 Docker 容器的健康檢查機制。  
+- `test`: 指定健康檢查的指令（可替換為實際檢查服務狀態的命令）。  
+- `interval`: 兩次健康檢查之間的間隔時間（此例為 30 秒）。  
+- `timeout`: 單次健康檢查的超時時間（此例為 10 秒）。  
+- `retries`: 連續失敗次數達到此值時，容器會被標記為不健康。  
+- `start_period`: 容器啟動後，健康檢查開始前的緩衝期（此例為 60 秒）。  
+
+註：  
+1. 健康檢查有助於 Docker Compose 自動監控服務狀態，並在服務異常時採取相應措施。  
+2. 詳細說明可參考官方文件：[Docker Compose healthcheck](https://docs.docker.com/compose/compose-file/compose-file-v3/#healthcheck)
+-->
 
 ---
 
 ## 3. 建立多個關聯容器的範例
 
-以下以一個簡單的 Web + 資料庫應用為例：
+以下範例說明如何用 Docker-compose 同時啟動 Jupyter（支援 GPU）與 Ollama 兩個服務，並讓它們透過自訂網路 `ollama_net` 互相溝通：
 
 ```yaml
-version: '3.8'
+name: dandelion
+
+networks:
+    ollama_net:
+        driver: bridge
+
 services:
-    app:
-        image: python:3.10
+    jupyter:
+        image: pytorch/pytorch:2.3.0-cuda12.1-cudnn8-devel
+        tty: true
+        ports:
+            - "8888:8888"
         volumes:
-            - ./app:/app
-        working_dir: /app
-        command: python app.py
-        depends_on:
-            - db
-    db:
-        image: postgres:15
-        environment:
-            POSTGRES_PASSWORD: example
+            - ~/yuchen:/workspace/yuchen
+        networks:
+            - ollama_net
+        deploy:
+            resources:
+                reservations:
+                    devices:
+                        - driver: nvidia
+                          count: all
+                          capabilities: [gpu]
+    ollama:
+        tty: true
+        image: ollama/ollama
+        networks:
+            - ollama_net
         volumes:
-            - pg_data:/var/lib/postgresql/data
-volumes:
-    pg_data:
+            - ~/yuchen/ollama:/root/.ollama
+        ports:
+            - "11435:11434"
+        deploy:
+            resources:
+                reservations:
+                    devices:
+                        - driver: nvidia
+                            count: all
+                            capabilities: [gpu]
+        healthcheck:
+            test: /usr/local/bin/docker-healthcheck.sh
+            interval: 30s
+            timeout: 10s
+            retries: 3
+            start_period: 60s
 ```
+
+- `networks` 讓 jupyter 與 ollama 服務可互通。
+- `port`
+    - "11435:11434" 表示將主機（對外）上的 11435 端口映射到容器（對內）中的 11434 端口。
+    - 外部訪問主機的 11435 端口時，實際會轉發到容器內部的 11434 端口。
+- `deploy.resources.reservations.devices` 指定兩個服務都可使用所有 GPU。
+- `healthcheck` 可自動檢查服務健康狀態。
+- `volumes` 保持資料持久化。
+
+這樣設定後，只需一行指令即可同時啟動、管理多個容器，並確保它們能互相連線與資料共享。
 
 - `depends_on`: 指定啟動順序，app 依賴 db
 - `volumes`: 保持資料持久化
