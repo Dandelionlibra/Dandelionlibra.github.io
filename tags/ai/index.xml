@@ -158,7 +158,46 @@ Decoder 讀取表示 → 生成：Transformer 是一種...
 &lt;h3 id="intermediate-layer-integration">Intermediate-Layer Integration:
 &lt;/h3>&lt;p>在生成模型內部的中間層注入檢索資訊，相較於輸入層與輸出層整合，屬於 半參數式（Semi-parametric） 的強化方式，具有更高的資訊融合深度與潛力。&lt;/p>
 &lt;h3 id="34retrieval-augmentation-necessity-and-frequency">3.4.Retrieval Augmentation Necessity and Frequency
-&lt;/h3>&lt;p>還未整理&lt;/p>
+&lt;/h3>&lt;p>基於 LLM 的生成中，檢索操作旨在補充知識以增強生成。儘管檢索增強模型前景光明，但若不加區分地使用不相關的段落進行增強，可能會覆蓋 LLM 已有的正確知識，導致錯誤回應，甚至使幻覺率翻倍。因此，對於檢索增強型 LLM (RA-LLMs) 來說，&lt;strong>準確回憶先驗知識並僅在必要時選擇性地整合檢索資訊&lt;/strong>至關重要，這是實現穩健 RA-LLMs 的關鍵。&lt;/p>
+&lt;h4 id="檢索必要性判斷">檢索必要性判斷
+&lt;/h4>&lt;p>大多數方法基於 LLM 的初步答案或內部推理結果來判斷是否需要檢索：&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>特殊標記控制&lt;/strong>：如 Self-RAG，引入特殊標記評估檢索必要性並控制行為。&lt;/li>
+&lt;li>&lt;strong>迭代提示決策&lt;/strong>：設計迭代提示決定生成中是否需要額外資訊。&lt;/li>
+&lt;li>&lt;strong>基於信賴度 (Logits Confidence)&lt;/strong>：傳統 RAG 中透過評估生成模型輸出的 logits 信賴度來判斷。如 FLARE，當 logits 低於閾值時動態觸發 RAG。&lt;/li>
+&lt;li>&lt;strong>協同檢測&lt;/strong>：如 SlimPLM，利用輕量級代理模型生成「啟發式答案」檢測 LLM 缺失知識，並用於查詢重寫以促進檢索。&lt;/li>
+&lt;/ul>
+&lt;h4 id="檢索頻率-retrieval-frequency">檢索頻率 (Retrieval Frequency)
+&lt;/h4>&lt;p>檢索頻率（或稱檢索步長）是決定生成過程中檢索使用程度的重要設計考量，影響模型的效率和有效性。當不考慮檢索必要性時，檢索頻率通常是預定義和固定的，主要有三種設定：&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>一次性檢索 (One-time retrieval)&lt;/strong>：&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>方式&lt;/strong>：在生成過程開始時只調用一次檢索功能，檢索所有所需資訊，然後提供給生成模型。&lt;/li>
+&lt;li>&lt;strong>適用場景&lt;/strong>：外部資料庫資訊需求對 LLM 來說很明確的情況。&lt;/li>
+&lt;li>&lt;strong>限制&lt;/strong>：對於需要長篇輸出的任務（如開放域摘要），預先檢索的文件可能不足以支持整個生成序列，需要生成中進行檢索操作。&lt;/li>
+&lt;li>&lt;strong>範例&lt;/strong>：REALM。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>每 N 個詞元檢索 (Every-n-token retrieval)&lt;/strong>：&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>方式&lt;/strong>：在生成過程中每隔 N 個詞元觸發一次檢索。&lt;/li>
+&lt;li>&lt;strong>適用場景&lt;/strong>：需要持續資訊補充的長篇生成任務。&lt;/li>
+&lt;li>&lt;strong>範例&lt;/strong>：In-Context RALM、RETRO。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>每個詞元檢索 (Every-token retrieval)&lt;/strong>：&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>方式&lt;/strong>：在生成過程中，為每個詞元的預測都檢索資訊。&lt;/li>
+&lt;li>&lt;strong>頻率&lt;/strong>：最頻繁的檢索策略。&lt;/li>
+&lt;li>&lt;strong>範例&lt;/strong>：kNN-LM。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>權衡&lt;/strong>：
+總體而言，檢索頻率影響 RAG 方法的有效性和效率。更頻繁的檢索通常帶來更好的性能，但也顯著增加計算成本。&lt;/p>
 &lt;h2 id="ra-llms-訓練策略概述">RA-LLMs 訓練策略概述
 &lt;/h2>&lt;p>&lt;img src="https://ar5iv.labs.arxiv.org/html/2405.06211/assets/x4.png"
 loading="lazy"
@@ -193,12 +232,19 @@ alt="RA-LLMs 訓練策略總覽"
 &lt;li>提示工程 — 調整輸入&lt;/li>
 &lt;li>生成控制 — 調整輸出過程&lt;/li>
 &lt;/ul>
+&lt;hr>
 &lt;h3 id="需訓練方法training-based">需訓練方法（Training-Based）
 &lt;/h3>&lt;ol>
-&lt;li>Independent Training&lt;br>
-獨立訓練方法會將 RAG 流程中的每個組件分開、獨立地進行訓練。這意味著檢索器和生成器各自最佳化，互不干擾。&lt;/li>
+&lt;li>
+&lt;p>Independent Training&lt;br>
+獨立訓練方法會將 RAG 流程中的每個組件分開、獨立地進行訓練，這意味著在訓練過程中，這兩個組件之間沒有任何交互作用。&lt;/p>
+&lt;p>&lt;strong>目的與優勢：&lt;/strong>&lt;br>
+相較於無需訓練的方法，獨立訓練能有效提升 RAG 模型的性能。&lt;/p>
+&lt;ol>
+&lt;li>訓練 LLMs 以更好地利用檢索到的知識。&lt;/li>
+&lt;li>訓練檢索器以彌合資訊檢索與語言生成之間的差距。&lt;/li>
 &lt;/ol>
-&lt;p>檢索器類型：&lt;/p>
+&lt;p>&lt;strong>檢索器類型：&lt;/strong>&lt;/p>
 &lt;ul>
 &lt;li>
 &lt;p>稀疏檢索器 (Sparse Retriever) ：
@@ -206,17 +252,34 @@ alt="RA-LLMs 訓練策略總覽"
 &lt;/li>
 &lt;li>
 &lt;p>密集檢索器 (Dense Retriever) ：
-密集檢索器則採用深度神經網絡將查詢和文件編碼成密集表示 (dense representations)。然後，通常使用內積計算相關性分數並檢索相關的外部知識。&lt;/p>
+密集檢索器則採用深度神經網絡將查詢和文件編碼成密集表示 (dense representations)。然後，通常使用內積計算相關性分數並檢索相關的外部知識。序列訓練透過協調訓練的方式，尋求更深層次的整合效果。&lt;/p>
 &lt;/li>
 &lt;/ul>
-&lt;ol start="2">
+&lt;/li>
 &lt;li>
 &lt;p>Sequential Training&lt;br>
-序列訓練方法則採取分階段的訓練方式。首先訓練一個模組（例如檢索器），然後將這個訓練好的組件固定下來，再利用它來指導另一個模組（例如生成器）的調整過程。&lt;/p>
+序列訓練方法則採取分階段的訓練方式。首先訓練一個模組（例如檢索器），然後再利用這個訓練好的模組去指導另一個模組（例如生成器）的調整過程，目的在改善模組間的協同作用。&lt;/p>
+&lt;p>&lt;strong>訓練流程：&lt;/strong> 序列訓練通常分為兩個階段&lt;/p>
+&lt;ol>
+&lt;li>**初始預訓練：**首先對檢索器或生成器中的一個模組進行獨立的預訓練。&lt;/li>
+&lt;li>**固定與訓練：**一旦其中一個模組完成預訓練，它就會被固定（freeze）下來，而另一個模組則在其輔助下進行訓練。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>優勢與靈活性：&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>協同增益：與獨立訓練相比，序列訓練的優勢在於可訓練的模組能夠受益於固定模組的引導和協助，從而更好地適應彼此。&lt;/li>
+&lt;li>利用現有模型：值得注意的是，許多已經預訓練好的強大模型（例如 BERT、CLIP、T5）可以直接作為固定模組使用，從而省略了初始的預訓練步驟，進一步提高了效率。&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>根據檢索器和生成器之間的訓練順序，序列訓練可分為兩大類：&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>檢索器優先 (Retriever First)：&lt;br>
+此類方法首先訓練檢索器，然後將其固定，再訓練生成器。&lt;/li>
+&lt;li>LLMs 優先 (LLMs First)：&lt;br>
+此類方法則相反，先訓練 LLM，再將其固定，然後訓練檢索器。&lt;/li>
+&lt;/ul>
 &lt;/li>
 &lt;li>
 &lt;p>Joint Training&lt;br>
-聯合訓練方法則是同時訓練檢索器和生成器。這種方式旨在讓兩個模組在訓練過程中相互協調、共同進步。&lt;/p>
+聯合訓練方法則是同時訓練檢索器和生成器，這種方式是為了讓兩個模組在訓練過程中相互協調、共同進步。&lt;/p>
 &lt;/li>
 &lt;/ol></description></item><item><title>LangChain 記憶型檢索問答：《小王子》文本互動實踐</title><link>https://Dandelionlibra.github.io/post/langchain/retrieverqa-2/</link><pubDate>Fri, 18 Jul 2025 08:39:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/langchain/retrieverqa-2/</guid><description>&lt;h2 id="以-langchain-記憶型檢索問答實現小王子文本互動">以 LangChain 記憶型檢索問答實現《小王子》文本互動
 &lt;/h2>&lt;p>本文介紹如何利用 LangChain 框架，結合 Ollama Embeddings、ChromaDB 與記憶型問答鏈（RunnableWithMessageHistory），實現能記住上下文的互動式檢索問答。以《小王子》文本為例，展示記憶型問答與一般檢索問答的差異。&lt;/p>
