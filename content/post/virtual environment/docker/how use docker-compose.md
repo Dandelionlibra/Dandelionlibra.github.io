@@ -148,11 +148,7 @@ services:
 
 這樣設定後，只需一行指令即可同時啟動、管理多個容器，並確保它們能互相連線與資料共享。
 
-- `depends_on`: 指定啟動順序，app 依賴 db
-- `volumes`: 保持資料持久化
-
-啟動所有服務：
-
+啟動所有服務：  
 `-d` 參數代表「detached mode」，也就是讓 Docker-Compose 在背景執行所有服務，而不佔用目前的終端視窗，不會顯示即時日誌。  
 ```bash
 docker-compose up -d
