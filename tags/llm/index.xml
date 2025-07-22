@@ -235,27 +235,20 @@ alt="RA-LLMs 訓練策略總覽"
 &lt;hr>
 &lt;h3 id="需訓練方法training-based">需訓練方法（Training-Based）
 &lt;/h3>&lt;ol>
-&lt;li>
-&lt;p>Independent Training&lt;br>
-獨立訓練方法會將 RAG 流程中的每個組件分開、獨立地進行訓練，這意味著在訓練過程中，這兩個組件之間沒有任何交互作用。&lt;/p>
-&lt;p>&lt;strong>目的與優勢：&lt;/strong>&lt;br>
-相較於無需訓練的方法，獨立訓練能有效提升 RAG 模型的性能。&lt;/p>
-&lt;ol>
-&lt;li>訓練 LLMs 以更好地利用檢索到的知識。&lt;/li>
-&lt;li>訓練檢索器以彌合資訊檢索與語言生成之間的差距。&lt;/li>
+&lt;li>Independent Training&lt;br>
+獨立訓練方法會將 RAG 流程中的每個組件分開、獨立地進行訓練，這意味著在訓練過程中，這兩個組件之間沒有任何交互作用。&lt;/li>
 &lt;/ol>
-&lt;p>&lt;strong>檢索器類型：&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>
-&lt;p>稀疏檢索器 (Sparse Retriever) ：
+&lt;p>&lt;strong>目的與優勢：&lt;/strong>&lt;br>
+相較於無需訓練的方法，獨立訓練能有效提升 RAG 模型的性能。&lt;br>
+1. 訓練 LLMs 以更好地利用檢索到的知識。&lt;br>
+2. 訓練檢索器以彌合資訊檢索與語言生成之間的差距。&lt;/p>
+&lt;p>&lt;strong>檢索器類型：&lt;/strong>
+* 稀疏檢索器 (Sparse Retriever) ：
 這類檢索器通常利用稀疏特徵，例如詞頻，來表示文件，並根據任務特定的指標（如 TF-IDF 和 BM25）計算相關性分數 。&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>密集檢索器 (Dense Retriever) ：
-密集檢索器則採用深度神經網絡將查詢和文件編碼成密集表示 (dense representations)。然後，通常使用內積計算相關性分數並檢索相關的外部知識。序列訓練透過協調訓練的方式，尋求更深層次的整合效果。&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;/li>
+&lt;pre>&lt;code>* 密集檢索器 (Dense Retriever) ：
+密集檢索器則採用深度神經網絡將查詢和文件編碼成密集表示 (dense representations)。然後，通常使用內積計算相關性分數並檢索相關的外部知識。序列訓練透過協調訓練的方式，尋求更深層次的整合效果。
+&lt;/code>&lt;/pre>
+&lt;ol start="2">
 &lt;li>
 &lt;p>Sequential Training&lt;br>
 序列訓練方法則採取分階段的訓練方式。首先訓練一個模組（例如檢索器），然後再利用這個訓練好的模組去指導另一個模組（例如生成器）的調整過程，目的在改善模組間的協同作用。&lt;/p>
