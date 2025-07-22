@@ -166,4 +166,4 @@ Re<sup>2</sup>G 在槽填充、問答、事實核查和對話等任務中，無�
 
 ## Reference
 
-- [Re2G: Retrieve, Rerank, Generate-ar5iv 可視化版本](https://ar5iv.labs.arxiv.org/html/2207.06300#:~:text=The%20third%20solution%20is%20our,excessive%20loss%20and%20stabilize%20training)
+- [Re2G: Retrieve, Rerank, Generate-ar5iv 可視化版本](https://ar5iv.labs.arxiv.org/html/2207.06300)
