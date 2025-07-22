@@ -4,7 +4,26 @@
 作者：Zirui Guo, Lianghao Xia, Yanhua Yu, Tu Ao, Chao Huang&lt;br>
 發佈於 arXiv，2024年10月&lt;/p>&lt;/blockquote>
 &lt;h1 id="摘要">摘要
-&lt;/h1>&lt;p>《LightRAG: Simple and Fast Retrieval-Augmented Generation》提出一種輕量且高效的檢索增強生成（RAG）框架，透過結合圖結構知識與雙層檢索策略來提升大型語言模型的回應品質。現有 RAG 系統常受限於扁平資料表徵與缺乏上下文關聯，導致回答內容片段化、無法捕捉實體之間的複雜關係。為了解決這些問題，LightRAG 在文本索引和檢索過程中引入知識圖譜，並採用雙層（低階/高階）檢索架構，同時整合圖結構與向量表示以高效檢索相關實體及其關係。此框架還包含一套漸進式更新演算法，能及時融合新知識，確保模型在動態資料環境中保持有效和即時。實驗結果顯示，相較既有方法，LightRAG 在檢索準確率與效率上都有顯著提升。研究已開源並提供原始碼供社群使用。&lt;/p></description></item><item><title>Re2G 論文導讀 — Retrieve, Rerank, Generate 框架解析與應用</title><link>https://Dandelionlibra.github.io/post/note/re2g-paper-review/</link><pubDate>Tue, 22 Jul 2025 01:31:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/re2g-paper-review/</guid><description>&lt;blockquote>
+&lt;/h1>&lt;p>RAG 透過整合外部知識來源，提升 LLMs 回應的準確性與上下文相關性，但面臨&lt;strong>過度依賴平面資料表示&lt;/strong> (flat data representations)、&lt;strong>上下文感知能力不足&lt;/strong> (inadequate contextual awareness)、&lt;strong>導致生成碎片化答案&lt;/strong> (fragmented answers)，無法捕捉複雜的相互依賴關係 (inter-dependencies)。&lt;br>
+LightRAG，提出透過將圖結構 (graph structures) 引入文本的索引 (text indexing) 和檢索 (retrieval) 過程來解決上述問題。&lt;/p>
+&lt;hr>
+&lt;h1 id="引言">引言
+&lt;/h1>&lt;h2 id="現有-rag-系統的局限性">現有 RAG 系統的局限性
+&lt;/h2>&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>依賴平面資料表示：&lt;/strong> 許多方法依賴於平面資料表示（flat data representations），限制了它們根據實體之間複雜關係來理解和檢索資訊的能力。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>缺乏上下文感知：&lt;/strong> 這些系統通常缺乏維持不同實體及其相互關係之間連貫性所需的上下文感知能力，導致回應可能無法完全解決用戶查詢。&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;blockquote>
+&lt;p>例：考慮用戶提問「電動車的興起如何影響城市空氣品質和大眾運輸基礎設施？」現有 RAG 方法可能檢索到關於電動車、空氣污染和公共交通挑戰的獨立文檔，但難以將這些信息綜合為一個連貫的回應。它們可能無法解釋電動車的普及如何改善空氣品質，進而可能影響公共交通規劃，用戶可能收到一個碎片化的答案，未能充分捕捉這些主題之間複雜的相互依賴關係。&lt;/p>&lt;/blockquote>
+&lt;h2 id="lightrag-的提出與核心挑戰">LightRAG 的提出與核心挑戰
+&lt;/h2>&lt;hr>
+&lt;hr>
+&lt;hr>
+&lt;hr></description></item><item><title>Re2G 論文導讀 — Retrieve, Rerank, Generate 框架解析與應用</title><link>https://Dandelionlibra.github.io/post/note/re2g-paper-review/</link><pubDate>Tue, 22 Jul 2025 01:31:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/re2g-paper-review/</guid><description>&lt;blockquote>
 &lt;p>本文整理自：&lt;a class="link" href="https://arxiv.org/abs/2207.06300" target="_blank" rel="noopener"
 >Re2G: Retrieve, Rerank, Generate&lt;/a>&lt;br>
 作者：Michael Glass, Gaetano Rossiello, Md Faisal Mahbub Chowdhury, Ankita Rajaram Naik, Pengshan Cai, Alfio Gliozzo&lt;br>
