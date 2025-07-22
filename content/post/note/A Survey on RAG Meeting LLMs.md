@@ -16,7 +16,7 @@ weight: 1
 ---
 
 > 本文整理自：[A Survey on RAG Meeting LLMs: Towards Retrieval-Augmented Large Language Models](https://arxiv.org/abs/2405.06211)  
-> 作者：Ting-Rui Chiang, Xiangyu Zhang, Tianyu Zhao, Xiangyang Xue, Xipeng Qiu  
+> 作者：Wenqi Fan, Yujuan Ding, Liangbo Ning, Shijie Wang, Hengyun Li, Dawei Yin, Tat-Seng Chua, Qing Li  
 > 發佈於 arXiv，2024年5月
 
 

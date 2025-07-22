@@ -17,7 +17,7 @@ weight: 1
 ---
 
 > 本文整理自：[LightRAG: Simple and Fast Retrieval-Augmented Generation](https://arxiv.org/abs/2410.05779)  
-> 作者：Yuxiang Zhang, Yuchen Zhang, Yiming Chen, Yiming Wang, Yiming Yang  
+> 作者：Zirui Guo, Lianghao Xia, Yanhua Yu, Tu Ao, Chao Huang  
 > 發佈於 arXiv，2024年10月
 
 # 摘要
