@@ -1187,22 +1187,25 @@ ps.若沒有 pip 我未來再寫一篇安裝與使用 pip 的文章 ;)&lt;/p>
 &lt;p>這樣設定後，只需一行指令即可同時啟動、管理多個容器，並確保它們能互相連線與資料共享。&lt;/p>
 &lt;p>啟動所有服務：&lt;br>
 &lt;code>-d&lt;/code> 參數代表「detached mode」，也就是讓 Docker-Compose 在背景執行所有服務，而不佔用目前的終端視窗，不會顯示即時日誌。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>docker-compose up -d
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>docker compose up -d
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>停止並移除所有服務：&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>docker-compose down
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>docker compose down
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;hr>
 &lt;h2 id="4-常用指令與管理方式">4. 常用指令與管理方式
 &lt;/h2>&lt;ul>
-&lt;li>啟動所有服務：&lt;code>docker-compose up&lt;/code>&lt;/li>
-&lt;li>背景執行：&lt;code>docker-compose up -d&lt;/code>&lt;/li>
-&lt;li>停止服務：&lt;code>docker-compose down&lt;/code>&lt;/li>
-&lt;li>查看日誌：&lt;code>docker-compose logs&lt;/code>&lt;/li>
-&lt;li>進入容器：&lt;code>docker-compose exec &amp;lt;service&amp;gt; bash&lt;/code>&lt;/li>
+&lt;li>啟動所有服務：&lt;code>docker compose up&lt;/code>&lt;/li>
+&lt;li>背景執行：&lt;code>docker compose up -d&lt;/code>&lt;/li>
+&lt;li>停止服務：&lt;code>docker compose down&lt;/code>&lt;/li>
+&lt;li>查看日誌：&lt;code>docker compose logs&lt;/code>&lt;/li>
+&lt;li>進入容器：&lt;code>docker compose exec &amp;lt;service&amp;gt; bash&lt;/code>&lt;/li>
 &lt;/ul>
 &lt;p>更多指令可參考 &lt;a class="link" href="https://docs.docker.com/compose/reference/overview/" target="_blank" rel="noopener"
 >官方文件&lt;/a>。&lt;/p>
 &lt;hr>
-&lt;h2 id="5-參考資料">5. 參考資料
+&lt;h2 id="5-補充-使用-pytorch-版的-jupyter">5. 補充-使用 pytorch 版的 jupyter
+&lt;/h2>&lt;p>進入容器後，開啟 jupyter。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>jupyter lab --ip&lt;span style="color:#f92672">=&lt;/span>0.0.0.0 --port&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">8888&lt;/span> --allow-root --no-browser
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="6-參考資料">6. 參考資料
 &lt;/h2>&lt;ul>
 &lt;li>&lt;a class="link" href="https://docs.docker.com/compose/" target="_blank" rel="noopener"
 >Docker Compose 官方文件&lt;/a>&lt;/li>
