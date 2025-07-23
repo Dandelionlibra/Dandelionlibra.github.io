@@ -2141,8 +2141,9 @@ Explanation: 7/-3 = -2.33333.. which is truncated to -2.&lt;/p>&lt;/blockquote>
 >官方文件&lt;/a>。&lt;/p>
 &lt;hr>
 &lt;h2 id="5-補充-使用-pytorch-版的-jupyter">5. 補充-使用 pytorch 版的 jupyter
-&lt;/h2>&lt;p>進入容器後，開啟 jupyter。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>jupyter lab --ip&lt;span style="color:#f92672">=&lt;/span>0.0.0.0 --port&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">8888&lt;/span> --allow-root --no-browser
+&lt;/h2>&lt;p>進入容器後，下載並開啟 jupyter。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>pip install jupyterlab
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>jupyter lab --ip&lt;span style="color:#f92672">=&lt;/span>0.0.0.0 --port&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">8888&lt;/span> --allow-root --no-browser
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="6-參考資料">6. 參考資料
 &lt;/h2>&lt;ul>
 &lt;li>&lt;a class="link" href="https://docs.docker.com/compose/" target="_blank" rel="noopener"
