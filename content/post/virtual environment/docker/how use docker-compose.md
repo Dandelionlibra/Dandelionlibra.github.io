@@ -175,12 +175,11 @@ docker compose down
 ---
 
 ## 5. 補充-使用 pytorch 版的 jupyter
-進入容器後，開啟 jupyter。  
+進入容器後，下載並開啟 jupyter。  
 ``` bash
+pip install jupyterlab
 jupyter lab --ip=0.0.0.0 --port=8888 --allow-root --no-browser
 ```
-
-
 
 ## 6. 參考資料
 
