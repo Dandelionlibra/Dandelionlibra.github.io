@@ -151,30 +151,38 @@ services:
 啟動所有服務：  
 `-d` 參數代表「detached mode」，也就是讓 Docker-Compose 在背景執行所有服務，而不佔用目前的終端視窗，不會顯示即時日誌。  
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 停止並移除所有服務：
 
 ```bash
-docker-compose down
+docker compose down
 ```
 
 ---
 
 ## 4. 常用指令與管理方式
 
-- 啟動所有服務：`docker-compose up`
-- 背景執行：`docker-compose up -d`
-- 停止服務：`docker-compose down`
-- 查看日誌：`docker-compose logs`
-- 進入容器：`docker-compose exec <service> bash`
+- 啟動所有服務：`docker compose up`
+- 背景執行：`docker compose up -d`
+- 停止服務：`docker compose down`
+- 查看日誌：`docker compose logs`
+- 進入容器：`docker compose exec <service> bash`
 
 更多指令可參考 [官方文件](https://docs.docker.com/compose/reference/overview/)。
 
 ---
 
-## 5. 參考資料
+## 5. 補充-使用 pytorch 版的 jupyter
+進入容器後，開啟 jupyter。  
+``` bash
+jupyter lab --ip=0.0.0.0 --port=8888 --allow-root --no-browser
+```
+
+
+
+## 6. 參考資料
 
 - [Docker Compose 官方文件](https://docs.docker.com/compose/)
 - [Docker 官方網站](https://www.docker.com/)
