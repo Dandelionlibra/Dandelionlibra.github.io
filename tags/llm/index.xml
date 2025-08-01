@@ -267,7 +267,7 @@
 &lt;td>需要深度自訂模型行為或進行學術研究&lt;/td>
 &lt;/tr>
 &lt;/tbody>
-&lt;/table></description></item><item><title>檢索增強大型語言模型綜述 — RA-LLMs 系統性回顧與應用解析</title><link>https://Dandelionlibra.github.io/post/note/rag-llms-survey-note/</link><pubDate>Sun, 20 Jul 2025 08:50:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/rag-llms-survey-note/</guid><description>&lt;blockquote>
+&lt;/table></description></item><item><title>檢索增強大型語言模型綜述 — RA-LLMs 系統性回顧與應用解析</title><link>https://Dandelionlibra.github.io/post/paper/rag-llms-survey-note/</link><pubDate>Sun, 20 Jul 2025 08:50:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/paper/rag-llms-survey-note/</guid><description>&lt;blockquote>
 &lt;p>本文整理自：&lt;a class="link" href="https://arxiv.org/abs/2405.06211" target="_blank" rel="noopener"
 >A Survey on RAG Meeting LLMs: Towards Retrieval-Augmented Large Language Models&lt;/a>&lt;br>
 作者：Wenqi Fan, Yujuan Ding, Liangbo Ning, Shijie Wang, Hengyun Li, Dawei Yin, Tat-Seng Chua, Qing Li&lt;br>
@@ -778,7 +778,7 @@ alt="Data_Connection"
 &lt;/li>
 &lt;/ul>
 &lt;h2 id="程式事例">程式事例
-&lt;/h2>&lt;p>&lt;a class="link" href="https://github.com/Dandelionlibra/Dandelionlibra.github.io/blob/main/content/post/langchain/LangChain_link.ipynb" target="_blank" rel="noopener"
+&lt;/h2>&lt;p>&lt;a class="link" href="https://github.com/Dandelionlibra/Dandelionlibra.github.io/blob/main/content/post/langchain/example/LangChain_link.ipynb" target="_blank" rel="noopener"
 >詳細程式請參閱&lt;/a>&lt;/p>
 &lt;h1 id="reference">Reference
 &lt;/h1>&lt;ul>

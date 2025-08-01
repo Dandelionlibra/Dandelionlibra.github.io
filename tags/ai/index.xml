@@ -2,7 +2,9 @@
 &lt;/h1>&lt;h2 id="native-rag">Native RAG
 &lt;/h2>&lt;p>嘗試解決內部資訊缺失的問題。&lt;br>
 RAG 在回答前會先基於提問與資料庫中內容的語意相似度篩選出最具關連的段落 (chunk) 再將這些資訊傳給 LLM 進行回答，但受限於檢索到的 chunk 內容，因此若是詢問的問題比較全面，例如主題大綱等等，因為需要全面的資料內容，但檢索後卻使會提供給 LLM 部分內容而已，因此可預測回答準確率大概不高，但是若是法規等問題回答結果會更精確。&lt;/p>
-&lt;h2 id="">
+&lt;h2 id="graph-rag">Graph RAG
+&lt;/h2>&lt;p>嘗試解決 Native RAG 回答不精確的問題。&lt;/p>
+&lt;h2 id="light-rag">Light RAG
 &lt;/h2>&lt;hr>
 &lt;h1 id="引言">引言
 &lt;/h1>&lt;h2 id="現有-rag-系統的局限性">現有 RAG 系統的局限性
@@ -18,32 +20,6 @@ RAG 在回答前會先基於提問與資料庫中內容的語意相似度篩選�
 &lt;/ul>
 &lt;h2 id="lightrag-模型概述">LightRAG 模型概述
 &lt;/h2>&lt;p>增強了系統捕捉實體之間複雜相互依賴關係的能力，從而產生更連貫和上下文更豐富的回應。&lt;/p>
-&lt;ul>
-&lt;li>
-&lt;p>&lt;strong>高效雙層檢索策略：&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>低層次檢索（low-level retrieval）： 側重於關於特定實體及其關係的精確資訊。&lt;/li>
-&lt;li>高層次檢索（high-level retrieval）： 涵蓋更廣泛的主題和概念。&lt;/li>
-&lt;li>優勢： 透過結合詳細和概念性檢索，LightRAG 有效適應多樣化的查詢範圍，確保用戶收到符合其特定需求的相關且全面的回應。&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>圖結構與向量表示的整合：&lt;/strong> 透過將圖結構與向量表示整合在一起，本 LightRAG 促進了相關實體和關係的高效檢索，同時透過從所構建的知識圖中獲取相關結構信息，增強了結果的全面性。&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;h2 id="本研究在-rag-系統中的關注點">本研究在 RAG 系統中的關注點
-&lt;/h2>&lt;!-- raw HTML omitted -->
-&lt;ul>
-&lt;li>
-&lt;p>&lt;strong>全面信息檢索&lt;/strong> (Comprehensive Information Retrieval)： 索引功能 ϕ(⋅) 必須善於提取全局信息，這對於增強模型有效回答查詢的能力至關重要。&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>高效且低成本檢索&lt;/strong> (Efficient and Low-Cost Retrieval)： 索引化的資料結構 𝒟^ 必須能夠實現快速且具成本效益的檢索，以有效處理高容量的查詢。&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>快速適應數據變化&lt;/strong> (Fast Adaptation to Data Changes)： 能夠迅速有效地調整數據結構以整合來自外部知識庫的新信息，這對於確保系統在不斷變化的信息環境中保持更新和相關性至關重要。&lt;/p>
-&lt;/li>
-&lt;/ul>
 &lt;hr>
 &lt;h1 id="內文">內文
 &lt;/h1>&lt;h2 id="lightrag-框架的整體架構">LightRAG 框架的整體架構
@@ -53,27 +29,22 @@ alt="LightRAG 框架總覽"
 >&lt;br>
 &lt;em>圖 1. LightRAG 框架總覽（取自原論文）&lt;/em>&lt;/p>
 &lt;p>架構如圖 1 所示。&lt;/p>
-&lt;p>流程從&lt;strong>原始文本塊&lt;/strong>開始，這些文本塊首先透過&lt;strong>基於圖形的文本索引&lt;/strong>（Graph-based Text Indexing）階段進行處理，過程包含幾個關鍵子組件：&lt;strong>實體與關係提取&lt;/strong>（Entity &amp;amp; Rel Extraction）、&lt;strong>LLM 剖析&lt;/strong>（LLM Profiling）和&lt;strong>去重&lt;/strong>（Deduplication），最後的輸出是一個用於檢索的&lt;strong>索引圖&lt;/strong>（Index Graph）。&lt;br>
-接著，Query LLM 接收輸入查詢，並從中生成&lt;strong>低層級關鍵字&lt;/strong>（Low-level Keys，包括實體和關係）和&lt;strong>高層級關鍵字&lt;/strong>（High-level Keys，包括語境和原始文本塊）。這些關鍵字隨後被送入&lt;strong>雙層級檢索範式&lt;/strong>（Dual-level Retrieval Paradigm），此範式與「索引圖」和「原始文本塊」互動，以檢索相關資訊。最終，檢索到的資訊被傳回 Query LLM 進行檢索增強的答案生成（Retrieval-Augmented Answer Generation）。  
-圖中展示了以「索引圖」作為核心儲存庫，這張圖不僅用來整理新資訊（索引），也用來尋找資訊（檢索），這代表系統不再只是儲存一堆零散的文字片段，而是將知識組織成一個有結構的網路，能更智慧地找出事物之間的關聯。&lt;br>
-此外，處理查詢的 LLM 在 LightRAG 多次出現，它不只負責生成最終答案，還會參與理解問題、引導系統去尋找相關資訊，並將找到的資料整合起來。&lt;/p>
-&lt;h2 id="基於圖形的文本索引">基於圖形的文本索引
-&lt;/h2>&lt;p>LightRAG 透過將文件分割成更小、更易於管理的片段來增強檢索系統。這種策略允許快速識別和存取相關資訊，而無需分析整個文件 。隨後，系統利用大型語言模型（LLMs）來識別和提取各種實體（例如，名稱、日期、位置和事件）以及它們之間的關係 。透過這個過程收集到的資訊將用於創建一個全面的知識圖譜，突顯整個文件集合中的連結和見解。&lt;/p>
-&lt;p>圖形生成模組正式表示為 𝒟^=(𝒱^,ℰ^)=Dedupe∘Prof​(𝒱,ℰ),𝒱,ℰ=∪𝒟i∈𝒟Recog​(𝒟i)&lt;/p>
 &lt;hr>
 &lt;h1 id="實驗">實驗
 &lt;/h1>&lt;hr>
 &lt;hr>
 &lt;h1 id="reference">Reference
 &lt;/h1>&lt;ul>
-&lt;li>&lt;a class="link" href="https://ar5iv.labs.arxiv.org/html/2410.05779" target="_blank" rel="noopener"
->LightRAG: Simple and Fast Retrieval-Augmented Generation-ar5iv 可視化版本&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://www.youtube.com/watch?v=-O5ATdQcefo" target="_blank" rel="noopener"
+>LightRAG与GraphRAG对比评测，从索引构建、本地检索、全局检索、混合检索等维度对请求大模型次数、Token消耗、金额消耗、检索质量等方面进行全面对比&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://github.com/NanGePlus/LightRAGTest" target="_blank" rel="noopener"
+>GitHub: [LightRAGTest]&lt;/a>&lt;/li>
 &lt;/ul></description></item><item><title>GraphRAG 概論</title><link>https://Dandelionlibra.github.io/post/note/graphrag-overview/</link><pubDate>Thu, 31 Jul 2025 03:24:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/graphrag-overview/</guid><description>&lt;h1 id="graph-rag-基本介紹">Graph RAG 基本介紹
 &lt;/h1>&lt;h2 id="graph-rag">Graph RAG
 &lt;/h2>&lt;p>Native RAG 嘗試解決內部資訊缺失的問題，但受限於檢索到的 chunk 內容，因此若是詢問的問題比較全面，例如主題大綱等等，因為需要全面的資料內容，但檢索後卻只會提供給 LLM 部分內容而已。而為了解決全域資訊缺失的問題因而誕生了 Graph RAG。&lt;/p>
 &lt;p>Graph RAG 透過將非結構化文本轉換為知識圖譜來解決 Native RAG 的問題。它不僅僅是檢索文本片段，而是理解實體之間的關係，從而能夠回答更複雜、需要綜合多方面資訊的問題。&lt;/p>
 &lt;p>node 表示每個主體，而 edge 則是表示了每個 entity 間的關係。&lt;/p>
-&lt;p>&lt;img src="https://Dandelionlibra.github.io/assert/GraphRag%20relation%20graph.PNG"
+&lt;p>&lt;img src="https://raw.githubusercontent.com/Dandelionlibra/Dandelionlibra.github.io/refs/heads/main/content/post/note/assert/GraphRag%20relation%20graph.png"
 loading="lazy"
 alt="Graph RAG 關係圖"
 >
@@ -81,7 +52,7 @@ alt="Graph RAG 關係圖"
 >Microsoft Graph RAG 介紹&lt;/a>）&lt;/em>&lt;/p>
 &lt;hr>
 &lt;h1 id="graph-rag-pipeline">Graph RAG Pipeline
-&lt;/h1>&lt;p>&lt;img src="https://Dandelionlibra.github.io/assert/GraphRag%20pipline.PNG"
+&lt;/h1>&lt;p>&lt;img src="https://raw.githubusercontent.com/Dandelionlibra/Dandelionlibra.github.io/refs/heads/main/content/post/note/assert/GraphRag%20pipline.png"
 loading="lazy"
 alt="Graph RAG pipline"
 >
@@ -98,7 +69,7 @@ alt="Graph RAG pipline"
 &lt;h2 id="4-element-summaries--graph-communities">4. Element Summaries → Graph Communities
 &lt;/h2>&lt;p>將相同主題的內容框成同樣的 Community。&lt;br>
 使用的演算法是 Leiden community detection algorithm，原則上是相同 Community 中的 entity 間的關係越複雜越好，而不同 Community 中的 entity 間關係越簡單越好。&lt;br>
-&lt;img src="https://Dandelionlibra.github.io/assert/GraphRag%20relation%20graph-2.PNG"
+&lt;img src="https://raw.githubusercontent.com/Dandelionlibra/Dandelionlibra.github.io/refs/heads/main/content/post/note/assert/GraphRag%20relation%20graph-2.png"
 loading="lazy"
 alt="Graph RAG 關係圖"
 >
@@ -110,7 +81,7 @@ alt="Graph RAG 關係圖"
 &lt;h2 id="6-community-summaries--community-answers--global-answer">6. Community Summaries → Community Answers → Global Answer
 &lt;/h2>&lt;p>依據 Community Summaries 回答問題。&lt;br>
 將問題拿去一一問每個 Community Summaries，得到各自的 Community 回答後，再將這些比較片面的回答整合成 global answer。&lt;/p>
-&lt;p>&lt;img src="https://Dandelionlibra.github.io/assert/step6%20GraphRag%20pipline.PNG"
+&lt;p>&lt;img src="https://raw.githubusercontent.com/Dandelionlibra/Dandelionlibra.github.io/refs/heads/main/content/post/note/assert/step6%20GraphRag%20pipline.png"
 loading="lazy"
 alt="Graph RAG 關係圖"
 >
@@ -474,7 +445,7 @@ alt="LightRAG 框架總覽"
 &lt;/h1>&lt;ul>
 &lt;li>&lt;a class="link" href="https://ar5iv.labs.arxiv.org/html/2410.05779" target="_blank" rel="noopener"
 >LightRAG: Simple and Fast Retrieval-Augmented Generation-ar5iv 可視化版本&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>Re2G 論文導讀 — Retrieve, Rerank, Generate 框架解析與應用</title><link>https://Dandelionlibra.github.io/post/note/re2g-paper-review/</link><pubDate>Tue, 22 Jul 2025 01:31:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/re2g-paper-review/</guid><description>&lt;blockquote>
+&lt;/ul></description></item><item><title>Re2G 論文導讀 — Retrieve, Rerank, Generate 框架解析與應用</title><link>https://Dandelionlibra.github.io/post/paper/re2g-paper-review/</link><pubDate>Tue, 22 Jul 2025 01:31:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/paper/re2g-paper-review/</guid><description>&lt;blockquote>
 &lt;p>本文整理自：&lt;a class="link" href="https://arxiv.org/abs/2207.06300" target="_blank" rel="noopener"
 >Re2G: Retrieve, Rerank, Generate&lt;/a>&lt;br>
 作者：Michael Glass, Gaetano Rossiello, Md Faisal Mahbub Chowdhury, Ankita Rajaram Naik, Pengshan Cai, Alfio Gliozzo&lt;br>
@@ -736,7 +707,7 @@ alt="Modular RAG 架構圖"
 >Three Paradigms of Retrieval-Augmented Generation (RAG) for LLMs&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="https://www.ibm.com/think/topics/rag-techniques#:~:" target="_blank" rel="noopener"
 >RAG Techniques | IBM Think&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>檢索增強大型語言模型綜述 — RA-LLMs 系統性回顧與應用解析</title><link>https://Dandelionlibra.github.io/post/note/rag-llms-survey-note/</link><pubDate>Sun, 20 Jul 2025 08:50:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/rag-llms-survey-note/</guid><description>&lt;blockquote>
+&lt;/ul></description></item><item><title>檢索增強大型語言模型綜述 — RA-LLMs 系統性回顧與應用解析</title><link>https://Dandelionlibra.github.io/post/paper/rag-llms-survey-note/</link><pubDate>Sun, 20 Jul 2025 08:50:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/paper/rag-llms-survey-note/</guid><description>&lt;blockquote>
 &lt;p>本文整理自：&lt;a class="link" href="https://arxiv.org/abs/2405.06211" target="_blank" rel="noopener"
 >A Survey on RAG Meeting LLMs: Towards Retrieval-Augmented Large Language Models&lt;/a>&lt;br>
 作者：Wenqi Fan, Yujuan Ding, Liangbo Ning, Shijie Wang, Hengyun Li, Dawei Yin, Tat-Seng Chua, Qing Li&lt;br>
@@ -1247,7 +1218,7 @@ alt="Data_Connection"
 &lt;/li>
 &lt;/ul>
 &lt;h2 id="程式事例">程式事例
-&lt;/h2>&lt;p>&lt;a class="link" href="https://github.com/Dandelionlibra/Dandelionlibra.github.io/blob/main/content/post/langchain/LangChain_link.ipynb" target="_blank" rel="noopener"
+&lt;/h2>&lt;p>&lt;a class="link" href="https://github.com/Dandelionlibra/Dandelionlibra.github.io/blob/main/content/post/langchain/example/LangChain_link.ipynb" target="_blank" rel="noopener"
 >詳細程式請參閱&lt;/a>&lt;/p>
 &lt;h1 id="reference">Reference
 &lt;/h1>&lt;ul>
