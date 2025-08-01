@@ -68,13 +68,10 @@ alt="LightRAG 框架總覽"
 &lt;/h1>&lt;ul>
 &lt;li>&lt;a class="link" href="https://ar5iv.labs.arxiv.org/html/2410.05779" target="_blank" rel="noopener"
 >LightRAG: Simple and Fast Retrieval-Augmented Generation-ar5iv 可視化版本&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>GraphRAG 概論</title><link>https://Dandelionlibra.github.io/post/note/graphrag-overview/</link><pubDate>Thu, 31 Jul 2025 03:24:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/graphrag-overview/</guid><description>&lt;h1 id="rag-種類">RAG 種類
-&lt;/h1>&lt;h2 id="native-rag">Native RAG
-&lt;/h2>&lt;p>嘗試解決內部資訊缺失的問題。&lt;br>
-RAG 在回答前會先基於提問與資料庫中內容的語意相似度篩選出最具關連的段落 (chunk) 再將這些資訊傳給 LLM 進行回答，但受限於檢索到的 chunk 內容，因此若是詢問的問題比較全面，例如主題大綱等等，因為需要全面的資料內容，但檢索後卻使會提供給 LLM 部分內容而已，因此可預測回答準確率大概不高，但是若是法規等問題回答結果會更精確。&lt;/p>
-&lt;p>而為了解決全域資訊缺失的問題因而誕生了 Graph RAG。&lt;/p>
-&lt;h2 id="graph-rag">Graph RAG
-&lt;/h2>&lt;p>Graph RAG 透過將非結構化文本轉換為知識圖譜來解決 Native RAG 的問題。它不僅僅是檢索文本片段，而是理解實體之間的關係，從而能夠回答更複雜、需要綜合多方面資訊的問題。&lt;/p>
+&lt;/ul></description></item><item><title>GraphRAG 概論</title><link>https://Dandelionlibra.github.io/post/note/graphrag-overview/</link><pubDate>Thu, 31 Jul 2025 03:24:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/graphrag-overview/</guid><description>&lt;h1 id="graph-rag-基本介紹">Graph RAG 基本介紹
+&lt;/h1>&lt;h2 id="graph-rag">Graph RAG
+&lt;/h2>&lt;p>Native RAG 嘗試解決內部資訊缺失的問題，但受限於檢索到的 chunk 內容，因此若是詢問的問題比較全面，例如主題大綱等等，因為需要全面的資料內容，但檢索後卻只會提供給 LLM 部分內容而已。而為了解決全域資訊缺失的問題因而誕生了 Graph RAG。&lt;/p>
+&lt;p>Graph RAG 透過將非結構化文本轉換為知識圖譜來解決 Native RAG 的問題。它不僅僅是檢索文本片段，而是理解實體之間的關係，從而能夠回答更複雜、需要綜合多方面資訊的問題。&lt;/p>
 &lt;p>node 表示每個主體，而 edge 則是表示了每個 entity 間的關係。&lt;/p>
 &lt;p>&lt;img src="https://Dandelionlibra.github.io/assert/GraphRag%20relation%20graph.PNG"
 loading="lazy"
