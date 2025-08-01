@@ -4,7 +4,7 @@ description: A Survey on RAG Meeting LLMs Towards Retrieval-Augmented Large Lang
 slug: rag-llms-survey-note
 date: 2025-07-20 08:50:00+0800
 categories:
-    - note
+    - paper
 tags:
     - AI
     - Large Language Model

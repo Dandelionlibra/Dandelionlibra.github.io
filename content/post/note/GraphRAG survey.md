@@ -21,13 +21,13 @@ Graph RAG 透過將非結構化文本轉換為知識圖譜來解決 Native RAG �
 
 node 表示每個主體，而 edge 則是表示了每個 entity 間的關係。
 
-![Graph RAG 關係圖](./assert/GraphRag%20relation%20graph.PNG)
+![Graph RAG 關係圖](https://raw.githubusercontent.com/Dandelionlibra/Dandelionlibra.github.io/refs/heads/main/content/post/note/assert/GraphRag%20relation%20graph.png)
 *圖：Graph RAG 將文本中的實體和關係抽取出來，構建成知識圖譜。（圖片來源：[Microsoft Graph RAG 介紹](https://www.youtube.com/watch?v=A1XSpKC2GHc&t=360s)）*
 
 ---
 
 # Graph RAG Pipeline
-![Graph RAG pipline](./assert/GraphRag%20pipline.PNG)
+![Graph RAG pipline](https://raw.githubusercontent.com/Dandelionlibra/Dandelionlibra.github.io/refs/heads/main/content/post/note/assert/GraphRag%20pipline.png)
 *圖：Graph RAG 將文本中的實體和關係抽取出來，構建成知識圖譜。（圖片來源：[Microsoft Graph RAG 介紹](https://arxiv.org/abs/2404.16130)）*
 
 
@@ -45,7 +45,7 @@ node 表示每個主體，而 edge 則是表示了每個 entity 間的關係。
 ## 4. Element Summaries → Graph Communities  
   將相同主題的內容框成同樣的 Community。  
   使用的演算法是 Leiden community detection algorithm，原則上是相同 Community 中的 entity 間的關係越複雜越好，而不同 Community 中的 entity 間關係越簡單越好。  
-  ![Graph RAG 關係圖](./assert/GraphRag%20relation%20graph-2.PNG)
+  ![Graph RAG 關係圖](https://raw.githubusercontent.com/Dandelionlibra/Dandelionlibra.github.io/refs/heads/main/content/post/note/assert/GraphRag%20relation%20graph-2.png)
   *圖：Graph RAG community detection。（圖片來源：[Microsoft Graph RAG 介紹](https://www.youtube.com/watch?v=A1XSpKC2GHc&t=780s)）*
 
 ## 5. Graph Communities → Community Summaries
@@ -56,7 +56,7 @@ node 表示每個主體，而 edge 則是表示了每個 entity 間的關係。
   依據 Community Summaries 回答問題。  
   將問題拿去一一問每個 Community Summaries，得到各自的 Community 回答後，再將這些比較片面的回答整合成 global answer。
 
-  ![Graph RAG 關係圖](./assert/step6%20GraphRag%20pipline.PNG)
+  ![Graph RAG 關係圖](https://raw.githubusercontent.com/Dandelionlibra/Dandelionlibra.github.io/refs/heads/main/content/post/note/assert/step6%20GraphRag%20pipline.png)
   *圖：Community Summaries → Community Answers → Global Answer。（圖片來源：[Microsoft Graph RAG 介紹](https://www.youtube.com/watch?v=A1XSpKC2GHc&t=1040s)）*
 
 如此就可以解決 Native RAG 只看部分資訊，而使的回答缺少其餘資訊的可能。

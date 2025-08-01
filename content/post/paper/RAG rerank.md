@@ -4,7 +4,7 @@ description: 導讀《Re2G-Retrieve, Rerank, Generate》論文，剖析其檢索
 slug: re2g-paper-review
 date: 2025-07-22 01:31:00+0800
 categories:
-    - note
+    - paper
 tags:
     - AI
     - Retrieval-Augmented Generation

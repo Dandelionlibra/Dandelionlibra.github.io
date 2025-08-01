@@ -67,7 +67,7 @@ weight: 1       # You can add weight to some posts to override the default sorti
 
 
 ## 程式事例  
-[詳細程式請參閱](https://github.com/Dandelionlibra/Dandelionlibra.github.io/blob/main/content/post/langchain/LangChain_link.ipynb)
+[詳細程式請參閱](https://github.com/Dandelionlibra/Dandelionlibra.github.io/blob/main/content/post/langchain/example/LangChain_link.ipynb)
 
 # Reference
 * https://www.youtube.com/playlist?list=PLAr9oL1AT4OElxInUijCzCgU3CpgHTjTI

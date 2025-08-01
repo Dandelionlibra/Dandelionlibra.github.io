@@ -1,6 +1,6 @@
 ---
 title: GraphRAG vs LightRAG 
-description: 比較兩種 RAG 的差異。
+description: 比較兩種 RAG 的差異(未完成)。
 slug: graphrag-lightrag-compare
 date: 2025-07-31 03:24:00+0800
 categories:
@@ -20,7 +20,11 @@ weight: 1
 嘗試解決內部資訊缺失的問題。  
 RAG 在回答前會先基於提問與資料庫中內容的語意相似度篩選出最具關連的段落 (chunk) 再將這些資訊傳給 LLM 進行回答，但受限於檢索到的 chunk 內容，因此若是詢問的問題比較全面，例如主題大綱等等，因為需要全面的資料內容，但檢索後卻使會提供給 LLM 部分內容而已，因此可預測回答準確率大概不高，但是若是法規等問題回答結果會更精確。
 
-##
+## Graph RAG
+嘗試解決 Native RAG 回答不精確的問題。  
+
+
+## Light RAG
 
 
 ---
@@ -38,27 +42,6 @@ RAG 在回答前會先基於提問與資料庫中內容的語意相似度篩選�
 
 增強了系統捕捉實體之間複雜相互依賴關係的能力，從而產生更連貫和上下文更豐富的回應。
 
-* **高效雙層檢索策略：** 
-  * 低層次檢索（low-level retrieval）： 側重於關於特定實體及其關係的精確資訊。
-  * 高層次檢索（high-level retrieval）： 涵蓋更廣泛的主題和概念。
-  * 優勢： 透過結合詳細和概念性檢索，LightRAG 有效適應多樣化的查詢範圍，確保用戶收到符合其特定需求的相關且全面的回應。
-
-* **圖結構與向量表示的整合：** 透過將圖結構與向量表示整合在一起，本 LightRAG 促進了相關實體和關係的高效檢索，同時透過從所構建的知識圖中獲取相關結構信息，增強了結果的全面性。
-
-## 本研究在 RAG 系統中的關注點  
-
-<p align="center">
-ℳ=(𝒢,ℛ=(φ,ψ)) <br>
-ℳ​(q;𝒟)=𝒢​(q,ψ​(q;𝒟^)) <br>
-𝒟^=φ​(𝒟)
-</p>
-
-* **全面信息檢索** (Comprehensive Information Retrieval)： 索引功能 ϕ(⋅) 必須善於提取全局信息，這對於增強模型有效回答查詢的能力至關重要。
-
-* **高效且低成本檢索** (Efficient and Low-Cost Retrieval)： 索引化的資料結構 𝒟^ 必須能夠實現快速且具成本效益的檢索，以有效處理高容量的查詢。
-
-* **快速適應數據變化** (Fast Adaptation to Data Changes)： 能夠迅速有效地調整數據結構以整合來自外部知識庫的新信息，這對於確保系統在不斷變化的信息環境中保持更新和相關性至關重要。
-
 ---
 
 # 內文
@@ -69,16 +52,8 @@ RAG 在回答前會先基於提問與資料庫中內容的語意相似度篩選�
 
 架構如圖 1 所示。  
 
-流程從**原始文本塊**開始，這些文本塊首先透過**基於圖形的文本索引**（Graph-based Text Indexing）階段進行處理，過程包含幾個關鍵子組件：**實體與關係提取**（Entity & Rel Extraction）、**LLM 剖析**（LLM Profiling）和**去重**（Deduplication），最後的輸出是一個用於檢索的**索引圖**（Index Graph）。  
-接著，Query LLM 接收輸入查詢，並從中生成**低層級關鍵字**（Low-level Keys，包括實體和關係）和**高層級關鍵字**（High-level Keys，包括語境和原始文本塊）。這些關鍵字隨後被送入**雙層級檢索範式**（Dual-level Retrieval Paradigm），此範式與「索引圖」和「原始文本塊」互動，以檢索相關資訊。最終，檢索到的資訊被傳回 Query LLM 進行檢索增強的答案生成（Retrieval-Augmented Answer Generation）。   
-圖中展示了以「索引圖」作為核心儲存庫，這張圖不僅用來整理新資訊（索引），也用來尋找資訊（檢索），這代表系統不再只是儲存一堆零散的文字片段，而是將知識組織成一個有結構的網路，能更智慧地找出事物之間的關聯。  
-此外，處理查詢的 LLM 在 LightRAG 多次出現，它不只負責生成最終答案，還會參與理解問題、引導系統去尋找相關資訊，並將找到的資料整合起來。
 
 
-## 基於圖形的文本索引
-LightRAG 透過將文件分割成更小、更易於管理的片段來增強檢索系統。這種策略允許快速識別和存取相關資訊，而無需分析整個文件 。隨後，系統利用大型語言模型（LLMs）來識別和提取各種實體（例如，名稱、日期、位置和事件）以及它們之間的關係 。透過這個過程收集到的資訊將用於創建一個全面的知識圖譜，突顯整個文件集合中的連結和見解。
-
-圖形生成模組正式表示為 𝒟^=(𝒱^,ℰ^)=Dedupe∘Prof​(𝒱,ℰ),𝒱,ℰ=∪𝒟i∈𝒟Recog​(𝒟i)
 
 ---
 
@@ -93,5 +68,5 @@ LightRAG 透過將文件分割成更小、更易於管理的片段來增強檢�
 ---
 
 # Reference
-
-- [LightRAG: Simple and Fast Retrieval-Augmented Generation-ar5iv 可視化版本](https://ar5iv.labs.arxiv.org/html/2410.05779)
+- [LightRAG与GraphRAG对比评测，从索引构建、本地检索、全局检索、混合检索等维度对请求大模型次数、Token消耗、金额消耗、检索质量等方面进行全面对比](https://www.youtube.com/watch?v=-O5ATdQcefo)
+- [GitHub: [LightRAGTest]](https://github.com/NanGePlus/LightRAGTest)
