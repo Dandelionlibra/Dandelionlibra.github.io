@@ -103,7 +103,7 @@ alt="Graph RAG 關係圖"
 >GraphRAG发布重大更新！增量更新索引终于来并新增DRIFT图推理搜索查询，带你手把手全流程实操新功能，源码分析，同时支持GPT、国产大模型、本地大模型等&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="https://github.com/NanGePlus/GraphRAGTestV040" target="_blank" rel="noopener"
 >GitHub: [GraphRAGTestV040]&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>LightRAG 論文導讀 — Simple and Fast Retrieval-Augmented Generation 筆記</title><link>https://Dandelionlibra.github.io/post/note/lightrag-paper-review/</link><pubDate>Tue, 22 Jul 2025 05:27:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/lightrag-paper-review/</guid><description>&lt;blockquote>
+&lt;/ul></description></item><item><title>LightRAG 論文導讀 — Simple and Fast Retrieval-Augmented Generation 筆記</title><link>https://Dandelionlibra.github.io/post/paper/lightrag-paper-review/</link><pubDate>Tue, 22 Jul 2025 05:27:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/paper/lightrag-paper-review/</guid><description>&lt;blockquote>
 &lt;p>本文整理自：&lt;a class="link" href="https://arxiv.org/abs/2410.05779" target="_blank" rel="noopener"
 >LightRAG: Simple and Fast Retrieval-Augmented Generation&lt;/a>&lt;br>
 作者：Zirui Guo, Lianghao Xia, Yanhua Yu, Tu Ao, Chao Huang&lt;br>

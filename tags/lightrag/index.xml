@@ -1,4 +1,245 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>LightRAG on YuChen</title><link>https://Dandelionlibra.github.io/tags/lightrag/</link><description>Recent content in LightRAG on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Thu, 31 Jul 2025 03:24:00 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/tags/lightrag/index.xml" rel="self" type="application/rss+xml"/><item><title>GraphRAG vs LightRAG</title><link>https://Dandelionlibra.github.io/post/note/graphrag-lightrag-compare/</link><pubDate>Thu, 31 Jul 2025 03:24:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/graphrag-lightrag-compare/</guid><description>&lt;h1 id="rag-種類">RAG 種類
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>LightRAG on YuChen</title><link>https://Dandelionlibra.github.io/tags/lightrag/</link><description>Recent content in LightRAG on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Fri, 01 Aug 2025 06:00:00 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/tags/lightrag/index.xml" rel="self" type="application/rss+xml"/><item><title>LightRAG API Server 教學：快速上手指南</title><link>https://Dandelionlibra.github.io/post/note/lightrag-api-server-tutorial/</link><pubDate>Fri, 01 Aug 2025 06:00:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/lightrag-api-server-tutorial/</guid><description>&lt;h1 id="lightrag-api-server-教學快速上手指南">LightRAG API Server 教學：快速上手指南
+&lt;/h1>&lt;p>&lt;a class="link" href="https://github.com/HKUDS/LightRAG" target="_blank" rel="noopener"
+>LightRAG&lt;/a> 是一個輕量級、模組化的 RAG（檢索增強生成）框架，旨在簡化 RAG 應用的開發與部署。其內建的 API Server 遵循 OpenAI API 標準，並提供一套完整的 Web UI API 來管理文件與知識圖譜，讓開發者能輕易地將自訂的 RAG 流程封裝成服務，並與現有生態系無縫接軌。本文將引導初學者完成從環境設定到 API 呼叫的完整流程。&lt;/p>
+&lt;hr>
+&lt;h2 id="1-環境設定與安裝">1. 環境設定與安裝
+&lt;/h2>&lt;p>首先，請確保您的開發環境已安裝 Python 3.9 或更高版本。接著，從 GitHub 下載 LightRAG 專案並安裝必要的套件。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 1. Clone the repository&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>git clone https://github.com/HKUDS/LightRAG.git
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cd LightRAG
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 2. Install dependencies&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>pip install -e .
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>pip install -r lightrag_webui/requirements.txt
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 3. Set up your OpenAI API key&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>export OPENAI_API_KEY&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;sk-...&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;hr>
+&lt;h2 id="2-啟動-api-server">2. 啟動 API Server
+&lt;/h2>&lt;p>LightRAG 使用一個 YAML 檔案來設定 API Server，包含端口、API 路徑以及要載入的模型。專案內已提供一個範例設定檔 &lt;code>lightrag_webui/config.yaml&lt;/code>。&lt;/p>
+&lt;p>您可以使用以下指令啟動伺服器：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>python -m lightrag.core.api_server --config-file lightrag_webui/config.yaml
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>成功啟動後，您會看到類似以下的輸出，代表伺服器正在 &lt;code>localhost:8008&lt;/code> 上運行：&lt;/p>
+&lt;pre tabindex="0">&lt;code>INFO: Uvicorn running on http://0.0.0.0:8008 (Press CTRL+C to quit)
+INFO: Started reloader process [xxxxx] using StatReload
+INFO: Started server process [xxxxx]
+INFO: Waiting for application startup.
+INFO: Application startup complete.
+&lt;/code>&lt;/pre>&lt;hr>
+&lt;h2 id="3-api-端點詳解">3. API 端點詳解
+&lt;/h2>&lt;p>獲取文件 api 教學。&lt;/p>
+&lt;pre tabindex="0">&lt;code>lightrag-server --help
+&lt;/code>&lt;/pre>&lt;p>LightRAG API Server 提供兩類主要的端點：一類是遵循 OpenAI 標準的核心聊天 API，另一類是 Web UI 用於管理資料的 API。&lt;/p>
+&lt;h3 id="31-openai-標準-api">3.1. OpenAI 標準 API
+&lt;/h3>&lt;p>這組 API 讓 LightRAG 可以輕易地整合進現有的 OpenAI 生態系。&lt;/p>
+&lt;h4 id="311-get-apiv1models">3.1.1. &lt;code>GET /api/v1/models&lt;/code>
+&lt;/h4>&lt;p>此端點用於查詢當前伺服器上所有可用的模型。&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>功能&lt;/strong>: 列出在設定檔中定義的所有模型名稱。&lt;/li>
+&lt;li>&lt;strong>範例&lt;/strong>:
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>curl -X GET http://localhost:8008/api/v1/models
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>&lt;strong>回應&lt;/strong>:
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;object&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;list&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;data&amp;#34;&lt;/span>: [
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;LightRAG&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;object&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;model&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;created&amp;#34;&lt;/span>: &lt;span style="color:#ae81ff">1721615822&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;owned_by&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;lightrag&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;/ul>
+&lt;h4 id="312-post-apiv1chatcompletions">3.1.2. &lt;code>POST /api/v1/chat/completions&lt;/code>
+&lt;/h4>&lt;p>這是核心的聊天互動端點，功能與 OpenAI 的 Chat Completions API 完全相容。它接收使用者輸入，執行 RAG 流程，並回傳 LLM 生成的答案。&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>功能&lt;/strong>: 執行一個完整的 RAG 查詢。&lt;/li>
+&lt;li>&lt;strong>範例&lt;/strong>:
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>curl -X POST http://localhost:8008/api/v1/chat/completions &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span>-H &lt;span style="color:#e6db74">&amp;#34;Content-Type: application/json&amp;#34;&lt;/span> &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span>-d &lt;span style="color:#e6db74">&amp;#39;{
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> &amp;#34;model&amp;#34;: &amp;#34;LightRAG&amp;#34;,
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> &amp;#34;messages&amp;#34;: [
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> {
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> &amp;#34;role&amp;#34;: &amp;#34;user&amp;#34;,
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> &amp;#34;content&amp;#34;: &amp;#34;What is Retrieval-Augmented Generation?&amp;#34;
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> }
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> ]
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74">}&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;/ul>
+&lt;h3 id="32-web-ui-api-總覽">3.2. Web UI API 總覽
+&lt;/h3>&lt;p>這組 API 主要由 LightRAG 的 Web UI 使用，提供文件處理、查詢、知識圖譜管理等進階功能。&lt;/p>
+&lt;h4 id="321-文件-documents-api">3.2.1. 文件 (Documents) API
+&lt;/h4>&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th style="text-align: left">方法&lt;/th>
+&lt;th style="text-align: left">路徑&lt;/th>
+&lt;th style="text-align: left">說明&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td style="text-align: left">&lt;code>POST&lt;/code>&lt;/td>
+&lt;td style="text-align: left">&lt;code>/documents/scan&lt;/code>&lt;/td>
+&lt;td style="text-align: left">掃描輸入資料夾中的新文件並進行處理。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align: left">&lt;code>POST&lt;/code>&lt;/td>
+&lt;td style="text-align: left">&lt;code>/documents/upload&lt;/code>&lt;/td>
+&lt;td style="text-align: left">上傳文件至輸入資料夾。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align: left">&lt;code>POST&lt;/code>&lt;/td>
+&lt;td style="text-align: left">&lt;code>/documents/text&lt;/code>&lt;/td>
+&lt;td style="text-align: left">插入單筆文字資料。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align: left">&lt;code>POST&lt;/code>&lt;/td>
+&lt;td style="text-align: left">&lt;code>/documents/texts&lt;/code>&lt;/td>
+&lt;td style="text-align: left">插入多筆文字資料。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align: left">&lt;code>DELETE&lt;/code>&lt;/td>
+&lt;td style="text-align: left">&lt;code>/documents&lt;/code>&lt;/td>
+&lt;td style="text-align: left">清除所有已處理的文件資料。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align: left">&lt;code>GET&lt;/code>&lt;/td>
+&lt;td style="text-align: left">&lt;code>/documents&lt;/code>&lt;/td>
+&lt;td style="text-align: left">獲取已處理的文件列表。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align: left">&lt;code>GET&lt;/code>&lt;/td>
+&lt;td style="text-align: left">&lt;code>/documents/pipeline_status&lt;/code>&lt;/td>
+&lt;td style="text-align: left">獲取文件處理管道的狀態。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align: left">&lt;code>DELETE&lt;/code>&lt;/td>
+&lt;td style="text-align: left">&lt;code>/documents/delete_document&lt;/code>&lt;/td>
+&lt;td style="text-align: left">根據文件 ID 刪除指定文件及其相關資料。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align: left">&lt;code>POST&lt;/code>&lt;/td>
+&lt;td style="text-align: left">&lt;code>/documents/clear_cache&lt;/code>&lt;/td>
+&lt;td style="text-align: left">清除快取。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align: left">&lt;code>DELETE&lt;/code>&lt;/td>
+&lt;td style="text-align: left">&lt;code>/documents/delete_entity&lt;/code>&lt;/td>
+&lt;td style="text-align: left">刪除指定的實體。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align: left">&lt;code>DELETE&lt;/code>&lt;/td>
+&lt;td style="text-align: left">&lt;code>/documents/delete_relation&lt;/code>&lt;/td>
+&lt;td style="text-align: left">刪除指定的關係。&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h4 id="322-查詢-query-api">3.2.2. 查詢 (Query) API
+&lt;/h4>&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th style="text-align: left">方法&lt;/th>
+&lt;th style="text-align: left">路徑&lt;/th>
+&lt;th style="text-align: left">說明&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td style="text-align: left">&lt;code>POST&lt;/code>&lt;/td>
+&lt;td style="text-align: left">&lt;code>/query&lt;/code>&lt;/td>
+&lt;td style="text-align: left">提交一個查詢並獲取一次性回覆。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align: left">&lt;code>POST&lt;/code>&lt;/td>
+&lt;td style="text-align: left">&lt;code>/query/stream&lt;/code>&lt;/td>
+&lt;td style="text-align: left">提交一個查詢並以串流方式獲取回覆。&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h4 id="323-知識圖譜-graph-api">3.2.3. 知識圖譜 (Graph) API
+&lt;/h4>&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th style="text-align: left">方法&lt;/th>
+&lt;th style="text-align: left">路徑&lt;/th>
+&lt;th style="text-align: left">說明&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td style="text-align: left">&lt;code>GET&lt;/code>&lt;/td>
+&lt;td style="text-align: left">&lt;code>/graph/label/list&lt;/code>&lt;/td>
+&lt;td style="text-align: left">獲取知識圖譜中所有的標籤 (Labels)。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align: left">&lt;code>GET&lt;/code>&lt;/td>
+&lt;td style="text-align: left">&lt;code>/graphs&lt;/code>&lt;/td>
+&lt;td style="text-align: left">獲取完整的知識圖譜資料。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align: left">&lt;code>GET&lt;/code>&lt;/td>
+&lt;td style="text-align: left">&lt;code>/graph/entity/exists&lt;/code>&lt;/td>
+&lt;td style="text-align: left">檢查指定的實體是否存在。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align: left">&lt;code>POST&lt;/code>&lt;/td>
+&lt;td style="text-align: left">&lt;code>/graph/entity/edit&lt;/code>&lt;/td>
+&lt;td style="text-align: left">更新一個實體的資訊。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align: left">&lt;code>POST&lt;/code>&lt;/td>
+&lt;td style="text-align: left">&lt;code>/graph/relation/edit&lt;/code>&lt;/td>
+&lt;td style="text-align: left">更新一個關係的資訊。&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h4 id="324-ollama-相容-api">3.2.4. Ollama 相容 API
+&lt;/h4>&lt;p>LightRAG 也提供與 Ollama 相容的 API 端點，方便與相關工具整合。&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th style="text-align: left">方法&lt;/th>
+&lt;th style="text-align: left">路徑&lt;/th>
+&lt;th style="text-align: left">說明&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td style="text-align: left">&lt;code>GET&lt;/code>&lt;/td>
+&lt;td style="text-align: left">&lt;code>/api/version&lt;/code>&lt;/td>
+&lt;td style="text-align: left">獲取 API 版本。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align: left">&lt;code>GET&lt;/code>&lt;/td>
+&lt;td style="text-align: left">&lt;code>/api/tags&lt;/code>&lt;/td>
+&lt;td style="text-align: left">獲取可用的模型標籤。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align: left">&lt;code>GET&lt;/code>&lt;/td>
+&lt;td style="text-align: left">&lt;code>/api/ps&lt;/code>&lt;/td>
+&lt;td style="text-align: left">獲取正在運行的模型。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align: left">&lt;code>POST&lt;/code>&lt;/td>
+&lt;td style="text-align: left">&lt;code>/api/generate&lt;/code>&lt;/td>
+&lt;td style="text-align: left">根據提示生成文字。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align: left">&lt;code>POST&lt;/code>&lt;/td>
+&lt;td style="text-align: left">&lt;code>/api/chat&lt;/code>&lt;/td>
+&lt;td style="text-align: left">進行聊天互動。&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;hr>
+&lt;h2 id="4-總結">4. 總結
+&lt;/h2>&lt;p>LightRAG 的 API Server 提供了一個標準化且功能豐富的介面，讓開發者能將複雜的 RAG 流程部署為一個獨立服務。透過遵循 OpenAI 的 API 格式並提供完整的文件管理 API，它極大地降低了整合門檻，無論是進行快速原型設計，還是將其整合到現有的應用程式中，都變得非常方便。希望本篇教學能幫助您順利踏出使用 LightRAG 的第一步。&lt;/p></description></item><item><title>GraphRAG vs LightRAG</title><link>https://Dandelionlibra.github.io/post/note/graphrag-lightrag-compare/</link><pubDate>Thu, 31 Jul 2025 03:24:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/graphrag-lightrag-compare/</guid><description>&lt;h1 id="rag-種類">RAG 種類
 &lt;/h1>&lt;h2 id="native-rag">Native RAG
 &lt;/h2>&lt;p>嘗試解決內部資訊缺失的問題。&lt;br>
 RAG 在回答前會先基於提問與資料庫中內容的語意相似度篩選出最具關連的段落 (chunk) 再將這些資訊傳給 LLM 進行回答，但受限於檢索到的 chunk 內容，因此若是詢問的問題比較全面，例如主題大綱等等，因為需要全面的資料內容，但檢索後卻使會提供給 LLM 部分內容而已，因此可預測回答準確率大概不高，但是若是法規等問題回答結果會更精確。&lt;/p>
@@ -39,7 +280,7 @@ alt="LightRAG 框架總覽"
 >LightRAG与GraphRAG对比评测，从索引构建、本地检索、全局检索、混合检索等维度对请求大模型次数、Token消耗、金额消耗、检索质量等方面进行全面对比&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="https://github.com/NanGePlus/LightRAGTest" target="_blank" rel="noopener"
 >GitHub: [LightRAGTest]&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>LightRAG 論文導讀 — Simple and Fast Retrieval-Augmented Generation 筆記</title><link>https://Dandelionlibra.github.io/post/note/lightrag-paper-review/</link><pubDate>Tue, 22 Jul 2025 05:27:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/lightrag-paper-review/</guid><description>&lt;blockquote>
+&lt;/ul></description></item><item><title>LightRAG 論文導讀 — Simple and Fast Retrieval-Augmented Generation 筆記</title><link>https://Dandelionlibra.github.io/post/paper/lightrag-paper-review/</link><pubDate>Tue, 22 Jul 2025 05:27:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/paper/lightrag-paper-review/</guid><description>&lt;blockquote>
 &lt;p>本文整理自：&lt;a class="link" href="https://arxiv.org/abs/2410.05779" target="_blank" rel="noopener"
 >LightRAG: Simple and Fast Retrieval-Augmented Generation&lt;/a>&lt;br>
 作者：Zirui Guo, Lianghao Xia, Yanhua Yu, Tu Ao, Chao Huang&lt;br>
