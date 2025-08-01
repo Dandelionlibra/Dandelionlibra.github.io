@@ -1,0 +1,1454 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><key id="d11" for="edge" attr.name="created_at" attr.type="long"/>
+<key id="d10" for="edge" attr.name="file_path" attr.type="string"/>
+<key id="d9" for="edge" attr.name="source_id" attr.type="string"/>
+<key id="d8" for="edge" attr.name="keywords" attr.type="string"/>
+<key id="d7" for="edge" attr.name="description" attr.type="string"/>
+<key id="d6" for="edge" attr.name="weight" attr.type="double"/>
+<key id="d5" for="node" attr.name="created_at" attr.type="long"/>
+<key id="d4" for="node" attr.name="file_path" attr.type="string"/>
+<key id="d3" for="node" attr.name="source_id" attr.type="string"/>
+<key id="d2" for="node" attr.name="description" attr.type="string"/>
+<key id="d1" for="node" attr.name="entity_type" attr.type="string"/>
+<key id="d0" for="node" attr.name="entity_id" attr.type="string"/>
+<graph edgedefault="undirected"><node id="知一書屋">
+  <data key="d0">知一書屋</data>
+  <data key="d1">organization</data>
+  <data key="d2">知一书屋是一家老旧的小书店，位于小巷之中，是林致远经营的地方。</data>
+  <data key="d3">chunk-b538e9f35d11f14b0ad81b617792d796</data>
+  <data key="d4">cat_story_1.txt</data>
+  <data key="d5">1754033106</data>
+</node>
+<node id="林致远">
+  <data key="d0">林致远</data>
+  <data key="d1">person</data>
+  <data key="d2">林致远是知一书屋的老板，一位年近六十岁的孤僻老人，曾经是大学教授。</data>
+  <data key="d3">chunk-b538e9f35d11f14b0ad81b617792d796</data>
+  <data key="d4">cat_story_1.txt</data>
+  <data key="d5">1754033106</data>
+</node>
+<node id="阿墨">
+  <data key="d0">阿墨</data>
+  <data key="d1">person</data>
+  <data key="d2">阿墨is a mysterious black cat associated with both林致遠and苏晓, potentially a guardian or symbol of their connection.&lt;SEP&gt;阿墨是一只黑猫，是林致远收养的，似乎具有某种神秘的能力。</data>
+  <data key="d3">chunk-b538e9f35d11f14b0ad81b617792d796&lt;SEP&gt;chunk-f088ddafc209a7b78bd36afd6e7df1da</data>
+  <data key="d4">cat_story_2.txt&lt;SEP&gt;cat_story_1.txt</data>
+  <data key="d5">1754033160</data>
+</node>
+<node id="苏婉">
+  <data key="d0">苏婉</data>
+  <data key="d1">person</data>
+  <data key="d2">苏婉是林致远的恋人，因罕见血癌去世，她的离去让林致远心如死灰。</data>
+  <data key="d3">chunk-b538e9f35d11f14b0ad81b617792d796</data>
+  <data key="d4">cat_story_1.txt</data>
+  <data key="d5">1754033106</data>
+</node>
+<node id="苏晓">
+  <data key="d0">苏晓</data>
+  <data key="d1">person</data>
+  <data key="d2">苏晓is a woman who seeks out林致遠, revealing a connection to his past love.&lt;SEP&gt;苏晓是一位文学研究生，经常光顾知一书屋，对古籍很感兴趣。</data>
+  <data key="d3">chunk-b538e9f35d11f14b0ad81b617792d796&lt;SEP&gt;chunk-f088ddafc209a7b78bd36afd6e7df1da</data>
+  <data key="d4">cat_story_2.txt&lt;SEP&gt;cat_story_1.txt</data>
+  <data key="d5">1754033160</data>
+</node>
+<node id="山海异闻录">
+  <data key="d0">山海异闻录</data>
+  <data key="d1">category</data>
+  <data key="d2">山海异闻录是一本古籍，其中记载了关于灵兽夜行使的信息。</data>
+  <data key="d3">chunk-b538e9f35d11f14b0ad81b617792d796</data>
+  <data key="d4">cat_story_1.txt</data>
+  <data key="d5">1754033106</data>
+</node>
+<node id="小巷">
+  <data key="d0">小巷</data>
+  <data key="d1">geo</data>
+  <data key="d2">小巷是知一书屋所在的位置，环境老旧。</data>
+  <data key="d3">chunk-b538e9f35d11f14b0ad81b617792d796</data>
+  <data key="d4">cat_story_1.txt</data>
+  <data key="d5">1754033106</data>
+</node>
+<node id="知一书屋">
+  <data key="d0">知一书屋</data>
+  <data key="d1">organization</data>
+  <data key="d2">知一书屋is the bookstore owned by林致遠and later managed by苏晓, becoming a popular literary hub.&lt;SEP&gt;知一书屋是一家老旧的小书店，位于小巷之中，是林致远经营的地方，售卖古籍。</data>
+  <data key="d3">chunk-b538e9f35d11f14b0ad81b617792d796&lt;SEP&gt;chunk-f088ddafc209a7b78bd36afd6e7df1da</data>
+  <data key="d4">cat_story_2.txt&lt;SEP&gt;cat_story_1.txt</data>
+  <data key="d5">1754033160</data>
+</node>
+<node id="罕见血癌">
+  <data key="d0">罕见血癌</data>
+  <data key="d1">category</data>
+  <data key="d2">罕见血癌是苏婉的死因，是林致远悲伤的根源。</data>
+  <data key="d3">chunk-b538e9f35d11f14b0ad81b617792d796</data>
+  <data key="d4">cat_story_1.txt</data>
+  <data key="d5">1754033107</data>
+</node>
+<node id="菊花茶">
+  <data key="d0">菊花茶</data>
+  <data key="d1">category</data>
+  <data key="d2">菊花茶是苏晓在知一书屋点的饮品，体现了她的休闲习惯。</data>
+  <data key="d3">chunk-b538e9f35d11f14b0ad81b617792d796</data>
+  <data key="d4">cat_story_1.txt</data>
+  <data key="d5">1754033107</data>
+</node>
+<node id="大学教授">
+  <data key="d0">大学教授</data>
+  <data key="d1">category</data>
+  <data key="d2">大学教授是林致远之前的职业，展现了他过去的辉煌。</data>
+  <data key="d3">chunk-b538e9f35d11f14b0ad81b617792d796</data>
+  <data key="d4">cat_story_1.txt</data>
+  <data key="d5">1754033107</data>
+</node>
+<node id="夜晚">
+  <data key="d0">夜晚</data>
+  <data key="d1">category</data>
+  <data key="d2">夜晚是故事经常发生的时段，烘托了神秘的气氛。</data>
+  <data key="d3">chunk-b538e9f35d11f14b0ad81b617792d796</data>
+  <data key="d4">cat_story_1.txt</data>
+  <data key="d5">1754033107</data>
+</node>
+<node id="古籍">
+  <data key="d0">古籍</data>
+  <data key="d1">category</data>
+  <data key="d2">古籍是知一书屋的主要商品，也是苏晓和林致远共同的爱好。</data>
+  <data key="d3">chunk-b538e9f35d11f14b0ad81b617792d796</data>
+  <data key="d4">cat_story_1.txt</data>
+  <data key="d5">1754033107</data>
+</node>
+<node id="林致遠">
+  <data key="d0">林致遠</data>
+  <data key="d1">person</data>
+  <data key="d2">林致遠is an elderly Chinese professor and bookstore owner who forms a connection with苏晓.</data>
+  <data key="d3">chunk-f088ddafc209a7b78bd36afd6e7df1da</data>
+  <data key="d4">cat_story_2.txt</data>
+  <data key="d5">1754033160</data>
+</node>
+<node id="中国">
+  <data key="d0">中国</data>
+  <data key="d1">geo</data>
+  <data key="d2">China is the setting of the story, where the characters and events take place.</data>
+  <data key="d3">chunk-f088ddafc209a7b78bd36afd6e7df1da</data>
+  <data key="d4">cat_story_2.txt</data>
+  <data key="d5">1754033160</data>
+</node>
+<node id="林致遠的爱情">
+  <data key="d0">林致遠的爱情</data>
+  <data key="d1">event</data>
+  <data key="d2">林致遠's past love is a central event that connects him to苏晓.</data>
+  <data key="d3">chunk-f088ddafc209a7b78bd36afd6e7df1da</data>
+  <data key="d4">cat_story_2.txt</data>
+  <data key="d5">1754033160</data>
+</node>
+<node id="苏晓的母亲">
+  <data key="d0">苏晓的母亲</data>
+  <data key="d1">person</data>
+  <data key="d2">苏晓's mother is a key figure in the story, having had a romantic relationship with林致遠.</data>
+  <data key="d3">chunk-f088ddafc209a7b78bd36afd6e7df1da</data>
+  <data key="d4">cat_story_2.txt</data>
+  <data key="d5">1754033160</data>
+</node>
+<node id="书">
+  <data key="d0">书</data>
+  <data key="d1">category</data>
+  <data key="d2">Books are a central theme and the main items within the bookstore, representing knowledge, stories, and connection.</data>
+  <data key="d3">chunk-f088ddafc209a7b78bd36afd6e7df1da</data>
+  <data key="d4">cat_story_2.txt</data>
+  <data key="d5">1754033160</data>
+</node>
+<node id="春天">
+  <data key="d0">春天</data>
+  <data key="d1">event</data>
+  <data key="d2">Spring symbolizes renewal and the cyclical nature of life, appearing as the time of林致遠's declining health.</data>
+  <data key="d3">chunk-f088ddafc209a7b78bd36afd6e7df1da</data>
+  <data key="d4">cat_story_2.txt</data>
+  <data key="d5">1754033161</data>
+</node>
+<node id="死亡">
+  <data key="d0">死亡</data>
+  <data key="d1">event</data>
+  <data key="d2">林致遠's death marks the end of one chapter and the beginning of another, passing on the legacy of the bookstore to苏晓.</data>
+  <data key="d3">chunk-f088ddafc209a7b78bd36afd6e7df1da</data>
+  <data key="d4">cat_story_2.txt</data>
+  <data key="d5">1754033161</data>
+</node>
+<node id="雾">
+  <data key="d0">雾</data>
+  <data key="d1">geo</data>
+  <data key="d2">The mist/fog represents mystery and the ethereal quality surrounding阿墨, adding to its enigmatic nature.</data>
+  <data key="d3">chunk-f088ddafc209a7b78bd36afd6e7df1da</data>
+  <data key="d4">cat_story_2.txt</data>
+  <data key="d5">1754033161</data>
+</node>
+<node id="黑猫">
+  <data key="d0">黑猫</data>
+  <data key="d1">category</data>
+  <data key="d2">The black cat is a recurring symbol of guardianship, mystery, and perhaps even a spiritual connection.</data>
+  <data key="d3">chunk-f088ddafc209a7b78bd36afd6e7df1da</data>
+  <data key="d4">cat_story_2.txt</data>
+  <data key="d5">1754033161</data>
+</node>
+<node id="书店">
+  <data key="d0">书店</data>
+  <data key="d1">category</data>
+  <data key="d2">The bookstore serves as a central location for the story’s events and as a symbol of knowledge, connection, and legacy.</data>
+  <data key="d3">chunk-f088ddafc209a7b78bd36afd6e7df1da</data>
+  <data key="d4">cat_story_2.txt</data>
+  <data key="d5">1754033161</data>
+</node>
+<node id="月光">
+  <data key="d0">月光</data>
+  <data key="d1">geo</data>
+  <data key="d2">Moonlight symbolizes mystery, peace, and a sense of wonder, associated with阿墨's final appearance.</data>
+  <data key="d3">chunk-f088ddafc209a7b78bd36afd6e7df1da</data>
+  <data key="d4">cat_story_2.txt</data>
+  <data key="d5">1754033161</data>
+</node>
+<node id="細胞">
+  <data key="d0">細胞</data>
+  <data key="d1">category</data>
+  <data key="d2">Cell is the basic unit of all living organisms, responsible for structure and function.</data>
+  <data key="d3">chunk-7da4699ea1b8f20db041f46e7f2b7cdd</data>
+  <data key="d4"></data>
+  <data key="d5">1754035523</data>
+</node>
+<node id="原核細胞">
+  <data key="d0">原核細胞</data>
+  <data key="d1">category</data>
+  <data key="d2">Prokaryotic cells, such as bacteria and cyanobacteria, lack a distinct nucleus.</data>
+  <data key="d3">chunk-7da4699ea1b8f20db041f46e7f2b7cdd</data>
+  <data key="d4"></data>
+  <data key="d5">1754035523</data>
+</node>
+<node id="真核細胞">
+  <data key="d0">真核細胞</data>
+  <data key="d1">category</data>
+  <data key="d2">Eukaryotic cells possess a distinct nucleus and specialized organelles.</data>
+  <data key="d3">chunk-7da4699ea1b8f20db041f46e7f2b7cdd</data>
+  <data key="d4"></data>
+  <data key="d5">1754035523</data>
+</node>
+<node id="細菌">
+  <data key="d0">細菌</data>
+  <data key="d1">category</data>
+  <data key="d2">Bacteria are a type of prokaryotic cell.</data>
+  <data key="d3">chunk-7da4699ea1b8f20db041f46e7f2b7cdd</data>
+  <data key="d4"></data>
+  <data key="d5">1754035523</data>
+</node>
+<node id="藍綠藻">
+  <data key="d0">藍綠藻</data>
+  <data key="d1">category</data>
+  <data key="d2">Cyanobacteria are a type of prokaryotic cell.</data>
+  <data key="d3">chunk-7da4699ea1b8f20db041f46e7f2b7cdd</data>
+  <data key="d4"></data>
+  <data key="d5">1754035523</data>
+</node>
+<node id="線粒體">
+  <data key="d0">線粒體</data>
+  <data key="d1">category</data>
+  <data key="d2">Mitochondria are organelles found in eukaryotic cells.</data>
+  <data key="d3">chunk-7da4699ea1b8f20db041f46e7f2b7cdd</data>
+  <data key="d4"></data>
+  <data key="d5">1754035523</data>
+</node>
+<node id="內質網">
+  <data key="d0">內質網</data>
+  <data key="d1">category</data>
+  <data key="d2">Endoplasmic reticulum are organelles found in eukaryotic cells.</data>
+  <data key="d3">chunk-7da4699ea1b8f20db041f46e7f2b7cdd</data>
+  <data key="d4"></data>
+  <data key="d5">1754035523</data>
+</node>
+<node id="細胞核">
+  <data key="d0">細胞核</data>
+  <data key="d1">category</data>
+  <data key="d2">The nucleus is a membrane-bound organelle that contains the genetic material of eukaryotic cells.</data>
+  <data key="d3">chunk-7da4699ea1b8f20db041f46e7f2b7cdd</data>
+  <data key="d4"></data>
+  <data key="d5">1754035523</data>
+</node>
+<node id="遺傳物質">
+  <data key="d0">遺傳物質</data>
+  <data key="d1">category</data>
+  <data key="d2">Genetic material, such as DNA, carries the instructions for cell function and heredity.</data>
+  <data key="d3">chunk-7da4699ea1b8f20db041f46e7f2b7cdd</data>
+  <data key="d4"></data>
+  <data key="d5">1754035523</data>
+</node>
+<node id="細胞質">
+  <data key="d0">細胞質</data>
+  <data key="d1">category</data>
+  <data key="d2">The cytoplasm is the gel-like substance within a cell where organelles are located.</data>
+  <data key="d3">chunk-7da4699ea1b8f20db041f46e7f2b7cdd</data>
+  <data key="d4"></data>
+  <data key="d5">1754035523</data>
+</node>
+<node id="DNA">
+  <data key="d0">DNA</data>
+  <data key="d1">category</data>
+  <data key="d2">Deoxyribonucleic acid, a molecule that carries the genetic instructions for all known living organisms.</data>
+  <data key="d3">chunk-7da4699ea1b8f20db041f46e7f2b7cdd</data>
+  <data key="d4"></data>
+  <data key="d5">1754035523</data>
+</node>
+<node id="小王子">
+  <data key="d0">小王子</data>
+  <data key="d1">person</data>
+  <data key="d2">The Little Prince (小王子) is the central character of the story, originating from a very small planet and actively seeking friendship. He is portrayed as a character who experiences a range of emotions, often melancholic, and spends time pondering philosophical questions. Descriptions of his size vary, sometimes being described as too big and other times too small, likely referring to how he is depicted visually. Ultimately, The Little Prince requires consolation and is the primary focus of the narrative’s attention, and is known for enjoying watching sunsets.&lt;SEP&gt;The Little Prince is the main character who interacts with the flower and reflects on its behavior.&lt;SEP&gt;The Little Prince, the main character, is preparing to leave his planet and is interacting with a flower.</data>
+  <data key="d3">chunk-df55872fecebe3e56018c5a5ee46482a&lt;SEP&gt;chunk-63dde1905e388e36517f5fb776e4b057&lt;SEP&gt;chunk-2951fdd4c52441e74915403c1f12110d&lt;SEP&gt;chunk-616d160a54d9d8e5307654611c72dfb8&lt;SEP&gt;chunk-800dab0bc86ff8f0df0fb900872322f5&lt;SEP&gt;chunk-90140055b6bcc32906960a2620eabb8a&lt;SEP&gt;chunk-5878c34a997b2491f813d6f46aeb496b</data>
+  <data key="d4">little_prince_6.txt&lt;SEP&gt;little_prince_9.txt&lt;SEP&gt;little_prince_8.txt&lt;SEP&gt;little_prince_7.txt&lt;SEP&gt;little_prince_4.txt</data>
+  <data key="d5">1754037444</data>
+</node>
+<node id="土耳其天文學家">
+  <data key="d0">土耳其天文學家</data>
+  <data key="d1">person</data>
+  <data key="d2">A Turkish astronomer who discovered planet B612 but was initially disbelieved due to his unfashionable attire.</data>
+  <data key="d3">chunk-63dde1905e388e36517f5fb776e4b057</data>
+  <data key="d4">little_prince_4.txt</data>
+  <data key="d5">1754037266</data>
+</node>
+<node id="行星Ｂ六一二號">
+  <data key="d0">行星Ｂ六一二號</data>
+  <data key="d1">geo</data>
+  <data key="d2">Planet B612, the Little Prince's home planet, a small asteroid initially dismissed by the scientific community.</data>
+  <data key="d3">chunk-63dde1905e388e36517f5fb776e4b057</data>
+  <data key="d4">little_prince_4.txt</data>
+  <data key="d5">1754037266</data>
+</node>
+<node id="行星">
+  <data key="d0">行星</data>
+  <data key="d1">geo</data>
+  <data key="d2">The entity **行星 (Planets)** represent different worlds and play a crucial role in the Little Prince’s journey. Generally, “行星” refers to planets or asteroids within the story's context. Specifically, one of these planets serves as the Little Prince’s home – a small celestial body characterized by easily visible sunsets. This planet is not only his residence but also where he diligently cultivates his flower.&lt;SEP&gt;The planet is the Little Prince's home, which he carefully maintains before leaving.</data>
+  <data key="d3">chunk-df55872fecebe3e56018c5a5ee46482a&lt;SEP&gt;chunk-63dde1905e388e36517f5fb776e4b057&lt;SEP&gt;chunk-2951fdd4c52441e74915403c1f12110d&lt;SEP&gt;chunk-90140055b6bcc32906960a2620eabb8a&lt;SEP&gt;chunk-5878c34a997b2491f813d6f46aeb496b</data>
+  <data key="d4">little_prince_6.txt&lt;SEP&gt;little_prince_9.txt&lt;SEP&gt;little_prince_8.txt&lt;SEP&gt;little_prince_7.txt&lt;SEP&gt;little_prince_4.txt</data>
+  <data key="d5">1754037444</data>
+</node>
+<node id="國際天文學會">
+  <data key="d0">國際天文學會</data>
+  <data key="d1">organization</data>
+  <data key="d2">The international astronomical society where the Turkish astronomer presented his findings.</data>
+  <data key="d3">chunk-63dde1905e388e36517f5fb776e4b057</data>
+  <data key="d4">little_prince_4.txt</data>
+  <data key="d5">1754037266</data>
+</node>
+<node id="大人们">
+  <data key="d0">大人们</data>
+  <data key="d1">category</data>
+  <data key="d2">Adults who are preoccupied with numbers and materialistic details, contrasting with the Little Prince's perspective.</data>
+  <data key="d3">chunk-63dde1905e388e36517f5fb776e4b057</data>
+  <data key="d4">little_prince_4.txt</data>
+  <data key="d5">1754037266</data>
+</node>
+<node id="大人們">
+  <data key="d0">大人們</data>
+  <data key="d1">category</data>
+  <data key="d2">Adults in general, characterized by their preoccupation with numbers, material possessions, and a lack of imagination, contrasting with the Little Prince's perspective.&lt;SEP&gt;Adults who the narrator feels they are starting to resemble.</data>
+  <data key="d3">chunk-616d160a54d9d8e5307654611c72dfb8&lt;SEP&gt;chunk-63dde1905e388e36517f5fb776e4b057</data>
+  <data key="d4">little_prince_4.txt</data>
+  <data key="d5">1754037266</data>
+</node>
+<node id="玫瑰">
+  <data key="d0">玫瑰</data>
+  <data key="d1">category</data>
+  <data key="d2">Though not directly described, a rose is hinted at as a significant figure in the Little Prince's life, potentially representing love or vanity.</data>
+  <data key="d3">chunk-63dde1905e388e36517f5fb776e4b057</data>
+  <data key="d4">little_prince_4.txt</data>
+  <data key="d5">1754037266</data>
+</node>
+<node id="綿羊">
+  <data key="d0">綿羊</data>
+  <data key="d1">category</data>
+  <data key="d2">綿羊 (Sheep) play a significant role in the narrative surrounding the Little Prince. They are repeatedly connected to his concerns for his flower, and are a recurring request from the Little Prince himself. The sheep symbolize innocence, vulnerability, and a need for protection. Descriptions note the sheep are sometimes imagined as being contained within a box, making them difficult to perceive, and the speaker intends to draw them for the Little Prince.</data>
+  <data key="d3">chunk-90140055b6bcc32906960a2620eabb8a&lt;SEP&gt;chunk-616d160a54d9d8e5307654611c72dfb8&lt;SEP&gt;chunk-63dde1905e388e36517f5fb776e4b057&lt;SEP&gt;chunk-800dab0bc86ff8f0df0fb900872322f5</data>
+  <data key="d4">little_prince_4.txt&lt;SEP&gt;little_prince_7.txt</data>
+  <data key="d5">1754037394</data>
+</node>
+<node id="畫家/作者">
+  <data key="d0">畫家/作者</data>
+  <data key="d1">person</data>
+  <data key="d2">The narrator and author of the story, who recalls their childhood friendship with the Little Prince and attempts to illustrate his world.</data>
+  <data key="d3">chunk-63dde1905e388e36517f5fb776e4b057</data>
+  <data key="d4">little_prince_4.txt</data>
+  <data key="d5">1754037266</data>
+</node>
+<node id="服裝">
+  <data key="d0">服裝</data>
+  <data key="d1">category</data>
+  <data key="d2">Clothing is highlighted as a factor in how the Turkish astronomer was initially dismissed, representing societal judgment and superficiality.</data>
+  <data key="d3">chunk-63dde1905e388e36517f5fb776e4b057</data>
+  <data key="d4">little_prince_4.txt</data>
+  <data key="d5">1754037266</data>
+</node>
+<node id="數字">
+  <data key="d0">數字</data>
+  <data key="d1">category</data>
+  <data key="d2">Numbers are presented as a preoccupation of adults, contrasting with the imaginative and emotional world of the Little Prince.</data>
+  <data key="d3">chunk-63dde1905e388e36517f5fb776e4b057</data>
+  <data key="d4">little_prince_4.txt</data>
+  <data key="d5">1754037266</data>
+</node>
+<node id="我">
+  <data key="d0">我</data>
+  <data key="d1">person</data>
+  <data key="d2">The narrator of the text, who is uncertain about details and attempts to create a representation of the Little Prince.&lt;SEP&gt;The speaker, who is comforting the little prince and offering to draw things for him.&lt;SEP&gt;The speaker, referring to themselves as 'I', is reflecting on a past relationship and expressing regret.</data>
+  <data key="d3">chunk-4c9c1197154a30e04699a09e0ced9306&lt;SEP&gt;chunk-616d160a54d9d8e5307654611c72dfb8&lt;SEP&gt;chunk-800dab0bc86ff8f0df0fb900872322f5</data>
+  <data key="d4">little_prince_8.txt&lt;SEP&gt;little_prince_4.txt&lt;SEP&gt;little_prince_7.txt</data>
+  <data key="d5">1754037399</data>
+</node>
+<node id="箱子">
+  <data key="d0">箱子</data>
+  <data key="d1">category</data>
+  <data key="d2">A box that contains or hides sheep, making it difficult to observe them.</data>
+  <data key="d3">chunk-616d160a54d9d8e5307654611c72dfb8</data>
+  <data key="d4">little_prince_4.txt</data>
+  <data key="d5">1754037266</data>
+</node>
+<node id="衣服">
+  <data key="d0">衣服</data>
+  <data key="d1">category</data>
+  <data key="d2">Clothing that is part of the representation of the Little Prince.</data>
+  <data key="d3">chunk-616d160a54d9d8e5307654611c72dfb8</data>
+  <data key="d4">little_prince_4.txt</data>
+  <data key="d5">1754037266</data>
+</node>
+<node id="法國">
+  <data key="d0">法國</data>
+  <data key="d1">geo</data>
+  <data key="d2">法國is a country mentioned in the context of viewing sunsets, representing a distant location.</data>
+  <data key="d3">chunk-2951fdd4c52441e74915403c1f12110d</data>
+  <data key="d4">little_prince_6.txt</data>
+  <data key="d5">1754037304</data>
+</node>
+<node id="美國">
+  <data key="d0">美國</data>
+  <data key="d1">geo</data>
+  <data key="d2">美國is mentioned in relation to the time difference with France and the setting of the sun.</data>
+  <data key="d3">chunk-2951fdd4c52441e74915403c1f12110d</data>
+  <data key="d4">little_prince_6.txt</data>
+  <data key="d5">1754037304</data>
+</node>
+<node id="落日">
+  <data key="d0">落日</data>
+  <data key="d1">event</data>
+  <data key="d2">落日(sunset) is a recurring event that the little prince enjoys and connects with his emotions.</data>
+  <data key="d3">chunk-2951fdd4c52441e74915403c1f12110d</data>
+  <data key="d4">little_prince_6.txt</data>
+  <data key="d5">1754037304</data>
+</node>
+<node id="第四天">
+  <data key="d0">第四天</data>
+  <data key="d1">event</data>
+  <data key="d2">A specific day mentioned in the text when the little prince shares details about his fondness for sunsets.</data>
+  <data key="d3">chunk-2951fdd4c52441e74915403c1f12110d</data>
+  <data key="d4">little_prince_6.txt</data>
+  <data key="d5">1754037304</data>
+</node>
+<node id="椅子">
+  <data key="d0">椅子</data>
+  <data key="d1">category</data>
+  <data key="d2">An object on the little prince's planet that can be moved to view the sunset, representing convenience and control over the environment.</data>
+  <data key="d3">chunk-2951fdd4c52441e74915403c1f12110d</data>
+  <data key="d4">little_prince_6.txt</data>
+  <data key="d5">1754037304</data>
+</node>
+<node id="四十三次">
+  <data key="d0">四十三次</data>
+  <data key="d1">event</data>
+  <data key="d2">The number of times the little prince watched the sunset on one occasion, highlighting his emotional state and possible loneliness.</data>
+  <data key="d3">chunk-2951fdd4c52441e74915403c1f12110d</data>
+  <data key="d4">little_prince_6.txt</data>
+  <data key="d5">1754037304</data>
+</node>
+<node id="花">
+  <data key="d0">花</data>
+  <data key="d1">person</data>
+  <data key="d2">The flower is a significant character, proud and somewhat demanding, with a complex relationship with the Little Prince.&lt;SEP&gt;花 (Flowers) hold significant meaning within the narrative, serving as a central symbol representing the Little Prince’s love and responsibility. The flowers are not simply objects of affection, but a complex entity with which the Little Prince interacts and attempts to understand. They represent the complexities and contradictions within the relationship, and are something the speaker intends to protect, highlighting their importance to the Little Prince.</data>
+  <data key="d3">chunk-df55872fecebe3e56018c5a5ee46482a&lt;SEP&gt;chunk-4c9c1197154a30e04699a09e0ced9306&lt;SEP&gt;chunk-800dab0bc86ff8f0df0fb900872322f5&lt;SEP&gt;chunk-90140055b6bcc32906960a2620eabb8a&lt;SEP&gt;chunk-5878c34a997b2491f813d6f46aeb496b</data>
+  <data key="d4">little_prince_9.txt&lt;SEP&gt;little_prince_8.txt&lt;SEP&gt;little_prince_7.txt</data>
+  <data key="d5">1754037444</data>
+</node>
+<node id="螺絲釘">
+  <data key="d0">螺絲釘</data>
+  <data key="d1">equipment</data>
+  <data key="d2">Screws are a persistent problem for the narrator, symbolizing practical concerns and urgent repairs.</data>
+  <data key="d3">chunk-90140055b6bcc32906960a2620eabb8a</data>
+  <data key="d4">little_prince_7.txt</data>
+  <data key="d5">1754037368</data>
+</node>
+<node id="紅臉的先生">
+  <data key="d0">紅臉的先生</data>
+  <data key="d1">person</data>
+  <data key="d2">The red-faced man represents a type of adult focused solely on superficial and meaningless pursuits.</data>
+  <data key="d3">chunk-90140055b6bcc32906960a2620eabb8a</data>
+  <data key="d4">little_prince_7.txt</data>
+  <data key="d5">1754037368</data>
+</node>
+<node id="星星">
+  <data key="d0">星星</data>
+  <data key="d1">category</data>
+  <data key="d2">Stars symbolize beauty, vastness, and the Little Prince’s connection to his home planet.</data>
+  <data key="d3">chunk-90140055b6bcc32906960a2620eabb8a</data>
+  <data key="d4">little_prince_7.txt</data>
+  <data key="d5">1754037368</data>
+</node>
+<node id="地球">
+  <data key="d0">地球</data>
+  <data key="d1">geo</data>
+  <data key="d2">Earth is the planet where the little prince needs comfort.</data>
+  <data key="d3">chunk-800dab0bc86ff8f0df0fb900872322f5</data>
+  <data key="d4">little_prince_7.txt</data>
+  <data key="d5">1754037368</data>
+</node>
+<node id="眼淚的世界">
+  <data key="d0">眼淚的世界</data>
+  <data key="d1">geo</data>
+  <data key="d2">A metaphorical place representing sadness or a state of emotional distress.</data>
+  <data key="d3">chunk-800dab0bc86ff8f0df0fb900872322f5</data>
+  <data key="d4">little_prince_7.txt</data>
+  <data key="d5">1754037368</data>
+</node>
+<node id="老虎">
+  <data key="d0">老虎</data>
+  <data key="d1">category</data>
+  <data key="d2">Tigers are mentioned by the flower, symbolizing a perceived threat and used as a pretext for attention.</data>
+  <data key="d3">chunk-df55872fecebe3e56018c5a5ee46482a</data>
+  <data key="d4">little_prince_8.txt</data>
+  <data key="d5">1754037399</data>
+</node>
+<node id="種子">
+  <data key="d0">種子</data>
+  <data key="d1">category</data>
+  <data key="d2">The seed from which the flower originated, representing its beginning and potential.</data>
+  <data key="d3">chunk-df55872fecebe3e56018c5a5ee46482a</data>
+  <data key="d4">little_prince_8.txt</data>
+  <data key="d5">1754037399</data>
+</node>
+<node id="巴歐巴">
+  <data key="d0">巴歐巴</data>
+  <data key="d1">category</data>
+  <data key="d2">A type of plant referenced as potentially similar to the flower, used for comparison.</data>
+  <data key="d3">chunk-df55872fecebe3e56018c5a5ee46482a</data>
+  <data key="d4">little_prince_8.txt</data>
+  <data key="d5">1754037399</data>
+</node>
+<node id="灌木">
+  <data key="d0">灌木</data>
+  <data key="d1">category</data>
+  <data key="d2">A shrub that initially grows where the flower eventually blooms.</data>
+  <data key="d3">chunk-df55872fecebe3e56018c5a5ee46482a</data>
+  <data key="d4">little_prince_8.txt</data>
+  <data key="d5">1754037399</data>
+</node>
+<node id="屏風">
+  <data key="d0">屏風</data>
+  <data key="d1">category</data>
+  <data key="d2">A wind screen that the flower requests for protection, highlighting its fragility.</data>
+  <data key="d3">chunk-df55872fecebe3e56018c5a5ee46482a</data>
+  <data key="d4">little_prince_8.txt</data>
+  <data key="d5">1754037399</data>
+</node>
+<node id="風">
+  <data key="d0">風</data>
+  <data key="d1">category</data>
+  <data key="d2">The wind, a natural element that the flower fears, prompting its request for a wind screen.</data>
+  <data key="d3">chunk-df55872fecebe3e56018c5a5ee46482a</data>
+  <data key="d4">little_prince_8.txt</data>
+  <data key="d5">1754037399</data>
+</node>
+<node id="太陽">
+  <data key="d0">太陽</data>
+  <data key="d1">category</data>
+  <data key="d2">The sun, mentioned in relation to the flower's birth and appearance.</data>
+  <data key="d3">chunk-df55872fecebe3e56018c5a5ee46482a</data>
+  <data key="d4">little_prince_8.txt</data>
+  <data key="d5">1754037399</data>
+</node>
+<node id="清水">
+  <data key="d0">清水</data>
+  <data key="d1">category</data>
+  <data key="d2">Water provided by the Little Prince to care for the flower.</data>
+  <data key="d3">chunk-df55872fecebe3e56018c5a5ee46482a</data>
+  <data key="d4">little_prince_8.txt</data>
+  <data key="d5">1754037399</data>
+</node>
+<node id="虛榮">
+  <data key="d0">虛榮</data>
+  <data key="d1">category</data>
+  <data key="d2">The flower's vanity, a prominent trait that drives its behavior and demands for attention.</data>
+  <data key="d3">chunk-df55872fecebe3e56018c5a5ee46482a</data>
+  <data key="d4">little_prince_8.txt</data>
+  <data key="d5">1754037399</data>
+</node>
+<node id="謊言">
+  <data key="d0">謊言</data>
+  <data key="d1">category</data>
+  <data key="d2">The flower's lies, used to manipulate the Little Prince and gain sympathy.</data>
+  <data key="d3">chunk-df55872fecebe3e56018c5a5ee46482a</data>
+  <data key="d4">little_prince_8.txt</data>
+  <data key="d5">1754037399</data>
+</node>
+<node id="She">
+  <data key="d0">She</data>
+  <data key="d1">person</data>
+  <data key="d2">The text refers to a 'She' who evokes feelings of fragrance and light, and whom the speaker regrets not understanding and loving.</data>
+  <data key="d3">chunk-4c9c1197154a30e04699a09e0ced9306</data>
+  <data key="d4">little_prince_8.txt</data>
+  <data key="d5">1754037399</data>
+</node>
+<node id="I">
+  <data key="d0">I</data>
+  <data key="d1">person</data>
+  <data key="d2">The text is a first-person narrative, and 'I' refers to the speaker reflecting on a past relationship.</data>
+  <data key="d3">chunk-4c9c1197154a30e04699a09e0ced9306</data>
+  <data key="d4">little_prince_8.txt</data>
+  <data key="d5">1754037399</data>
+</node>
+<node id="Flowers">
+  <data key="d0">Flowers</data>
+  <data key="d1">category</data>
+  <data key="d2">Flowers are used as a metaphor to represent the contradictions and complexities of the relationship.</data>
+  <data key="d3">chunk-4c9c1197154a30e04699a09e0ced9306</data>
+  <data key="d4">little_prince_8.txt</data>
+  <data key="d5">1754037399</data>
+</node>
+<node id="她">
+  <data key="d0">她</data>
+  <data key="d1">person</data>
+  <data key="d2">The person being spoken about, referred to as 'She', is the object of the speaker's reflection and past affection.</data>
+  <data key="d3">chunk-4c9c1197154a30e04699a09e0ced9306</data>
+  <data key="d4">little_prince_8.txt</data>
+  <data key="d5">1754037399</data>
+</node>
+<node id="判斷">
+  <data key="d0">判斷</data>
+  <data key="d1">category</data>
+  <data key="d2">Represents the act of judging or misinterpreting the other person's intentions.</data>
+  <data key="d3">chunk-4c9c1197154a30e04699a09e0ced9306</data>
+  <data key="d4">little_prince_8.txt</data>
+  <data key="d5">1754037399</data>
+</node>
+<node id="香氣">
+  <data key="d0">香氣</data>
+  <data key="d1">category</data>
+  <data key="d2">The fragrance associated with 'She', evoking a sense of allure and beauty.</data>
+  <data key="d3">chunk-4c9c1197154a30e04699a09e0ced9306</data>
+  <data key="d4">little_prince_8.txt</data>
+  <data key="d5">1754037399</data>
+</node>
+<node id="光">
+  <data key="d0">光</data>
+  <data key="d1">category</data>
+  <data key="d2">Represents the illuminating or radiant quality associated with 'She', symbolizing her impact on the speaker.</data>
+  <data key="d3">chunk-4c9c1197154a30e04699a09e0ced9306</data>
+  <data key="d4">little_prince_8.txt</data>
+  <data key="d5">1754037399</data>
+</node>
+<node id="詭計">
+  <data key="d0">詭計</data>
+  <data key="d1">category</data>
+  <data key="d2">Refers to the perceived 'schemes' or complexities in 'She's' behavior, which the speaker now understands as a facade for tenderness.</data>
+  <data key="d3">chunk-4c9c1197154a30e04699a09e0ced9306</data>
+  <data key="d4">little_prince_8.txt</data>
+  <data key="d5">1754037399</data>
+</node>
+<node id="溫柔">
+  <data key="d0">溫柔</data>
+  <data key="d1">category</data>
+  <data key="d2">The underlying tenderness or gentleness that the speaker realizes was hidden beneath the perceived 'schemes'.</data>
+  <data key="d3">chunk-4c9c1197154a30e04699a09e0ced9306</data>
+  <data key="d4">little_prince_8.txt</data>
+  <data key="d5">1754037400</data>
+</node>
+<node id="火山">
+  <data key="d0">火山</data>
+  <data key="d1">category</data>
+  <data key="d2">Volcanoes are a recurring element on the Little Prince's planet, both active and extinct, representing maintenance and potential danger.</data>
+  <data key="d3">chunk-5878c34a997b2491f813d6f46aeb496b</data>
+  <data key="d4">little_prince_9.txt</data>
+  <data key="d5">1754037444</data>
+</node>
+<node id="逃亡">
+  <data key="d0">逃亡</data>
+  <data key="d1">event</data>
+  <data key="d2">The escape, or departure, is the central event driving the Little Prince's actions.</data>
+  <data key="d3">chunk-5878c34a997b2491f813d6f46aeb496b</data>
+  <data key="d4">little_prince_9.txt</data>
+  <data key="d5">1754037444</data>
+</node>
+<node id="活火山">
+  <data key="d0">活火山</data>
+  <data key="d1">category</data>
+  <data key="d2">Active volcanoes on the Little Prince’s planet, used for heating breakfast.</data>
+  <data key="d3">chunk-5878c34a997b2491f813d6f46aeb496b</data>
+  <data key="d4">little_prince_9.txt</data>
+  <data key="d5">1754037444</data>
+</node>
+<node id="死火山">
+  <data key="d0">死火山</data>
+  <data key="d1">category</data>
+  <data key="d2">Extinct volcanoes on the Little Prince’s planet, also maintained by the Little Prince.</data>
+  <data key="d3">chunk-5878c34a997b2491f813d6f46aeb496b</data>
+  <data key="d4">little_prince_9.txt</data>
+  <data key="d5">1754037444</data>
+</node>
+<node id="移棲野鳥">
+  <data key="d0">移棲野鳥</data>
+  <data key="d1">category</data>
+  <data key="d2">Migratory birds, implied to be helping the Little Prince escape.</data>
+  <data key="d3">chunk-5878c34a997b2491f813d6f46aeb496b</data>
+  <data key="d4">little_prince_9.txt</data>
+  <data key="d5">1754037444</data>
+</node>
+<node id="巴歐巴幼苗">
+  <data key="d0">巴歐巴幼苗</data>
+  <data key="d1">category</data>
+  <data key="d2">Baobab seedlings, which the Little Prince diligently removes from his planet.</data>
+  <data key="d3">chunk-5878c34a997b2491f813d6f46aeb496b</data>
+  <data key="d4">little_prince_9.txt</data>
+  <data key="d5">1754037444</data>
+</node>
+<node id="玻璃罩">
+  <data key="d0">玻璃罩</data>
+  <data key="d1">category</data>
+  <data key="d2">A glass cover used to protect the flower.</data>
+  <data key="d3">chunk-5878c34a997b2491f813d6f46aeb496b</data>
+  <data key="d4">little_prince_9.txt</data>
+  <data key="d5">1754037444</data>
+</node>
+<node id="夜晚的涼風">
+  <data key="d0">夜晚的涼風</data>
+  <data key="d1">category</data>
+  <data key="d2">Cool night breeze, which the flower tolerates.</data>
+  <data key="d3">chunk-5878c34a997b2491f813d6f46aeb496b</data>
+  <data key="d4">little_prince_9.txt</data>
+  <data key="d5">1754037444</data>
+</node>
+<node id="蛹">
+  <data key="d0">蛹</data>
+  <data key="d1">category</data>
+  <data key="d2">Caterpillars/pupae, the flower suggests raising to attract butterflies.</data>
+  <data key="d3">chunk-5878c34a997b2491f813d6f46aeb496b</data>
+  <data key="d4">little_prince_9.txt</data>
+  <data key="d5">1754037444</data>
+</node>
+<node id="蝴蝶">
+  <data key="d0">蝴蝶</data>
+  <data key="d1">category</data>
+  <data key="d2">Butterflies, the flower wants to attract as visitors.</data>
+  <data key="d3">chunk-5878c34a997b2491f813d6f46aeb496b</data>
+  <data key="d4">little_prince_9.txt</data>
+  <data key="d5">1754037444</data>
+</node>
+<node id="芒刺">
+  <data key="d0">芒刺</data>
+  <data key="d1">category</data>
+  <data key="d2">Thorns, the flower uses for protection.</data>
+  <data key="d3">chunk-5878c34a997b2491f813d6f46aeb496b</data>
+  <data key="d4">little_prince_9.txt</data>
+  <data key="d5">1754037444</data>
+</node>
+<node id="大點的動物">
+  <data key="d0">大點的動物</data>
+  <data key="d1">category</data>
+  <data key="d2">Larger animals, the flower doesn't fear thanks to its thorns.</data>
+  <data key="d3">chunk-5878c34a997b2491f813d6f46aeb496b</data>
+  <data key="d4">little_prince_9.txt</data>
+  <data key="d5">1754037444</data>
+</node>
+<edge source="林致远" target="知一书屋">
+  <data key="d6">18.0</data>
+  <data key="d7">林致远是知一书屋的主人，经营这家书店。</data>
+  <data key="d8">business operation,ownership</data>
+  <data key="d9">chunk-b538e9f35d11f14b0ad81b617792d796</data>
+  <data key="d10">cat_story_1.txt</data>
+  <data key="d11">1754033107</data>
+</edge>
+<edge source="林致远" target="阿墨">
+  <data key="d6">17.0</data>
+  <data key="d7">林致远收养了阿墨，阿墨成为了他生活的一部分。&lt;SEP&gt;阿墨似乎具有某种神秘力量，帮助林致远改善了睡眠和身体状况。</data>
+  <data key="d8">companionship,healing,mysterious connection,pet ownership</data>
+  <data key="d9">chunk-b538e9f35d11f14b0ad81b617792d796</data>
+  <data key="d10">cat_story_1.txt</data>
+  <data key="d11">1754033107</data>
+</edge>
+<edge source="林致远" target="苏婉">
+  <data key="d6">10.0</data>
+  <data key="d7">苏婉是林致远的恋人，她的去世对林致远造成了巨大的打击。</data>
+  <data key="d8">loss and grief,romantic relationship</data>
+  <data key="d9">chunk-b538e9f35d11f14b0ad81b617792d796</data>
+  <data key="d10">cat_story_1.txt</data>
+  <data key="d11">1754033107</data>
+</edge>
+<edge source="林致远" target="大学教授">
+  <data key="d6">8.0</data>
+  <data key="d7">林致远曾经是一名大学教授，展现了他过去的辉煌和知识渊博。</data>
+  <data key="d8">background,expertise,past occupation</data>
+  <data key="d9">chunk-b538e9f35d11f14b0ad81b617792d796</data>
+  <data key="d10">cat_story_1.txt</data>
+  <data key="d11">1754033107</data>
+</edge>
+<edge source="阿墨" target="山海异闻录">
+  <data key="d6">8.0</data>
+  <data key="d7">山海异闻录中记载的灵兽夜行使与阿墨的特征相似。</data>
+  <data key="d8">animal characteristics,mythical connection</data>
+  <data key="d9">chunk-b538e9f35d11f14b0ad81b617792d796</data>
+  <data key="d10">cat_story_1.txt</data>
+  <data key="d11">1754033107</data>
+</edge>
+<edge source="阿墨" target="苏晓">
+  <data key="d6">5.0</data>
+  <data key="d7">阿墨also becomes associated with苏晓, continuing its protective role.</data>
+  <data key="d8">animal companion,guardian</data>
+  <data key="d9">chunk-f088ddafc209a7b78bd36afd6e7df1da</data>
+  <data key="d10">cat_story_2.txt</data>
+  <data key="d11">1754033161</data>
+</edge>
+<edge source="阿墨" target="雾">
+  <data key="d6">6.0</data>
+  <data key="d7">The mist surrounds阿墨, adding to its mysterious and ethereal quality.</data>
+  <data key="d8">atmosphere,mystery</data>
+  <data key="d9">chunk-f088ddafc209a7b78bd36afd6e7df1da</data>
+  <data key="d10">cat_story_2.txt</data>
+  <data key="d11">1754033161</data>
+</edge>
+<edge source="阿墨" target="林致遠">
+  <data key="d6">6.0</data>
+  <data key="d7">阿墨has a long-standing connection with林致遠, seemingly guarding or observing him.</data>
+  <data key="d8">animal companion,guardian</data>
+  <data key="d9">chunk-f088ddafc209a7b78bd36afd6e7df1da</data>
+  <data key="d10">cat_story_2.txt</data>
+  <data key="d11">1754033161</data>
+</edge>
+<edge source="阿墨" target="月光">
+  <data key="d6">5.0</data>
+  <data key="d7">阿墨is associated with moonlight, enhancing its enigmatic and almost supernatural presence.</data>
+  <data key="d8">atmosphere,mystery</data>
+  <data key="d9">chunk-f088ddafc209a7b78bd36afd6e7df1da</data>
+  <data key="d10">cat_story_2.txt</data>
+  <data key="d11">1754033162</data>
+</edge>
+<edge source="苏婉" target="罕见血癌">
+  <data key="d6">10.0</data>
+  <data key="d7">罕见血癌是苏婉的死因，导致林致远一直沉浸在悲伤之中。</data>
+  <data key="d8">cause of death,grief,loss</data>
+  <data key="d9">chunk-b538e9f35d11f14b0ad81b617792d796</data>
+  <data key="d10">cat_story_1.txt</data>
+  <data key="d11">1754033107</data>
+</edge>
+<edge source="苏晓" target="知一书屋">
+  <data key="d6">23.0</data>
+  <data key="d7">苏晓inherits知一书屋from林致遠, continuing his legacy and becoming the new caretaker of the bookstore.&lt;SEP&gt;苏晓takes over the management of知一书屋after林致遠's passing.&lt;SEP&gt;苏晓是知一书屋的顾客，经常光顾这家书店。</data>
+  <data key="d8">business continuation,continuation,customer-business,inheritance,regular visit</data>
+  <data key="d9">chunk-b538e9f35d11f14b0ad81b617792d796&lt;SEP&gt;chunk-f088ddafc209a7b78bd36afd6e7df1da</data>
+  <data key="d10">cat_story_2.txt&lt;SEP&gt;cat_story_1.txt</data>
+  <data key="d11">1754033161</data>
+</edge>
+<edge source="苏晓" target="菊花茶">
+  <data key="d6">7.0</data>
+  <data key="d7">苏晓在知一书屋点了一杯菊花茶，体现了她的休闲习惯和对书屋氛围的享受。</data>
+  <data key="d8">ambiance,customer habit,relaxation</data>
+  <data key="d9">chunk-b538e9f35d11f14b0ad81b617792d796</data>
+  <data key="d10">cat_story_1.txt</data>
+  <data key="d11">1754033107</data>
+</edge>
+<edge source="苏晓" target="林致遠">
+  <data key="d6">9.0</data>
+  <data key="d7">林致遠and苏晓form a bond after苏晓reveals she is the daughter of his past love.</data>
+  <data key="d8">emotional bond,family connection</data>
+  <data key="d9">chunk-f088ddafc209a7b78bd36afd6e7df1da</data>
+  <data key="d10">cat_story_2.txt</data>
+  <data key="d11">1754033161</data>
+</edge>
+<edge source="苏晓" target="苏晓的母亲">
+  <data key="d6">7.0</data>
+  <data key="d7">苏晓learned about林致遠from her mother on her deathbed.</data>
+  <data key="d8">family history,maternal connection</data>
+  <data key="d9">chunk-f088ddafc209a7b78bd36afd6e7df1da</data>
+  <data key="d10">cat_story_2.txt</data>
+  <data key="d11">1754033161</data>
+</edge>
+<edge source="知一书屋" target="夜晚">
+  <data key="d6">7.0</data>
+  <data key="d7">夜晚是知一书屋经常发生的事件时间，烘托了书屋神秘的气氛。</data>
+  <data key="d8">atmosphere,setting,time of day</data>
+  <data key="d9">chunk-b538e9f35d11f14b0ad81b617792d796</data>
+  <data key="d10">cat_story_1.txt</data>
+  <data key="d11">1754033107</data>
+</edge>
+<edge source="知一书屋" target="古籍">
+  <data key="d6">8.0</data>
+  <data key="d7">古籍是知一书屋的主要商品和特色，吸引了像苏晓这样的顾客。</data>
+  <data key="d8">customer attraction,shared interest,store inventory</data>
+  <data key="d9">chunk-b538e9f35d11f14b0ad81b617792d796</data>
+  <data key="d10">cat_story_1.txt</data>
+  <data key="d11">1754033107</data>
+</edge>
+<edge source="知一书屋" target="书">
+  <data key="d6">8.0</data>
+  <data key="d7">Books are the central focus of知一书屋, defining its purpose and attracting customers.</data>
+  <data key="d8">content,purpose</data>
+  <data key="d9">chunk-f088ddafc209a7b78bd36afd6e7df1da</data>
+  <data key="d10">cat_story_2.txt</data>
+  <data key="d11">1754033162</data>
+</edge>
+<edge source="知一书屋" target="林致遠">
+  <data key="d6">16.0</data>
+  <data key="d7">林致遠owns and operates知一书屋, dedicating his life to books and creating a literary hub.&lt;SEP&gt;林致遠owns and operates知一书屋, which is central to the story.</data>
+  <data key="d8">dedication,ownership,setting</data>
+  <data key="d9">chunk-f088ddafc209a7b78bd36afd6e7df1da</data>
+  <data key="d10">cat_story_2.txt</data>
+  <data key="d11">1754033162</data>
+</edge>
+<edge source="林致遠" target="苏晓的母亲">
+  <data key="d6">8.0</data>
+  <data key="d7">林致遠had a romantic relationship with苏晓's mother in his youth.</data>
+  <data key="d8">familial link,past love</data>
+  <data key="d9">chunk-f088ddafc209a7b78bd36afd6e7df1da</data>
+  <data key="d10">cat_story_2.txt</data>
+  <data key="d11">1754033161</data>
+</edge>
+<edge source="林致遠" target="春天">
+  <data key="d6">5.0</data>
+  <data key="d7">春天coincides with林致遠's declining health, symbolizing the natural cycle of life and the approach of his end.</data>
+  <data key="d8">cycle of life,symbolism</data>
+  <data key="d9">chunk-f088ddafc209a7b78bd36afd6e7df1da</data>
+  <data key="d10">cat_story_2.txt</data>
+  <data key="d11">1754033162</data>
+</edge>
+<edge source="林致遠" target="死亡">
+  <data key="d6">7.0</data>
+  <data key="d7">林致遠's death marks the end of his life and the passing of his legacy onto苏晓.</data>
+  <data key="d8">legacy,passing</data>
+  <data key="d9">chunk-f088ddafc209a7b78bd36afd6e7df1da</data>
+  <data key="d10">cat_story_2.txt</data>
+  <data key="d11">1754033162</data>
+</edge>
+<edge source="細胞" target="細胞質">
+  <data key="d6">9.0</data>
+  <data key="d7">Cytoplasm is the substance within the cell where organelles are located.</data>
+  <data key="d8">cellular structure,location</data>
+  <data key="d9">chunk-7da4699ea1b8f20db041f46e7f2b7cdd</data>
+  <data key="d10"></data>
+  <data key="d11">1754035523</data>
+</edge>
+<edge source="細胞" target="遺傳物質">
+  <data key="d6">8.0</data>
+  <data key="d7">Genetic material is contained within cells.</data>
+  <data key="d8">cellular components,heredity</data>
+  <data key="d9">chunk-7da4699ea1b8f20db041f46e7f2b7cdd</data>
+  <data key="d10"></data>
+  <data key="d11">1754035523</data>
+</edge>
+<edge source="細胞" target="真核細胞">
+  <data key="d6">9.0</data>
+  <data key="d7">Eukaryotic cells are a type of cell.</data>
+  <data key="d8">categorization,cell type</data>
+  <data key="d9">chunk-7da4699ea1b8f20db041f46e7f2b7cdd</data>
+  <data key="d10"></data>
+  <data key="d11">1754035524</data>
+</edge>
+<edge source="細胞" target="原核細胞">
+  <data key="d6">9.0</data>
+  <data key="d7">Prokaryotic cells are a type of cell.</data>
+  <data key="d8">categorization,cell type</data>
+  <data key="d9">chunk-7da4699ea1b8f20db041f46e7f2b7cdd</data>
+  <data key="d10"></data>
+  <data key="d11">1754035524</data>
+</edge>
+<edge source="原核細胞" target="細菌">
+  <data key="d6">19.0</data>
+  <data key="d7">Bacteria are an example of prokaryotic cells.</data>
+  <data key="d8">categorization,cell type</data>
+  <data key="d9">chunk-7da4699ea1b8f20db041f46e7f2b7cdd</data>
+  <data key="d10"></data>
+  <data key="d11">1754035523</data>
+</edge>
+<edge source="原核細胞" target="藍綠藻">
+  <data key="d6">19.0</data>
+  <data key="d7">Cyanobacteria are an example of prokaryotic cells.</data>
+  <data key="d8">categorization,cell type</data>
+  <data key="d9">chunk-7da4699ea1b8f20db041f46e7f2b7cdd</data>
+  <data key="d10"></data>
+  <data key="d11">1754035523</data>
+</edge>
+<edge source="真核細胞" target="線粒體">
+  <data key="d6">16.0</data>
+  <data key="d7">Eukaryotic cells contain mitochondria.&lt;SEP&gt;Mitochondria are found in eukaryotic cells.</data>
+  <data key="d8">cell type,cellular structure,organelle location</data>
+  <data key="d9">chunk-7da4699ea1b8f20db041f46e7f2b7cdd</data>
+  <data key="d10"></data>
+  <data key="d11">1754035523</data>
+</edge>
+<edge source="真核細胞" target="內質網">
+  <data key="d6">16.0</data>
+  <data key="d7">Endoplasmic reticulum are found in eukaryotic cells.&lt;SEP&gt;Eukaryotic cells contain endoplasmic reticulum.</data>
+  <data key="d8">cell type,cellular structure,organelle location</data>
+  <data key="d9">chunk-7da4699ea1b8f20db041f46e7f2b7cdd</data>
+  <data key="d10"></data>
+  <data key="d11">1754035523</data>
+</edge>
+<edge source="真核細胞" target="細胞核">
+  <data key="d6">9.0</data>
+  <data key="d7">Eukaryotic cells contain a nucleus.</data>
+  <data key="d8">cellular structure,organelle location</data>
+  <data key="d9">chunk-7da4699ea1b8f20db041f46e7f2b7cdd</data>
+  <data key="d10"></data>
+  <data key="d11">1754035524</data>
+</edge>
+<edge source="遺傳物質" target="DNA">
+  <data key="d6">10.0</data>
+  <data key="d7">DNA is a type of genetic material.</data>
+  <data key="d8">genetics,molecular biology</data>
+  <data key="d9">chunk-7da4699ea1b8f20db041f46e7f2b7cdd</data>
+  <data key="d10"></data>
+  <data key="d11">1754035523</data>
+</edge>
+<edge source="小王子" target="行星Ｂ六一二號">
+  <data key="d6">10.0</data>
+  <data key="d7">The Little Prince originates from and resides on asteroid B612.</data>
+  <data key="d8">origin,residence</data>
+  <data key="d9">chunk-63dde1905e388e36517f5fb776e4b057</data>
+  <data key="d10">little_prince_4.txt</data>
+  <data key="d11">1754037266</data>
+</edge>
+<edge source="小王子" target="綿羊">
+  <data key="d6">24.0</data>
+  <data key="d7">The Little Prince repeatedly requests a sheep, highlighting his innocence and need for companionship.&lt;SEP&gt;The Little Prince worries about the sheep eating his flower, representing his responsibility and care.&lt;SEP&gt;The speaker intends to draw a muzzle for the little prince's sheep.</data>
+  <data key="d8">care,comfort,companionship,imagination,request,responsibility</data>
+  <data key="d9">chunk-90140055b6bcc32906960a2620eabb8a&lt;SEP&gt;chunk-63dde1905e388e36517f5fb776e4b057&lt;SEP&gt;chunk-800dab0bc86ff8f0df0fb900872322f5</data>
+  <data key="d10">little_prince_4.txt&lt;SEP&gt;little_prince_7.txt</data>
+  <data key="d11">1754037397</data>
+</edge>
+<edge source="小王子" target="玫瑰">
+  <data key="d6">6.0</data>
+  <data key="d7">The rose is alluded to as a significant figure in the Little Prince's life, possibly representing love or vanity.</data>
+  <data key="d8">emotional connection,significance</data>
+  <data key="d9">chunk-63dde1905e388e36517f5fb776e4b057</data>
+  <data key="d10">little_prince_4.txt</data>
+  <data key="d11">1754037267</data>
+</edge>
+<edge source="小王子" target="畫家/作者">
+  <data key="d6">17.0</data>
+  <data key="d7">The author illustrates the Little Prince's world and attempts to capture its essence.&lt;SEP&gt;The narrator/author recounts their childhood friendship and memories of the Little Prince.</data>
+  <data key="d8">depiction,friendship,illustration,memory</data>
+  <data key="d9">chunk-63dde1905e388e36517f5fb776e4b057</data>
+  <data key="d10">little_prince_4.txt</data>
+  <data key="d11">1754037267</data>
+</edge>
+<edge source="小王子" target="我">
+  <data key="d6">17.0</data>
+  <data key="d7">The narrator is attempting to create or represent the Little Prince.&lt;SEP&gt;The speaker is comforting the little prince, indicating a caring relationship.</data>
+  <data key="d8">care,comfort,creation,representation</data>
+  <data key="d9">chunk-616d160a54d9d8e5307654611c72dfb8&lt;SEP&gt;chunk-800dab0bc86ff8f0df0fb900872322f5</data>
+  <data key="d10">little_prince_4.txt&lt;SEP&gt;little_prince_7.txt</data>
+  <data key="d11">1754037398</data>
+</edge>
+<edge source="小王子" target="落日">
+  <data key="d6">9.0</data>
+  <data key="d7">小王子enjoys watching sunsets, finding comfort and connection in the event.</data>
+  <data key="d8">aesthetic appreciation,emotional connection</data>
+  <data key="d9">chunk-2951fdd4c52441e74915403c1f12110d</data>
+  <data key="d10">little_prince_6.txt</data>
+  <data key="d11">1754037304</data>
+</edge>
+<edge source="小王子" target="行星">
+  <data key="d6">25.0</data>
+  <data key="d7">The Little Prince resides on and cares for his planet before leaving.&lt;SEP&gt;The Little Prince resides on and cultivates the flower on his planet.&lt;SEP&gt;小王子's home planet allows for easy viewing of sunsets due to its small size.</data>
+  <data key="d8">accessibility,cultivation,location,ownership,planetary care,planetary setting,residence</data>
+  <data key="d9">chunk-df55872fecebe3e56018c5a5ee46482a&lt;SEP&gt;chunk-5878c34a997b2491f813d6f46aeb496b&lt;SEP&gt;chunk-2951fdd4c52441e74915403c1f12110d</data>
+  <data key="d10">little_prince_6.txt&lt;SEP&gt;little_prince_9.txt&lt;SEP&gt;little_prince_8.txt</data>
+  <data key="d11">1754037444</data>
+</edge>
+<edge source="小王子" target="椅子">
+  <data key="d6">8.0</data>
+  <data key="d7">The little prince can move a chair on his planet to adjust his viewing angle of the sunset.</data>
+  <data key="d8">control,convenience,environment</data>
+  <data key="d9">chunk-2951fdd4c52441e74915403c1f12110d</data>
+  <data key="d10">little_prince_6.txt</data>
+  <data key="d11">1754037305</data>
+</edge>
+<edge source="小王子" target="四十三次">
+  <data key="d6">7.0</data>
+  <data key="d7">The little prince watched the sunset 43 times, potentially indicating a period of sadness or contemplation.</data>
+  <data key="d8">contemplation,emotional state,solitude</data>
+  <data key="d9">chunk-2951fdd4c52441e74915403c1f12110d</data>
+  <data key="d10">little_prince_6.txt</data>
+  <data key="d11">1754037305</data>
+</edge>
+<edge source="小王子" target="花">
+  <data key="d6">53.0</data>
+  <data key="d7">The Little Prince interacts with and cares for the flower before departing.&lt;SEP&gt;The Little Prince shares a significant relationship with the Flower, characterized by both care and a degree of manipulation. The Little Prince deeply loves and cares for the Flower, viewing it as unique and precious, and promises to protect it. He dedicates time to observing and understanding its complex nature. However, the Flower is not merely a passive recipient of his affection; it actively demands attention, expresses its needs, and even manipulates the Little Prince through displays of vulnerability. Despite this dynamic, the Little Prince remains devoted to the Flower and committed to its well-being.&lt;SEP&gt;The flower expresses her feelings for the Little Prince, acknowledging her own shortcomings.</data>
+  <data key="d8">affection,attention-seeking,care,complex relationship,dependency,emotional expression,love,manipulation,observation,protection,understanding,uniqueness</data>
+  <data key="d9">chunk-90140055b6bcc32906960a2620eabb8a&lt;SEP&gt;chunk-df55872fecebe3e56018c5a5ee46482a&lt;SEP&gt;chunk-5878c34a997b2491f813d6f46aeb496b&lt;SEP&gt;chunk-800dab0bc86ff8f0df0fb900872322f5</data>
+  <data key="d10">little_prince_9.txt&lt;SEP&gt;little_prince_8.txt&lt;SEP&gt;little_prince_7.txt</data>
+  <data key="d11">1754037446</data>
+</edge>
+<edge source="小王子" target="星星">
+  <data key="d6">8.0</data>
+  <data key="d7">The Little Prince feels connected to the stars and his home planet, finding solace and meaning in them.</data>
+  <data key="d8">connection,home</data>
+  <data key="d9">chunk-90140055b6bcc32906960a2620eabb8a</data>
+  <data key="d10">little_prince_7.txt</data>
+  <data key="d11">1754037398</data>
+</edge>
+<edge source="小王子" target="紅臉的先生">
+  <data key="d6">7.0</data>
+  <data key="d7">The Little Prince contrasts the red-faced man's superficial pursuits with genuine appreciation for beauty and love.</data>
+  <data key="d8">contrast,values</data>
+  <data key="d9">chunk-90140055b6bcc32906960a2620eabb8a</data>
+  <data key="d10">little_prince_7.txt</data>
+  <data key="d11">1754037398</data>
+</edge>
+<edge source="小王子" target="眼淚的世界">
+  <data key="d6">5.0</data>
+  <data key="d7">The little prince is associated with the world of tears, indicating sadness or emotional distress.</data>
+  <data key="d8">distress,sadness</data>
+  <data key="d9">chunk-800dab0bc86ff8f0df0fb900872322f5</data>
+  <data key="d10">little_prince_7.txt</data>
+  <data key="d11">1754037399</data>
+</edge>
+<edge source="小王子" target="清水">
+  <data key="d6">8.0</data>
+  <data key="d7">The Little Prince provides water to care for the flower, demonstrating his dedication.</data>
+  <data key="d8">care,dedication,provision</data>
+  <data key="d9">chunk-df55872fecebe3e56018c5a5ee46482a</data>
+  <data key="d10">little_prince_8.txt</data>
+  <data key="d11">1754037408</data>
+</edge>
+<edge source="小王子" target="火山">
+  <data key="d6">7.0</data>
+  <data key="d7">The Little Prince cleans both the active and extinct volcanoes on his planet.</data>
+  <data key="d8">maintenance,planetary features</data>
+  <data key="d9">chunk-5878c34a997b2491f813d6f46aeb496b</data>
+  <data key="d10">little_prince_9.txt</data>
+  <data key="d11">1754037445</data>
+</edge>
+<edge source="小王子" target="巴歐巴幼苗">
+  <data key="d6">7.0</data>
+  <data key="d7">The Little Prince removes the baobab seedlings to prevent them from overgrowing his planet.</data>
+  <data key="d8">control,planetary care</data>
+  <data key="d9">chunk-5878c34a997b2491f813d6f46aeb496b</data>
+  <data key="d10">little_prince_9.txt</data>
+  <data key="d11">1754037446</data>
+</edge>
+<edge source="小王子" target="逃亡">
+  <data key="d6">9.0</data>
+  <data key="d7">The Little Prince's actions are driven by his impending departure.</data>
+  <data key="d8">departure,motivation</data>
+  <data key="d9">chunk-5878c34a997b2491f813d6f46aeb496b</data>
+  <data key="d10">little_prince_9.txt</data>
+  <data key="d11">1754037446</data>
+</edge>
+<edge source="土耳其天文學家" target="行星Ｂ六一二號">
+  <data key="d6">9.0</data>
+  <data key="d7">The Turkish astronomer discovered and reported on asteroid B612.</data>
+  <data key="d8">discovery,observation</data>
+  <data key="d9">chunk-63dde1905e388e36517f5fb776e4b057</data>
+  <data key="d10">little_prince_4.txt</data>
+  <data key="d11">1754037267</data>
+</edge>
+<edge source="土耳其天文學家" target="國際天文學會">
+  <data key="d6">8.0</data>
+  <data key="d7">The Turkish astronomer presented his findings about asteroid B612 at the International Astronomical Society.</data>
+  <data key="d8">presentation,validation</data>
+  <data key="d9">chunk-63dde1905e388e36517f5fb776e4b057</data>
+  <data key="d10">little_prince_4.txt</data>
+  <data key="d11">1754037267</data>
+</edge>
+<edge source="行星" target="落日">
+  <data key="d6">8.0</data>
+  <data key="d7">The planet's size makes the sunset easily accessible, unlike Earth where one has to travel far.</data>
+  <data key="d8">accessibility,convenience</data>
+  <data key="d9">chunk-2951fdd4c52441e74915403c1f12110d</data>
+  <data key="d10">little_prince_6.txt</data>
+  <data key="d11">1754037305</data>
+</edge>
+<edge source="行星" target="星星">
+  <data key="d6">6.0</data>
+  <data key="d7">The stars and planets are interconnected, representing the Little Prince’s journey and cosmic connections.</data>
+  <data key="d8">cosmic connection,journey</data>
+  <data key="d9">chunk-90140055b6bcc32906960a2620eabb8a</data>
+  <data key="d10">little_prince_7.txt</data>
+  <data key="d11">1754037368</data>
+</edge>
+<edge source="行星" target="花">
+  <data key="d6">7.0</data>
+  <data key="d7">The flower grows on the Little Prince's planet, being the sole point of interest.</data>
+  <data key="d8">ecosystem,growth,home</data>
+  <data key="d9">chunk-df55872fecebe3e56018c5a5ee46482a</data>
+  <data key="d10">little_prince_8.txt</data>
+  <data key="d11">1754037408</data>
+</edge>
+<edge source="行星" target="火山">
+  <data key="d6">7.0</data>
+  <data key="d7">Volcanoes are a key feature of the Little Prince's planet.</data>
+  <data key="d8">geography,planetary features</data>
+  <data key="d9">chunk-5878c34a997b2491f813d6f46aeb496b</data>
+  <data key="d10">little_prince_9.txt</data>
+  <data key="d11">1754037445</data>
+</edge>
+<edge source="大人們" target="數字">
+  <data key="d6">7.0</data>
+  <data key="d7">Adults are characterized by their preoccupation with numbers, prioritizing quantity over quality.</data>
+  <data key="d8">characterization,values</data>
+  <data key="d9">chunk-63dde1905e388e36517f5fb776e4b057</data>
+  <data key="d10">little_prince_4.txt</data>
+  <data key="d11">1754037267</data>
+</edge>
+<edge source="大人們" target="服裝">
+  <data key="d6">7.0</data>
+  <data key="d7">Adults' judgment of the Turkish astronomer's clothing highlights their superficiality.</data>
+  <data key="d8">judgment,superficiality</data>
+  <data key="d9">chunk-63dde1905e388e36517f5fb776e4b057</data>
+  <data key="d10">little_prince_4.txt</data>
+  <data key="d11">1754037267</data>
+</edge>
+<edge source="大人們" target="我">
+  <data key="d6">6.0</data>
+  <data key="d7">The narrator fears becoming like adults.</data>
+  <data key="d8">resemblance,transformation</data>
+  <data key="d9">chunk-616d160a54d9d8e5307654611c72dfb8</data>
+  <data key="d10">little_prince_4.txt</data>
+  <data key="d11">1754037267</data>
+</edge>
+<edge source="綿羊" target="箱子">
+  <data key="d6">7.0</data>
+  <data key="d7">The sheep are contained within the box, obscuring their view.</data>
+  <data key="d8">containment,obscuration</data>
+  <data key="d9">chunk-616d160a54d9d8e5307654611c72dfb8</data>
+  <data key="d10">little_prince_4.txt</data>
+  <data key="d11">1754037267</data>
+</edge>
+<edge source="綿羊" target="我">
+  <data key="d6">13.0</data>
+  <data key="d7">The narrator wants to see the sheep, but they are hidden in the box, creating a barrier.&lt;SEP&gt;The speaker intends to draw a muzzle for the little prince's sheep, showing a desire to fulfill the little prince's wishes.</data>
+  <data key="d8">barrier,creation,fulfillment,perception,sheep</data>
+  <data key="d9">chunk-616d160a54d9d8e5307654611c72dfb8&lt;SEP&gt;chunk-800dab0bc86ff8f0df0fb900872322f5</data>
+  <data key="d10">little_prince_4.txt&lt;SEP&gt;little_prince_7.txt</data>
+  <data key="d11">1754037394</data>
+</edge>
+<edge source="我" target="衣服">
+  <data key="d6">7.0</data>
+  <data key="d7">The narrator is concerned about the colors and details of the Little Prince's clothing during the representation process.</data>
+  <data key="d8">color,details,representation</data>
+  <data key="d9">chunk-616d160a54d9d8e5307654611c72dfb8</data>
+  <data key="d10">little_prince_4.txt</data>
+  <data key="d11">1754037267</data>
+</edge>
+<edge source="我" target="箱子">
+  <data key="d6">6.0</data>
+  <data key="d7">The narrator is unable to see the sheep inside the box, which is causing difficulty.</data>
+  <data key="d8">box,difficulty,perception</data>
+  <data key="d9">chunk-616d160a54d9d8e5307654611c72dfb8</data>
+  <data key="d10">little_prince_4.txt</data>
+  <data key="d11">1754037267</data>
+</edge>
+<edge source="我" target="花">
+  <data key="d6">8.0</data>
+  <data key="d7">The speaker intends to draw a helmet for the little prince's flower, showing a protective attitude.</data>
+  <data key="d8">care,protection</data>
+  <data key="d9">chunk-800dab0bc86ff8f0df0fb900872322f5</data>
+  <data key="d10">little_prince_7.txt</data>
+  <data key="d11">1754037394</data>
+</edge>
+<edge source="我" target="她">
+  <data key="d6">9.0</data>
+  <data key="d7">The speaker ('I') is reflecting on a past relationship with 'She', expressing regret for not fully understanding her.</data>
+  <data key="d8">misunderstanding,past relationship,regret</data>
+  <data key="d9">chunk-4c9c1197154a30e04699a09e0ced9306</data>
+  <data key="d10">little_prince_8.txt</data>
+  <data key="d11">1754037409</data>
+</edge>
+<edge source="我" target="香氣">
+  <data key="d6">7.0</data>
+  <data key="d7">The speaker associates 'She' with a pleasant fragrance, indicating an attraction or fondness.</data>
+  <data key="d8">affection,attraction,sensory experience</data>
+  <data key="d9">chunk-4c9c1197154a30e04699a09e0ced9306</data>
+  <data key="d10">little_prince_8.txt</data>
+  <data key="d11">1754037409</data>
+</edge>
+<edge source="我" target="光">
+  <data key="d6">8.0</data>
+  <data key="d7">The speaker perceives a radiant quality in 'She', suggesting she had a positive and illuminating influence.</data>
+  <data key="d8">admiration,positive influence,radiance</data>
+  <data key="d9">chunk-4c9c1197154a30e04699a09e0ced9306</data>
+  <data key="d10">little_prince_8.txt</data>
+  <data key="d11">1754037409</data>
+</edge>
+<edge source="我" target="詭計">
+  <data key="d6">7.0</data>
+  <data key="d7">The speaker initially perceived 'She's' actions as 'schemes' but now understands them as masking tenderness.</data>
+  <data key="d8">hidden emotions,misinterpretation,realization</data>
+  <data key="d9">chunk-4c9c1197154a30e04699a09e0ced9306</data>
+  <data key="d10">little_prince_8.txt</data>
+  <data key="d11">1754037410</data>
+</edge>
+<edge source="我" target="判斷">
+  <data key="d6">6.0</data>
+  <data key="d7">The speaker acknowledges having made a judgment about 'She' which they now realize was incorrect.</data>
+  <data key="d8">misjudgment,regret,self-reflection</data>
+  <data key="d9">chunk-4c9c1197154a30e04699a09e0ced9306</data>
+  <data key="d10">little_prince_8.txt</data>
+  <data key="d11">1754037410</data>
+</edge>
+<edge source="法國" target="美國">
+  <data key="d6">7.0</data>
+  <data key="d7">美國and法國are related by the time difference, creating a scenario where one can see the sunset in either location.</data>
+  <data key="d8">geographical contrast,time zones</data>
+  <data key="d9">chunk-2951fdd4c52441e74915403c1f12110d</data>
+  <data key="d10">little_prince_6.txt</data>
+  <data key="d11">1754037304</data>
+</edge>
+<edge source="花" target="種子">
+  <data key="d6">7.0</data>
+  <data key="d7">The flower originated from a seed, representing its beginning and potential.</data>
+  <data key="d8">development,growth,origin</data>
+  <data key="d9">chunk-df55872fecebe3e56018c5a5ee46482a</data>
+  <data key="d10">little_prince_8.txt</data>
+  <data key="d11">1754037408</data>
+</edge>
+<edge source="花" target="巴歐巴">
+  <data key="d6">5.0</data>
+  <data key="d7">The flower is compared to a Baobab plant, drawing a parallel in their growth or characteristics.</data>
+  <data key="d8">categorization,comparison,similarity</data>
+  <data key="d9">chunk-df55872fecebe3e56018c5a5ee46482a</data>
+  <data key="d10">little_prince_8.txt</data>
+  <data key="d11">1754037408</data>
+</edge>
+<edge source="花" target="灌木">
+  <data key="d6">6.0</data>
+  <data key="d7">The flower grew from a shrub, indicating its growth location and process.</data>
+  <data key="d8">environment,growth,origin</data>
+  <data key="d9">chunk-df55872fecebe3e56018c5a5ee46482a</data>
+  <data key="d10">little_prince_8.txt</data>
+  <data key="d11">1754037409</data>
+</edge>
+<edge source="花" target="老虎">
+  <data key="d6">9.0</data>
+  <data key="d7">The flower uses the threat of tigers to manipulate the Little Prince into providing care.</data>
+  <data key="d8">attention seeking,fear,manipulation</data>
+  <data key="d9">chunk-df55872fecebe3e56018c5a5ee46482a</data>
+  <data key="d10">little_prince_8.txt</data>
+  <data key="d11">1754037409</data>
+</edge>
+<edge source="花" target="屏風">
+  <data key="d6">8.0</data>
+  <data key="d7">The flower requests a wind screen for protection, highlighting its fragility.</data>
+  <data key="d8">need,protection,vulnerability</data>
+  <data key="d9">chunk-df55872fecebe3e56018c5a5ee46482a</data>
+  <data key="d10">little_prince_8.txt</data>
+  <data key="d11">1754037409</data>
+</edge>
+<edge source="花" target="風">
+  <data key="d6">7.0</data>
+  <data key="d7">The flower fears the wind and requests a wind screen, demonstrating its sensitivity.</data>
+  <data key="d8">fear,protection,sensitivity</data>
+  <data key="d9">chunk-df55872fecebe3e56018c5a5ee46482a</data>
+  <data key="d10">little_prince_8.txt</data>
+  <data key="d11">1754037409</data>
+</edge>
+<edge source="花" target="太陽">
+  <data key="d6">6.0</data>
+  <data key="d7">The flower's birth and appearance are related to the sun, indicating a natural connection.</data>
+  <data key="d8">appearance,birth,nature</data>
+  <data key="d9">chunk-df55872fecebe3e56018c5a5ee46482a</data>
+  <data key="d10">little_prince_8.txt</data>
+  <data key="d11">1754037410</data>
+</edge>
+<edge source="花" target="虛榮">
+  <data key="d6">9.0</data>
+  <data key="d7">The flower's vanity drives its behavior and demands for attention, showcasing its character flaw.</data>
+  <data key="d8">character,flaw,motivation</data>
+  <data key="d9">chunk-df55872fecebe3e56018c5a5ee46482a</data>
+  <data key="d10">little_prince_8.txt</data>
+  <data key="d11">1754037410</data>
+</edge>
+<edge source="花" target="謊言">
+  <data key="d6">8.0</data>
+  <data key="d7">The flower tells lies to manipulate the Little Prince, revealing its deceptive nature.</data>
+  <data key="d8">character,deception,manipulation</data>
+  <data key="d9">chunk-df55872fecebe3e56018c5a5ee46482a</data>
+  <data key="d10">little_prince_8.txt</data>
+  <data key="d11">1754037410</data>
+</edge>
+<edge source="花" target="玻璃罩">
+  <data key="d6">8.0</data>
+  <data key="d7">The flower is protected by a glass cover.</data>
+  <data key="d8">care,protection</data>
+  <data key="d9">chunk-5878c34a997b2491f813d6f46aeb496b</data>
+  <data key="d10">little_prince_9.txt</data>
+  <data key="d11">1754037445</data>
+</edge>
+<edge source="花" target="夜晚的涼風">
+  <data key="d6">6.0</data>
+  <data key="d7">The flower claims to be tolerant of the cool night breeze.</data>
+  <data key="d8">environmental adaptation,tolerance</data>
+  <data key="d9">chunk-5878c34a997b2491f813d6f46aeb496b</data>
+  <data key="d10">little_prince_9.txt</data>
+  <data key="d11">1754037445</data>
+</edge>
+<edge source="花" target="蛹">
+  <data key="d6">7.0</data>
+  <data key="d7">The flower suggests raising caterpillars to attract butterflies.</data>
+  <data key="d8">attraction,desire for companionship</data>
+  <data key="d9">chunk-5878c34a997b2491f813d6f46aeb496b</data>
+  <data key="d10">little_prince_9.txt</data>
+  <data key="d11">1754037445</data>
+</edge>
+<edge source="花" target="蝴蝶">
+  <data key="d6">8.0</data>
+  <data key="d7">The flower wants to attract butterflies as visitors.</data>
+  <data key="d8">companionship,desire for visitors</data>
+  <data key="d9">chunk-5878c34a997b2491f813d6f46aeb496b</data>
+  <data key="d10">little_prince_9.txt</data>
+  <data key="d11">1754037445</data>
+</edge>
+<edge source="花" target="芒刺">
+  <data key="d6">9.0</data>
+  <data key="d7">The flower uses its thorns for protection.</data>
+  <data key="d8">defense,protection</data>
+  <data key="d9">chunk-5878c34a997b2491f813d6f46aeb496b</data>
+  <data key="d10">little_prince_9.txt</data>
+  <data key="d11">1754037445</data>
+</edge>
+<edge source="花" target="大點的動物">
+  <data key="d6">8.0</data>
+  <data key="d7">The flower feels safe from larger animals due to its thorns.</data>
+  <data key="d8">defense,protection</data>
+  <data key="d9">chunk-5878c34a997b2491f813d6f46aeb496b</data>
+  <data key="d10">little_prince_9.txt</data>
+  <data key="d11">1754037446</data>
+</edge>
+<edge source="She" target="I">
+  <data key="d6">8.0</data>
+  <data key="d7">The speaker ('I') reflects on a past relationship with 'She', expressing regret over not understanding or loving her.</data>
+  <data key="d8">past relationship,regret,unrequited love</data>
+  <data key="d9">chunk-4c9c1197154a30e04699a09e0ced9306</data>
+  <data key="d10">little_prince_8.txt</data>
+  <data key="d11">1754037409</data>
+</edge>
+<edge source="She" target="Flowers">
+  <data key="d6">7.0</data>
+  <data key="d7">The 'She' is associated with the metaphor of flowers, representing her complex and contradictory nature.</data>
+  <data key="d8">complexity,duality,metaphor</data>
+  <data key="d9">chunk-4c9c1197154a30e04699a09e0ced9306</data>
+  <data key="d10">little_prince_8.txt</data>
+  <data key="d11">1754037409</data>
+</edge>
+<edge source="詭計" target="溫柔">
+  <data key="d6">8.0</data>
+  <data key="d7">The 'schemes' are revealed to be a facade concealing underlying 'tenderness'. </data>
+  <data key="d8">deception,revelation,true nature</data>
+  <data key="d9">chunk-4c9c1197154a30e04699a09e0ced9306</data>
+  <data key="d10">little_prince_8.txt</data>
+  <data key="d11">1754037409</data>
+</edge>
+<edge source="逃亡" target="移棲野鳥">
+  <data key="d6">6.0</data>
+  <data key="d7">The migratory birds are helping the Little Prince with his departure.</data>
+  <data key="d8">assistance,travel</data>
+  <data key="d9">chunk-5878c34a997b2491f813d6f46aeb496b</data>
+  <data key="d10">little_prince_9.txt</data>
+  <data key="d11">1754037445</data>
+</edge>
+</graph></graphml>
