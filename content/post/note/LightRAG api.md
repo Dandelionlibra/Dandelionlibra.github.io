@@ -1,6 +1,6 @@
 ---
 title: LightRAG API Server 教學：快速上手指南
-description: 未完成 本文提供 LightRAG API Server 的完整教學，涵蓋環境設定、伺服器啟動、API 端點詳解與程式碼範例，幫助初學者快速掌握 LightRAG 的核心功能。
+description: 未完成 本文提供 LightRAG API Server 的完整教學，涵蓋環境設定、伺服器啟動、常用 API 端點使用範例，幫助初學者快速掌握 LightRAG 的核心功能。
 slug: lightrag-api-server-tutorial
 date: 2025-08-01 06:00:00+0800
 categories:
@@ -64,11 +64,74 @@ INFO:     Application startup complete.
 
 ## 3. API 端點詳解
 
-獲取文件 api 教學。
+`-X`: 指定 HTTP 方法  
+`-H`: 加入 HTTP 標頭  
+> ex. `-H "Content-Type: application/json"` 用於告知伺服器此次請求的資料格式是 JSON。  
+> 可多次使用 `-H` 加標頭。
+> 
+`-d`: 傳送請求資料，常搭配 `POST`,`PUT` 使用，當指定 `Content-Type: application/json` 時，會把內容當 JSON 傳送。  
+`-v`: verbose 模式，顯示完整請求與回應過程，主要用於除錯。  
+`-o <file>`: 輸出到檔案中。  
+
+---
+
+**獲取文件 api 教學**
 ```
 lightrag-server --help
 ```
+或在連上 server 後開啟: http://localhost:9621/redoc#tag/documents/operation
 
+---
+
+### 3.1. Documents
+---
+
+#### 3.1.1. Scan For New Documents  
+`POST`: `/documents/scan`  
+啟動背景掃描，去檢查輸入目錄中是否有新的文件，若有則讀取這些文件。  
+
+**回傳內容**  
+* `status`(required): Status of the scanning operation.  
+   value: `scanning_started`
+* `message`: Additional details about the scanning operation.
+
+``` bash
+curl -X POST "http://localhost:9621/documents/scan"
+```
+
+---
+
+#### 3.1.2. Upload To Input Dir
+`POST`: `/documents/upload`  
+將檔案上傳到指定的目錄，再對其進行索引，以便檢索。  
+
+**傳入參數**  
+* `file`(required): 要上傳的檔案。
+* `api_key_header_value`: 有些伺服器可能需要 API Key 做身份驗證。  
+  
+**回傳內容**  
+* `status`(required): Status of the uploadding operation.  
+  Enum: `success`、`duplicated`、`partial_success`、`failure`  
+* `message`(required): Message describing the operation result.
+
+※`-F "file=@檔案路徑"` 用於傳  multipart/form-data。
+``` bash
+curl -X POST "http://localhost:9621/documents/upload" \
+    -F "file=@./../prince_docs/little_prince_1.txt"
+```
+
+---
+
+
+
+---
+
+### 3.2. Query
+
+
+---
+
+### 3.3. Documents
 
 
 
