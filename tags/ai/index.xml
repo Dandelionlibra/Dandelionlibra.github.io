@@ -27,9 +27,55 @@ INFO: Waiting for application startup.
 INFO: Application startup complete.
 &lt;/code>&lt;/pre>&lt;hr>
 &lt;h2 id="3-api-端點詳解">3. API 端點詳解
-&lt;/h2>&lt;p>獲取文件 api 教學。&lt;/p>
+&lt;/h2>&lt;p>&lt;code>-X&lt;/code>: 指定 HTTP 方法&lt;br>
+&lt;code>-H&lt;/code>: 加入 HTTP 標頭&lt;/p>
+&lt;blockquote>
+&lt;p>ex. &lt;code>-H &amp;quot;Content-Type: application/json&amp;quot;&lt;/code> 用於告知伺服器此次請求的資料格式是 JSON。&lt;br>
+可多次使用 &lt;code>-H&lt;/code> 加標頭。&lt;/p>&lt;/blockquote>
+&lt;p>&lt;code>-d&lt;/code>: 傳送請求資料，常搭配 &lt;code>POST&lt;/code>,&lt;code>PUT&lt;/code> 使用，當指定 &lt;code>Content-Type: application/json&lt;/code> 時，會把內容當 JSON 傳送。&lt;br>
+&lt;code>-v&lt;/code>: verbose 模式，顯示完整請求與回應過程，主要用於除錯。&lt;br>
+&lt;code>-o &amp;lt;file&amp;gt;&lt;/code>: 輸出到檔案中。&lt;/p>
+&lt;hr>
+&lt;p>&lt;strong>獲取文件 api 教學&lt;/strong>&lt;/p>
 &lt;pre tabindex="0">&lt;code>lightrag-server --help
-&lt;/code>&lt;/pre>&lt;p>LightRAG API Server 提供兩類主要的端點：一類是遵循 OpenAI 標準的核心聊天 API，另一類是 Web UI 用於管理資料的 API。&lt;/p>
+&lt;/code>&lt;/pre>&lt;p>或在連上 server 後開啟: http://localhost:9621/redoc#tag/documents/operation&lt;/p>
+&lt;hr>
+&lt;h3 id="31-documents">3.1. Documents
+&lt;/h3>&lt;hr>
+&lt;h4 id="311-scan-for-new-documents">3.1.1. Scan For New Documents
+&lt;/h4>&lt;p>&lt;code>POST&lt;/code>: &lt;code>/documents/scan&lt;/code>&lt;br>
+啟動背景掃描，去檢查輸入目錄中是否有新的文件，若有則讀取這些文件。&lt;/p>
+&lt;p>&lt;strong>回傳內容&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>status&lt;/code>(required): Status of the scanning operation.&lt;br>
+value: &lt;code>scanning_started&lt;/code>&lt;/li>
+&lt;li>&lt;code>message&lt;/code>: Additional details about the scanning operation.&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>curl -X POST &lt;span style="color:#e6db74">&amp;#34;http://localhost:9621/documents/scan&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;hr>
+&lt;h4 id="312-upload-to-input-dir">3.1.2. Upload To Input Dir
+&lt;/h4>&lt;p>&lt;code>POST&lt;/code>: &lt;code>/documents/upload&lt;/code>&lt;br>
+將檔案上傳到指定的目錄，再對其進行索引，以便檢索。&lt;/p>
+&lt;p>&lt;strong>傳入參數&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>file&lt;/code>(required): 要上傳的檔案。&lt;/li>
+&lt;li>&lt;code>api_key_header_value&lt;/code>: 有些伺服器可能需要 API Key 做身份驗證。&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>回傳內容&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>status&lt;/code>(required): Status of the uploadding operation.&lt;br>
+Enum: &lt;code>success&lt;/code>、&lt;code>duplicated&lt;/code>、&lt;code>partial_success&lt;/code>、&lt;code>failure&lt;/code>&lt;/li>
+&lt;li>&lt;code>message&lt;/code>(required): Message describing the operation result.&lt;/li>
+&lt;/ul>
+&lt;p>※&lt;code>-F &amp;quot;file=@檔案路徑&amp;quot;&lt;/code> 用於傳 multipart/form-data。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>curl -X POST &lt;span style="color:#e6db74">&amp;#34;http://localhost:9621/documents/upload&amp;#34;&lt;/span> &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> -F &lt;span style="color:#e6db74">&amp;#34;file=@./../prince_docs/little_prince_1.txt&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;hr>
+&lt;hr>
+&lt;h3 id="32-query">3.2. Query
+&lt;/h3>&lt;hr>
+&lt;h3 id="33-documents">3.3. Documents
+&lt;/h3>&lt;p>LightRAG API Server 提供兩類主要的端點：一類是遵循 OpenAI 標準的核心聊天 API，另一類是 Web UI 用於管理資料的 API。&lt;/p>
 &lt;h3 id="31-openai-標準-api">3.1. OpenAI 標準 API
 &lt;/h3>&lt;p>這組 API 讓 LightRAG 可以輕易地整合進現有的 OpenAI 生態系。&lt;/p>
 &lt;h4 id="311-get-apiv1models">3.1.1. &lt;code>GET /api/v1/models&lt;/code>
