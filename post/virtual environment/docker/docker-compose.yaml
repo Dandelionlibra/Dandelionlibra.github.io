@@ -55,5 +55,22 @@ services:
       timeout: 10s
       retries: 3
       start_period: 60s
-  
+      
+  lightrag:
+    container_name: lightrag # http://lightrag:9621
+    image: ghcr.io/hkuds/lightrag:latest
+    ports:
+      - "9621:9621"
+    volumes:
+      - ./LightRAG/data/rag_storage:/app/data/rag_storage
+      - ./LightRAG/data/inputs:/app/data/inputs
+      - ./LightRAG/config.ini:/app/config.ini
+      - ./LightRAG/.env:/app/.env
+    env_file:
+      - ./LightRAG/.env
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - ollama_net
 
