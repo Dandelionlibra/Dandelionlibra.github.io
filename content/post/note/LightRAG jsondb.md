@@ -1,5 +1,5 @@
 ---
-title: LightRAG API Server 教學：快速上手指南
+title: LightRAG Server 檔案儲存基本介紹
 description: 未完成 本文提供 LightRAG 使用 JSON 作為資料庫時的檔案儲存基本介紹。
 slug: lightrag-json-db
 date: 2025-08-06 09:03:00+0800
@@ -21,8 +21,14 @@ weight: 1
 ---
 
 
+# LightRAG 支援的儲存類型
+* KV_STORAGE：llm 回應快取、文字區塊、文件訊息
+* VECTOR_STORAGE：實體向量、關係向量、區塊向量
+* GRAPH_STORAGE：實體關係圖
+* DOC_STATUS_STORAGE：文檔索引狀態
 
-## kv_store_doc_status.json  
+
+## 1. kv_store_doc_status.json  
 功能：紀錄每份文件在知識庫中的處理狀態與相關資訊。
 
 **主要欄位**
@@ -36,7 +42,7 @@ weight: 1
 * 方便追蹤與除錯。
 
 ---
-## kv_store_full_docs.json
+## 2. kv_store_full_docs.json
 功能：儲存完整的原始文檔，作為語義檢索的來源。
 
 **主要欄位**
@@ -51,7 +57,7 @@ weight: 1
 
 ---
 
-## kv_store_llm_response_cache.json
+## 3. kv_store_llm_response_cache.json
 功能：作為 LLM 查詢結果的快取，避免重複計算。
 
 **主要欄位**
@@ -67,7 +73,7 @@ weight: 1
 
 ---
 
-## kv_store_text_chunks.json
+## 4. kv_store_text_chunks.json
 功能：儲存將文件切割後的小片段（chunks），方便向量檢索。
 
 **主要欄位**
