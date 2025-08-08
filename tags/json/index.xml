@@ -1,8 +1,15 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>JSON on YuChen</title><link>https://Dandelionlibra.github.io/tags/json/</link><description>Recent content in JSON on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Wed, 06 Aug 2025 09:03:00 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/tags/json/index.xml" rel="self" type="application/rss+xml"/><item><title>LightRAG API Server 教學：快速上手指南</title><link>https://Dandelionlibra.github.io/post/note/lightrag-json-db/</link><pubDate>Wed, 06 Aug 2025 09:03:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/lightrag-json-db/</guid><description>&lt;h1 id="lightrag-api-server-教學快速上手指南">LightRAG API Server 教學：快速上手指南
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>JSON on YuChen</title><link>https://Dandelionlibra.github.io/tags/json/</link><description>Recent content in JSON on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Wed, 06 Aug 2025 09:03:00 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/tags/json/index.xml" rel="self" type="application/rss+xml"/><item><title>LightRAG Server 檔案儲存基本介紹</title><link>https://Dandelionlibra.github.io/post/note/lightrag-json-db/</link><pubDate>Wed, 06 Aug 2025 09:03:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/lightrag-json-db/</guid><description>&lt;h1 id="lightrag-api-server-教學快速上手指南">LightRAG API Server 教學：快速上手指南
 &lt;/h1>&lt;p>&lt;a class="link" href="https://github.com/HKUDS/LightRAG" target="_blank" rel="noopener"
 >LightRAG&lt;/a> 是一個輕量級、模組化的 RAG（檢索增強生成）框架，旨在簡化 RAG 應用的開發與部署。其內建的 API Server 遵循 OpenAI API 標準，並提供一套完整的 Web UI API 來管理文件與知識圖譜，讓開發者能輕易地將自訂的 RAG 流程封裝成服務，並與現有生態系無縫接軌。本文將引導初學者完成從環境設定到 API 呼叫的完整流程。&lt;/p>
 &lt;hr>
-&lt;h2 id="kv_store_doc_statusjson">kv_store_doc_status.json
+&lt;h1 id="lightrag-支援的儲存類型">LightRAG 支援的儲存類型
+&lt;/h1>&lt;ul>
+&lt;li>KV_STORAGE：llm 回應快取、文字區塊、文件訊息&lt;/li>
+&lt;li>VECTOR_STORAGE：實體向量、關係向量、區塊向量&lt;/li>
+&lt;li>GRAPH_STORAGE：實體關係圖&lt;/li>
+&lt;li>DOC_STATUS_STORAGE：文檔索引狀態&lt;/li>
+&lt;/ul>
+&lt;h2 id="1-kv_store_doc_statusjson">1. kv_store_doc_status.json
 &lt;/h2>&lt;p>功能：紀錄每份文件在知識庫中的處理狀態與相關資訊。&lt;/p>
 &lt;p>&lt;strong>主要欄位&lt;/strong>&lt;/p>
 &lt;ul>
@@ -17,7 +24,7 @@
 &lt;li>方便追蹤與除錯。&lt;/li>
 &lt;/ul>
 &lt;hr>
-&lt;h2 id="kv_store_full_docsjson">kv_store_full_docs.json
+&lt;h2 id="2-kv_store_full_docsjson">2. kv_store_full_docs.json
 &lt;/h2>&lt;p>功能：儲存完整的原始文檔，作為語義檢索的來源。&lt;/p>
 &lt;p>&lt;strong>主要欄位&lt;/strong>&lt;/p>
 &lt;ul>
@@ -32,7 +39,7 @@
 &lt;li>提供「非分塊」的全文檢索。&lt;/li>
 &lt;/ul>
 &lt;hr>
-&lt;h2 id="kv_store_llm_response_cachejson">kv_store_llm_response_cache.json
+&lt;h2 id="3-kv_store_llm_response_cachejson">3. kv_store_llm_response_cache.json
 &lt;/h2>&lt;p>功能：作為 LLM 查詢結果的快取，避免重複計算。&lt;/p>
 &lt;p>&lt;strong>主要欄位&lt;/strong>&lt;/p>
 &lt;ul>
@@ -47,7 +54,7 @@
 &lt;li>允許分析熱門查詢。&lt;/li>
 &lt;/ul>
 &lt;hr>
-&lt;h2 id="kv_store_text_chunksjson">kv_store_text_chunks.json
+&lt;h2 id="4-kv_store_text_chunksjson">4. kv_store_text_chunks.json
 &lt;/h2>&lt;p>功能：儲存將文件切割後的小片段（chunks），方便向量檢索。&lt;/p>
 &lt;p>&lt;strong>主要欄位&lt;/strong>&lt;/p>
 &lt;ul>

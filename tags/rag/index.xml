@@ -1,8 +1,15 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>RAG on YuChen</title><link>https://Dandelionlibra.github.io/tags/rag/</link><description>Recent content in RAG on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Wed, 06 Aug 2025 09:03:00 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/tags/rag/index.xml" rel="self" type="application/rss+xml"/><item><title>LightRAG API Server 教學：快速上手指南</title><link>https://Dandelionlibra.github.io/post/note/lightrag-json-db/</link><pubDate>Wed, 06 Aug 2025 09:03:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/lightrag-json-db/</guid><description>&lt;h1 id="lightrag-api-server-教學快速上手指南">LightRAG API Server 教學：快速上手指南
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>RAG on YuChen</title><link>https://Dandelionlibra.github.io/tags/rag/</link><description>Recent content in RAG on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Wed, 06 Aug 2025 09:03:00 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/tags/rag/index.xml" rel="self" type="application/rss+xml"/><item><title>LightRAG Server 檔案儲存基本介紹</title><link>https://Dandelionlibra.github.io/post/note/lightrag-json-db/</link><pubDate>Wed, 06 Aug 2025 09:03:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/lightrag-json-db/</guid><description>&lt;h1 id="lightrag-api-server-教學快速上手指南">LightRAG API Server 教學：快速上手指南
 &lt;/h1>&lt;p>&lt;a class="link" href="https://github.com/HKUDS/LightRAG" target="_blank" rel="noopener"
 >LightRAG&lt;/a> 是一個輕量級、模組化的 RAG（檢索增強生成）框架，旨在簡化 RAG 應用的開發與部署。其內建的 API Server 遵循 OpenAI API 標準，並提供一套完整的 Web UI API 來管理文件與知識圖譜，讓開發者能輕易地將自訂的 RAG 流程封裝成服務，並與現有生態系無縫接軌。本文將引導初學者完成從環境設定到 API 呼叫的完整流程。&lt;/p>
 &lt;hr>
-&lt;h2 id="kv_store_doc_statusjson">kv_store_doc_status.json
+&lt;h1 id="lightrag-支援的儲存類型">LightRAG 支援的儲存類型
+&lt;/h1>&lt;ul>
+&lt;li>KV_STORAGE：llm 回應快取、文字區塊、文件訊息&lt;/li>
+&lt;li>VECTOR_STORAGE：實體向量、關係向量、區塊向量&lt;/li>
+&lt;li>GRAPH_STORAGE：實體關係圖&lt;/li>
+&lt;li>DOC_STATUS_STORAGE：文檔索引狀態&lt;/li>
+&lt;/ul>
+&lt;h2 id="1-kv_store_doc_statusjson">1. kv_store_doc_status.json
 &lt;/h2>&lt;p>功能：紀錄每份文件在知識庫中的處理狀態與相關資訊。&lt;/p>
 &lt;p>&lt;strong>主要欄位&lt;/strong>&lt;/p>
 &lt;ul>
@@ -17,7 +24,7 @@
 &lt;li>方便追蹤與除錯。&lt;/li>
 &lt;/ul>
 &lt;hr>
-&lt;h2 id="kv_store_full_docsjson">kv_store_full_docs.json
+&lt;h2 id="2-kv_store_full_docsjson">2. kv_store_full_docs.json
 &lt;/h2>&lt;p>功能：儲存完整的原始文檔，作為語義檢索的來源。&lt;/p>
 &lt;p>&lt;strong>主要欄位&lt;/strong>&lt;/p>
 &lt;ul>
@@ -32,7 +39,7 @@
 &lt;li>提供「非分塊」的全文檢索。&lt;/li>
 &lt;/ul>
 &lt;hr>
-&lt;h2 id="kv_store_llm_response_cachejson">kv_store_llm_response_cache.json
+&lt;h2 id="3-kv_store_llm_response_cachejson">3. kv_store_llm_response_cache.json
 &lt;/h2>&lt;p>功能：作為 LLM 查詢結果的快取，避免重複計算。&lt;/p>
 &lt;p>&lt;strong>主要欄位&lt;/strong>&lt;/p>
 &lt;ul>
@@ -47,7 +54,7 @@
 &lt;li>允許分析熱門查詢。&lt;/li>
 &lt;/ul>
 &lt;hr>
-&lt;h2 id="kv_store_text_chunksjson">kv_store_text_chunks.json
+&lt;h2 id="4-kv_store_text_chunksjson">4. kv_store_text_chunks.json
 &lt;/h2>&lt;p>功能：儲存將文件切割後的小片段（chunks），方便向量檢索。&lt;/p>
 &lt;p>&lt;strong>主要欄位&lt;/strong>&lt;/p>
 &lt;ul>
@@ -132,29 +139,112 @@
 &lt;/h1>&lt;p>&lt;a class="link" href="https://github.com/HKUDS/LightRAG" target="_blank" rel="noopener"
 >LightRAG&lt;/a> 是一個輕量級、模組化的 RAG（檢索增強生成）框架，旨在簡化 RAG 應用的開發與部署。其內建的 API Server 遵循 OpenAI API 標準，並提供一套完整的 Web UI API 來管理文件與知識圖譜，讓開發者能輕易地將自訂的 RAG 流程封裝成服務，並與現有生態系無縫接軌。本文將引導初學者完成從環境設定到 API 呼叫的完整流程。&lt;/p>
 &lt;hr>
-&lt;h2 id="1-環境設定與安裝">1. 環境設定與安裝
-&lt;/h2>&lt;p>首先，請確保您的開發環境已安裝 Python 3.9 或更高版本。接著，從 GitHub 下載 LightRAG 專案並安裝必要的套件。&lt;/p>
+&lt;h2 id="1-安裝與環境設定">1. 安裝與環境設定
+&lt;/h2>&lt;h3 id="11-安裝-lightrag">1.1. 安裝 LightRAG
+&lt;/h3>&lt;ul>
+&lt;li>install from PyPl&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>pip install &lt;span style="color:#e6db74">&amp;#34;lightrag-hku[api]&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>Installation from Source&lt;/li>
+&lt;/ul>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 1. Clone the repository&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>git clone https://github.com/HKUDS/LightRAG.git
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cd LightRAG
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 2. Install dependencies&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>pip install -e .
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>pip install -r lightrag_webui/requirements.txt
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 2. create a Python virtual environment if necessary&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 3. Set up your OpenAI API key&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>export OPENAI_API_KEY&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;sk-...&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 3. Install in editable mode with API support&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>pip install -e &lt;span style="color:#e6db74">&amp;#34;.[api]&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 4. 修改範例環境文件&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cp env.example .env
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 5. 啟動 API Server&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>lightrag-server
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="12-環境文件設定">1.2. 環境文件設定
+&lt;/h3>&lt;ul>
+&lt;li>OpenAI LLM + Ollama Embedding:&lt;/li>
+&lt;/ul>
+&lt;pre tabindex="0">&lt;code>LLM_BINDING=openai
+LLM_MODEL=gpt-4o
+LLM_BINDING_HOST=https://api.openai.com/v1
+LLM_BINDING_API_KEY=your_api_key
+EMBEDDING_BINDING=ollama
+EMBEDDING_BINDING_HOST=http://localhost:11434
+EMBEDDING_MODEL=bge-m3:latest
+EMBEDDING_DIM=1024
+# EMBEDDING_BINDING_API_KEY=your_api_key
+&lt;/code>&lt;/pre>&lt;ul>
+&lt;li>Ollama LLM + Ollama Embedding:&lt;/li>
+&lt;/ul>
+&lt;pre tabindex="0">&lt;code>LLM_BINDING=ollama
+LLM_MODEL=mistral-nemo:latest
+LLM_BINDING_HOST=http://localhost:11434
+# LLM_BINDING_API_KEY=your_api_key
+### Ollama Server context length (Must be larger than MAX_TOTAL_TOKENS+2000)
+OLLAMA_LLM_NUM_CTX=16384
+EMBEDDING_BINDING=ollama
+EMBEDDING_BINDING_HOST=http://localhost:11434
+EMBEDDING_MODEL=bge-m3:latest
+EMBEDDING_DIM=1024
+# EMBEDDING_BINDING_API_KEY=your_api_key
+&lt;/code>&lt;/pre>&lt;ul>
+&lt;li>其他環境設定參數：
+&lt;ul>
+&lt;li>&lt;code>--host&lt;/code>：伺服器監聽位址（預設：0.0.0.0）&lt;/li>
+&lt;li>&lt;code>--port&lt;/code>：伺服器監聽連接埠（預設：9621）&lt;/li>
+&lt;li>&lt;code>--timeout&lt;/code>：LLM 請求逾時（預設值：150 秒）&lt;/li>
+&lt;li>&lt;code>--log-level&lt;/code>：日誌等級（預設：INFO）&lt;/li>
+&lt;li>&lt;code>--working-dir&lt;/code>：資料庫持久目錄（預設：./rag_storage）&lt;/li>
+&lt;li>&lt;code>--input-dir&lt;/code>：上傳檔案的目錄（預設值：./inputs）&lt;/li>
+&lt;li>&lt;code>--workspace&lt;/code>：工作區名稱，用於邏輯隔離多個 LightRAG 實例之間的資料（預設：空），及所以工作共用同一個資料目錄&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="13-使用-docker-啟動-lightrag-伺服器">1.3. 使用 Docker 啟動 LightRAG 伺服器
+&lt;/h3>&lt;p>建立名為 &lt;code>docker compose.yml&lt;/code> 的檔案：&lt;/p>
+&lt;pre tabindex="0">&lt;code>services:
+lightrag:
+container_name: lightrag
+image: ghcr.io/hkuds/lightrag:latest
+ports:
+- &amp;#34;${PORT:-9621}:9621&amp;#34;
+volumes:
+- ./data/rag_storage:/app/data/rag_storage
+- ./data/inputs:/app/data/inputs
+- ./config.ini:/app/config.ini
+- ./.env:/app/.env
+env_file:
+- .env
+restart: unless-stopped
+extra_hosts:
+- &amp;#34;host.docker.internal:host-gateway&amp;#34;
+&lt;/code>&lt;/pre>&lt;p>啟動 LightRAG 伺服器：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>docker compose up
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># If you want the program to run in the background after startup, add the -d parameter at the end of the command.&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;hr>
 &lt;h2 id="2-啟動-api-server">2. 啟動 API Server
 &lt;/h2>&lt;p>LightRAG 使用一個 YAML 檔案來設定 API Server，包含端口、API 路徑以及要載入的模型。專案內已提供一個範例設定檔 &lt;code>lightrag_webui/config.yaml&lt;/code>。&lt;/p>
-&lt;p>您可以使用以下指令啟動伺服器：&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>python -m lightrag.core.api_server --config-file lightrag_webui/config.yaml
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>成功啟動後，您會看到類似以下的輸出，代表伺服器正在 &lt;code>localhost:8008&lt;/code> 上運行：&lt;/p>
-&lt;pre tabindex="0">&lt;code>INFO: Uvicorn running on http://0.0.0.0:8008 (Press CTRL+C to quit)
-INFO: Started reloader process [xxxxx] using StatReload
-INFO: Started server process [xxxxx]
-INFO: Waiting for application startup.
-INFO: Application startup complete.
+&lt;p>進入容器後使用以下指令啟動伺服器：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>lightrag-server
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Server 成功啟動後，您會看到類似以下的輸出，代表伺服器正在 &lt;code>localhost:9621&lt;/code> 上運行：&lt;/p>
+&lt;pre tabindex="0">&lt;code> ╔══════════════════════════════════════════════════════════════╗
+║ LightRAG Server v1.4.4/0189 ║
+║ Fast, Lightweight RAG Server Implementation ║
+╚══════════════════════════════════════════════════════════════╝
+📡 Server Configuration:
+├─ Host: 0.0.0.0
+├─ Port: 9621
+├─ Workers: 1
+├─ CORS Origins: *
+├─ SSL Enabled: False
+├─ Ollama Emulating Model: lightrag:latest
+├─ Log Level: INFO
+├─ Verbose Debug: False
+├─ History Turns: 0
+├─ API Key: Not Set
+└─ JWT Auth: Disabled
 &lt;/code>&lt;/pre>&lt;hr>
 &lt;h2 id="3-api-端點詳解">3. API 端點詳解
 &lt;/h2>&lt;p>&lt;code>-X&lt;/code>: 指定 HTTP 方法&lt;br>
@@ -203,7 +293,16 @@ Enum: &lt;code>success&lt;/code>、&lt;code>duplicated&lt;/code>、&lt;code>part
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;hr>
 &lt;hr>
 &lt;h3 id="32-query">3.2. Query
-&lt;/h3>&lt;hr>
+&lt;/h3>&lt;pre>&lt;code>mode: Literal[&amp;quot;local&amp;quot;, &amp;quot;global&amp;quot;, &amp;quot;hybrid&amp;quot;, &amp;quot;naive&amp;quot;, &amp;quot;mix&amp;quot;, &amp;quot;bypass&amp;quot;] = &amp;quot;global&amp;quot;
+&amp;quot;&amp;quot;&amp;quot;Specifies the retrieval mode:
+- &amp;quot;local&amp;quot;: Focuses on context-dependent information.
+- &amp;quot;global&amp;quot;: Utilizes global knowledge.
+- &amp;quot;hybrid&amp;quot;: Combines local and global retrieval methods.
+- &amp;quot;naive&amp;quot;: Performs a basic search without advanced techniques.
+- &amp;quot;mix&amp;quot;: Integrates knowledge graph and vector retrieval.
+&amp;quot;&amp;quot;&amp;quot;
+&lt;/code>&lt;/pre>
+&lt;hr>
 &lt;h3 id="33-documents">3.3. Documents
 &lt;/h3>&lt;p>LightRAG API Server 提供兩類主要的端點：一類是遵循 OpenAI 標準的核心聊天 API，另一類是 Web UI 用於管理資料的 API。&lt;/p>
 &lt;h3 id="31-openai-標準-api">3.1. OpenAI 標準 API
