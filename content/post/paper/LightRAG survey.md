@@ -1,6 +1,6 @@
 ---
 title: LightRAG 論文導讀 — Simple and Fast Retrieval-Augmented Generation 筆記
-description: 未完成 導讀《LightRAG-Simple and Fast Retrieval-Augmented Generation》論文，解析其結合知識圖譜與雙層檢索策略的高效 RAG 架構設計與應用。
+description: 導讀《LightRAG-Simple and Fast Retrieval-Augmented Generation》論文，解析其結合知識圖譜與雙層檢索策略的高效 RAG 架構設計與應用。
 slug: lightrag-paper-review
 date: 2025-07-22 05:27:00+0800
 categories:
