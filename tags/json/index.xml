@@ -1,138 +1,138 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>JSON on YuChen</title><link>https://Dandelionlibra.github.io/tags/json/</link><description>Recent content in JSON on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Wed, 06 Aug 2025 09:03:00 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/tags/json/index.xml" rel="self" type="application/rss+xml"/><item><title>LightRAG Server 檔案儲存基本介紹</title><link>https://Dandelionlibra.github.io/post/note/lightrag-json-db/</link><pubDate>Wed, 06 Aug 2025 09:03:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/lightrag-json-db/</guid><description>&lt;h1 id="lightrag-api-server-教學快速上手指南">LightRAG API Server 教學：快速上手指南
-&lt;/h1>&lt;p>&lt;a class="link" href="https://github.com/HKUDS/LightRAG" target="_blank" rel="noopener"
->LightRAG&lt;/a> 是一個輕量級、模組化的 RAG（檢索增強生成）框架，旨在簡化 RAG 應用的開發與部署。其內建的 API Server 遵循 OpenAI API 標準，並提供一套完整的 Web UI API 來管理文件與知識圖譜，讓開發者能輕易地將自訂的 RAG 流程封裝成服務，並與現有生態系無縫接軌。本文將引導初學者完成從環境設定到 API 呼叫的完整流程。&lt;/p>
-&lt;hr>
-&lt;h1 id="lightrag-支援的儲存類型">LightRAG 支援的儲存類型
-&lt;/h1>&lt;ul>
-&lt;li>KV_STORAGE：llm 回應快取、文字區塊、文件訊息&lt;/li>
-&lt;li>VECTOR_STORAGE：實體向量、關係向量、區塊向量&lt;/li>
-&lt;li>GRAPH_STORAGE：實體關係圖&lt;/li>
-&lt;li>DOC_STATUS_STORAGE：文檔索引狀態&lt;/li>
-&lt;/ul>
-&lt;h2 id="1-kv_store_doc_statusjson">1. kv_store_doc_status.json
-&lt;/h2>&lt;p>功能：紀錄每份文件在知識庫中的處理狀態與相關資訊。&lt;/p>
-&lt;p>&lt;strong>主要欄位&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>__id__&lt;/code>：文件的唯一識別碼。&lt;/li>
-&lt;li>&lt;code>file_path&lt;/code>：原始文件檔名或路徑。&lt;/li>
-&lt;li>&lt;code>status&lt;/code>：處理狀態（如：processed, pending, error）。&lt;/li>
-&lt;li>&lt;code>updated_at&lt;/code>：最後更新時間。&lt;/li>
-&lt;/ul>
-&lt;p>&lt;strong>用途&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>監控文件是否已完成切割、嵌入與存入向量資料庫。&lt;/li>
-&lt;li>方便追蹤與除錯。&lt;/li>
-&lt;/ul>
-&lt;hr>
-&lt;h2 id="2-kv_store_full_docsjson">2. kv_store_full_docs.json
-&lt;/h2>&lt;p>功能：儲存完整的原始文檔，作為語義檢索的來源。&lt;/p>
-&lt;p>&lt;strong>主要欄位&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>__id__&lt;/code>：文件唯一 ID。&lt;/li>
-&lt;li>&lt;code>file_path&lt;/code>：檔案來源路徑。&lt;/li>
-&lt;li>&lt;code>content&lt;/code>：完整文件的文字內容。&lt;/li>
-&lt;li>&lt;code>metadata&lt;/code>：附屬資訊（如標題、作者、分類）。&lt;/li>
-&lt;/ul>
-&lt;p>&lt;strong>用途&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>保留完整語境，便於 LLM 在回答時回溯全文。&lt;/li>
-&lt;li>提供「非分塊」的全文檢索。&lt;/li>
-&lt;/ul>
-&lt;hr>
-&lt;h2 id="3-kv_store_llm_response_cachejson">3. kv_store_llm_response_cache.json
-&lt;/h2>&lt;p>功能：作為 LLM 查詢結果的快取，避免重複計算。&lt;/p>
-&lt;p>&lt;strong>主要欄位&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>query&lt;/code>：使用者輸入的查詢字串。&lt;/li>
-&lt;li>&lt;code>response&lt;/code>：LLM 生成的回答。&lt;/li>
-&lt;li>&lt;code>timestamp&lt;/code>：快取生成時間。&lt;/li>
-&lt;li>&lt;code>hit_count&lt;/code>：該查詢被重複使用的次數。&lt;/li>
-&lt;/ul>
-&lt;p>&lt;strong>用途&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>提升系統效能，減少模型重複推理。&lt;/li>
-&lt;li>允許分析熱門查詢。&lt;/li>
-&lt;/ul>
-&lt;hr>
-&lt;h2 id="4-kv_store_text_chunksjson">4. kv_store_text_chunks.json
-&lt;/h2>&lt;p>功能：儲存將文件切割後的小片段（chunks），方便向量檢索。&lt;/p>
-&lt;p>&lt;strong>主要欄位&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>__id__&lt;/code>：文本片段 ID。&lt;/li>
-&lt;li>&lt;code>file_path&lt;/code>：來源文件名稱。&lt;/li>
-&lt;li>&lt;code>chunk_index&lt;/code>：片段順序號。&lt;/li>
-&lt;li>&lt;code>content&lt;/code>：片段內容文字。&lt;/li>
-&lt;li>&lt;code>embedding_vector&lt;/code>（可選）：對應的向量嵌入。&lt;/li>
-&lt;/ul>
-&lt;p>&lt;strong>用途&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>支援語意檢索（RAG: Retrieval-Augmented Generation）。&lt;/li>
-&lt;li>每個 chunk 對應一組 embedding，利於近似搜尋。&lt;/li>
-&lt;/ul>
-&lt;p>存有 token 數。&lt;/p>
-&lt;hr>
-&lt;h2 id="vdb_chunksjson">vdb_chunks.json
-&lt;/h2>&lt;p>功能：儲存經嵌入處理的文本向量（Vector DB 核心）。&lt;/p>
-&lt;p>&lt;strong>主要欄位&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>__id__&lt;/code>：chunk 的唯一識別碼。&lt;/li>
-&lt;li>&lt;code>embedding_dim&lt;/code>：向量維度（如 1024）。&lt;/li>
-&lt;li>&lt;code>embedding_vector&lt;/code>：嵌入向量。&lt;/li>
-&lt;li>&lt;code>content&lt;/code>：對應文本。&lt;/li>
-&lt;li>&lt;code>source_id&lt;/code>：來源 chunk 的 ID。&lt;/li>
-&lt;/ul>
-&lt;p>&lt;strong>用途&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>提供高效相似度搜尋。&lt;/li>
-&lt;li>是 RAG 系統的核心檢索資料來源。&lt;/li>
-&lt;/ul>
-&lt;hr>
-&lt;h2 id="vdb_entitiesjson">vdb_entities.json
-&lt;/h2>&lt;p>功能：儲存從文本中抽取的命名實體與相關描述。&lt;/p>
-&lt;p>&lt;strong>主要欄位&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>__id__&lt;/code>：實體 ID。&lt;/li>
-&lt;li>&lt;code>entity_name&lt;/code>：實體名稱（如「林致远」「阿墨」）。&lt;/li>
-&lt;li>&lt;code>content&lt;/code>：實體的描述或定義。&lt;/li>
-&lt;li>&lt;code>file_path&lt;/code>：來源檔案。&lt;/li>
-&lt;li>&lt;code>source_id&lt;/code>：對應文本片段 ID。&lt;/li>
-&lt;li>&lt;code>__created_at__&lt;/code>：建立時間戳。&lt;/li>
-&lt;li>&lt;code>embedding_dim&lt;/code>：嵌入向量維度（如 1024）。&lt;/li>
-&lt;/ul>
-&lt;p>&lt;strong>特色&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>一個實體可能來自多個文本片段，用 &lt;!-- raw HTML omitted --> 分隔。&lt;/li>
-&lt;li>可支援多語言或多版本（如 知一书屋 vs 知一書屋）。&lt;/li>
-&lt;/ul>
-&lt;p>&lt;strong>用途&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>為知識圖譜中的節點（entities）。&lt;/li>
-&lt;li>支援語義關聯檢索與上下文補全。&lt;/li>
-&lt;/ul>
-&lt;hr>
-&lt;h2 id="vdb_relationshipsjson">vdb_relationships.json
-&lt;/h2>&lt;p>功能：儲存實體之間的語義關係，形成知識圖譜 (Knowledge Graph)。&lt;/p>
-&lt;p>&lt;strong>主要欄位&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>__id__&lt;/code>：關係 ID。&lt;/li>
-&lt;li>&lt;code>src_id&lt;/code>：關係的起始實體名稱。&lt;/li>
-&lt;li>&lt;code>tgt_id&lt;/code>：關係的目標實體名稱。&lt;/li>
-&lt;li>&lt;code>content&lt;/code>：關係的描述與類別（可能包含多種語意標籤，如 companionship, ownership）。&lt;/li>
-&lt;li>&lt;code>file_path&lt;/code>：來源文件。&lt;/li>
-&lt;li>&lt;code>source_id&lt;/code>：對應的文本 chunk。&lt;/li>
-&lt;li>&lt;code>__created_at__&lt;/code>：建立時間。&lt;/li>
-&lt;/ul>
-&lt;p>&lt;strong>用途&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>支援「語義圖譜檢索」，例如：&lt;br>
-問「阿墨和林致远的關係？」 → 檢索 companionship 與 mysterious connection。&lt;/li>
-&lt;li>提供結構化的語意推理，補強向量檢索。&lt;/li>
-&lt;/ul>
-&lt;hr>
-&lt;h2 id="4-總結">4. 總結
-&lt;/h2>&lt;ul>
-&lt;li>kv_store* 系列 → 偏向文件與片段的管理、狀態與快取。&lt;/li>
-&lt;li>vdb* 系列 → 偏向語義層面的知識圖譜與向量檢索。&lt;/li>
-&lt;li>entities 與 relationships → 構成知識圖譜 (Knowledge Graph)。&lt;/li>
-&lt;li>chunks 與 embeddings → 構成語意檢索的基礎。&lt;/li>
-&lt;/ul></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>JSON on YuChen</title><link>https://Dandelionlibra.github.io/tags/json/</link><description>Recent content in JSON on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Wed, 06 Aug 2025 09:03:00 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/tags/json/index.xml" rel="self" type="application/rss+xml"/><item><title>LightRAG Server 檔案儲存基本介紹</title><link>https://Dandelionlibra.github.io/post/note/lightrag-json-db/</link><pubDate>Wed, 06 Aug 2025 09:03:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/lightrag-json-db/</guid><description>&lt;h1 id="lightrag-api-server-教學快速上手指南"&gt;LightRAG API Server 教學：快速上手指南
+&lt;/h1&gt;&lt;p&gt;&lt;a class="link" href="https://github.com/HKUDS/LightRAG" target="_blank" rel="noopener"
+&gt;LightRAG&lt;/a&gt; 是一個輕量級、模組化的 RAG（檢索增強生成）框架，旨在簡化 RAG 應用的開發與部署。其內建的 API Server 遵循 OpenAI API 標準，並提供一套完整的 Web UI API 來管理文件與知識圖譜，讓開發者能輕易地將自訂的 RAG 流程封裝成服務，並與現有生態系無縫接軌。本文將引導初學者完成從環境設定到 API 呼叫的完整流程。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h1 id="lightrag-支援的儲存類型"&gt;LightRAG 支援的儲存類型
+&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;KV_STORAGE：llm 回應快取、文字區塊、文件訊息&lt;/li&gt;
+&lt;li&gt;VECTOR_STORAGE：實體向量、關係向量、區塊向量&lt;/li&gt;
+&lt;li&gt;GRAPH_STORAGE：實體關係圖&lt;/li&gt;
+&lt;li&gt;DOC_STATUS_STORAGE：文檔索引狀態&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="1-kv_store_doc_statusjson"&gt;1. kv_store_doc_status.json
+&lt;/h2&gt;&lt;p&gt;功能：紀錄每份文件在知識庫中的處理狀態與相關資訊。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;主要欄位&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;__id__&lt;/code&gt;：文件的唯一識別碼。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;file_path&lt;/code&gt;：原始文件檔名或路徑。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;status&lt;/code&gt;：處理狀態（如：processed, pending, error）。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;updated_at&lt;/code&gt;：最後更新時間。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;用途&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;監控文件是否已完成切割、嵌入與存入向量資料庫。&lt;/li&gt;
+&lt;li&gt;方便追蹤與除錯。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="2-kv_store_full_docsjson"&gt;2. kv_store_full_docs.json
+&lt;/h2&gt;&lt;p&gt;功能：儲存完整的原始文檔，作為語義檢索的來源。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;主要欄位&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;__id__&lt;/code&gt;：文件唯一 ID。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;file_path&lt;/code&gt;：檔案來源路徑。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;content&lt;/code&gt;：完整文件的文字內容。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;metadata&lt;/code&gt;：附屬資訊（如標題、作者、分類）。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;用途&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;保留完整語境，便於 LLM 在回答時回溯全文。&lt;/li&gt;
+&lt;li&gt;提供「非分塊」的全文檢索。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="3-kv_store_llm_response_cachejson"&gt;3. kv_store_llm_response_cache.json
+&lt;/h2&gt;&lt;p&gt;功能：作為 LLM 查詢結果的快取，避免重複計算。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;主要欄位&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;query&lt;/code&gt;：使用者輸入的查詢字串。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;response&lt;/code&gt;：LLM 生成的回答。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;timestamp&lt;/code&gt;：快取生成時間。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;hit_count&lt;/code&gt;：該查詢被重複使用的次數。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;用途&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;提升系統效能，減少模型重複推理。&lt;/li&gt;
+&lt;li&gt;允許分析熱門查詢。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="4-kv_store_text_chunksjson"&gt;4. kv_store_text_chunks.json
+&lt;/h2&gt;&lt;p&gt;功能：儲存將文件切割後的小片段（chunks），方便向量檢索。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;主要欄位&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;__id__&lt;/code&gt;：文本片段 ID。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;file_path&lt;/code&gt;：來源文件名稱。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;chunk_index&lt;/code&gt;：片段順序號。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;content&lt;/code&gt;：片段內容文字。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;embedding_vector&lt;/code&gt;（可選）：對應的向量嵌入。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;用途&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;支援語意檢索（RAG: Retrieval-Augmented Generation）。&lt;/li&gt;
+&lt;li&gt;每個 chunk 對應一組 embedding，利於近似搜尋。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;存有 token 數。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="vdb_chunksjson"&gt;vdb_chunks.json
+&lt;/h2&gt;&lt;p&gt;功能：儲存經嵌入處理的文本向量（Vector DB 核心）。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;主要欄位&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;__id__&lt;/code&gt;：chunk 的唯一識別碼。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;embedding_dim&lt;/code&gt;：向量維度（如 1024）。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;embedding_vector&lt;/code&gt;：嵌入向量。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;content&lt;/code&gt;：對應文本。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;source_id&lt;/code&gt;：來源 chunk 的 ID。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;用途&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;提供高效相似度搜尋。&lt;/li&gt;
+&lt;li&gt;是 RAG 系統的核心檢索資料來源。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="vdb_entitiesjson"&gt;vdb_entities.json
+&lt;/h2&gt;&lt;p&gt;功能：儲存從文本中抽取的命名實體與相關描述。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;主要欄位&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;__id__&lt;/code&gt;：實體 ID。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;entity_name&lt;/code&gt;：實體名稱（如「林致远」「阿墨」）。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;content&lt;/code&gt;：實體的描述或定義。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;file_path&lt;/code&gt;：來源檔案。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;source_id&lt;/code&gt;：對應文本片段 ID。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;__created_at__&lt;/code&gt;：建立時間戳。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;embedding_dim&lt;/code&gt;：嵌入向量維度（如 1024）。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;特色&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;一個實體可能來自多個文本片段，用 &lt;!-- raw HTML omitted --&gt; 分隔。&lt;/li&gt;
+&lt;li&gt;可支援多語言或多版本（如 知一书屋 vs 知一書屋）。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;用途&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;為知識圖譜中的節點（entities）。&lt;/li&gt;
+&lt;li&gt;支援語義關聯檢索與上下文補全。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="vdb_relationshipsjson"&gt;vdb_relationships.json
+&lt;/h2&gt;&lt;p&gt;功能：儲存實體之間的語義關係，形成知識圖譜 (Knowledge Graph)。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;主要欄位&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;__id__&lt;/code&gt;：關係 ID。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;src_id&lt;/code&gt;：關係的起始實體名稱。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;tgt_id&lt;/code&gt;：關係的目標實體名稱。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;content&lt;/code&gt;：關係的描述與類別（可能包含多種語意標籤，如 companionship, ownership）。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;file_path&lt;/code&gt;：來源文件。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;source_id&lt;/code&gt;：對應的文本 chunk。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;__created_at__&lt;/code&gt;：建立時間。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;用途&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;支援「語義圖譜檢索」，例如：&lt;br&gt;
+問「阿墨和林致远的關係？」 → 檢索 companionship 與 mysterious connection。&lt;/li&gt;
+&lt;li&gt;提供結構化的語意推理，補強向量檢索。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="4-總結"&gt;4. 總結
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;kv_store* 系列 → 偏向文件與片段的管理、狀態與快取。&lt;/li&gt;
+&lt;li&gt;vdb* 系列 → 偏向語義層面的知識圖譜與向量檢索。&lt;/li&gt;
+&lt;li&gt;entities 與 relationships → 構成知識圖譜 (Knowledge Graph)。&lt;/li&gt;
+&lt;li&gt;chunks 與 embeddings → 構成語意檢索的基礎。&lt;/li&gt;
+&lt;/ul&gt;</description></item></channel></rss>

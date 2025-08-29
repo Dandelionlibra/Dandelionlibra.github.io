@@ -1,178 +1,178 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Ollama on YuChen</title><link>https://Dandelionlibra.github.io/tags/ollama/</link><description>Recent content in Ollama on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Fri, 18 Jul 2025 08:39:00 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/tags/ollama/index.xml" rel="self" type="application/rss+xml"/><item><title>LangChain 記憶型檢索問答：《小王子》文本互動實踐</title><link>https://Dandelionlibra.github.io/post/langchain/retrieverqa-2/</link><pubDate>Fri, 18 Jul 2025 08:39:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/langchain/retrieverqa-2/</guid><description>&lt;h2 id="以-langchain-記憶型檢索問答實現小王子文本互動">以 LangChain 記憶型檢索問答實現《小王子》文本互動
-&lt;/h2>&lt;p>本文介紹如何利用 LangChain 框架，結合 Ollama Embeddings、ChromaDB 與記憶型問答鏈（RunnableWithMessageHistory），實現能記住上下文的互動式檢索問答。以《小王子》文本為例，展示記憶型問答與一般檢索問答的差異。&lt;/p>
-&lt;h3 id="一記憶型問答鏈設計">一、記憶型問答鏈設計
-&lt;/h3>&lt;p>LangChain 提供 &lt;code>RunnableWithMessageHistory&lt;/code>，可根據 session_id 保存對話歷程，讓模型具備「記憶」功能。核心流程如下：&lt;/p>
-&lt;ol>
-&lt;li>&lt;strong>建立 InMemoryHistory 類&lt;/strong>：用於儲存每個 session 的訊息。&lt;/li>
-&lt;li>&lt;strong>載入 PDF 並分割文本&lt;/strong>：使用 &lt;code>PyPDFLoader&lt;/code> 和 &lt;code>RecursiveCharacterTextSplitter&lt;/code>。&lt;/li>
-&lt;li>&lt;strong>建立向量資料庫&lt;/strong>：用 Ollama Embeddings 將文本轉向量，存入 ChromaDB。&lt;/li>
-&lt;li>&lt;strong>設計 Prompt 與 Chain&lt;/strong>：結合歷史訊息與提問，串接 LLM。&lt;/li>
-&lt;li>&lt;strong>啟動記憶型問答鏈&lt;/strong>：每次提問都能保留上下文，實現多輪互動。&lt;/li>
-&lt;/ol>
-&lt;h4 id="主要程式片段">主要程式片段
-&lt;/h4>&lt;p>完整程式碼請參考：&lt;a class="link" href="https://github.com/Dandelionlibra/Dandelionlibra.github.io/blob/main/content/post/langchain/example/LangChain_memory_ask_via_pdf.ipynb" target="_blank" rel="noopener"
->GitHub 範例程式&lt;/a>&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 建立記憶管理器&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">InMemoryHistory&lt;/span>(BaseChatMessageHistory, BaseModel):
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> messages: list[BaseMessage] &lt;span style="color:#f92672">=&lt;/span> Field(default_factory&lt;span style="color:#f92672">=&lt;/span>list)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">add_messages&lt;/span>(self, messages: list[BaseMessage]) &lt;span style="color:#f92672">-&amp;gt;&lt;/span> &lt;span style="color:#66d9ef">None&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> self&lt;span style="color:#f92672">.&lt;/span>messages&lt;span style="color:#f92672">.&lt;/span>extend(messages)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">clear&lt;/span>(self) &lt;span style="color:#f92672">-&amp;gt;&lt;/span> &lt;span style="color:#66d9ef">None&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> self&lt;span style="color:#f92672">.&lt;/span>messages &lt;span style="color:#f92672">=&lt;/span> []
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>store &lt;span style="color:#f92672">=&lt;/span> {}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">get_by_session_id&lt;/span>(session_id: str) &lt;span style="color:#f92672">-&amp;gt;&lt;/span> BaseChatMessageHistory:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> session_id &lt;span style="color:#f92672">not&lt;/span> &lt;span style="color:#f92672">in&lt;/span> store:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> store[session_id] &lt;span style="color:#f92672">=&lt;/span> InMemoryHistory()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> store[session_id]
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 啟動記憶型問答鏈&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>chain_with_history &lt;span style="color:#f92672">=&lt;/span> RunnableWithMessageHistory(
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> chain,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> get_by_session_id,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> input_messages_key&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;question&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> history_messages_key&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;history&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>)
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="二互動範例">二、互動範例
-&lt;/h3>&lt;h4 id="問答一你看過經典故事小王子嗎">問答一：你看過經典故事小王子嗎？
-&lt;/h4>&lt;p>模型回答：&lt;/p>
-&lt;blockquote>
-&lt;p>我看過《小王子》！這是個非常著名的小說，作者是安托瓦內·德·聖-埃克絮佩里。故事充滿哲理與寓意，讓人思考生命、愛情和友誼。&lt;/p>&lt;/blockquote>
-&lt;h4 id="問答二啟蒙了你什麼">問答二：啟蒙了你什麼？
-&lt;/h4>&lt;p>模型回答：&lt;/p>
-&lt;blockquote>
-&lt;p>小王子和這個故事都啟蒙了我對生命、愛情和友誼的看法。它教會我要珍惜生命、關心他人和追求夢想。&lt;/p>&lt;/blockquote>
-&lt;h4 id="問答三你覺得小王子是個怎樣的人">問答三：你覺得小王子是個怎樣的人？
-&lt;/h4>&lt;p>模型回答：&lt;/p>
-&lt;blockquote>
-&lt;p>小王子是一個獨特、敏感和浪漫的年輕人。他能看到世界的美麗和價值，願意為之付出努力，但也有些缺乏勇氣承認自己的情感。&lt;/p>&lt;/blockquote>
-&lt;h4 id="問答四續寫第二部小王子">問答四：續寫第二部小王子
-&lt;/h4>&lt;p>模型回答：&lt;/p>
-&lt;blockquote>
-&lt;p>根據小王子的故事，我們可以繼續他的冒險旅程。他想探索更大的世界，沿途遇到許多新奇的生物和景色，對每件事都充滿好奇和興趣。&lt;/p>&lt;/blockquote>
-&lt;h3 id="三記憶型問答-vs-一般檢索問答">三、記憶型問答 VS 一般檢索問答
-&lt;/h3>&lt;ul>
-&lt;li>&lt;strong>記憶型問答&lt;/strong>：能保留上下文，支持多輪互動，回答更貼合對話脈絡。&lt;/li>
-&lt;li>&lt;strong>一般檢索問答&lt;/strong>：每次提問獨立，無法記住前文，回答較為片段。&lt;/li>
-&lt;/ul>
-&lt;h4 id="一般檢索問答範例">一般檢索問答範例
-&lt;/h4>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>qa_chain &lt;span style="color:#f92672">=&lt;/span> RetrievalQA&lt;span style="color:#f92672">.&lt;/span>from_chain_type(
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> llm&lt;span style="color:#f92672">=&lt;/span>ollama_llm,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> retriever&lt;span style="color:#f92672">=&lt;/span>vector_db&lt;span style="color:#f92672">.&lt;/span>as_retriever(),
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>qa_chain&lt;span style="color:#f92672">.&lt;/span>invoke(&lt;span style="color:#e6db74">&amp;#39;你看過經典故事小王子嘛？&amp;#39;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 回答：是的，我看過《小王子》。&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="四總結">四、總結
-&lt;/h3>&lt;p>結合 LangChain 記憶型問答鏈，可針對文本進行多輪互動，模型能記住上下文，回答更自然且具延續性。適合用於深入文本探索、故事續寫等場景。&lt;/p>
-&lt;h2 id="參考資料">參考資料
-&lt;/h2>&lt;ul>
-&lt;li>&lt;a class="link" href="https://python.langchain.com/api_reference/core/runnables/langchain_core.runnables.history.RunnableWithMessageHistory.html" target="_blank" rel="noopener"
->LangChain RunnableWithMessageHistory 官方文件&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://dandelionlibra.github.io/post/langchain/retrieverqa-1/" target="_blank" rel="noopener"
->LangChain 檢索問答基礎篇&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>使用 Langchain 框架進行檢索提問</title><link>https://Dandelionlibra.github.io/post/langchain/retrieverqa-1/</link><pubDate>Fri, 18 Jul 2025 02:59:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/langchain/retrieverqa-1/</guid><description>&lt;h2 id="程式運行詳細步驟">程式運行詳細步驟
-&lt;/h2>&lt;p>以下以 Jupyter Notebook 格式，記錄如何使用 LangChain 框架結合 Ollama Embeddings 與 ChromaDB，實現 PDF 文件的檢索式問答。&lt;br>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Ollama on YuChen</title><link>https://Dandelionlibra.github.io/tags/ollama/</link><description>Recent content in Ollama on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Fri, 18 Jul 2025 08:39:00 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/tags/ollama/index.xml" rel="self" type="application/rss+xml"/><item><title>LangChain 記憶型檢索問答：《小王子》文本互動實踐</title><link>https://Dandelionlibra.github.io/post/langchain/retrieverqa-2/</link><pubDate>Fri, 18 Jul 2025 08:39:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/langchain/retrieverqa-2/</guid><description>&lt;h2 id="以-langchain-記憶型檢索問答實現小王子文本互動"&gt;以 LangChain 記憶型檢索問答實現《小王子》文本互動
+&lt;/h2&gt;&lt;p&gt;本文介紹如何利用 LangChain 框架，結合 Ollama Embeddings、ChromaDB 與記憶型問答鏈（RunnableWithMessageHistory），實現能記住上下文的互動式檢索問答。以《小王子》文本為例，展示記憶型問答與一般檢索問答的差異。&lt;/p&gt;
+&lt;h3 id="一記憶型問答鏈設計"&gt;一、記憶型問答鏈設計
+&lt;/h3&gt;&lt;p&gt;LangChain 提供 &lt;code&gt;RunnableWithMessageHistory&lt;/code&gt;，可根據 session_id 保存對話歷程，讓模型具備「記憶」功能。核心流程如下：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;建立 InMemoryHistory 類&lt;/strong&gt;：用於儲存每個 session 的訊息。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;載入 PDF 並分割文本&lt;/strong&gt;：使用 &lt;code&gt;PyPDFLoader&lt;/code&gt; 和 &lt;code&gt;RecursiveCharacterTextSplitter&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;建立向量資料庫&lt;/strong&gt;：用 Ollama Embeddings 將文本轉向量，存入 ChromaDB。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;設計 Prompt 與 Chain&lt;/strong&gt;：結合歷史訊息與提問，串接 LLM。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;啟動記憶型問答鏈&lt;/strong&gt;：每次提問都能保留上下文，實現多輪互動。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id="主要程式片段"&gt;主要程式片段
+&lt;/h4&gt;&lt;p&gt;完整程式碼請參考：&lt;a class="link" href="https://github.com/Dandelionlibra/Dandelionlibra.github.io/blob/main/content/post/langchain/example/LangChain_memory_ask_via_pdf.ipynb" target="_blank" rel="noopener"
+&gt;GitHub 範例程式&lt;/a&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 建立記憶管理器&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;InMemoryHistory&lt;/span&gt;(BaseChatMessageHistory, BaseModel):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; messages: list[BaseMessage] &lt;span style="color:#f92672"&gt;=&lt;/span&gt; Field(default_factory&lt;span style="color:#f92672"&gt;=&lt;/span&gt;list)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;add_messages&lt;/span&gt;(self, messages: list[BaseMessage]) &lt;span style="color:#f92672"&gt;-&amp;gt;&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;messages&lt;span style="color:#f92672"&gt;.&lt;/span&gt;extend(messages)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;clear&lt;/span&gt;(self) &lt;span style="color:#f92672"&gt;-&amp;gt;&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;messages &lt;span style="color:#f92672"&gt;=&lt;/span&gt; []
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;store &lt;span style="color:#f92672"&gt;=&lt;/span&gt; {}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;get_by_session_id&lt;/span&gt;(session_id: str) &lt;span style="color:#f92672"&gt;-&amp;gt;&lt;/span&gt; BaseChatMessageHistory:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; session_id &lt;span style="color:#f92672"&gt;not&lt;/span&gt; &lt;span style="color:#f92672"&gt;in&lt;/span&gt; store:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; store[session_id] &lt;span style="color:#f92672"&gt;=&lt;/span&gt; InMemoryHistory()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; store[session_id]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 啟動記憶型問答鏈&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chain_with_history &lt;span style="color:#f92672"&gt;=&lt;/span&gt; RunnableWithMessageHistory(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; chain,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; get_by_session_id,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; input_messages_key&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;question&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; history_messages_key&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;history&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="二互動範例"&gt;二、互動範例
+&lt;/h3&gt;&lt;h4 id="問答一你看過經典故事小王子嗎"&gt;問答一：你看過經典故事小王子嗎？
+&lt;/h4&gt;&lt;p&gt;模型回答：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;我看過《小王子》！這是個非常著名的小說，作者是安托瓦內·德·聖-埃克絮佩里。故事充滿哲理與寓意，讓人思考生命、愛情和友誼。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;h4 id="問答二啟蒙了你什麼"&gt;問答二：啟蒙了你什麼？
+&lt;/h4&gt;&lt;p&gt;模型回答：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;小王子和這個故事都啟蒙了我對生命、愛情和友誼的看法。它教會我要珍惜生命、關心他人和追求夢想。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;h4 id="問答三你覺得小王子是個怎樣的人"&gt;問答三：你覺得小王子是個怎樣的人？
+&lt;/h4&gt;&lt;p&gt;模型回答：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;小王子是一個獨特、敏感和浪漫的年輕人。他能看到世界的美麗和價值，願意為之付出努力，但也有些缺乏勇氣承認自己的情感。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;h4 id="問答四續寫第二部小王子"&gt;問答四：續寫第二部小王子
+&lt;/h4&gt;&lt;p&gt;模型回答：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;根據小王子的故事，我們可以繼續他的冒險旅程。他想探索更大的世界，沿途遇到許多新奇的生物和景色，對每件事都充滿好奇和興趣。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;h3 id="三記憶型問答-vs-一般檢索問答"&gt;三、記憶型問答 VS 一般檢索問答
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;記憶型問答&lt;/strong&gt;：能保留上下文，支持多輪互動，回答更貼合對話脈絡。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;一般檢索問答&lt;/strong&gt;：每次提問獨立，無法記住前文，回答較為片段。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id="一般檢索問答範例"&gt;一般檢索問答範例
+&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;qa_chain &lt;span style="color:#f92672"&gt;=&lt;/span&gt; RetrievalQA&lt;span style="color:#f92672"&gt;.&lt;/span&gt;from_chain_type(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; llm&lt;span style="color:#f92672"&gt;=&lt;/span&gt;ollama_llm,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; retriever&lt;span style="color:#f92672"&gt;=&lt;/span&gt;vector_db&lt;span style="color:#f92672"&gt;.&lt;/span&gt;as_retriever(),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;qa_chain&lt;span style="color:#f92672"&gt;.&lt;/span&gt;invoke(&lt;span style="color:#e6db74"&gt;&amp;#39;你看過經典故事小王子嘛？&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 回答：是的，我看過《小王子》。&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="四總結"&gt;四、總結
+&lt;/h3&gt;&lt;p&gt;結合 LangChain 記憶型問答鏈，可針對文本進行多輪互動，模型能記住上下文，回答更自然且具延續性。適合用於深入文本探索、故事續寫等場景。&lt;/p&gt;
+&lt;h2 id="參考資料"&gt;參考資料
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="https://python.langchain.com/api_reference/core/runnables/langchain_core.runnables.history.RunnableWithMessageHistory.html" target="_blank" rel="noopener"
+&gt;LangChain RunnableWithMessageHistory 官方文件&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://dandelionlibra.github.io/post/langchain/retrieverqa-1/" target="_blank" rel="noopener"
+&gt;LangChain 檢索問答基礎篇&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>使用 Langchain 框架進行檢索提問</title><link>https://Dandelionlibra.github.io/post/langchain/retrieverqa-1/</link><pubDate>Fri, 18 Jul 2025 02:59:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/langchain/retrieverqa-1/</guid><description>&lt;h2 id="程式運行詳細步驟"&gt;程式運行詳細步驟
+&lt;/h2&gt;&lt;p&gt;以下以 Jupyter Notebook 格式，記錄如何使用 LangChain 框架結合 Ollama Embeddings 與 ChromaDB，實現 PDF 文件的檢索式問答。&lt;br&gt;
 詳細程式參考：&lt;a class="link" href="https://github.com/Dandelionlibra/Dandelionlibra.github.io/blob/main/content/post/langchain/example/LangChain_ask_via_pdf.ipynb" target="_blank" rel="noopener"
->GitHub 範例程式&lt;/a>&lt;/p>
-&lt;h3 id="1-載入必要套件與初始化-embedding-模型">1. 載入必要套件與初始化 Embedding 模型
-&lt;/h3>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> langchain_community.document_loaders &lt;span style="color:#f92672">import&lt;/span> PyPDFLoader
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> langchain_text_splitters &lt;span style="color:#f92672">import&lt;/span> RecursiveCharacterTextSplitter
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> langchain_ollama &lt;span style="color:#f92672">import&lt;/span> OllamaEmbeddings
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> langchain_chroma &lt;span style="color:#f92672">import&lt;/span> Chroma
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 初始化 Ollama Embeddings&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>embeddings_model &lt;span style="color:#f92672">=&lt;/span> OllamaEmbeddings(
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> base_url&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#39;http://dandelion-ollama-1:11434&amp;#39;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> model&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;bge-m3:567m&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>)
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="2-載入-pdf-文件並分割文本">2. 載入 PDF 文件並分割文本
-&lt;/h3>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 載入 PDF&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>loader &lt;span style="color:#f92672">=&lt;/span> PyPDFLoader(&lt;span style="color:#e6db74">&amp;#39;./data/PDF_file.pdf&amp;#39;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>docs &lt;span style="color:#f92672">=&lt;/span> loader&lt;span style="color:#f92672">.&lt;/span>load_and_split()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 設定分段參數&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>chunk_size &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">256&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>chunk_overlap &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">128&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>text_splitter &lt;span style="color:#f92672">=&lt;/span> RecursiveCharacterTextSplitter(chunk_size&lt;span style="color:#f92672">=&lt;/span>chunk_size, chunk_overlap&lt;span style="color:#f92672">=&lt;/span>chunk_overlap)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>documents &lt;span style="color:#f92672">=&lt;/span> text_splitter&lt;span style="color:#f92672">.&lt;/span>split_documents(docs)
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="3-建立-chroma-向量資料庫">3. 建立 Chroma 向量資料庫
-&lt;/h3>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>db &lt;span style="color:#f92672">=&lt;/span> Chroma&lt;span style="color:#f92672">.&lt;/span>from_documents(
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> documents,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> embedding&lt;span style="color:#f92672">=&lt;/span>embeddings_model,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> persist_directory&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;./story-db&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>)
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="4-啟動檢索式問答鏈-retrievalqa-chain">4. 啟動檢索式問答鏈 (RetrievalQA Chain)
-&lt;/h3>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> langchain_ollama &lt;span style="color:#f92672">import&lt;/span> OllamaLLM
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> langchain.chains &lt;span style="color:#f92672">import&lt;/span> RetrievalQA
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ollama_llm &lt;span style="color:#f92672">=&lt;/span> OllamaLLM(
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> base_url&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#39;http://dandelion-ollama-1:11434&amp;#39;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> model&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;llama3.1:8b&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> temperature&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">0.0&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> num_predict&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">512&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>qa_chain &lt;span style="color:#f92672">=&lt;/span> RetrievalQA&lt;span style="color:#f92672">.&lt;/span>from_chain_type(
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> llm&lt;span style="color:#f92672">=&lt;/span>ollama_llm,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> retriever&lt;span style="color:#f92672">=&lt;/span>db&lt;span style="color:#f92672">.&lt;/span>as_retriever(),
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>)
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="5-問答範例及模型回答">5. 問答範例及模型回答
-&lt;/h3>&lt;p>以下僅列出部分問答範例，其餘可自行嘗試：&lt;/p>
-&lt;hr>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>query &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;玫瑰是誰？&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>result &lt;span style="color:#f92672">=&lt;/span> qa_chain&lt;span style="color:#f92672">.&lt;/span>invoke(query)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>print(result)
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;strong>模型回答：&lt;/strong>&lt;/p>
-&lt;pre tabindex="0">&lt;code>{&amp;#39;query&amp;#39;: &amp;#39;玫瑰是誰？&amp;#39;, &amp;#39;result&amp;#39;: &amp;#39;玫瑰是小王子的玫瑰花，還有園中其他五千朵玫瑰花（但小王子的玫瑰花是獨一無二的）。&amp;#39;}
-&lt;/code>&lt;/pre>&lt;hr>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>qa_chain&lt;span style="color:#f92672">.&lt;/span>invoke(&lt;span style="color:#e6db74">&amp;#39;小王子的來歷是什？&amp;#39;&lt;/span>)
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;strong>模型回答：&lt;/strong>&lt;/p>
-&lt;pre tabindex="0">&lt;code>{&amp;#39;query&amp;#39;: &amp;#39;小王子的來歷是什？&amp;#39;, &amp;#39;result&amp;#39;: &amp;#39;小王子所來自的那個星球是小行星B612。&amp;#39;}
-&lt;/code>&lt;/pre>&lt;hr>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>qa_chain&lt;span style="color:#f92672">.&lt;/span>invoke(&lt;span style="color:#e6db74">&amp;#39;你覺得小王子是個怎樣的人？&amp;#39;&lt;/span>)
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;strong>模型回答：&lt;/strong>&lt;/p>
-&lt;pre tabindex="0">&lt;code>{&amp;#39;query&amp;#39;: &amp;#39;你覺得小王子是個怎樣的人？&amp;#39;, &amp;#39;result&amp;#39;: &amp;#39;根據文中描述，小王子的性格可以看出來。他似乎是一個敏感、浪漫、獨立的年輕人。他對他所遇到的陌生人的評價很細致，能夠看穿別人的真實面目。他也顯示出對自由和自主的渴望。&amp;#39;}
-&lt;/code>&lt;/pre>&lt;hr>
-&lt;blockquote>
-&lt;p>更多問題可依據文本內容自由發揮，探索不同答案。&lt;/p>&lt;/blockquote>
-&lt;h3 id="筆記重點">筆記重點
-&lt;/h3>&lt;ul>
-&lt;li>透過 &lt;code>PyPDFLoader&lt;/code> 讀取 PDF，並用 &lt;code>RecursiveCharacterTextSplitter&lt;/code> 分割文本，利於後續檢索。&lt;/li>
-&lt;li>使用 Ollama Embeddings 將文本轉為向量，存入 ChromaDB。&lt;/li>
-&lt;li>結合 Ollama LLM 與 RetrievalQA Chain，實現自然語言問答。&lt;/li>
-&lt;li>可針對文本內容進行多樣化提問，快速獲得答案。&lt;/li>
-&lt;/ul></description></item><item><title>How to install and use Ollama?</title><link>https://Dandelionlibra.github.io/post/ollama/ollama/</link><pubDate>Sat, 05 Jul 2025 00:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/ollama/ollama/</guid><description>&lt;h1 id="介紹-ollama">介紹 Ollama
-&lt;/h1>&lt;p>Ollama 是一個能在 本地（Windows/Mac/Linux）執行大型語言模型（LLM）和 Vision Language Model（VLM） 的框架。&lt;/p>
-&lt;ul>
-&lt;li>開源工具&lt;/li>
-&lt;li>在本地端運行大型語言模型&lt;/li>
-&lt;li>離線特性以保護隱私&lt;/li>
-&lt;/ul>
-&lt;h1 id="安裝-ollama">安裝 Ollama
-&lt;/h1>&lt;h2 id="windows">Windows
-&lt;/h2>&lt;p>至 &lt;a class="link" href="https://ollama.com/" target="_blank" rel="noopener"
->Ollama 官方網站&lt;/a>
-下載 windows 版本後，點擊執行檔安裝。&lt;br>
-安裝後於終端機中測試是否安裝成功。&lt;/p>
-&lt;pre tabindex="0">&lt;code>ollama --help
-&lt;/code>&lt;/pre>&lt;h2 id="mac">Mac
-&lt;/h2>&lt;p>參考官方文件的下載指令。&lt;/p>
-&lt;pre tabindex="0">&lt;code>brew install ollama
-&lt;/code>&lt;/pre>&lt;h2 id="linux">Linux
-&lt;/h2>&lt;p>參考官方文件的下載指令。&lt;/p>
-&lt;pre tabindex="0">&lt;code>curl -fsSL https://ollama.com/install.sh | sh
-&lt;/code>&lt;/pre>&lt;h1 id="如何使用-ollama">如何使用 Ollama?
-&lt;/h1>&lt;h3 id="在本地啟動服務">在本地啟動服務
-&lt;/h3>&lt;pre tabindex="0">&lt;code>ollama serve
-&lt;/code>&lt;/pre>&lt;pre tabindex="0">&lt;code>C:\Users\user&amp;gt;ollama serve
-&lt;/code>&lt;/pre>&lt;h3 id="執行語言模型">執行語言模型
-&lt;/h3>&lt;p>可以參考官方文件中提供的模型 &lt;a class="link" href="https://ollama.com/search" target="_blank" rel="noopener"
->https://ollama.com/search&lt;/a>&lt;/p>
-&lt;pre tabindex="0">&lt;code>ollama run [model name]
-&lt;/code>&lt;/pre>&lt;p>若是第一次運行該模型則會執行下載。
-minicpm-V 是可用於解說圖片的語言模型，使用 &lt;code>/bye&lt;/code> 離開。&lt;/p>
-&lt;pre tabindex="0">&lt;code>C:\Users\user&amp;gt;ollama run minicpm-v:latest
+&gt;GitHub 範例程式&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id="1-載入必要套件與初始化-embedding-模型"&gt;1. 載入必要套件與初始化 Embedding 模型
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; langchain_community.document_loaders &lt;span style="color:#f92672"&gt;import&lt;/span&gt; PyPDFLoader
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; langchain_text_splitters &lt;span style="color:#f92672"&gt;import&lt;/span&gt; RecursiveCharacterTextSplitter
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; langchain_ollama &lt;span style="color:#f92672"&gt;import&lt;/span&gt; OllamaEmbeddings
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; langchain_chroma &lt;span style="color:#f92672"&gt;import&lt;/span&gt; Chroma
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 初始化 Ollama Embeddings&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;embeddings_model &lt;span style="color:#f92672"&gt;=&lt;/span&gt; OllamaEmbeddings(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; base_url&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;http://dandelion-ollama-1:11434&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; model&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;bge-m3:567m&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="2-載入-pdf-文件並分割文本"&gt;2. 載入 PDF 文件並分割文本
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 載入 PDF&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;loader &lt;span style="color:#f92672"&gt;=&lt;/span&gt; PyPDFLoader(&lt;span style="color:#e6db74"&gt;&amp;#39;./data/PDF_file.pdf&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docs &lt;span style="color:#f92672"&gt;=&lt;/span&gt; loader&lt;span style="color:#f92672"&gt;.&lt;/span&gt;load_and_split()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 設定分段參數&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chunk_size &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;256&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chunk_overlap &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;128&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;text_splitter &lt;span style="color:#f92672"&gt;=&lt;/span&gt; RecursiveCharacterTextSplitter(chunk_size&lt;span style="color:#f92672"&gt;=&lt;/span&gt;chunk_size, chunk_overlap&lt;span style="color:#f92672"&gt;=&lt;/span&gt;chunk_overlap)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;documents &lt;span style="color:#f92672"&gt;=&lt;/span&gt; text_splitter&lt;span style="color:#f92672"&gt;.&lt;/span&gt;split_documents(docs)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="3-建立-chroma-向量資料庫"&gt;3. 建立 Chroma 向量資料庫
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;db &lt;span style="color:#f92672"&gt;=&lt;/span&gt; Chroma&lt;span style="color:#f92672"&gt;.&lt;/span&gt;from_documents(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; documents,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; embedding&lt;span style="color:#f92672"&gt;=&lt;/span&gt;embeddings_model,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; persist_directory&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;./story-db&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="4-啟動檢索式問答鏈-retrievalqa-chain"&gt;4. 啟動檢索式問答鏈 (RetrievalQA Chain)
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; langchain_ollama &lt;span style="color:#f92672"&gt;import&lt;/span&gt; OllamaLLM
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; langchain.chains &lt;span style="color:#f92672"&gt;import&lt;/span&gt; RetrievalQA
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ollama_llm &lt;span style="color:#f92672"&gt;=&lt;/span&gt; OllamaLLM(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; base_url&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;http://dandelion-ollama-1:11434&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; model&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;llama3.1:8b&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; temperature&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;0.0&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; num_predict&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;512&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;qa_chain &lt;span style="color:#f92672"&gt;=&lt;/span&gt; RetrievalQA&lt;span style="color:#f92672"&gt;.&lt;/span&gt;from_chain_type(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; llm&lt;span style="color:#f92672"&gt;=&lt;/span&gt;ollama_llm,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; retriever&lt;span style="color:#f92672"&gt;=&lt;/span&gt;db&lt;span style="color:#f92672"&gt;.&lt;/span&gt;as_retriever(),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="5-問答範例及模型回答"&gt;5. 問答範例及模型回答
+&lt;/h3&gt;&lt;p&gt;以下僅列出部分問答範例，其餘可自行嘗試：&lt;/p&gt;
+&lt;hr&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;query &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;玫瑰是誰？&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;result &lt;span style="color:#f92672"&gt;=&lt;/span&gt; qa_chain&lt;span style="color:#f92672"&gt;.&lt;/span&gt;invoke(query)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(result)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;模型回答：&lt;/strong&gt;&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;{&amp;#39;query&amp;#39;: &amp;#39;玫瑰是誰？&amp;#39;, &amp;#39;result&amp;#39;: &amp;#39;玫瑰是小王子的玫瑰花，還有園中其他五千朵玫瑰花（但小王子的玫瑰花是獨一無二的）。&amp;#39;}
+&lt;/code&gt;&lt;/pre&gt;&lt;hr&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;qa_chain&lt;span style="color:#f92672"&gt;.&lt;/span&gt;invoke(&lt;span style="color:#e6db74"&gt;&amp;#39;小王子的來歷是什？&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;模型回答：&lt;/strong&gt;&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;{&amp;#39;query&amp;#39;: &amp;#39;小王子的來歷是什？&amp;#39;, &amp;#39;result&amp;#39;: &amp;#39;小王子所來自的那個星球是小行星B612。&amp;#39;}
+&lt;/code&gt;&lt;/pre&gt;&lt;hr&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;qa_chain&lt;span style="color:#f92672"&gt;.&lt;/span&gt;invoke(&lt;span style="color:#e6db74"&gt;&amp;#39;你覺得小王子是個怎樣的人？&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;模型回答：&lt;/strong&gt;&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;{&amp;#39;query&amp;#39;: &amp;#39;你覺得小王子是個怎樣的人？&amp;#39;, &amp;#39;result&amp;#39;: &amp;#39;根據文中描述，小王子的性格可以看出來。他似乎是一個敏感、浪漫、獨立的年輕人。他對他所遇到的陌生人的評價很細致，能夠看穿別人的真實面目。他也顯示出對自由和自主的渴望。&amp;#39;}
+&lt;/code&gt;&lt;/pre&gt;&lt;hr&gt;
+&lt;blockquote&gt;
+&lt;p&gt;更多問題可依據文本內容自由發揮，探索不同答案。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;h3 id="筆記重點"&gt;筆記重點
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;透過 &lt;code&gt;PyPDFLoader&lt;/code&gt; 讀取 PDF，並用 &lt;code&gt;RecursiveCharacterTextSplitter&lt;/code&gt; 分割文本，利於後續檢索。&lt;/li&gt;
+&lt;li&gt;使用 Ollama Embeddings 將文本轉為向量，存入 ChromaDB。&lt;/li&gt;
+&lt;li&gt;結合 Ollama LLM 與 RetrievalQA Chain，實現自然語言問答。&lt;/li&gt;
+&lt;li&gt;可針對文本內容進行多樣化提問，快速獲得答案。&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>How to install and use Ollama?</title><link>https://Dandelionlibra.github.io/post/ollama/ollama/</link><pubDate>Sat, 05 Jul 2025 00:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/ollama/ollama/</guid><description>&lt;h1 id="介紹-ollama"&gt;介紹 Ollama
+&lt;/h1&gt;&lt;p&gt;Ollama 是一個能在 本地（Windows/Mac/Linux）執行大型語言模型（LLM）和 Vision Language Model（VLM） 的框架。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;開源工具&lt;/li&gt;
+&lt;li&gt;在本地端運行大型語言模型&lt;/li&gt;
+&lt;li&gt;離線特性以保護隱私&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id="安裝-ollama"&gt;安裝 Ollama
+&lt;/h1&gt;&lt;h2 id="windows"&gt;Windows
+&lt;/h2&gt;&lt;p&gt;至 &lt;a class="link" href="https://ollama.com/" target="_blank" rel="noopener"
+&gt;Ollama 官方網站&lt;/a&gt;
+下載 windows 版本後，點擊執行檔安裝。&lt;br&gt;
+安裝後於終端機中測試是否安裝成功。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;ollama --help
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id="mac"&gt;Mac
+&lt;/h2&gt;&lt;p&gt;參考官方文件的下載指令。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;brew install ollama
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id="linux"&gt;Linux
+&lt;/h2&gt;&lt;p&gt;參考官方文件的下載指令。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;curl -fsSL https://ollama.com/install.sh | sh
+&lt;/code&gt;&lt;/pre&gt;&lt;h1 id="如何使用-ollama"&gt;如何使用 Ollama?
+&lt;/h1&gt;&lt;h3 id="在本地啟動服務"&gt;在本地啟動服務
+&lt;/h3&gt;&lt;pre tabindex="0"&gt;&lt;code&gt;ollama serve
+&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex="0"&gt;&lt;code&gt;C:\Users\user&amp;gt;ollama serve
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="執行語言模型"&gt;執行語言模型
+&lt;/h3&gt;&lt;p&gt;可以參考官方文件中提供的模型 &lt;a class="link" href="https://ollama.com/search" target="_blank" rel="noopener"
+&gt;https://ollama.com/search&lt;/a&gt;&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;ollama run [model name]
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;若是第一次運行該模型則會執行下載。
+minicpm-V 是可用於解說圖片的語言模型，使用 &lt;code&gt;/bye&lt;/code&gt; 離開。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;C:\Users\user&amp;gt;ollama run minicpm-v:latest
 pulling manifest
 pulling 262843d4806a: 100% ▕█████████████████▏ 4.4 GB
 pulling f8a805e9e620: 100% ▕█████████████████▏ 1.0 GB
@@ -191,8 +191,8 @@ brownish-grey patches around its eyes and ears. Its pink nose is
 prominent, as are its large black eyes which stand out against its pale
 face.
 &amp;gt;&amp;gt;&amp;gt; /bye
-&lt;/code>&lt;/pre>&lt;p>終端呼叫模型並輸入指令。&lt;/p>
-&lt;pre tabindex="0">&lt;code>C:\Users\user&amp;gt;ollama run llama3.1:8b &amp;#34;define what is atom&amp;#34;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;終端呼叫模型並輸入指令。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;C:\Users\user&amp;gt;ollama run llama3.1:8b &amp;#34;define what is atom&amp;#34;
 An **atom** (from the Greek word &amp;#34;atomos,&amp;#34; meaning indivisible) is the smallest
 unit of a chemical element that retains its chemical properties and is
 considered the fundamental building block of matter.
@@ -205,81 +205,81 @@ composition over time.
 ... 忽略 ...
 Would you like me to explain any related concepts or clarify anything about
 atoms?
-&lt;/code>&lt;/pre>&lt;h3 id="查看目前已安裝的語言模型">查看目前已安裝的語言模型
-&lt;/h3>&lt;pre tabindex="0">&lt;code>ollama list
-&lt;/code>&lt;/pre>&lt;pre tabindex="0">&lt;code>C:\Users\user&amp;gt;ollama list
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="查看目前已安裝的語言模型"&gt;查看目前已安裝的語言模型
+&lt;/h3&gt;&lt;pre tabindex="0"&gt;&lt;code&gt;ollama list
+&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex="0"&gt;&lt;code&gt;C:\Users\user&amp;gt;ollama list
 NAME ID SIZE MODIFIED
 minicpm-v:latest c92bfad01205 5.5 GB 2 hours ago
 llama3.1:8b 46e0c10c039e 4.9 GB 2 hours ago
-&lt;/code>&lt;/pre>&lt;h3 id="刪除已安裝的語言模型">刪除已安裝的語言模型
-&lt;/h3>&lt;pre tabindex="0">&lt;code>ollama rm [model name]
-&lt;/code>&lt;/pre>&lt;pre tabindex="0">&lt;code>C:\Users\user&amp;gt;ollama rm minicpm-v:latest
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="刪除已安裝的語言模型"&gt;刪除已安裝的語言模型
+&lt;/h3&gt;&lt;pre tabindex="0"&gt;&lt;code&gt;ollama rm [model name]
+&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex="0"&gt;&lt;code&gt;C:\Users\user&amp;gt;ollama rm minicpm-v:latest
 deleted &amp;#39;minicpm-v:latest&amp;#39;
 C:\Users\user&amp;gt;ollama list
 NAME ID SIZE MODIFIED
 llama3.1:8b 46e0c10c039e 4.9 GB 8 hours ago
-&lt;/code>&lt;/pre>&lt;h3 id="">
-&lt;/h3>&lt;h3 id="role-的-3-個主要類型">&lt;code>role&lt;/code> 的 3 個主要類型
-&lt;/h3>&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th>role&lt;/th>
-&lt;th>說明&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td>&lt;code>system&lt;/code>&lt;/td>
-&lt;td>系統角色，設定「這個模型該如何表現自己」，定義整個對話的角色背景、口吻、限制。&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>&lt;code>user&lt;/code>&lt;/td>
-&lt;td>使用者角色，模擬真實使用者輸入的訊息。&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>&lt;code>assistant&lt;/code>&lt;/td>
-&lt;td>模型扮演的角色回覆。用來提供上下文（例如多輪對話）。&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;h2 id="使用-python-與程式串接">使用 Python 與程式串接
-&lt;/h2>&lt;h3 id="使用-requests-呼叫">使用 requests 呼叫
-&lt;/h3>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> requests
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> json
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># API URL&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>url &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;http://127.0.0.1:11434/v1/chat/completions&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 請求資料&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>payload &lt;span style="color:#f92672">=&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;model&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;llama3.1:8b&amp;#34;&lt;/span>, &lt;span style="color:#75715e"># 對應你本地拉取的模型名稱&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;messages&amp;#34;&lt;/span>: [
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {&lt;span style="color:#e6db74">&amp;#34;role&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;system&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;content&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;You are a helpful assistant.&amp;#34;&lt;/span>},
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {&lt;span style="color:#e6db74">&amp;#34;role&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;user&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;content&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;What is the capital of France?&amp;#34;&lt;/span>},
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {&lt;span style="color:#e6db74">&amp;#34;role&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;assistant&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;content&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;The capital of France is Paris.&amp;#34;&lt;/span>},
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {&lt;span style="color:#e6db74">&amp;#34;role&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;user&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;content&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;What is the population of Paris?&amp;#34;&lt;/span>},
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {&lt;span style="color:#e6db74">&amp;#34;role&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;assistant&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;content&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;As of 2023, the population of Paris is about 2.1 million.&amp;#34;&lt;/span>},
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {&lt;span style="color:#e6db74">&amp;#34;role&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;user&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;content&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;What river flows through Paris?&amp;#34;&lt;/span>}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ]
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Headers&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>headers &lt;span style="color:#f92672">=&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;Content-Type&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;application/json&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># &amp;#34;Authorization&amp;#34;: &amp;#34;Bearer ollama&amp;#34; # 傳遞身份驗證資訊，本地伺服器預設不驗證金鑰可省略&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 發送 POST 請求&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>response &lt;span style="color:#f92672">=&lt;/span> requests&lt;span style="color:#f92672">.&lt;/span>post(url, headers&lt;span style="color:#f92672">=&lt;/span>headers, data&lt;span style="color:#f92672">=&lt;/span>json&lt;span style="color:#f92672">.&lt;/span>dumps(payload))
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 顯示結果&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">if&lt;/span> response&lt;span style="color:#f92672">.&lt;/span>status_code &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#ae81ff">200&lt;/span>: &lt;span style="color:#75715e"># HTTP 狀態碼 200 代表請求成功。&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> data &lt;span style="color:#f92672">=&lt;/span> response&lt;span style="color:#f92672">.&lt;/span>json() &lt;span style="color:#75715e"># 解析 JSON 資料，此方法將回應內容（ex.字串）轉換成 Python 的資料結構（ex.dict）&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> print(data[&lt;span style="color:#e6db74">&amp;#34;choices&amp;#34;&lt;/span>][&lt;span style="color:#ae81ff">0&lt;/span>][&lt;span style="color:#e6db74">&amp;#34;message&amp;#34;&lt;/span>][&lt;span style="color:#e6db74">&amp;#34;content&amp;#34;&lt;/span>])
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">else&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> print(&lt;span style="color:#e6db74">&amp;#34;Error:&amp;#34;&lt;/span>, response&lt;span style="color:#f92672">.&lt;/span>status_code, response&lt;span style="color:#f92672">.&lt;/span>text)
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>response 返回結構類似：&lt;/p>
-&lt;pre tabindex="0">&lt;code>{
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=""&gt;
+&lt;/h3&gt;&lt;h3 id="role-的-3-個主要類型"&gt;&lt;code&gt;role&lt;/code&gt; 的 3 個主要類型
+&lt;/h3&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;role&lt;/th&gt;
+&lt;th&gt;說明&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;system&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;系統角色，設定「這個模型該如何表現自己」，定義整個對話的角色背景、口吻、限制。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;user&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;使用者角色，模擬真實使用者輸入的訊息。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;assistant&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;模型扮演的角色回覆。用來提供上下文（例如多輪對話）。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="使用-python-與程式串接"&gt;使用 Python 與程式串接
+&lt;/h2&gt;&lt;h3 id="使用-requests-呼叫"&gt;使用 requests 呼叫
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; requests
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; json
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# API URL&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;url &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;http://127.0.0.1:11434/v1/chat/completions&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 請求資料&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;payload &lt;span style="color:#f92672"&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;model&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;llama3.1:8b&amp;#34;&lt;/span&gt;, &lt;span style="color:#75715e"&gt;# 對應你本地拉取的模型名稱&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;messages&amp;#34;&lt;/span&gt;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {&lt;span style="color:#e6db74"&gt;&amp;#34;role&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;system&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;content&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;You are a helpful assistant.&amp;#34;&lt;/span&gt;},
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {&lt;span style="color:#e6db74"&gt;&amp;#34;role&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;user&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;content&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;What is the capital of France?&amp;#34;&lt;/span&gt;},
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {&lt;span style="color:#e6db74"&gt;&amp;#34;role&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;assistant&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;content&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;The capital of France is Paris.&amp;#34;&lt;/span&gt;},
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {&lt;span style="color:#e6db74"&gt;&amp;#34;role&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;user&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;content&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;What is the population of Paris?&amp;#34;&lt;/span&gt;},
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {&lt;span style="color:#e6db74"&gt;&amp;#34;role&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;assistant&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;content&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;As of 2023, the population of Paris is about 2.1 million.&amp;#34;&lt;/span&gt;},
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {&lt;span style="color:#e6db74"&gt;&amp;#34;role&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;user&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;content&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;What river flows through Paris?&amp;#34;&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Headers&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;headers &lt;span style="color:#f92672"&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;Content-Type&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;application/json&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# &amp;#34;Authorization&amp;#34;: &amp;#34;Bearer ollama&amp;#34; # 傳遞身份驗證資訊，本地伺服器預設不驗證金鑰可省略&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 發送 POST 請求&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;response &lt;span style="color:#f92672"&gt;=&lt;/span&gt; requests&lt;span style="color:#f92672"&gt;.&lt;/span&gt;post(url, headers&lt;span style="color:#f92672"&gt;=&lt;/span&gt;headers, data&lt;span style="color:#f92672"&gt;=&lt;/span&gt;json&lt;span style="color:#f92672"&gt;.&lt;/span&gt;dumps(payload))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 顯示結果&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; response&lt;span style="color:#f92672"&gt;.&lt;/span&gt;status_code &lt;span style="color:#f92672"&gt;==&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;200&lt;/span&gt;: &lt;span style="color:#75715e"&gt;# HTTP 狀態碼 200 代表請求成功。&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; data &lt;span style="color:#f92672"&gt;=&lt;/span&gt; response&lt;span style="color:#f92672"&gt;.&lt;/span&gt;json() &lt;span style="color:#75715e"&gt;# 解析 JSON 資料，此方法將回應內容（ex.字串）轉換成 Python 的資料結構（ex.dict）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; print(data[&lt;span style="color:#e6db74"&gt;&amp;#34;choices&amp;#34;&lt;/span&gt;][&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;][&lt;span style="color:#e6db74"&gt;&amp;#34;message&amp;#34;&lt;/span&gt;][&lt;span style="color:#e6db74"&gt;&amp;#34;content&amp;#34;&lt;/span&gt;])
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;else&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; print(&lt;span style="color:#e6db74"&gt;&amp;#34;Error:&amp;#34;&lt;/span&gt;, response&lt;span style="color:#f92672"&gt;.&lt;/span&gt;status_code, response&lt;span style="color:#f92672"&gt;.&lt;/span&gt;text)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;response 返回結構類似：&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;{
 &amp;#34;id&amp;#34;: &amp;#34;chatcmpl-1234567890abcdef&amp;#34;,
 &amp;#34;object&amp;#34;: &amp;#34;chat.completion&amp;#34;,
 &amp;#34;created&amp;#34;: 1700000000,
@@ -300,74 +300,74 @@ llama3.1:8b 46e0c10c039e 4.9 GB 8 hours ago
 &amp;#34;total_tokens&amp;#34;: 30
 }
 }
-&lt;/code>&lt;/pre>&lt;h3 id="使用-openai-sdk-呼叫">使用 openai SDK 呼叫
-&lt;/h3>&lt;h4 id="安裝-openai">安裝 openai
-&lt;/h4>&lt;p>使用 pip 指令進行安裝。&lt;br>
-ps.若沒有 pip 我未來再寫一篇安裝與使用 pip 的文章 ;)&lt;/p>
-&lt;pre tabindex="0">&lt;code>pip install openai
-&lt;/code>&lt;/pre>&lt;p>查看安裝版本 &amp;amp; 是否已安裝過&lt;/p>
-&lt;pre tabindex="0">&lt;code>pip show openai
-&lt;/code>&lt;/pre>&lt;pre tabindex="0">&lt;code>WARNING: Package(s) not found: openai
-&lt;/code>&lt;/pre>&lt;p>若已安裝過且版本小於 1.0.0，更新 openai 套件&lt;/p>
-&lt;pre tabindex="0">&lt;code>pip install --upgrade openai
-&lt;/code>&lt;/pre>&lt;h3 id="使用語言模型">使用語言模型
-&lt;/h3>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> openai &lt;span style="color:#f92672">import&lt;/span> OpenAI
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>client &lt;span style="color:#f92672">=&lt;/span> OpenAI(
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># base_url = &amp;#34;http://localhost:11434/v1&amp;#34;,&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> base_url &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;http://127.0.0.1:11434/v1&amp;#34;&lt;/span>, &lt;span style="color:#75715e"># 本地 Ollama 伺服器的 URL，預設端口為 11434&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> api_key &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;ollama&amp;#34;&lt;/span>, &lt;span style="color:#75715e"># 本地 Ollama 不驗證密鑰，只要隨意填入即可，習慣使用 ollama&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 呼叫本地 Ollama 伺服器進行 Chat Completion&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>response &lt;span style="color:#f92672">=&lt;/span> client&lt;span style="color:#f92672">.&lt;/span>chat&lt;span style="color:#f92672">.&lt;/span>completions&lt;span style="color:#f92672">.&lt;/span>create(
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> model&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;llama3.1:8b&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> messages&lt;span style="color:#f92672">=&lt;/span>[ &lt;span style="color:#75715e"># 設定對話內容&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;role&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;system&amp;#34;&lt;/span>, &lt;span style="color:#75715e"># 設定模型行為&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;content&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;You are a helpful assistant.&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;role&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;user&amp;#34;&lt;/span>, &lt;span style="color:#75715e"># 使用者輸入的問題&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;content&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;What is the capital of France?&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ],
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>print(response&lt;span style="color:#f92672">.&lt;/span>choices[&lt;span style="color:#ae81ff">0&lt;/span>]&lt;span style="color:#f92672">.&lt;/span>message&lt;span style="color:#f92672">.&lt;/span>content)
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="使用-vision-model">使用 Vision model
-&lt;/h3>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> base64
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> openai &lt;span style="color:#f92672">import&lt;/span> OpenAI
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>image_path &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">r&lt;/span>&lt;span style="color:#e6db74">&amp;#34;C:\圖片路徑.png&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">with&lt;/span> open(image_path, &lt;span style="color:#e6db74">&amp;#34;rb&amp;#34;&lt;/span>) &lt;span style="color:#66d9ef">as&lt;/span> img_file:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> b64_string &lt;span style="color:#f92672">=&lt;/span> base64&lt;span style="color:#f92672">.&lt;/span>b64encode(img_file&lt;span style="color:#f92672">.&lt;/span>read())&lt;span style="color:#f92672">.&lt;/span>decode(&lt;span style="color:#e6db74">&amp;#34;utf-8&amp;#34;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 建立可傳入 Ollama 的完整 URL 字串&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>image_b64_url &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">f&lt;/span>&lt;span style="color:#e6db74">&amp;#34;data:image/png;base64,&lt;/span>&lt;span style="color:#e6db74">{&lt;/span>b64_string&lt;span style="color:#e6db74">}&lt;/span>&lt;span style="color:#e6db74">&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>client &lt;span style="color:#f92672">=&lt;/span> OpenAI(
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> base_url&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;http://127.0.0.1:11434/v1&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> api_key&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;ollama&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>response &lt;span style="color:#f92672">=&lt;/span> client&lt;span style="color:#f92672">.&lt;/span>chat&lt;span style="color:#f92672">.&lt;/span>completions&lt;span style="color:#f92672">.&lt;/span>create(
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> model&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;minicpm-v&amp;#34;&lt;/span>, &lt;span style="color:#75715e"># 支援圖片輸入的模型&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> messages&lt;span style="color:#f92672">=&lt;/span>[
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;role&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;user&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;content&amp;#34;&lt;/span>: [
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {&lt;span style="color:#e6db74">&amp;#34;type&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;text&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;text&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;Please describe the image in detail.&amp;#34;&lt;/span>},
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;type&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;image_url&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;image_url&amp;#34;&lt;/span>: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;url&amp;#34;&lt;/span>: image_b64_url
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ]
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ]
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>print(response&lt;span style="color:#f92672">.&lt;/span>choices[&lt;span style="color:#ae81ff">0&lt;/span>]&lt;span style="color:#f92672">.&lt;/span>message&lt;span style="color:#f92672">.&lt;/span>content)
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item></channel></rss>
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="使用-openai-sdk-呼叫"&gt;使用 openai SDK 呼叫
+&lt;/h3&gt;&lt;h4 id="安裝-openai"&gt;安裝 openai
+&lt;/h4&gt;&lt;p&gt;使用 pip 指令進行安裝。&lt;br&gt;
+ps.若沒有 pip 我未來再寫一篇安裝與使用 pip 的文章 ;)&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;pip install openai
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;查看安裝版本 &amp;amp; 是否已安裝過&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;pip show openai
+&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex="0"&gt;&lt;code&gt;WARNING: Package(s) not found: openai
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;若已安裝過且版本小於 1.0.0，更新 openai 套件&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;pip install --upgrade openai
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="使用語言模型"&gt;使用語言模型
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; openai &lt;span style="color:#f92672"&gt;import&lt;/span&gt; OpenAI
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;client &lt;span style="color:#f92672"&gt;=&lt;/span&gt; OpenAI(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# base_url = &amp;#34;http://localhost:11434/v1&amp;#34;,&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; base_url &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;http://127.0.0.1:11434/v1&amp;#34;&lt;/span&gt;, &lt;span style="color:#75715e"&gt;# 本地 Ollama 伺服器的 URL，預設端口為 11434&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; api_key &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;ollama&amp;#34;&lt;/span&gt;, &lt;span style="color:#75715e"&gt;# 本地 Ollama 不驗證密鑰，只要隨意填入即可，習慣使用 ollama&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 呼叫本地 Ollama 伺服器進行 Chat Completion&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;response &lt;span style="color:#f92672"&gt;=&lt;/span&gt; client&lt;span style="color:#f92672"&gt;.&lt;/span&gt;chat&lt;span style="color:#f92672"&gt;.&lt;/span&gt;completions&lt;span style="color:#f92672"&gt;.&lt;/span&gt;create(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; model&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;llama3.1:8b&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; messages&lt;span style="color:#f92672"&gt;=&lt;/span&gt;[ &lt;span style="color:#75715e"&gt;# 設定對話內容&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;role&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;system&amp;#34;&lt;/span&gt;, &lt;span style="color:#75715e"&gt;# 設定模型行為&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;content&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;You are a helpful assistant.&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;role&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;user&amp;#34;&lt;/span&gt;, &lt;span style="color:#75715e"&gt;# 使用者輸入的問題&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;content&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;What is the capital of France?&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(response&lt;span style="color:#f92672"&gt;.&lt;/span&gt;choices[&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;]&lt;span style="color:#f92672"&gt;.&lt;/span&gt;message&lt;span style="color:#f92672"&gt;.&lt;/span&gt;content)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="使用-vision-model"&gt;使用 Vision model
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; base64
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; openai &lt;span style="color:#f92672"&gt;import&lt;/span&gt; OpenAI
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;image_path &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;r&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;C:\圖片路徑.png&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;with&lt;/span&gt; open(image_path, &lt;span style="color:#e6db74"&gt;&amp;#34;rb&amp;#34;&lt;/span&gt;) &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; img_file:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; b64_string &lt;span style="color:#f92672"&gt;=&lt;/span&gt; base64&lt;span style="color:#f92672"&gt;.&lt;/span&gt;b64encode(img_file&lt;span style="color:#f92672"&gt;.&lt;/span&gt;read())&lt;span style="color:#f92672"&gt;.&lt;/span&gt;decode(&lt;span style="color:#e6db74"&gt;&amp;#34;utf-8&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 建立可傳入 Ollama 的完整 URL 字串&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;image_b64_url &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;data:image/png;base64,&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;b64_string&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;client &lt;span style="color:#f92672"&gt;=&lt;/span&gt; OpenAI(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; base_url&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;http://127.0.0.1:11434/v1&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; api_key&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;ollama&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;response &lt;span style="color:#f92672"&gt;=&lt;/span&gt; client&lt;span style="color:#f92672"&gt;.&lt;/span&gt;chat&lt;span style="color:#f92672"&gt;.&lt;/span&gt;completions&lt;span style="color:#f92672"&gt;.&lt;/span&gt;create(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; model&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;minicpm-v&amp;#34;&lt;/span&gt;, &lt;span style="color:#75715e"&gt;# 支援圖片輸入的模型&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; messages&lt;span style="color:#f92672"&gt;=&lt;/span&gt;[
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;role&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;user&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;content&amp;#34;&lt;/span&gt;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {&lt;span style="color:#e6db74"&gt;&amp;#34;type&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;text&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;text&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;Please describe the image in detail.&amp;#34;&lt;/span&gt;},
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;type&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;image_url&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;image_url&amp;#34;&lt;/span&gt;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;url&amp;#34;&lt;/span&gt;: image_b64_url
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(response&lt;span style="color:#f92672"&gt;.&lt;/span&gt;choices[&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;]&lt;span style="color:#f92672"&gt;.&lt;/span&gt;message&lt;span style="color:#f92672"&gt;.&lt;/span&gt;content)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description></item></channel></rss>

@@ -1,232 +1,232 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Knowledge Graph on YuChen</title><link>https://Dandelionlibra.github.io/tags/knowledge-graph/</link><description>Recent content in Knowledge Graph on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Tue, 22 Jul 2025 05:27:00 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/tags/knowledge-graph/index.xml" rel="self" type="application/rss+xml"/><item><title>LightRAG 論文導讀 — Simple and Fast Retrieval-Augmented Generation 筆記</title><link>https://Dandelionlibra.github.io/post/paper/lightrag-paper-review/</link><pubDate>Tue, 22 Jul 2025 05:27:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/paper/lightrag-paper-review/</guid><description>&lt;blockquote>
-&lt;p>本文整理自：&lt;a class="link" href="https://arxiv.org/abs/2410.05779" target="_blank" rel="noopener"
->LightRAG: Simple and Fast Retrieval-Augmented Generation&lt;/a>&lt;br>
-作者：Zirui Guo, Lianghao Xia, Yanhua Yu, Tu Ao, Chao Huang&lt;br>
-發佈於 arXiv，2024年10月&lt;/p>&lt;/blockquote>
-&lt;h1 id="摘要">摘要
-&lt;/h1>&lt;p>RAG 透過整合外部知識來源，提升 LLMs 回應的準確性與上下文相關性，但面臨&lt;strong>過度依賴平面資料表示&lt;/strong> (flat data representations)、&lt;strong>上下文感知能力不足&lt;/strong> (inadequate contextual awareness)、&lt;strong>導致生成碎片化答案&lt;/strong> (fragmented answers)，無法捕捉複雜的相互依賴關係 (inter-dependencies)。&lt;br>
-LightRAG，提出透過將圖結構 (graph structures) 引入文本的索引 (text indexing) 和檢索 (retrieval) 過程來解決上述問題。&lt;/p>
-&lt;hr>
-&lt;h1 id="引言">引言
-&lt;/h1>&lt;h2 id="現有-rag-系統的局限性">現有 RAG 系統的局限性
-&lt;/h2>&lt;ul>
-&lt;li>
-&lt;p>&lt;strong>依賴平面資料表示：&lt;/strong> 許多方法依賴於平面資料表示（flat data representations），限制了它們根據實體之間複雜關係來理解和檢索資訊的能力。&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>缺乏上下文感知：&lt;/strong> 這些系統通常缺乏維持不同實體及其相互關係之間連貫性所需的上下文感知能力，導致回應可能無法完全解決用戶查詢。&lt;/p>
-&lt;blockquote>
-&lt;p>例：考慮用戶提問「電動車的興起如何影響城市空氣品質和大眾運輸基礎設施？」現有 RAG 方法可能檢索到關於電動車、空氣污染和公共交通挑戰的獨立文檔，但難以將這些信息綜合為一個連貫的回應。它們可能無法解釋電動車的普及如何改善空氣品質，進而可能影響公共交通規劃，用戶可能收到一個碎片化的答案，未能充分捕捉這些主題之間複雜的相互依賴關係。&lt;/p>&lt;/blockquote>
-&lt;/li>
-&lt;/ul>
-&lt;h2 id="lightrag-模型概述">LightRAG 模型概述
-&lt;/h2>&lt;p>增強了系統捕捉實體之間複雜相互依賴關係的能力，從而產生更連貫和上下文更豐富的回應。&lt;/p>
-&lt;ul>
-&lt;li>
-&lt;p>&lt;strong>高效雙層檢索策略：&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>低層次檢索（low-level retrieval）： 側重於關於特定實體及其關係的精確資訊。&lt;/li>
-&lt;li>高層次檢索（high-level retrieval）： 涵蓋更廣泛的主題和概念。&lt;/li>
-&lt;li>優勢： 透過結合詳細和概念性檢索，LightRAG 有效適應多樣化的查詢範圍，確保用戶收到符合其特定需求的相關且全面的回應。&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>圖結構與向量表示的整合：&lt;/strong> 透過將圖結構與向量表示整合在一起，本 LightRAG 促進了相關實體和關係的高效檢索，同時透過從所構建的知識圖中獲取相關結構信息，增強了結果的全面性。&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;h2 id="本研究在-rag-系統中的關注點">本研究在 RAG 系統中的關注點
-&lt;/h2>&lt;!-- raw HTML omitted -->
-&lt;ul>
-&lt;li>
-&lt;p>&lt;strong>全面信息檢索&lt;/strong> (Comprehensive Information Retrieval)： 索引功能 ϕ(⋅) 必須善於提取全局信息，這對於增強模型有效回答查詢的能力至關重要。&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>高效且低成本檢索&lt;/strong> (Efficient and Low-Cost Retrieval)： 索引化的資料結構 𝒟^ 必須能夠實現快速且具成本效益的檢索，以有效處理高容量的查詢。&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>快速適應數據變化&lt;/strong> (Fast Adaptation to Data Changes)： 能夠迅速有效地調整數據結構以整合來自外部知識庫的新信息，這對於確保系統在不斷變化的信息環境中保持更新和相關性至關重要。&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;hr>
-&lt;h1 id="內文">內文
-&lt;/h1>&lt;h2 id="lightrag-框架的整體架構">LightRAG 框架的整體架構
-&lt;/h2>&lt;p>&lt;img src="https://raw.githubusercontent.com/HKUDS/LightRAG/refs/heads/main/README.assets/b2aaf634151b4706892693ffb43d9093.png"
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Knowledge Graph on YuChen</title><link>https://Dandelionlibra.github.io/tags/knowledge-graph/</link><description>Recent content in Knowledge Graph on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Tue, 22 Jul 2025 05:27:00 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/tags/knowledge-graph/index.xml" rel="self" type="application/rss+xml"/><item><title>LightRAG 論文導讀 — Simple and Fast Retrieval-Augmented Generation 筆記</title><link>https://Dandelionlibra.github.io/post/paper/lightrag-paper-review/</link><pubDate>Tue, 22 Jul 2025 05:27:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/paper/lightrag-paper-review/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;本文整理自：&lt;a class="link" href="https://arxiv.org/abs/2410.05779" target="_blank" rel="noopener"
+&gt;LightRAG: Simple and Fast Retrieval-Augmented Generation&lt;/a&gt;&lt;br&gt;
+作者：Zirui Guo, Lianghao Xia, Yanhua Yu, Tu Ao, Chao Huang&lt;br&gt;
+發佈於 arXiv，2024年10月&lt;/p&gt;&lt;/blockquote&gt;
+&lt;h1 id="摘要"&gt;摘要
+&lt;/h1&gt;&lt;p&gt;RAG 透過整合外部知識來源，提升 LLMs 回應的準確性與上下文相關性，但面臨&lt;strong&gt;過度依賴平面資料表示&lt;/strong&gt; (flat data representations)、&lt;strong&gt;上下文感知能力不足&lt;/strong&gt; (inadequate contextual awareness)、&lt;strong&gt;導致生成碎片化答案&lt;/strong&gt; (fragmented answers)，無法捕捉複雜的相互依賴關係 (inter-dependencies)。&lt;br&gt;
+LightRAG，提出透過將圖結構 (graph structures) 引入文本的索引 (text indexing) 和檢索 (retrieval) 過程來解決上述問題。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h1 id="引言"&gt;引言
+&lt;/h1&gt;&lt;h2 id="現有-rag-系統的局限性"&gt;現有 RAG 系統的局限性
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;依賴平面資料表示：&lt;/strong&gt; 許多方法依賴於平面資料表示（flat data representations），限制了它們根據實體之間複雜關係來理解和檢索資訊的能力。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;缺乏上下文感知：&lt;/strong&gt; 這些系統通常缺乏維持不同實體及其相互關係之間連貫性所需的上下文感知能力，導致回應可能無法完全解決用戶查詢。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;例：考慮用戶提問「電動車的興起如何影響城市空氣品質和大眾運輸基礎設施？」現有 RAG 方法可能檢索到關於電動車、空氣污染和公共交通挑戰的獨立文檔，但難以將這些信息綜合為一個連貫的回應。它們可能無法解釋電動車的普及如何改善空氣品質，進而可能影響公共交通規劃，用戶可能收到一個碎片化的答案，未能充分捕捉這些主題之間複雜的相互依賴關係。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="lightrag-模型概述"&gt;LightRAG 模型概述
+&lt;/h2&gt;&lt;p&gt;增強了系統捕捉實體之間複雜相互依賴關係的能力，從而產生更連貫和上下文更豐富的回應。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;高效雙層檢索策略：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;低層次檢索（low-level retrieval）： 側重於關於特定實體及其關係的精確資訊。&lt;/li&gt;
+&lt;li&gt;高層次檢索（high-level retrieval）： 涵蓋更廣泛的主題和概念。&lt;/li&gt;
+&lt;li&gt;優勢： 透過結合詳細和概念性檢索，LightRAG 有效適應多樣化的查詢範圍，確保用戶收到符合其特定需求的相關且全面的回應。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;圖結構與向量表示的整合：&lt;/strong&gt; 透過將圖結構與向量表示整合在一起，本 LightRAG 促進了相關實體和關係的高效檢索，同時透過從所構建的知識圖中獲取相關結構信息，增強了結果的全面性。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="本研究在-rag-系統中的關注點"&gt;本研究在 RAG 系統中的關注點
+&lt;/h2&gt;&lt;!-- raw HTML omitted --&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;全面信息檢索&lt;/strong&gt; (Comprehensive Information Retrieval)： 索引功能 ϕ(⋅) 必須善於提取全局信息，這對於增強模型有效回答查詢的能力至關重要。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;高效且低成本檢索&lt;/strong&gt; (Efficient and Low-Cost Retrieval)： 索引化的資料結構 𝒟^ 必須能夠實現快速且具成本效益的檢索，以有效處理高容量的查詢。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;快速適應數據變化&lt;/strong&gt; (Fast Adaptation to Data Changes)： 能夠迅速有效地調整數據結構以整合來自外部知識庫的新信息，這對於確保系統在不斷變化的信息環境中保持更新和相關性至關重要。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h1 id="內文"&gt;內文
+&lt;/h1&gt;&lt;h2 id="lightrag-框架的整體架構"&gt;LightRAG 框架的整體架構
+&lt;/h2&gt;&lt;p&gt;&lt;img src="https://raw.githubusercontent.com/HKUDS/LightRAG/refs/heads/main/README.assets/b2aaf634151b4706892693ffb43d9093.png"
 loading="lazy"
 alt="LightRAG 框架總覽"
->&lt;br>
-&lt;em>圖 1. LightRAG 框架總覽（取自原論文）&lt;/em>&lt;/p>
-&lt;p>架構如圖 1 所示。&lt;/p>
-&lt;p>流程從&lt;strong>原始文本塊&lt;/strong>開始，這些文本塊首先透過&lt;strong>基於圖形的文本索引&lt;/strong>（Graph-based Text Indexing）階段進行處理，過程包含幾個關鍵子組件：&lt;strong>實體與關係提取&lt;/strong>（Entity &amp;amp; Rel Extraction）、&lt;strong>LLM 剖析&lt;/strong>（LLM Profiling）和&lt;strong>去重&lt;/strong>（Deduplication），最後的輸出是一個用於檢索的&lt;strong>索引圖&lt;/strong>（Index Graph）。&lt;br>
-接著，Query LLM 接收輸入查詢，並從中生成&lt;strong>低層級關鍵字&lt;/strong>（Low-level Keys，包括實體和關係）和&lt;strong>高層級關鍵字&lt;/strong>（High-level Keys，包括語境和原始文本塊）。這些關鍵字隨後被送入&lt;strong>雙層級檢索範式&lt;/strong>（Dual-level Retrieval Paradigm），此範式與「索引圖」和「原始文本塊」互動，以檢索相關資訊。最終，檢索到的資訊被傳回 Query LLM 進行檢索增強的答案生成（Retrieval-Augmented Answer Generation）。  
-圖中展示了以「索引圖」作為核心儲存庫，這張圖不僅用來整理新資訊（索引），也用來尋找資訊（檢索），這代表系統不再只是儲存一堆零散的文字片段，而是將知識組織成一個有結構的網路，能更智慧地找出事物之間的關聯。&lt;br>
-此外，處理查詢的 LLM 在 LightRAG 多次出現，它不只負責生成最終答案，還會參與理解問題、引導系統去尋找相關資訊，並將找到的資料整合起來。&lt;/p>
-&lt;hr>
-&lt;h2 id="基於圖形的文本索引">基於圖形的文本索引
-&lt;/h2>&lt;p>LightRAG 透過將文件分割成更小、更易於管理的片段來增強檢索系統。這種策略允許快速識別和存取相關資訊，而無需分析整個文件 。隨後，系統利用大型語言模型（LLMs）來識別和提取各種實體（例如，名稱、日期、位置和事件）以及它們之間的關係 。透過這個過程收集到的資訊將用於創建一個全面的知識圖譜，突顯整個文件集合中的連結和見解。&lt;/p>
-&lt;p>圖形生成模組正式表示為：&lt;/p>
-&lt;!-- raw HTML omitted -->
-&lt;ul>
-&lt;li>&lt;strong>實體與關係提取 (R(⋅))&lt;/strong>：
-&lt;ul>
-&lt;li>將文檔切分為更小的片段，方便快速檢索與處理。&lt;/li>
-&lt;li>使用大型語言模型抽取實體（如人名、地點、事件）以及它們之間的關係，構建知識圖譜。&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;ul>
-&lt;li>&lt;strong>LLM 剖析以生成鍵值對 (P(⋅))&lt;/strong>：為每個實體與關係生成索引鍵（key）與對應摘要文本（value），形成文本鍵值對（K, V）。實體通常採用名稱作為鍵；關係也由關聯實體摘要或主題語形成鍵。&lt;/li>
-&lt;/ul>
-&lt;ul>
-&lt;li>&lt;strong>去重以優化圖操作 (D(⋅))&lt;/strong>：合併相同的實體與關係，以減少圖的複雜度，優化後續運算效率。&lt;/li>
-&lt;/ul>
-&lt;ul>
-&lt;li>
-&lt;p>&lt;strong>優勢&lt;/strong>：&lt;/p>
-&lt;ul>
-&lt;li>全面性理解：透過多跳子圖 (multi-hop subgraphs) 強化對文本中跨關係依賴的理解。&lt;/li>
-&lt;li>檢索效率提升：採用鍵值對結構提升查詢精準度與速度，相較於傳統依賴 chunk traversal 方法更具效率。&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>增量更新 (Incremental Knowledge Base Update)&lt;/strong>：新文檔插入時，只對該文檔進行索引解析，並與原有圖進行合併，無需重建整個索引，極大降低計算成本並提升更新速度。&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;hr>
-&lt;h2 id="雙層次檢索機制-dual-level-retrieval-paradigm">雙層次檢索機制 (Dual-level Retrieval Paradigm)
-&lt;/h2>&lt;ol>
-&lt;li>&lt;strong>分類查詢類型&lt;/strong>&lt;/li>
-&lt;/ol>
-&lt;ul>
-&lt;li>Specific Queries：查找特定實體的資訊。&lt;br>
-ex. 誰寫了《Pride and Prejudice》？&lt;/li>
-&lt;li>Abstract Queries：探索概念性主題。&lt;br>
-ex. 人工智慧如何影響現代教育？&lt;/li>
-&lt;/ul>
-&lt;ol start="2">
-&lt;li>&lt;strong>查詢關鍵詞抽取 (Keyword Extraction)&lt;/strong>&lt;/li>
-&lt;/ol>
-&lt;ul>
-&lt;li>將查詢分為：
-&lt;ul>
-&lt;li>低階關鍵詞（Low‑level）——聚焦具體實體或關係（例：人名、事件）。&lt;/li>
-&lt;li>高階關鍵詞（High‑level）——概括性主題或概念（例：制度變革趨勢）。&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>低階檢索 (Low‑Level Retrieval)：透過低階鍵精確定位實體與其屬性或鄰近關係。&lt;/li>
-&lt;li>高階檢索 (High‑Level Retrieval)：透過高階鍵尋找涵蓋廣泛主題或總覽資訊。&lt;/li>
-&lt;/ul>
-&lt;ol start="3">
-&lt;li>&lt;strong>圖結構與向量結合檢索&lt;/strong>&lt;/li>
-&lt;/ol>
-&lt;ul>
-&lt;li>結合知識圖結構與向量表示（vector embeddings），在進行查詢時同時考量局部（local）與全局（global）語義。&lt;/li>
-&lt;li>並引入高階相關結構資訊（如一跳鄰居）加強檢索結果的完整性與關聯度。&lt;/li>
-&lt;/ul>
-&lt;hr>
-&lt;h2 id="檢索增強答案生成">檢索增強答案生成
-&lt;/h2>&lt;ol>
-&lt;li>
-&lt;p>使用檢索回來的資料，將所有相關的實體與關係摘要（由 profiling function 生成；P(⋅)）作為 LLM 的上下文輸入。&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>結合查詢與上下文生成回答，將查詢緊接相關資料餵給 LLM，生成上下文合宜、符合需求的回答。&lt;/p>
-&lt;/li>
-&lt;/ol>
-&lt;hr>
-&lt;h2 id="複雜度分析">複雜度分析
-&lt;/h2>&lt;ol>
-&lt;li>
-&lt;p>索引階段：對文本進行實體與關係抽取時，需對每個文本片段呼叫一次 LLM，不增加額外系統負擔。&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>檢索階段：相較於傳統高成本的 GraphRAG 社群遍歷，LightRAG 採用向量搜索與圖結構結合方式──只需一次 API 呼叫與少量 token，即完成檢索。&lt;/p>
-&lt;/li>
-&lt;/ol>
-&lt;hr>
-&lt;h1 id="結論重點整理">結論重點整理
-&lt;/h1>&lt;ol>
-&lt;li>圖結構索引（Graph-based Indexing）&lt;/li>
-&lt;/ol>
-&lt;ul>
-&lt;li>以實體與關係為核心建構知識圖，支援去重與增量更新，不必重建全索引。&lt;/li>
-&lt;/ul>
-&lt;ol start="2">
-&lt;li>雙層檢索（Dual-level Retrieval）&lt;/li>
-&lt;/ol>
-&lt;ul>
-&lt;li>低階檢索：精確定位實體與細節資訊。&lt;/li>
-&lt;li>高階檢索：捕捉抽象主題與全局脈絡。&lt;/li>
-&lt;li>兩者結合確保 全面性 + 精準性。&lt;/li>
-&lt;/ul>
-&lt;ol start="3">
-&lt;li>向量與圖結合（Hybrid Retrieval）&lt;/li>
-&lt;/ol>
-&lt;ul>
-&lt;li>結合向量相似度與多跳圖結構檢索，兼顧語義相關與結構關聯。&lt;/li>
-&lt;/ul>
-&lt;ol start="4">
-&lt;li>低成本高效率&lt;/li>
-&lt;/ol>
-&lt;ul>
-&lt;li>檢索階段僅需一次 API 呼叫、百級 token，較 GraphRAG 大幅節省計算與金錢成本。&lt;/li>
-&lt;/ul>
-&lt;ol start="5">
-&lt;li>動態適應性&lt;/li>
-&lt;/ol>
-&lt;ul>
-&lt;li>能即時合併新知識圖節點，適合動態更新的大型知識庫（如法律、醫療、科研）。&lt;/li>
-&lt;/ul>
-&lt;p>&lt;strong>LightRAG vs GraphRAG&lt;/strong>&lt;/p>
-&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th>面向&lt;/th>
-&lt;th>LightRAG&lt;/th>
-&lt;th>GraphRAG&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td>&lt;strong>索引結構&lt;/strong>&lt;/td>
-&lt;td>基於 &lt;strong>圖結構（Knowledge Graph）+ 向量索引&lt;/strong>，以實體與關係為鍵值對（Key-Value）存儲，支援去重與增量更新&lt;/td>
-&lt;td>基於 &lt;strong>圖結構社群（Graph Community）&lt;/strong>，以社群摘要為檢索單位&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>&lt;strong>檢索策略&lt;/strong>&lt;/td>
-&lt;td>&lt;strong>雙層檢索&lt;/strong>：低階（細節）+ 高階（主題）並結合多跳圖檢索與向量相似度&lt;/td>
-&lt;td>單層檢索：依社群摘要進行檢索，缺乏細粒度與多層結合&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>&lt;strong>生成過程&lt;/strong>&lt;/td>
-&lt;td>檢索到的實體與關係摘要直接送入 LLM，結構化輸入更精準&lt;/td>
-&lt;td>將社群摘要送入 LLM，依社群內容生成答案&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>&lt;strong>檢索成本&lt;/strong>&lt;/td>
-&lt;td>一次 API 呼叫&lt;/td>
-&lt;td>多次 API 呼叫&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>&lt;strong>增量更新&lt;/strong>&lt;/td>
-&lt;td>支援 &lt;strong>快速合併更新&lt;/strong>，僅更新新文檔的圖索引&lt;/td>
-&lt;td>需重建整個社群報告，成本高&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>&lt;strong>資訊完整性&lt;/strong>&lt;/td>
-&lt;td>低階檢索補足細節，高階檢索抓全局，全面性佳&lt;/td>
-&lt;td>依賴社群摘要，可能遺漏細節&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>&lt;strong>適用場景&lt;/strong>&lt;/td>
-&lt;td>資料頻繁更新、大型知識庫、多層次查詢需求&lt;/td>
-&lt;td>資料相對靜態、偏向高層總覽查詢&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;hr>
-&lt;hr>
-&lt;h1 id="reference">Reference
-&lt;/h1>&lt;ul>
-&lt;li>&lt;a class="link" href="https://ar5iv.labs.arxiv.org/html/2410.05779" target="_blank" rel="noopener"
->LightRAG: Simple and Fast Retrieval-Augmented Generation-ar5iv 可視化版本&lt;/a>&lt;/li>
-&lt;/ul></description></item></channel></rss>
+&gt;&lt;br&gt;
+&lt;em&gt;圖 1. LightRAG 框架總覽（取自原論文）&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;架構如圖 1 所示。&lt;/p&gt;
+&lt;p&gt;流程從&lt;strong&gt;原始文本塊&lt;/strong&gt;開始，這些文本塊首先透過&lt;strong&gt;基於圖形的文本索引&lt;/strong&gt;（Graph-based Text Indexing）階段進行處理，過程包含幾個關鍵子組件：&lt;strong&gt;實體與關係提取&lt;/strong&gt;（Entity &amp;amp; Rel Extraction）、&lt;strong&gt;LLM 剖析&lt;/strong&gt;（LLM Profiling）和&lt;strong&gt;去重&lt;/strong&gt;（Deduplication），最後的輸出是一個用於檢索的&lt;strong&gt;索引圖&lt;/strong&gt;（Index Graph）。&lt;br&gt;
+接著，Query LLM 接收輸入查詢，並從中生成&lt;strong&gt;低層級關鍵字&lt;/strong&gt;（Low-level Keys，包括實體和關係）和&lt;strong&gt;高層級關鍵字&lt;/strong&gt;（High-level Keys，包括語境和原始文本塊）。這些關鍵字隨後被送入&lt;strong&gt;雙層級檢索範式&lt;/strong&gt;（Dual-level Retrieval Paradigm），此範式與「索引圖」和「原始文本塊」互動，以檢索相關資訊。最終，檢索到的資訊被傳回 Query LLM 進行檢索增強的答案生成（Retrieval-Augmented Answer Generation）。  
+圖中展示了以「索引圖」作為核心儲存庫，這張圖不僅用來整理新資訊（索引），也用來尋找資訊（檢索），這代表系統不再只是儲存一堆零散的文字片段，而是將知識組織成一個有結構的網路，能更智慧地找出事物之間的關聯。&lt;br&gt;
+此外，處理查詢的 LLM 在 LightRAG 多次出現，它不只負責生成最終答案，還會參與理解問題、引導系統去尋找相關資訊，並將找到的資料整合起來。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="基於圖形的文本索引"&gt;基於圖形的文本索引
+&lt;/h2&gt;&lt;p&gt;LightRAG 透過將文件分割成更小、更易於管理的片段來增強檢索系統。這種策略允許快速識別和存取相關資訊，而無需分析整個文件 。隨後，系統利用大型語言模型（LLMs）來識別和提取各種實體（例如，名稱、日期、位置和事件）以及它們之間的關係 。透過這個過程收集到的資訊將用於創建一個全面的知識圖譜，突顯整個文件集合中的連結和見解。&lt;/p&gt;
+&lt;p&gt;圖形生成模組正式表示為：&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;實體與關係提取 (R(⋅))&lt;/strong&gt;：
+&lt;ul&gt;
+&lt;li&gt;將文檔切分為更小的片段，方便快速檢索與處理。&lt;/li&gt;
+&lt;li&gt;使用大型語言模型抽取實體（如人名、地點、事件）以及它們之間的關係，構建知識圖譜。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;LLM 剖析以生成鍵值對 (P(⋅))&lt;/strong&gt;：為每個實體與關係生成索引鍵（key）與對應摘要文本（value），形成文本鍵值對（K, V）。實體通常採用名稱作為鍵；關係也由關聯實體摘要或主題語形成鍵。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;去重以優化圖操作 (D(⋅))&lt;/strong&gt;：合併相同的實體與關係，以減少圖的複雜度，優化後續運算效率。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;優勢&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;全面性理解：透過多跳子圖 (multi-hop subgraphs) 強化對文本中跨關係依賴的理解。&lt;/li&gt;
+&lt;li&gt;檢索效率提升：採用鍵值對結構提升查詢精準度與速度，相較於傳統依賴 chunk traversal 方法更具效率。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;增量更新 (Incremental Knowledge Base Update)&lt;/strong&gt;：新文檔插入時，只對該文檔進行索引解析，並與原有圖進行合併，無需重建整個索引，極大降低計算成本並提升更新速度。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="雙層次檢索機制-dual-level-retrieval-paradigm"&gt;雙層次檢索機制 (Dual-level Retrieval Paradigm)
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;分類查詢類型&lt;/strong&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;Specific Queries：查找特定實體的資訊。&lt;br&gt;
+ex. 誰寫了《Pride and Prejudice》？&lt;/li&gt;
+&lt;li&gt;Abstract Queries：探索概念性主題。&lt;br&gt;
+ex. 人工智慧如何影響現代教育？&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start="2"&gt;
+&lt;li&gt;&lt;strong&gt;查詢關鍵詞抽取 (Keyword Extraction)&lt;/strong&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;將查詢分為：
+&lt;ul&gt;
+&lt;li&gt;低階關鍵詞（Low‑level）——聚焦具體實體或關係（例：人名、事件）。&lt;/li&gt;
+&lt;li&gt;高階關鍵詞（High‑level）——概括性主題或概念（例：制度變革趨勢）。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;低階檢索 (Low‑Level Retrieval)：透過低階鍵精確定位實體與其屬性或鄰近關係。&lt;/li&gt;
+&lt;li&gt;高階檢索 (High‑Level Retrieval)：透過高階鍵尋找涵蓋廣泛主題或總覽資訊。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start="3"&gt;
+&lt;li&gt;&lt;strong&gt;圖結構與向量結合檢索&lt;/strong&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;結合知識圖結構與向量表示（vector embeddings），在進行查詢時同時考量局部（local）與全局（global）語義。&lt;/li&gt;
+&lt;li&gt;並引入高階相關結構資訊（如一跳鄰居）加強檢索結果的完整性與關聯度。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="檢索增強答案生成"&gt;檢索增強答案生成
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;使用檢索回來的資料，將所有相關的實體與關係摘要（由 profiling function 生成；P(⋅)）作為 LLM 的上下文輸入。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;結合查詢與上下文生成回答，將查詢緊接相關資料餵給 LLM，生成上下文合宜、符合需求的回答。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h2 id="複雜度分析"&gt;複雜度分析
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;索引階段：對文本進行實體與關係抽取時，需對每個文本片段呼叫一次 LLM，不增加額外系統負擔。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;檢索階段：相較於傳統高成本的 GraphRAG 社群遍歷，LightRAG 採用向量搜索與圖結構結合方式──只需一次 API 呼叫與少量 token，即完成檢索。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h1 id="結論重點整理"&gt;結論重點整理
+&lt;/h1&gt;&lt;ol&gt;
+&lt;li&gt;圖結構索引（Graph-based Indexing）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;以實體與關係為核心建構知識圖，支援去重與增量更新，不必重建全索引。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start="2"&gt;
+&lt;li&gt;雙層檢索（Dual-level Retrieval）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;低階檢索：精確定位實體與細節資訊。&lt;/li&gt;
+&lt;li&gt;高階檢索：捕捉抽象主題與全局脈絡。&lt;/li&gt;
+&lt;li&gt;兩者結合確保 全面性 + 精準性。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start="3"&gt;
+&lt;li&gt;向量與圖結合（Hybrid Retrieval）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;結合向量相似度與多跳圖結構檢索，兼顧語義相關與結構關聯。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start="4"&gt;
+&lt;li&gt;低成本高效率&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;檢索階段僅需一次 API 呼叫、百級 token，較 GraphRAG 大幅節省計算與金錢成本。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start="5"&gt;
+&lt;li&gt;動態適應性&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;能即時合併新知識圖節點，適合動態更新的大型知識庫（如法律、醫療、科研）。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;LightRAG vs GraphRAG&lt;/strong&gt;&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;面向&lt;/th&gt;
+&lt;th&gt;LightRAG&lt;/th&gt;
+&lt;th&gt;GraphRAG&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;索引結構&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;基於 &lt;strong&gt;圖結構（Knowledge Graph）+ 向量索引&lt;/strong&gt;，以實體與關係為鍵值對（Key-Value）存儲，支援去重與增量更新&lt;/td&gt;
+&lt;td&gt;基於 &lt;strong&gt;圖結構社群（Graph Community）&lt;/strong&gt;，以社群摘要為檢索單位&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;檢索策略&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&lt;strong&gt;雙層檢索&lt;/strong&gt;：低階（細節）+ 高階（主題）並結合多跳圖檢索與向量相似度&lt;/td&gt;
+&lt;td&gt;單層檢索：依社群摘要進行檢索，缺乏細粒度與多層結合&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;生成過程&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;檢索到的實體與關係摘要直接送入 LLM，結構化輸入更精準&lt;/td&gt;
+&lt;td&gt;將社群摘要送入 LLM，依社群內容生成答案&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;檢索成本&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;一次 API 呼叫&lt;/td&gt;
+&lt;td&gt;多次 API 呼叫&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;增量更新&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;支援 &lt;strong&gt;快速合併更新&lt;/strong&gt;，僅更新新文檔的圖索引&lt;/td&gt;
+&lt;td&gt;需重建整個社群報告，成本高&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;資訊完整性&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;低階檢索補足細節，高階檢索抓全局，全面性佳&lt;/td&gt;
+&lt;td&gt;依賴社群摘要，可能遺漏細節&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;適用場景&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;資料頻繁更新、大型知識庫、多層次查詢需求&lt;/td&gt;
+&lt;td&gt;資料相對靜態、偏向高層總覽查詢&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;hr&gt;
+&lt;hr&gt;
+&lt;h1 id="reference"&gt;Reference
+&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="https://ar5iv.labs.arxiv.org/html/2410.05779" target="_blank" rel="noopener"
+&gt;LightRAG: Simple and Fast Retrieval-Augmented Generation-ar5iv 可視化版本&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item></channel></rss>

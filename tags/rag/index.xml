@@ -1,172 +1,172 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>RAG on YuChen</title><link>https://Dandelionlibra.github.io/tags/rag/</link><description>Recent content in RAG on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Wed, 06 Aug 2025 09:03:00 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/tags/rag/index.xml" rel="self" type="application/rss+xml"/><item><title>LightRAG Server 檔案儲存基本介紹</title><link>https://Dandelionlibra.github.io/post/note/lightrag-json-db/</link><pubDate>Wed, 06 Aug 2025 09:03:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/lightrag-json-db/</guid><description>&lt;h1 id="lightrag-api-server-教學快速上手指南">LightRAG API Server 教學：快速上手指南
-&lt;/h1>&lt;p>&lt;a class="link" href="https://github.com/HKUDS/LightRAG" target="_blank" rel="noopener"
->LightRAG&lt;/a> 是一個輕量級、模組化的 RAG（檢索增強生成）框架，旨在簡化 RAG 應用的開發與部署。其內建的 API Server 遵循 OpenAI API 標準，並提供一套完整的 Web UI API 來管理文件與知識圖譜，讓開發者能輕易地將自訂的 RAG 流程封裝成服務，並與現有生態系無縫接軌。本文將引導初學者完成從環境設定到 API 呼叫的完整流程。&lt;/p>
-&lt;hr>
-&lt;h1 id="lightrag-支援的儲存類型">LightRAG 支援的儲存類型
-&lt;/h1>&lt;ul>
-&lt;li>KV_STORAGE：llm 回應快取、文字區塊、文件訊息&lt;/li>
-&lt;li>VECTOR_STORAGE：實體向量、關係向量、區塊向量&lt;/li>
-&lt;li>GRAPH_STORAGE：實體關係圖&lt;/li>
-&lt;li>DOC_STATUS_STORAGE：文檔索引狀態&lt;/li>
-&lt;/ul>
-&lt;h2 id="1-kv_store_doc_statusjson">1. kv_store_doc_status.json
-&lt;/h2>&lt;p>功能：紀錄每份文件在知識庫中的處理狀態與相關資訊。&lt;/p>
-&lt;p>&lt;strong>主要欄位&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>__id__&lt;/code>：文件的唯一識別碼。&lt;/li>
-&lt;li>&lt;code>file_path&lt;/code>：原始文件檔名或路徑。&lt;/li>
-&lt;li>&lt;code>status&lt;/code>：處理狀態（如：processed, pending, error）。&lt;/li>
-&lt;li>&lt;code>updated_at&lt;/code>：最後更新時間。&lt;/li>
-&lt;/ul>
-&lt;p>&lt;strong>用途&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>監控文件是否已完成切割、嵌入與存入向量資料庫。&lt;/li>
-&lt;li>方便追蹤與除錯。&lt;/li>
-&lt;/ul>
-&lt;hr>
-&lt;h2 id="2-kv_store_full_docsjson">2. kv_store_full_docs.json
-&lt;/h2>&lt;p>功能：儲存完整的原始文檔，作為語義檢索的來源。&lt;/p>
-&lt;p>&lt;strong>主要欄位&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>__id__&lt;/code>：文件唯一 ID。&lt;/li>
-&lt;li>&lt;code>file_path&lt;/code>：檔案來源路徑。&lt;/li>
-&lt;li>&lt;code>content&lt;/code>：完整文件的文字內容。&lt;/li>
-&lt;li>&lt;code>metadata&lt;/code>：附屬資訊（如標題、作者、分類）。&lt;/li>
-&lt;/ul>
-&lt;p>&lt;strong>用途&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>保留完整語境，便於 LLM 在回答時回溯全文。&lt;/li>
-&lt;li>提供「非分塊」的全文檢索。&lt;/li>
-&lt;/ul>
-&lt;hr>
-&lt;h2 id="3-kv_store_llm_response_cachejson">3. kv_store_llm_response_cache.json
-&lt;/h2>&lt;p>功能：作為 LLM 查詢結果的快取，避免重複計算。&lt;/p>
-&lt;p>&lt;strong>主要欄位&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>query&lt;/code>：使用者輸入的查詢字串。&lt;/li>
-&lt;li>&lt;code>response&lt;/code>：LLM 生成的回答。&lt;/li>
-&lt;li>&lt;code>timestamp&lt;/code>：快取生成時間。&lt;/li>
-&lt;li>&lt;code>hit_count&lt;/code>：該查詢被重複使用的次數。&lt;/li>
-&lt;/ul>
-&lt;p>&lt;strong>用途&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>提升系統效能，減少模型重複推理。&lt;/li>
-&lt;li>允許分析熱門查詢。&lt;/li>
-&lt;/ul>
-&lt;hr>
-&lt;h2 id="4-kv_store_text_chunksjson">4. kv_store_text_chunks.json
-&lt;/h2>&lt;p>功能：儲存將文件切割後的小片段（chunks），方便向量檢索。&lt;/p>
-&lt;p>&lt;strong>主要欄位&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>__id__&lt;/code>：文本片段 ID。&lt;/li>
-&lt;li>&lt;code>file_path&lt;/code>：來源文件名稱。&lt;/li>
-&lt;li>&lt;code>chunk_index&lt;/code>：片段順序號。&lt;/li>
-&lt;li>&lt;code>content&lt;/code>：片段內容文字。&lt;/li>
-&lt;li>&lt;code>embedding_vector&lt;/code>（可選）：對應的向量嵌入。&lt;/li>
-&lt;/ul>
-&lt;p>&lt;strong>用途&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>支援語意檢索（RAG: Retrieval-Augmented Generation）。&lt;/li>
-&lt;li>每個 chunk 對應一組 embedding，利於近似搜尋。&lt;/li>
-&lt;/ul>
-&lt;p>存有 token 數。&lt;/p>
-&lt;hr>
-&lt;h2 id="vdb_chunksjson">vdb_chunks.json
-&lt;/h2>&lt;p>功能：儲存經嵌入處理的文本向量（Vector DB 核心）。&lt;/p>
-&lt;p>&lt;strong>主要欄位&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>__id__&lt;/code>：chunk 的唯一識別碼。&lt;/li>
-&lt;li>&lt;code>embedding_dim&lt;/code>：向量維度（如 1024）。&lt;/li>
-&lt;li>&lt;code>embedding_vector&lt;/code>：嵌入向量。&lt;/li>
-&lt;li>&lt;code>content&lt;/code>：對應文本。&lt;/li>
-&lt;li>&lt;code>source_id&lt;/code>：來源 chunk 的 ID。&lt;/li>
-&lt;/ul>
-&lt;p>&lt;strong>用途&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>提供高效相似度搜尋。&lt;/li>
-&lt;li>是 RAG 系統的核心檢索資料來源。&lt;/li>
-&lt;/ul>
-&lt;hr>
-&lt;h2 id="vdb_entitiesjson">vdb_entities.json
-&lt;/h2>&lt;p>功能：儲存從文本中抽取的命名實體與相關描述。&lt;/p>
-&lt;p>&lt;strong>主要欄位&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>__id__&lt;/code>：實體 ID。&lt;/li>
-&lt;li>&lt;code>entity_name&lt;/code>：實體名稱（如「林致远」「阿墨」）。&lt;/li>
-&lt;li>&lt;code>content&lt;/code>：實體的描述或定義。&lt;/li>
-&lt;li>&lt;code>file_path&lt;/code>：來源檔案。&lt;/li>
-&lt;li>&lt;code>source_id&lt;/code>：對應文本片段 ID。&lt;/li>
-&lt;li>&lt;code>__created_at__&lt;/code>：建立時間戳。&lt;/li>
-&lt;li>&lt;code>embedding_dim&lt;/code>：嵌入向量維度（如 1024）。&lt;/li>
-&lt;/ul>
-&lt;p>&lt;strong>特色&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>一個實體可能來自多個文本片段，用 &lt;!-- raw HTML omitted --> 分隔。&lt;/li>
-&lt;li>可支援多語言或多版本（如 知一书屋 vs 知一書屋）。&lt;/li>
-&lt;/ul>
-&lt;p>&lt;strong>用途&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>為知識圖譜中的節點（entities）。&lt;/li>
-&lt;li>支援語義關聯檢索與上下文補全。&lt;/li>
-&lt;/ul>
-&lt;hr>
-&lt;h2 id="vdb_relationshipsjson">vdb_relationships.json
-&lt;/h2>&lt;p>功能：儲存實體之間的語義關係，形成知識圖譜 (Knowledge Graph)。&lt;/p>
-&lt;p>&lt;strong>主要欄位&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>__id__&lt;/code>：關係 ID。&lt;/li>
-&lt;li>&lt;code>src_id&lt;/code>：關係的起始實體名稱。&lt;/li>
-&lt;li>&lt;code>tgt_id&lt;/code>：關係的目標實體名稱。&lt;/li>
-&lt;li>&lt;code>content&lt;/code>：關係的描述與類別（可能包含多種語意標籤，如 companionship, ownership）。&lt;/li>
-&lt;li>&lt;code>file_path&lt;/code>：來源文件。&lt;/li>
-&lt;li>&lt;code>source_id&lt;/code>：對應的文本 chunk。&lt;/li>
-&lt;li>&lt;code>__created_at__&lt;/code>：建立時間。&lt;/li>
-&lt;/ul>
-&lt;p>&lt;strong>用途&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>支援「語義圖譜檢索」，例如：&lt;br>
-問「阿墨和林致远的關係？」 → 檢索 companionship 與 mysterious connection。&lt;/li>
-&lt;li>提供結構化的語意推理，補強向量檢索。&lt;/li>
-&lt;/ul>
-&lt;hr>
-&lt;h2 id="4-總結">4. 總結
-&lt;/h2>&lt;ul>
-&lt;li>kv_store* 系列 → 偏向文件與片段的管理、狀態與快取。&lt;/li>
-&lt;li>vdb* 系列 → 偏向語義層面的知識圖譜與向量檢索。&lt;/li>
-&lt;li>entities 與 relationships → 構成知識圖譜 (Knowledge Graph)。&lt;/li>
-&lt;li>chunks 與 embeddings → 構成語意檢索的基礎。&lt;/li>
-&lt;/ul></description></item><item><title>LightRAG API Server 教學：快速上手指南</title><link>https://Dandelionlibra.github.io/post/note/lightrag-api-server-tutorial/</link><pubDate>Fri, 01 Aug 2025 06:00:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/lightrag-api-server-tutorial/</guid><description>&lt;h1 id="lightrag-api-server-教學快速上手指南">LightRAG API Server 教學：快速上手指南
-&lt;/h1>&lt;p>&lt;a class="link" href="https://github.com/HKUDS/LightRAG" target="_blank" rel="noopener"
->LightRAG&lt;/a> 是一個輕量級、模組化的 RAG（檢索增強生成）框架，旨在簡化 RAG 應用的開發與部署。其內建的 API Server 遵循 OpenAI API 標準，並提供一套完整的 Web UI API 來管理文件與知識圖譜，讓開發者能輕易地將自訂的 RAG 流程封裝成服務，並與現有生態系無縫接軌。本文將引導初學者完成從環境設定到 API 呼叫的完整流程。&lt;/p>
-&lt;hr>
-&lt;h2 id="1-安裝與環境設定">1. 安裝與環境設定
-&lt;/h2>&lt;h3 id="11-安裝-lightrag">1.1. 安裝 LightRAG
-&lt;/h3>&lt;ul>
-&lt;li>install from PyPl&lt;/li>
-&lt;/ul>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>pip install &lt;span style="color:#e6db74">&amp;#34;lightrag-hku[api]&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
-&lt;li>Installation from Source&lt;/li>
-&lt;/ul>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 1. Clone the repository&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>git clone https://github.com/HKUDS/LightRAG.git
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cd LightRAG
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 2. create a Python virtual environment if necessary&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 3. Install in editable mode with API support&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>pip install -e &lt;span style="color:#e6db74">&amp;#34;.[api]&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 4. 修改範例環境文件&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cp env.example .env
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 5. 啟動 API Server&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>lightrag-server
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="12-環境文件設定">1.2. 環境文件設定
-&lt;/h3>&lt;ul>
-&lt;li>OpenAI LLM + Ollama Embedding:&lt;/li>
-&lt;/ul>
-&lt;pre tabindex="0">&lt;code>LLM_BINDING=openai
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>RAG on YuChen</title><link>https://Dandelionlibra.github.io/tags/rag/</link><description>Recent content in RAG on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Wed, 06 Aug 2025 09:03:00 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/tags/rag/index.xml" rel="self" type="application/rss+xml"/><item><title>LightRAG Server 檔案儲存基本介紹</title><link>https://Dandelionlibra.github.io/post/note/lightrag-json-db/</link><pubDate>Wed, 06 Aug 2025 09:03:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/lightrag-json-db/</guid><description>&lt;h1 id="lightrag-api-server-教學快速上手指南"&gt;LightRAG API Server 教學：快速上手指南
+&lt;/h1&gt;&lt;p&gt;&lt;a class="link" href="https://github.com/HKUDS/LightRAG" target="_blank" rel="noopener"
+&gt;LightRAG&lt;/a&gt; 是一個輕量級、模組化的 RAG（檢索增強生成）框架，旨在簡化 RAG 應用的開發與部署。其內建的 API Server 遵循 OpenAI API 標準，並提供一套完整的 Web UI API 來管理文件與知識圖譜，讓開發者能輕易地將自訂的 RAG 流程封裝成服務，並與現有生態系無縫接軌。本文將引導初學者完成從環境設定到 API 呼叫的完整流程。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h1 id="lightrag-支援的儲存類型"&gt;LightRAG 支援的儲存類型
+&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;KV_STORAGE：llm 回應快取、文字區塊、文件訊息&lt;/li&gt;
+&lt;li&gt;VECTOR_STORAGE：實體向量、關係向量、區塊向量&lt;/li&gt;
+&lt;li&gt;GRAPH_STORAGE：實體關係圖&lt;/li&gt;
+&lt;li&gt;DOC_STATUS_STORAGE：文檔索引狀態&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="1-kv_store_doc_statusjson"&gt;1. kv_store_doc_status.json
+&lt;/h2&gt;&lt;p&gt;功能：紀錄每份文件在知識庫中的處理狀態與相關資訊。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;主要欄位&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;__id__&lt;/code&gt;：文件的唯一識別碼。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;file_path&lt;/code&gt;：原始文件檔名或路徑。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;status&lt;/code&gt;：處理狀態（如：processed, pending, error）。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;updated_at&lt;/code&gt;：最後更新時間。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;用途&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;監控文件是否已完成切割、嵌入與存入向量資料庫。&lt;/li&gt;
+&lt;li&gt;方便追蹤與除錯。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="2-kv_store_full_docsjson"&gt;2. kv_store_full_docs.json
+&lt;/h2&gt;&lt;p&gt;功能：儲存完整的原始文檔，作為語義檢索的來源。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;主要欄位&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;__id__&lt;/code&gt;：文件唯一 ID。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;file_path&lt;/code&gt;：檔案來源路徑。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;content&lt;/code&gt;：完整文件的文字內容。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;metadata&lt;/code&gt;：附屬資訊（如標題、作者、分類）。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;用途&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;保留完整語境，便於 LLM 在回答時回溯全文。&lt;/li&gt;
+&lt;li&gt;提供「非分塊」的全文檢索。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="3-kv_store_llm_response_cachejson"&gt;3. kv_store_llm_response_cache.json
+&lt;/h2&gt;&lt;p&gt;功能：作為 LLM 查詢結果的快取，避免重複計算。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;主要欄位&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;query&lt;/code&gt;：使用者輸入的查詢字串。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;response&lt;/code&gt;：LLM 生成的回答。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;timestamp&lt;/code&gt;：快取生成時間。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;hit_count&lt;/code&gt;：該查詢被重複使用的次數。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;用途&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;提升系統效能，減少模型重複推理。&lt;/li&gt;
+&lt;li&gt;允許分析熱門查詢。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="4-kv_store_text_chunksjson"&gt;4. kv_store_text_chunks.json
+&lt;/h2&gt;&lt;p&gt;功能：儲存將文件切割後的小片段（chunks），方便向量檢索。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;主要欄位&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;__id__&lt;/code&gt;：文本片段 ID。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;file_path&lt;/code&gt;：來源文件名稱。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;chunk_index&lt;/code&gt;：片段順序號。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;content&lt;/code&gt;：片段內容文字。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;embedding_vector&lt;/code&gt;（可選）：對應的向量嵌入。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;用途&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;支援語意檢索（RAG: Retrieval-Augmented Generation）。&lt;/li&gt;
+&lt;li&gt;每個 chunk 對應一組 embedding，利於近似搜尋。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;存有 token 數。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="vdb_chunksjson"&gt;vdb_chunks.json
+&lt;/h2&gt;&lt;p&gt;功能：儲存經嵌入處理的文本向量（Vector DB 核心）。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;主要欄位&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;__id__&lt;/code&gt;：chunk 的唯一識別碼。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;embedding_dim&lt;/code&gt;：向量維度（如 1024）。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;embedding_vector&lt;/code&gt;：嵌入向量。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;content&lt;/code&gt;：對應文本。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;source_id&lt;/code&gt;：來源 chunk 的 ID。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;用途&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;提供高效相似度搜尋。&lt;/li&gt;
+&lt;li&gt;是 RAG 系統的核心檢索資料來源。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="vdb_entitiesjson"&gt;vdb_entities.json
+&lt;/h2&gt;&lt;p&gt;功能：儲存從文本中抽取的命名實體與相關描述。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;主要欄位&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;__id__&lt;/code&gt;：實體 ID。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;entity_name&lt;/code&gt;：實體名稱（如「林致远」「阿墨」）。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;content&lt;/code&gt;：實體的描述或定義。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;file_path&lt;/code&gt;：來源檔案。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;source_id&lt;/code&gt;：對應文本片段 ID。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;__created_at__&lt;/code&gt;：建立時間戳。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;embedding_dim&lt;/code&gt;：嵌入向量維度（如 1024）。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;特色&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;一個實體可能來自多個文本片段，用 &lt;!-- raw HTML omitted --&gt; 分隔。&lt;/li&gt;
+&lt;li&gt;可支援多語言或多版本（如 知一书屋 vs 知一書屋）。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;用途&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;為知識圖譜中的節點（entities）。&lt;/li&gt;
+&lt;li&gt;支援語義關聯檢索與上下文補全。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="vdb_relationshipsjson"&gt;vdb_relationships.json
+&lt;/h2&gt;&lt;p&gt;功能：儲存實體之間的語義關係，形成知識圖譜 (Knowledge Graph)。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;主要欄位&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;__id__&lt;/code&gt;：關係 ID。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;src_id&lt;/code&gt;：關係的起始實體名稱。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;tgt_id&lt;/code&gt;：關係的目標實體名稱。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;content&lt;/code&gt;：關係的描述與類別（可能包含多種語意標籤，如 companionship, ownership）。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;file_path&lt;/code&gt;：來源文件。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;source_id&lt;/code&gt;：對應的文本 chunk。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;__created_at__&lt;/code&gt;：建立時間。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;用途&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;支援「語義圖譜檢索」，例如：&lt;br&gt;
+問「阿墨和林致远的關係？」 → 檢索 companionship 與 mysterious connection。&lt;/li&gt;
+&lt;li&gt;提供結構化的語意推理，補強向量檢索。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="4-總結"&gt;4. 總結
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;kv_store* 系列 → 偏向文件與片段的管理、狀態與快取。&lt;/li&gt;
+&lt;li&gt;vdb* 系列 → 偏向語義層面的知識圖譜與向量檢索。&lt;/li&gt;
+&lt;li&gt;entities 與 relationships → 構成知識圖譜 (Knowledge Graph)。&lt;/li&gt;
+&lt;li&gt;chunks 與 embeddings → 構成語意檢索的基礎。&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>LightRAG API Server 教學：快速上手指南</title><link>https://Dandelionlibra.github.io/post/note/lightrag-api-server-tutorial/</link><pubDate>Fri, 01 Aug 2025 06:00:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/lightrag-api-server-tutorial/</guid><description>&lt;h1 id="lightrag-api-server-教學快速上手指南"&gt;LightRAG API Server 教學：快速上手指南
+&lt;/h1&gt;&lt;p&gt;&lt;a class="link" href="https://github.com/HKUDS/LightRAG" target="_blank" rel="noopener"
+&gt;LightRAG&lt;/a&gt; 是一個輕量級、模組化的 RAG（檢索增強生成）框架，旨在簡化 RAG 應用的開發與部署。其內建的 API Server 遵循 OpenAI API 標準，並提供一套完整的 Web UI API 來管理文件與知識圖譜，讓開發者能輕易地將自訂的 RAG 流程封裝成服務，並與現有生態系無縫接軌。本文將引導初學者完成從環境設定到 API 呼叫的完整流程。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="1-安裝與環境設定"&gt;1. 安裝與環境設定
+&lt;/h2&gt;&lt;h3 id="11-安裝-lightrag"&gt;1.1. 安裝 LightRAG
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;install from PyPl&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pip install &lt;span style="color:#e6db74"&gt;&amp;#34;lightrag-hku[api]&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;Installation from Source&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 1. Clone the repository&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git clone https://github.com/HKUDS/LightRAG.git
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cd LightRAG
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 2. create a Python virtual environment if necessary&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 3. Install in editable mode with API support&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pip install -e &lt;span style="color:#e6db74"&gt;&amp;#34;.[api]&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 4. 修改範例環境文件&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cp env.example .env
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 5. 啟動 API Server&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;lightrag-server
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="12-環境文件設定"&gt;1.2. 環境文件設定
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;OpenAI LLM + Ollama Embedding:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;LLM_BINDING=openai
 LLM_MODEL=gpt-4o
 LLM_BINDING_HOST=https://api.openai.com/v1
 LLM_BINDING_API_KEY=your_api_key
@@ -175,10 +175,10 @@ EMBEDDING_BINDING_HOST=http://localhost:11434
 EMBEDDING_MODEL=bge-m3:latest
 EMBEDDING_DIM=1024
 # EMBEDDING_BINDING_API_KEY=your_api_key
-&lt;/code>&lt;/pre>&lt;ul>
-&lt;li>Ollama LLM + Ollama Embedding:&lt;/li>
-&lt;/ul>
-&lt;pre tabindex="0">&lt;code>LLM_BINDING=ollama
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;Ollama LLM + Ollama Embedding:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;LLM_BINDING=ollama
 LLM_MODEL=mistral-nemo:latest
 LLM_BINDING_HOST=http://localhost:11434
 # LLM_BINDING_API_KEY=your_api_key
@@ -189,22 +189,22 @@ EMBEDDING_BINDING_HOST=http://localhost:11434
 EMBEDDING_MODEL=bge-m3:latest
 EMBEDDING_DIM=1024
 # EMBEDDING_BINDING_API_KEY=your_api_key
-&lt;/code>&lt;/pre>&lt;ul>
-&lt;li>其他環境設定參數：
-&lt;ul>
-&lt;li>&lt;code>--host&lt;/code>：伺服器監聽位址（預設：0.0.0.0）&lt;/li>
-&lt;li>&lt;code>--port&lt;/code>：伺服器監聽連接埠（預設：9621）&lt;/li>
-&lt;li>&lt;code>--timeout&lt;/code>：LLM 請求逾時（預設值：150 秒）&lt;/li>
-&lt;li>&lt;code>--log-level&lt;/code>：日誌等級（預設：INFO）&lt;/li>
-&lt;li>&lt;code>--working-dir&lt;/code>：資料庫持久目錄（預設：./rag_storage）&lt;/li>
-&lt;li>&lt;code>--input-dir&lt;/code>：上傳檔案的目錄（預設值：./inputs）&lt;/li>
-&lt;li>&lt;code>--workspace&lt;/code>：工作區名稱，用於邏輯隔離多個 LightRAG 實例之間的資料（預設：空），及所以工作共用同一個資料目錄&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;h3 id="13-使用-docker-啟動-lightrag-伺服器">1.3. 使用 Docker 啟動 LightRAG 伺服器
-&lt;/h3>&lt;p>建立名為 &lt;code>docker compose.yml&lt;/code> 的檔案：&lt;/p>
-&lt;pre tabindex="0">&lt;code>services:
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;其他環境設定參數：
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;--host&lt;/code&gt;：伺服器監聽位址（預設：0.0.0.0）&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--port&lt;/code&gt;：伺服器監聽連接埠（預設：9621）&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--timeout&lt;/code&gt;：LLM 請求逾時（預設值：150 秒）&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--log-level&lt;/code&gt;：日誌等級（預設：INFO）&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--working-dir&lt;/code&gt;：資料庫持久目錄（預設：./rag_storage）&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--input-dir&lt;/code&gt;：上傳檔案的目錄（預設值：./inputs）&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--workspace&lt;/code&gt;：工作區名稱，用於邏輯隔離多個 LightRAG 實例之間的資料（預設：空），及所以工作共用同一個資料目錄&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="13-使用-docker-啟動-lightrag-伺服器"&gt;1.3. 使用 Docker 啟動 LightRAG 伺服器
+&lt;/h3&gt;&lt;p&gt;建立名為 &lt;code&gt;docker compose.yml&lt;/code&gt; 的檔案：&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;services:
 lightrag:
 container_name: lightrag
 image: ghcr.io/hkuds/lightrag:latest
@@ -220,16 +220,16 @@ env_file:
 restart: unless-stopped
 extra_hosts:
 - &amp;#34;host.docker.internal:host-gateway&amp;#34;
-&lt;/code>&lt;/pre>&lt;p>啟動 LightRAG 伺服器：&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>docker compose up
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># If you want the program to run in the background after startup, add the -d parameter at the end of the command.&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;hr>
-&lt;h2 id="2-啟動-api-server">2. 啟動 API Server
-&lt;/h2>&lt;p>LightRAG 使用一個 YAML 檔案來設定 API Server，包含端口、API 路徑以及要載入的模型。專案內已提供一個範例設定檔 &lt;code>lightrag_webui/config.yaml&lt;/code>。&lt;/p>
-&lt;p>進入容器後使用以下指令啟動伺服器：&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>lightrag-server
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Server 成功啟動後，您會看到類似以下的輸出，代表伺服器正在 &lt;code>localhost:9621&lt;/code> 上運行：&lt;/p>
-&lt;pre tabindex="0">&lt;code> ╔══════════════════════════════════════════════════════════════╗
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;啟動 LightRAG 伺服器：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker compose up
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# If you want the program to run in the background after startup, add the -d parameter at the end of the command.&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="2-啟動-api-server"&gt;2. 啟動 API Server
+&lt;/h2&gt;&lt;p&gt;LightRAG 使用一個 YAML 檔案來設定 API Server，包含端口、API 路徑以及要載入的模型。專案內已提供一個範例設定檔 &lt;code&gt;lightrag_webui/config.yaml&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;進入容器後使用以下指令啟動伺服器：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;lightrag-server
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Server 成功啟動後，您會看到類似以下的輸出，代表伺服器正在 &lt;code&gt;localhost:9621&lt;/code&gt; 上運行：&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt; ╔══════════════════════════════════════════════════════════════╗
 ║ LightRAG Server v1.4.4/0189 ║
 ║ Fast, Lightweight RAG Server Implementation ║
 ╚══════════════════════════════════════════════════════════════╝
@@ -245,55 +245,55 @@ extra_hosts:
 ├─ History Turns: 0
 ├─ API Key: Not Set
 └─ JWT Auth: Disabled
-&lt;/code>&lt;/pre>&lt;hr>
-&lt;h2 id="3-api-端點詳解">3. API 端點詳解
-&lt;/h2>&lt;p>&lt;code>-X&lt;/code>: 指定 HTTP 方法&lt;br>
-&lt;code>-H&lt;/code>: 加入 HTTP 標頭&lt;/p>
-&lt;blockquote>
-&lt;p>ex. &lt;code>-H &amp;quot;Content-Type: application/json&amp;quot;&lt;/code> 用於告知伺服器此次請求的資料格式是 JSON。&lt;br>
-可多次使用 &lt;code>-H&lt;/code> 加標頭。&lt;/p>&lt;/blockquote>
-&lt;p>&lt;code>-d&lt;/code>: 傳送請求資料，常搭配 &lt;code>POST&lt;/code>,&lt;code>PUT&lt;/code> 使用，當指定 &lt;code>Content-Type: application/json&lt;/code> 時，會把內容當 JSON 傳送。&lt;br>
-&lt;code>-v&lt;/code>: verbose 模式，顯示完整請求與回應過程，主要用於除錯。&lt;br>
-&lt;code>-o &amp;lt;file&amp;gt;&lt;/code>: 輸出到檔案中。&lt;/p>
-&lt;hr>
-&lt;p>&lt;strong>獲取文件 api 教學&lt;/strong>&lt;/p>
-&lt;pre tabindex="0">&lt;code>lightrag-server --help
-&lt;/code>&lt;/pre>&lt;p>或在連上 server 後開啟: http://localhost:9621/redoc#tag/documents/operation&lt;/p>
-&lt;hr>
-&lt;h3 id="31-documents">3.1. Documents
-&lt;/h3>&lt;hr>
-&lt;h4 id="311-scan-for-new-documents">3.1.1. Scan For New Documents
-&lt;/h4>&lt;p>&lt;code>POST&lt;/code>: &lt;code>/documents/scan&lt;/code>&lt;br>
-啟動背景掃描，去檢查輸入目錄中是否有新的文件，若有則讀取這些文件。&lt;/p>
-&lt;p>&lt;strong>回傳內容&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>status&lt;/code>(required): Status of the scanning operation.&lt;br>
-value: &lt;code>scanning_started&lt;/code>&lt;/li>
-&lt;li>&lt;code>message&lt;/code>: Additional details about the scanning operation.&lt;/li>
-&lt;/ul>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>curl -X POST &lt;span style="color:#e6db74">&amp;#34;http://localhost:9621/documents/scan&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;hr>
-&lt;h4 id="312-upload-to-input-dir">3.1.2. Upload To Input Dir
-&lt;/h4>&lt;p>&lt;code>POST&lt;/code>: &lt;code>/documents/upload&lt;/code>&lt;br>
-將檔案上傳到指定的目錄，再對其進行索引，以便檢索。&lt;/p>
-&lt;p>&lt;strong>傳入參數&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>file&lt;/code>(required): 要上傳的檔案。&lt;/li>
-&lt;li>&lt;code>api_key_header_value&lt;/code>: 有些伺服器可能需要 API Key 做身份驗證。&lt;/li>
-&lt;/ul>
-&lt;p>&lt;strong>回傳內容&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>status&lt;/code>(required): Status of the uploadding operation.&lt;br>
-Enum: &lt;code>success&lt;/code>、&lt;code>duplicated&lt;/code>、&lt;code>partial_success&lt;/code>、&lt;code>failure&lt;/code>&lt;/li>
-&lt;li>&lt;code>message&lt;/code>(required): Message describing the operation result.&lt;/li>
-&lt;/ul>
-&lt;p>※&lt;code>-F &amp;quot;file=@檔案路徑&amp;quot;&lt;/code> 用於傳 multipart/form-data。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>curl -X POST &lt;span style="color:#e6db74">&amp;#34;http://localhost:9621/documents/upload&amp;#34;&lt;/span> &lt;span style="color:#ae81ff">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> -F &lt;span style="color:#e6db74">&amp;#34;file=@./../prince_docs/little_prince_1.txt&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;hr>
-&lt;hr>
-&lt;h3 id="32-query">3.2. Query
-&lt;/h3>&lt;pre>&lt;code>mode: Literal[&amp;quot;local&amp;quot;, &amp;quot;global&amp;quot;, &amp;quot;hybrid&amp;quot;, &amp;quot;naive&amp;quot;, &amp;quot;mix&amp;quot;, &amp;quot;bypass&amp;quot;] = &amp;quot;global&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;hr&gt;
+&lt;h2 id="3-api-端點詳解"&gt;3. API 端點詳解
+&lt;/h2&gt;&lt;p&gt;&lt;code&gt;-X&lt;/code&gt;: 指定 HTTP 方法&lt;br&gt;
+&lt;code&gt;-H&lt;/code&gt;: 加入 HTTP 標頭&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;ex. &lt;code&gt;-H &amp;quot;Content-Type: application/json&amp;quot;&lt;/code&gt; 用於告知伺服器此次請求的資料格式是 JSON。&lt;br&gt;
+可多次使用 &lt;code&gt;-H&lt;/code&gt; 加標頭。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;&lt;code&gt;-d&lt;/code&gt;: 傳送請求資料，常搭配 &lt;code&gt;POST&lt;/code&gt;,&lt;code&gt;PUT&lt;/code&gt; 使用，當指定 &lt;code&gt;Content-Type: application/json&lt;/code&gt; 時，會把內容當 JSON 傳送。&lt;br&gt;
+&lt;code&gt;-v&lt;/code&gt;: verbose 模式，顯示完整請求與回應過程，主要用於除錯。&lt;br&gt;
+&lt;code&gt;-o &amp;lt;file&amp;gt;&lt;/code&gt;: 輸出到檔案中。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;獲取文件 api 教學&lt;/strong&gt;&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;lightrag-server --help
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;或在連上 server 後開啟: http://localhost:9621/redoc#tag/documents/operation&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id="31-documents"&gt;3.1. Documents
+&lt;/h3&gt;&lt;hr&gt;
+&lt;h4 id="311-scan-for-new-documents"&gt;3.1.1. Scan For New Documents
+&lt;/h4&gt;&lt;p&gt;&lt;code&gt;POST&lt;/code&gt;: &lt;code&gt;/documents/scan&lt;/code&gt;&lt;br&gt;
+啟動背景掃描，去檢查輸入目錄中是否有新的文件，若有則讀取這些文件。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;回傳內容&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;status&lt;/code&gt;(required): Status of the scanning operation.&lt;br&gt;
+value: &lt;code&gt;scanning_started&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;message&lt;/code&gt;: Additional details about the scanning operation.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -X POST &lt;span style="color:#e6db74"&gt;&amp;#34;http://localhost:9621/documents/scan&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h4 id="312-upload-to-input-dir"&gt;3.1.2. Upload To Input Dir
+&lt;/h4&gt;&lt;p&gt;&lt;code&gt;POST&lt;/code&gt;: &lt;code&gt;/documents/upload&lt;/code&gt;&lt;br&gt;
+將檔案上傳到指定的目錄，再對其進行索引，以便檢索。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;傳入參數&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;file&lt;/code&gt;(required): 要上傳的檔案。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;api_key_header_value&lt;/code&gt;: 有些伺服器可能需要 API Key 做身份驗證。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;回傳內容&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;status&lt;/code&gt;(required): Status of the uploadding operation.&lt;br&gt;
+Enum: &lt;code&gt;success&lt;/code&gt;、&lt;code&gt;duplicated&lt;/code&gt;、&lt;code&gt;partial_success&lt;/code&gt;、&lt;code&gt;failure&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;message&lt;/code&gt;(required): Message describing the operation result.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;※&lt;code&gt;-F &amp;quot;file=@檔案路徑&amp;quot;&lt;/code&gt; 用於傳 multipart/form-data。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -X POST &lt;span style="color:#e6db74"&gt;&amp;#34;http://localhost:9621/documents/upload&amp;#34;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;&lt;/span&gt; -F &lt;span style="color:#e6db74"&gt;&amp;#34;file=@./../prince_docs/little_prince_1.txt&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;hr&gt;
+&lt;h3 id="32-query"&gt;3.2. Query
+&lt;/h3&gt;&lt;pre&gt;&lt;code&gt;mode: Literal[&amp;quot;local&amp;quot;, &amp;quot;global&amp;quot;, &amp;quot;hybrid&amp;quot;, &amp;quot;naive&amp;quot;, &amp;quot;mix&amp;quot;, &amp;quot;bypass&amp;quot;] = &amp;quot;global&amp;quot;
 &amp;quot;&amp;quot;&amp;quot;Specifies the retrieval mode:
 - &amp;quot;local&amp;quot;: Focuses on context-dependent information.
 - &amp;quot;global&amp;quot;: Utilizes global knowledge.
@@ -301,1091 +301,1091 @@ Enum: &lt;code>success&lt;/code>、&lt;code>duplicated&lt;/code>、&lt;code>part
 - &amp;quot;naive&amp;quot;: Performs a basic search without advanced techniques.
 - &amp;quot;mix&amp;quot;: Integrates knowledge graph and vector retrieval.
 &amp;quot;&amp;quot;&amp;quot;
-&lt;/code>&lt;/pre>
-&lt;hr>
-&lt;h3 id="33-documents">3.3. Documents
-&lt;/h3>&lt;p>LightRAG API Server 提供兩類主要的端點：一類是遵循 OpenAI 標準的核心聊天 API，另一類是 Web UI 用於管理資料的 API。&lt;/p>
-&lt;h3 id="31-openai-標準-api">3.1. OpenAI 標準 API
-&lt;/h3>&lt;p>這組 API 讓 LightRAG 可以輕易地整合進現有的 OpenAI 生態系。&lt;/p>
-&lt;h4 id="311-get-apiv1models">3.1.1. &lt;code>GET /api/v1/models&lt;/code>
-&lt;/h4>&lt;p>此端點用於查詢當前伺服器上所有可用的模型。&lt;/p>
-&lt;ul>
-&lt;li>&lt;strong>功能&lt;/strong>: 列出在設定檔中定義的所有模型名稱。&lt;/li>
-&lt;li>&lt;strong>範例&lt;/strong>:
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>curl -X GET http://localhost:8008/api/v1/models
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
-&lt;li>&lt;strong>回應&lt;/strong>:
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;object&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;list&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;data&amp;#34;&lt;/span>: [
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;LightRAG&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;object&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;model&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;created&amp;#34;&lt;/span>: &lt;span style="color:#ae81ff">1721615822&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;owned_by&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;lightrag&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ]
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
-&lt;/ul>
-&lt;h4 id="312-post-apiv1chatcompletions">3.1.2. &lt;code>POST /api/v1/chat/completions&lt;/code>
-&lt;/h4>&lt;p>這是核心的聊天互動端點，功能與 OpenAI 的 Chat Completions API 完全相容。它接收使用者輸入，執行 RAG 流程，並回傳 LLM 生成的答案。&lt;/p>
-&lt;ul>
-&lt;li>&lt;strong>功能&lt;/strong>: 執行一個完整的 RAG 查詢。&lt;/li>
-&lt;li>&lt;strong>範例&lt;/strong>:
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>curl -X POST http://localhost:8008/api/v1/chat/completions &lt;span style="color:#ae81ff">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span>-H &lt;span style="color:#e6db74">&amp;#34;Content-Type: application/json&amp;#34;&lt;/span> &lt;span style="color:#ae81ff">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span>-d &lt;span style="color:#e6db74">&amp;#39;{
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> &amp;#34;model&amp;#34;: &amp;#34;LightRAG&amp;#34;,
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> &amp;#34;messages&amp;#34;: [
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> {
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> &amp;#34;role&amp;#34;: &amp;#34;user&amp;#34;,
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> &amp;#34;content&amp;#34;: &amp;#34;What is Retrieval-Augmented Generation?&amp;#34;
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> }
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> ]
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74">}&amp;#39;&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
-&lt;/ul>
-&lt;h3 id="32-web-ui-api-總覽">3.2. Web UI API 總覽
-&lt;/h3>&lt;p>這組 API 主要由 LightRAG 的 Web UI 使用，提供文件處理、查詢、知識圖譜管理等進階功能。&lt;/p>
-&lt;h4 id="321-文件-documents-api">3.2.1. 文件 (Documents) API
-&lt;/h4>&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th style="text-align: left">方法&lt;/th>
-&lt;th style="text-align: left">路徑&lt;/th>
-&lt;th style="text-align: left">說明&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td style="text-align: left">&lt;code>POST&lt;/code>&lt;/td>
-&lt;td style="text-align: left">&lt;code>/documents/scan&lt;/code>&lt;/td>
-&lt;td style="text-align: left">掃描輸入資料夾中的新文件並進行處理。&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align: left">&lt;code>POST&lt;/code>&lt;/td>
-&lt;td style="text-align: left">&lt;code>/documents/upload&lt;/code>&lt;/td>
-&lt;td style="text-align: left">上傳文件至輸入資料夾。&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align: left">&lt;code>POST&lt;/code>&lt;/td>
-&lt;td style="text-align: left">&lt;code>/documents/text&lt;/code>&lt;/td>
-&lt;td style="text-align: left">插入單筆文字資料。&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align: left">&lt;code>POST&lt;/code>&lt;/td>
-&lt;td style="text-align: left">&lt;code>/documents/texts&lt;/code>&lt;/td>
-&lt;td style="text-align: left">插入多筆文字資料。&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align: left">&lt;code>DELETE&lt;/code>&lt;/td>
-&lt;td style="text-align: left">&lt;code>/documents&lt;/code>&lt;/td>
-&lt;td style="text-align: left">清除所有已處理的文件資料。&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align: left">&lt;code>GET&lt;/code>&lt;/td>
-&lt;td style="text-align: left">&lt;code>/documents&lt;/code>&lt;/td>
-&lt;td style="text-align: left">獲取已處理的文件列表。&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align: left">&lt;code>GET&lt;/code>&lt;/td>
-&lt;td style="text-align: left">&lt;code>/documents/pipeline_status&lt;/code>&lt;/td>
-&lt;td style="text-align: left">獲取文件處理管道的狀態。&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align: left">&lt;code>DELETE&lt;/code>&lt;/td>
-&lt;td style="text-align: left">&lt;code>/documents/delete_document&lt;/code>&lt;/td>
-&lt;td style="text-align: left">根據文件 ID 刪除指定文件及其相關資料。&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align: left">&lt;code>POST&lt;/code>&lt;/td>
-&lt;td style="text-align: left">&lt;code>/documents/clear_cache&lt;/code>&lt;/td>
-&lt;td style="text-align: left">清除快取。&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align: left">&lt;code>DELETE&lt;/code>&lt;/td>
-&lt;td style="text-align: left">&lt;code>/documents/delete_entity&lt;/code>&lt;/td>
-&lt;td style="text-align: left">刪除指定的實體。&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align: left">&lt;code>DELETE&lt;/code>&lt;/td>
-&lt;td style="text-align: left">&lt;code>/documents/delete_relation&lt;/code>&lt;/td>
-&lt;td style="text-align: left">刪除指定的關係。&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;h4 id="322-查詢-query-api">3.2.2. 查詢 (Query) API
-&lt;/h4>&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th style="text-align: left">方法&lt;/th>
-&lt;th style="text-align: left">路徑&lt;/th>
-&lt;th style="text-align: left">說明&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td style="text-align: left">&lt;code>POST&lt;/code>&lt;/td>
-&lt;td style="text-align: left">&lt;code>/query&lt;/code>&lt;/td>
-&lt;td style="text-align: left">提交一個查詢並獲取一次性回覆。&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align: left">&lt;code>POST&lt;/code>&lt;/td>
-&lt;td style="text-align: left">&lt;code>/query/stream&lt;/code>&lt;/td>
-&lt;td style="text-align: left">提交一個查詢並以串流方式獲取回覆。&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;h4 id="323-知識圖譜-graph-api">3.2.3. 知識圖譜 (Graph) API
-&lt;/h4>&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th style="text-align: left">方法&lt;/th>
-&lt;th style="text-align: left">路徑&lt;/th>
-&lt;th style="text-align: left">說明&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td style="text-align: left">&lt;code>GET&lt;/code>&lt;/td>
-&lt;td style="text-align: left">&lt;code>/graph/label/list&lt;/code>&lt;/td>
-&lt;td style="text-align: left">獲取知識圖譜中所有的標籤 (Labels)。&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align: left">&lt;code>GET&lt;/code>&lt;/td>
-&lt;td style="text-align: left">&lt;code>/graphs&lt;/code>&lt;/td>
-&lt;td style="text-align: left">獲取完整的知識圖譜資料。&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align: left">&lt;code>GET&lt;/code>&lt;/td>
-&lt;td style="text-align: left">&lt;code>/graph/entity/exists&lt;/code>&lt;/td>
-&lt;td style="text-align: left">檢查指定的實體是否存在。&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align: left">&lt;code>POST&lt;/code>&lt;/td>
-&lt;td style="text-align: left">&lt;code>/graph/entity/edit&lt;/code>&lt;/td>
-&lt;td style="text-align: left">更新一個實體的資訊。&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align: left">&lt;code>POST&lt;/code>&lt;/td>
-&lt;td style="text-align: left">&lt;code>/graph/relation/edit&lt;/code>&lt;/td>
-&lt;td style="text-align: left">更新一個關係的資訊。&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;h4 id="324-ollama-相容-api">3.2.4. Ollama 相容 API
-&lt;/h4>&lt;p>LightRAG 也提供與 Ollama 相容的 API 端點，方便與相關工具整合。&lt;/p>
-&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th style="text-align: left">方法&lt;/th>
-&lt;th style="text-align: left">路徑&lt;/th>
-&lt;th style="text-align: left">說明&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td style="text-align: left">&lt;code>GET&lt;/code>&lt;/td>
-&lt;td style="text-align: left">&lt;code>/api/version&lt;/code>&lt;/td>
-&lt;td style="text-align: left">獲取 API 版本。&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align: left">&lt;code>GET&lt;/code>&lt;/td>
-&lt;td style="text-align: left">&lt;code>/api/tags&lt;/code>&lt;/td>
-&lt;td style="text-align: left">獲取可用的模型標籤。&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align: left">&lt;code>GET&lt;/code>&lt;/td>
-&lt;td style="text-align: left">&lt;code>/api/ps&lt;/code>&lt;/td>
-&lt;td style="text-align: left">獲取正在運行的模型。&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align: left">&lt;code>POST&lt;/code>&lt;/td>
-&lt;td style="text-align: left">&lt;code>/api/generate&lt;/code>&lt;/td>
-&lt;td style="text-align: left">根據提示生成文字。&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align: left">&lt;code>POST&lt;/code>&lt;/td>
-&lt;td style="text-align: left">&lt;code>/api/chat&lt;/code>&lt;/td>
-&lt;td style="text-align: left">進行聊天互動。&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;hr>
-&lt;h2 id="4-總結">4. 總結
-&lt;/h2>&lt;p>LightRAG 的 API Server 提供了一個標準化且功能豐富的介面，讓開發者能將複雜的 RAG 流程部署為一個獨立服務。透過遵循 OpenAI 的 API 格式並提供完整的文件管理 API，它極大地降低了整合門檻，無論是進行快速原型設計，還是將其整合到現有的應用程式中，都變得非常方便。希望本篇教學能幫助您順利踏出使用 LightRAG 的第一步。&lt;/p></description></item><item><title>GraphRAG vs LightRAG</title><link>https://Dandelionlibra.github.io/post/note/graphrag-lightrag-compare/</link><pubDate>Thu, 31 Jul 2025 03:24:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/graphrag-lightrag-compare/</guid><description>&lt;h1 id="rag-種類">RAG 種類
-&lt;/h1>&lt;h2 id="native-rag">Native RAG
-&lt;/h2>&lt;p>嘗試解決內部資訊缺失的問題。&lt;br>
-RAG 在回答前會先基於提問與資料庫中內容的語意相似度篩選出最具關連的段落 (chunk) 再將這些資訊傳給 LLM 進行回答，但受限於檢索到的 chunk 內容，因此若是詢問的問題比較全面，例如主題大綱等等，因為需要全面的資料內容，但檢索後卻使會提供給 LLM 部分內容而已，因此可預測回答準確率大概不高，但是若是法規等問題回答結果會更精確。&lt;/p>
-&lt;h2 id="graph-rag">Graph RAG
-&lt;/h2>&lt;p>嘗試解決 Native RAG 回答不精確的問題。&lt;/p>
-&lt;h2 id="light-rag">Light RAG
-&lt;/h2>&lt;hr>
-&lt;h1 id="引言">引言
-&lt;/h1>&lt;h2 id="現有-rag-系統的局限性">現有 RAG 系統的局限性
-&lt;/h2>&lt;ul>
-&lt;li>
-&lt;p>&lt;strong>依賴平面資料表示：&lt;/strong> 許多方法依賴於平面資料表示（flat data representations），限制了它們根據實體之間複雜關係來理解和檢索資訊的能力。&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>缺乏上下文感知：&lt;/strong> 這些系統通常缺乏維持不同實體及其相互關係之間連貫性所需的上下文感知能力，導致回應可能無法完全解決用戶查詢。&lt;/p>
-&lt;blockquote>
-&lt;p>例：考慮用戶提問「電動車的興起如何影響城市空氣品質和大眾運輸基礎設施？」現有 RAG 方法可能檢索到關於電動車、空氣污染和公共交通挑戰的獨立文檔，但難以將這些信息綜合為一個連貫的回應。它們可能無法解釋電動車的普及如何改善空氣品質，進而可能影響公共交通規劃，用戶可能收到一個碎片化的答案，未能充分捕捉這些主題之間複雜的相互依賴關係。&lt;/p>&lt;/blockquote>
-&lt;/li>
-&lt;/ul>
-&lt;h2 id="lightrag-模型概述">LightRAG 模型概述
-&lt;/h2>&lt;p>增強了系統捕捉實體之間複雜相互依賴關係的能力，從而產生更連貫和上下文更豐富的回應。&lt;/p>
-&lt;hr>
-&lt;h1 id="內文">內文
-&lt;/h1>&lt;h2 id="lightrag-框架的整體架構">LightRAG 框架的整體架構
-&lt;/h2>&lt;p>&lt;img src="https://raw.githubusercontent.com/HKUDS/LightRAG/refs/heads/main/README.assets/b2aaf634151b4706892693ffb43d9093.png"
+&lt;/code&gt;&lt;/pre&gt;
+&lt;hr&gt;
+&lt;h3 id="33-documents"&gt;3.3. Documents
+&lt;/h3&gt;&lt;p&gt;LightRAG API Server 提供兩類主要的端點：一類是遵循 OpenAI 標準的核心聊天 API，另一類是 Web UI 用於管理資料的 API。&lt;/p&gt;
+&lt;h3 id="31-openai-標準-api"&gt;3.1. OpenAI 標準 API
+&lt;/h3&gt;&lt;p&gt;這組 API 讓 LightRAG 可以輕易地整合進現有的 OpenAI 生態系。&lt;/p&gt;
+&lt;h4 id="311-get-apiv1models"&gt;3.1.1. &lt;code&gt;GET /api/v1/models&lt;/code&gt;
+&lt;/h4&gt;&lt;p&gt;此端點用於查詢當前伺服器上所有可用的模型。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;功能&lt;/strong&gt;: 列出在設定檔中定義的所有模型名稱。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;範例&lt;/strong&gt;:
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -X GET http://localhost:8008/api/v1/models
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;回應&lt;/strong&gt;:
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;object&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;list&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;data&amp;#34;&lt;/span&gt;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;id&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;LightRAG&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;object&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;model&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;created&amp;#34;&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;1721615822&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;owned_by&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;lightrag&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id="312-post-apiv1chatcompletions"&gt;3.1.2. &lt;code&gt;POST /api/v1/chat/completions&lt;/code&gt;
+&lt;/h4&gt;&lt;p&gt;這是核心的聊天互動端點，功能與 OpenAI 的 Chat Completions API 完全相容。它接收使用者輸入，執行 RAG 流程，並回傳 LLM 生成的答案。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;功能&lt;/strong&gt;: 執行一個完整的 RAG 查詢。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;範例&lt;/strong&gt;:
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -X POST http://localhost:8008/api/v1/chat/completions &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;&lt;/span&gt;-H &lt;span style="color:#e6db74"&gt;&amp;#34;Content-Type: application/json&amp;#34;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;&lt;/span&gt;-d &lt;span style="color:#e6db74"&gt;&amp;#39;{
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; &amp;#34;model&amp;#34;: &amp;#34;LightRAG&amp;#34;,
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; &amp;#34;messages&amp;#34;: [
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; &amp;#34;role&amp;#34;: &amp;#34;user&amp;#34;,
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; &amp;#34;content&amp;#34;: &amp;#34;What is Retrieval-Augmented Generation?&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;}&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="32-web-ui-api-總覽"&gt;3.2. Web UI API 總覽
+&lt;/h3&gt;&lt;p&gt;這組 API 主要由 LightRAG 的 Web UI 使用，提供文件處理、查詢、知識圖譜管理等進階功能。&lt;/p&gt;
+&lt;h4 id="321-文件-documents-api"&gt;3.2.1. 文件 (Documents) API
+&lt;/h4&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style="text-align: left"&gt;方法&lt;/th&gt;
+&lt;th style="text-align: left"&gt;路徑&lt;/th&gt;
+&lt;th style="text-align: left"&gt;說明&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;POST&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;/documents/scan&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;掃描輸入資料夾中的新文件並進行處理。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;POST&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;/documents/upload&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;上傳文件至輸入資料夾。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;POST&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;/documents/text&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;插入單筆文字資料。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;POST&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;/documents/texts&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;插入多筆文字資料。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;DELETE&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;/documents&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;清除所有已處理的文件資料。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;GET&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;/documents&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;獲取已處理的文件列表。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;GET&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;/documents/pipeline_status&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;獲取文件處理管道的狀態。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;DELETE&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;/documents/delete_document&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;根據文件 ID 刪除指定文件及其相關資料。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;POST&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;/documents/clear_cache&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;清除快取。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;DELETE&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;/documents/delete_entity&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;刪除指定的實體。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;DELETE&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;/documents/delete_relation&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;刪除指定的關係。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id="322-查詢-query-api"&gt;3.2.2. 查詢 (Query) API
+&lt;/h4&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style="text-align: left"&gt;方法&lt;/th&gt;
+&lt;th style="text-align: left"&gt;路徑&lt;/th&gt;
+&lt;th style="text-align: left"&gt;說明&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;POST&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;/query&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;提交一個查詢並獲取一次性回覆。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;POST&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;/query/stream&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;提交一個查詢並以串流方式獲取回覆。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id="323-知識圖譜-graph-api"&gt;3.2.3. 知識圖譜 (Graph) API
+&lt;/h4&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style="text-align: left"&gt;方法&lt;/th&gt;
+&lt;th style="text-align: left"&gt;路徑&lt;/th&gt;
+&lt;th style="text-align: left"&gt;說明&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;GET&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;/graph/label/list&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;獲取知識圖譜中所有的標籤 (Labels)。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;GET&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;/graphs&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;獲取完整的知識圖譜資料。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;GET&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;/graph/entity/exists&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;檢查指定的實體是否存在。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;POST&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;/graph/entity/edit&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;更新一個實體的資訊。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;POST&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;/graph/relation/edit&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;更新一個關係的資訊。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id="324-ollama-相容-api"&gt;3.2.4. Ollama 相容 API
+&lt;/h4&gt;&lt;p&gt;LightRAG 也提供與 Ollama 相容的 API 端點，方便與相關工具整合。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style="text-align: left"&gt;方法&lt;/th&gt;
+&lt;th style="text-align: left"&gt;路徑&lt;/th&gt;
+&lt;th style="text-align: left"&gt;說明&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;GET&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;/api/version&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;獲取 API 版本。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;GET&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;/api/tags&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;獲取可用的模型標籤。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;GET&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;/api/ps&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;獲取正在運行的模型。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;POST&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;/api/generate&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;根據提示生成文字。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;POST&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;/api/chat&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;進行聊天互動。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;hr&gt;
+&lt;h2 id="4-總結"&gt;4. 總結
+&lt;/h2&gt;&lt;p&gt;LightRAG 的 API Server 提供了一個標準化且功能豐富的介面，讓開發者能將複雜的 RAG 流程部署為一個獨立服務。透過遵循 OpenAI 的 API 格式並提供完整的文件管理 API，它極大地降低了整合門檻，無論是進行快速原型設計，還是將其整合到現有的應用程式中，都變得非常方便。希望本篇教學能幫助您順利踏出使用 LightRAG 的第一步。&lt;/p&gt;</description></item><item><title>GraphRAG vs LightRAG</title><link>https://Dandelionlibra.github.io/post/note/graphrag-lightrag-compare/</link><pubDate>Thu, 31 Jul 2025 03:24:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/graphrag-lightrag-compare/</guid><description>&lt;h1 id="rag-種類"&gt;RAG 種類
+&lt;/h1&gt;&lt;h2 id="native-rag"&gt;Native RAG
+&lt;/h2&gt;&lt;p&gt;嘗試解決內部資訊缺失的問題。&lt;br&gt;
+RAG 在回答前會先基於提問與資料庫中內容的語意相似度篩選出最具關連的段落 (chunk) 再將這些資訊傳給 LLM 進行回答，但受限於檢索到的 chunk 內容，因此若是詢問的問題比較全面，例如主題大綱等等，因為需要全面的資料內容，但檢索後卻使會提供給 LLM 部分內容而已，因此可預測回答準確率大概不高，但是若是法規等問題回答結果會更精確。&lt;/p&gt;
+&lt;h2 id="graph-rag"&gt;Graph RAG
+&lt;/h2&gt;&lt;p&gt;嘗試解決 Native RAG 回答不精確的問題。&lt;/p&gt;
+&lt;h2 id="light-rag"&gt;Light RAG
+&lt;/h2&gt;&lt;hr&gt;
+&lt;h1 id="引言"&gt;引言
+&lt;/h1&gt;&lt;h2 id="現有-rag-系統的局限性"&gt;現有 RAG 系統的局限性
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;依賴平面資料表示：&lt;/strong&gt; 許多方法依賴於平面資料表示（flat data representations），限制了它們根據實體之間複雜關係來理解和檢索資訊的能力。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;缺乏上下文感知：&lt;/strong&gt; 這些系統通常缺乏維持不同實體及其相互關係之間連貫性所需的上下文感知能力，導致回應可能無法完全解決用戶查詢。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;例：考慮用戶提問「電動車的興起如何影響城市空氣品質和大眾運輸基礎設施？」現有 RAG 方法可能檢索到關於電動車、空氣污染和公共交通挑戰的獨立文檔，但難以將這些信息綜合為一個連貫的回應。它們可能無法解釋電動車的普及如何改善空氣品質，進而可能影響公共交通規劃，用戶可能收到一個碎片化的答案，未能充分捕捉這些主題之間複雜的相互依賴關係。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="lightrag-模型概述"&gt;LightRAG 模型概述
+&lt;/h2&gt;&lt;p&gt;增強了系統捕捉實體之間複雜相互依賴關係的能力，從而產生更連貫和上下文更豐富的回應。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h1 id="內文"&gt;內文
+&lt;/h1&gt;&lt;h2 id="lightrag-框架的整體架構"&gt;LightRAG 框架的整體架構
+&lt;/h2&gt;&lt;p&gt;&lt;img src="https://raw.githubusercontent.com/HKUDS/LightRAG/refs/heads/main/README.assets/b2aaf634151b4706892693ffb43d9093.png"
 loading="lazy"
 alt="LightRAG 框架總覽"
->&lt;br>
-&lt;em>圖 1. LightRAG 框架總覽（取自原論文）&lt;/em>&lt;/p>
-&lt;p>架構如圖 1 所示。&lt;/p>
-&lt;hr>
-&lt;h1 id="實驗">實驗
-&lt;/h1>&lt;hr>
-&lt;hr>
-&lt;h1 id="reference">Reference
-&lt;/h1>&lt;ul>
-&lt;li>&lt;a class="link" href="https://www.youtube.com/watch?v=-O5ATdQcefo" target="_blank" rel="noopener"
->LightRAG与GraphRAG对比评测，从索引构建、本地检索、全局检索、混合检索等维度对请求大模型次数、Token消耗、金额消耗、检索质量等方面进行全面对比&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://github.com/NanGePlus/LightRAGTest" target="_blank" rel="noopener"
->GitHub: [LightRAGTest]&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>GraphRAG 概論</title><link>https://Dandelionlibra.github.io/post/note/graphrag-overview/</link><pubDate>Thu, 31 Jul 2025 03:24:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/graphrag-overview/</guid><description>&lt;h1 id="graph-rag-基本介紹">Graph RAG 基本介紹
-&lt;/h1>&lt;h2 id="graph-rag">Graph RAG
-&lt;/h2>&lt;p>Native RAG 嘗試解決內部資訊缺失的問題，但受限於檢索到的 chunk 內容，因此若是詢問的問題比較全面，例如主題大綱等等，因為需要全面的資料內容，但檢索後卻只會提供給 LLM 部分內容而已。而為了解決全域資訊缺失的問題因而誕生了 Graph RAG。&lt;/p>
-&lt;p>Graph RAG 透過將非結構化文本轉換為知識圖譜來解決 Native RAG 的問題。它不僅僅是檢索文本片段，而是理解實體之間的關係，從而能夠回答更複雜、需要綜合多方面資訊的問題。&lt;/p>
-&lt;p>node 表示每個主體，而 edge 則是表示了每個 entity 間的關係。&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/Dandelionlibra/Dandelionlibra.github.io/refs/heads/main/content/post/note/assert/GraphRag%20relation%20graph.png"
+&gt;&lt;br&gt;
+&lt;em&gt;圖 1. LightRAG 框架總覽（取自原論文）&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;架構如圖 1 所示。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h1 id="實驗"&gt;實驗
+&lt;/h1&gt;&lt;hr&gt;
+&lt;hr&gt;
+&lt;h1 id="reference"&gt;Reference
+&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="https://www.youtube.com/watch?v=-O5ATdQcefo" target="_blank" rel="noopener"
+&gt;LightRAG与GraphRAG对比评测，从索引构建、本地检索、全局检索、混合检索等维度对请求大模型次数、Token消耗、金额消耗、检索质量等方面进行全面对比&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://github.com/NanGePlus/LightRAGTest" target="_blank" rel="noopener"
+&gt;GitHub: [LightRAGTest]&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>GraphRAG 概論</title><link>https://Dandelionlibra.github.io/post/note/graphrag-overview/</link><pubDate>Thu, 31 Jul 2025 03:24:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/graphrag-overview/</guid><description>&lt;h1 id="graph-rag-基本介紹"&gt;Graph RAG 基本介紹
+&lt;/h1&gt;&lt;h2 id="graph-rag"&gt;Graph RAG
+&lt;/h2&gt;&lt;p&gt;Native RAG 嘗試解決內部資訊缺失的問題，但受限於檢索到的 chunk 內容，因此若是詢問的問題比較全面，例如主題大綱等等，因為需要全面的資料內容，但檢索後卻只會提供給 LLM 部分內容而已。而為了解決全域資訊缺失的問題因而誕生了 Graph RAG。&lt;/p&gt;
+&lt;p&gt;Graph RAG 透過將非結構化文本轉換為知識圖譜來解決 Native RAG 的問題。它不僅僅是檢索文本片段，而是理解實體之間的關係，從而能夠回答更複雜、需要綜合多方面資訊的問題。&lt;/p&gt;
+&lt;p&gt;node 表示每個主體，而 edge 則是表示了每個 entity 間的關係。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://raw.githubusercontent.com/Dandelionlibra/Dandelionlibra.github.io/refs/heads/main/content/post/note/assert/GraphRag%20relation%20graph.png"
 loading="lazy"
 alt="Graph RAG 關係圖"
->
-&lt;em>圖：Graph RAG 將文本中的實體和關係抽取出來，構建成知識圖譜。（圖片來源：&lt;a class="link" href="https://www.youtube.com/watch?v=A1XSpKC2GHc&amp;amp;t=360s" target="_blank" rel="noopener"
->Microsoft Graph RAG 介紹&lt;/a>）&lt;/em>&lt;/p>
-&lt;hr>
-&lt;h1 id="graph-rag-pipeline">Graph RAG Pipeline
-&lt;/h1>&lt;p>&lt;img src="https://raw.githubusercontent.com/Dandelionlibra/Dandelionlibra.github.io/refs/heads/main/content/post/note/assert/GraphRag%20pipline.png"
+&gt;
+&lt;em&gt;圖：Graph RAG 將文本中的實體和關係抽取出來，構建成知識圖譜。（圖片來源：&lt;a class="link" href="https://www.youtube.com/watch?v=A1XSpKC2GHc&amp;amp;t=360s" target="_blank" rel="noopener"
+&gt;Microsoft Graph RAG 介紹&lt;/a&gt;）&lt;/em&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h1 id="graph-rag-pipeline"&gt;Graph RAG Pipeline
+&lt;/h1&gt;&lt;p&gt;&lt;img src="https://raw.githubusercontent.com/Dandelionlibra/Dandelionlibra.github.io/refs/heads/main/content/post/note/assert/GraphRag%20pipline.png"
 loading="lazy"
 alt="Graph RAG pipline"
->
-&lt;em>圖：Graph RAG 將文本中的實體和關係抽取出來，構建成知識圖譜。（圖片來源：&lt;a class="link" href="https://arxiv.org/abs/2404.16130" target="_blank" rel="noopener"
->Microsoft Graph RAG 介紹&lt;/a>）&lt;/em>&lt;/p>
-&lt;h2 id="1-source-documents--text-chunks">1. Source Documents → Text Chunks
-&lt;/h2>&lt;p>將長文件轉換成小 chunks，每個 chunks size 越大則產生的 chunk 越少。&lt;/p>
-&lt;h2 id="2-text-chunks--element-instances">2. Text Chunks → Element Instances
-&lt;/h2>&lt;p>使用多輪對 LLM 的問答以完善所有主體與彼此之間的關聯。&lt;br>
-例，讓 LLM 生成資料庫中資訊的關係，接著拿生成的東西去詢問 LLM 生成的結果是否還有缺失?&lt;br>
-若有，則再次讓 LLM 補全，一直重複到 LLM 回答可以為止。&lt;/p>
-&lt;h2 id="3-element-instances--element-summaries">3. Element Instances → Element Summaries
-&lt;/h2>&lt;p>使用一個額外的 LLM 輸入 Entity 與他的 Relationship，輸出針對此 Entity Summary 的描述。&lt;/p>
-&lt;h2 id="4-element-summaries--graph-communities">4. Element Summaries → Graph Communities
-&lt;/h2>&lt;p>將相同主題的內容框成同樣的 Community。&lt;br>
-使用的演算法是 Leiden community detection algorithm，原則上是相同 Community 中的 entity 間的關係越複雜越好，而不同 Community 中的 entity 間關係越簡單越好。&lt;br>
+&gt;
+&lt;em&gt;圖：Graph RAG 將文本中的實體和關係抽取出來，構建成知識圖譜。（圖片來源：&lt;a class="link" href="https://arxiv.org/abs/2404.16130" target="_blank" rel="noopener"
+&gt;Microsoft Graph RAG 介紹&lt;/a&gt;）&lt;/em&gt;&lt;/p&gt;
+&lt;h2 id="1-source-documents--text-chunks"&gt;1. Source Documents → Text Chunks
+&lt;/h2&gt;&lt;p&gt;將長文件轉換成小 chunks，每個 chunks size 越大則產生的 chunk 越少。&lt;/p&gt;
+&lt;h2 id="2-text-chunks--element-instances"&gt;2. Text Chunks → Element Instances
+&lt;/h2&gt;&lt;p&gt;使用多輪對 LLM 的問答以完善所有主體與彼此之間的關聯。&lt;br&gt;
+例，讓 LLM 生成資料庫中資訊的關係，接著拿生成的東西去詢問 LLM 生成的結果是否還有缺失?&lt;br&gt;
+若有，則再次讓 LLM 補全，一直重複到 LLM 回答可以為止。&lt;/p&gt;
+&lt;h2 id="3-element-instances--element-summaries"&gt;3. Element Instances → Element Summaries
+&lt;/h2&gt;&lt;p&gt;使用一個額外的 LLM 輸入 Entity 與他的 Relationship，輸出針對此 Entity Summary 的描述。&lt;/p&gt;
+&lt;h2 id="4-element-summaries--graph-communities"&gt;4. Element Summaries → Graph Communities
+&lt;/h2&gt;&lt;p&gt;將相同主題的內容框成同樣的 Community。&lt;br&gt;
+使用的演算法是 Leiden community detection algorithm，原則上是相同 Community 中的 entity 間的關係越複雜越好，而不同 Community 中的 entity 間關係越簡單越好。&lt;br&gt;
 &lt;img src="https://raw.githubusercontent.com/Dandelionlibra/Dandelionlibra.github.io/refs/heads/main/content/post/note/assert/GraphRag%20relation%20graph-2.png"
 loading="lazy"
 alt="Graph RAG 關係圖"
->
-&lt;em>圖：Graph RAG community detection。（圖片來源：&lt;a class="link" href="https://www.youtube.com/watch?v=A1XSpKC2GHc&amp;amp;t=780s" target="_blank" rel="noopener"
->Microsoft Graph RAG 介紹&lt;/a>）&lt;/em>&lt;/p>
-&lt;h2 id="5-graph-communities--community-summaries">5. Graph Communities → Community Summaries
-&lt;/h2>&lt;p>將同一個 community 中的 entity 都組合起來，詢問 LLM 整個此類別 community 的摘要，以第四點的圖為例，就會產生三個 Community Summaries。&lt;br>
-若知識圖譜非常大，則可能無法將所有 entity 都傳給 LLM 則可以依照 community 中 entity 的重要性決定是否要先放入(重要性依照單一 node 的 relation 數量決定)。&lt;/p>
-&lt;h2 id="6-community-summaries--community-answers--global-answer">6. Community Summaries → Community Answers → Global Answer
-&lt;/h2>&lt;p>依據 Community Summaries 回答問題。&lt;br>
-將問題拿去一一問每個 Community Summaries，得到各自的 Community 回答後，再將這些比較片面的回答整合成 global answer。&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/Dandelionlibra/Dandelionlibra.github.io/refs/heads/main/content/post/note/assert/step6%20GraphRag%20pipline.png"
+&gt;
+&lt;em&gt;圖：Graph RAG community detection。（圖片來源：&lt;a class="link" href="https://www.youtube.com/watch?v=A1XSpKC2GHc&amp;amp;t=780s" target="_blank" rel="noopener"
+&gt;Microsoft Graph RAG 介紹&lt;/a&gt;）&lt;/em&gt;&lt;/p&gt;
+&lt;h2 id="5-graph-communities--community-summaries"&gt;5. Graph Communities → Community Summaries
+&lt;/h2&gt;&lt;p&gt;將同一個 community 中的 entity 都組合起來，詢問 LLM 整個此類別 community 的摘要，以第四點的圖為例，就會產生三個 Community Summaries。&lt;br&gt;
+若知識圖譜非常大，則可能無法將所有 entity 都傳給 LLM 則可以依照 community 中 entity 的重要性決定是否要先放入(重要性依照單一 node 的 relation 數量決定)。&lt;/p&gt;
+&lt;h2 id="6-community-summaries--community-answers--global-answer"&gt;6. Community Summaries → Community Answers → Global Answer
+&lt;/h2&gt;&lt;p&gt;依據 Community Summaries 回答問題。&lt;br&gt;
+將問題拿去一一問每個 Community Summaries，得到各自的 Community 回答後，再將這些比較片面的回答整合成 global answer。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://raw.githubusercontent.com/Dandelionlibra/Dandelionlibra.github.io/refs/heads/main/content/post/note/assert/step6%20GraphRag%20pipline.png"
 loading="lazy"
 alt="Graph RAG 關係圖"
->
-&lt;em>圖：Community Summaries → Community Answers → Global Answer。（圖片來源：&lt;a class="link" href="https://www.youtube.com/watch?v=A1XSpKC2GHc&amp;amp;t=1040s" target="_blank" rel="noopener"
->Microsoft Graph RAG 介紹&lt;/a>）&lt;/em>&lt;/p>
-&lt;p>如此就可以解決 Native RAG 只看部分資訊，而使的回答缺少其餘資訊的可能。&lt;/p>
-&lt;hr>
-&lt;h1 id="結論">結論
-&lt;/h1>&lt;ul>
-&lt;li>GraphRAG 展現了更好的全域檢索能力。&lt;/li>
-&lt;li>建造知識圖譜花費的成本遠高於 Native RAG。&lt;/li>
-&lt;/ul>
-&lt;hr>
-&lt;h1 id="reference">Reference
-&lt;/h1>&lt;ul>
-&lt;li>&lt;a class="link" href="https://www.youtube.com/watch?v=A1XSpKC2GHc&amp;amp;t=240s" target="_blank" rel="noopener"
->Microsoft Graph RAG 介紹：用 Knowledge Graph 來做 RAG＋Colab 實作&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://www.youtube.com/watch?v=7WFMd8U8C7E" target="_blank" rel="noopener"
->GraphRAG发布重大更新！增量更新索引终于来并新增DRIFT图推理搜索查询，带你手把手全流程实操新功能，源码分析，同时支持GPT、国产大模型、本地大模型等&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://github.com/NanGePlus/GraphRAGTestV040" target="_blank" rel="noopener"
->GitHub: [GraphRAGTestV040]&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>LightRAG 論文導讀 — Simple and Fast Retrieval-Augmented Generation 筆記</title><link>https://Dandelionlibra.github.io/post/paper/lightrag-paper-review/</link><pubDate>Tue, 22 Jul 2025 05:27:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/paper/lightrag-paper-review/</guid><description>&lt;blockquote>
-&lt;p>本文整理自：&lt;a class="link" href="https://arxiv.org/abs/2410.05779" target="_blank" rel="noopener"
->LightRAG: Simple and Fast Retrieval-Augmented Generation&lt;/a>&lt;br>
-作者：Zirui Guo, Lianghao Xia, Yanhua Yu, Tu Ao, Chao Huang&lt;br>
-發佈於 arXiv，2024年10月&lt;/p>&lt;/blockquote>
-&lt;h1 id="摘要">摘要
-&lt;/h1>&lt;p>RAG 透過整合外部知識來源，提升 LLMs 回應的準確性與上下文相關性，但面臨&lt;strong>過度依賴平面資料表示&lt;/strong> (flat data representations)、&lt;strong>上下文感知能力不足&lt;/strong> (inadequate contextual awareness)、&lt;strong>導致生成碎片化答案&lt;/strong> (fragmented answers)，無法捕捉複雜的相互依賴關係 (inter-dependencies)。&lt;br>
-LightRAG，提出透過將圖結構 (graph structures) 引入文本的索引 (text indexing) 和檢索 (retrieval) 過程來解決上述問題。&lt;/p>
-&lt;hr>
-&lt;h1 id="引言">引言
-&lt;/h1>&lt;h2 id="現有-rag-系統的局限性">現有 RAG 系統的局限性
-&lt;/h2>&lt;ul>
-&lt;li>
-&lt;p>&lt;strong>依賴平面資料表示：&lt;/strong> 許多方法依賴於平面資料表示（flat data representations），限制了它們根據實體之間複雜關係來理解和檢索資訊的能力。&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>缺乏上下文感知：&lt;/strong> 這些系統通常缺乏維持不同實體及其相互關係之間連貫性所需的上下文感知能力，導致回應可能無法完全解決用戶查詢。&lt;/p>
-&lt;blockquote>
-&lt;p>例：考慮用戶提問「電動車的興起如何影響城市空氣品質和大眾運輸基礎設施？」現有 RAG 方法可能檢索到關於電動車、空氣污染和公共交通挑戰的獨立文檔，但難以將這些信息綜合為一個連貫的回應。它們可能無法解釋電動車的普及如何改善空氣品質，進而可能影響公共交通規劃，用戶可能收到一個碎片化的答案，未能充分捕捉這些主題之間複雜的相互依賴關係。&lt;/p>&lt;/blockquote>
-&lt;/li>
-&lt;/ul>
-&lt;h2 id="lightrag-模型概述">LightRAG 模型概述
-&lt;/h2>&lt;p>增強了系統捕捉實體之間複雜相互依賴關係的能力，從而產生更連貫和上下文更豐富的回應。&lt;/p>
-&lt;ul>
-&lt;li>
-&lt;p>&lt;strong>高效雙層檢索策略：&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>低層次檢索（low-level retrieval）： 側重於關於特定實體及其關係的精確資訊。&lt;/li>
-&lt;li>高層次檢索（high-level retrieval）： 涵蓋更廣泛的主題和概念。&lt;/li>
-&lt;li>優勢： 透過結合詳細和概念性檢索，LightRAG 有效適應多樣化的查詢範圍，確保用戶收到符合其特定需求的相關且全面的回應。&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>圖結構與向量表示的整合：&lt;/strong> 透過將圖結構與向量表示整合在一起，本 LightRAG 促進了相關實體和關係的高效檢索，同時透過從所構建的知識圖中獲取相關結構信息，增強了結果的全面性。&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;h2 id="本研究在-rag-系統中的關注點">本研究在 RAG 系統中的關注點
-&lt;/h2>&lt;!-- raw HTML omitted -->
-&lt;ul>
-&lt;li>
-&lt;p>&lt;strong>全面信息檢索&lt;/strong> (Comprehensive Information Retrieval)： 索引功能 ϕ(⋅) 必須善於提取全局信息，這對於增強模型有效回答查詢的能力至關重要。&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>高效且低成本檢索&lt;/strong> (Efficient and Low-Cost Retrieval)： 索引化的資料結構 𝒟^ 必須能夠實現快速且具成本效益的檢索，以有效處理高容量的查詢。&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>快速適應數據變化&lt;/strong> (Fast Adaptation to Data Changes)： 能夠迅速有效地調整數據結構以整合來自外部知識庫的新信息，這對於確保系統在不斷變化的信息環境中保持更新和相關性至關重要。&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;hr>
-&lt;h1 id="內文">內文
-&lt;/h1>&lt;h2 id="lightrag-框架的整體架構">LightRAG 框架的整體架構
-&lt;/h2>&lt;p>&lt;img src="https://raw.githubusercontent.com/HKUDS/LightRAG/refs/heads/main/README.assets/b2aaf634151b4706892693ffb43d9093.png"
+&gt;
+&lt;em&gt;圖：Community Summaries → Community Answers → Global Answer。（圖片來源：&lt;a class="link" href="https://www.youtube.com/watch?v=A1XSpKC2GHc&amp;amp;t=1040s" target="_blank" rel="noopener"
+&gt;Microsoft Graph RAG 介紹&lt;/a&gt;）&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;如此就可以解決 Native RAG 只看部分資訊，而使的回答缺少其餘資訊的可能。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h1 id="結論"&gt;結論
+&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;GraphRAG 展現了更好的全域檢索能力。&lt;/li&gt;
+&lt;li&gt;建造知識圖譜花費的成本遠高於 Native RAG。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h1 id="reference"&gt;Reference
+&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="https://www.youtube.com/watch?v=A1XSpKC2GHc&amp;amp;t=240s" target="_blank" rel="noopener"
+&gt;Microsoft Graph RAG 介紹：用 Knowledge Graph 來做 RAG＋Colab 實作&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://www.youtube.com/watch?v=7WFMd8U8C7E" target="_blank" rel="noopener"
+&gt;GraphRAG发布重大更新！增量更新索引终于来并新增DRIFT图推理搜索查询，带你手把手全流程实操新功能，源码分析，同时支持GPT、国产大模型、本地大模型等&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://github.com/NanGePlus/GraphRAGTestV040" target="_blank" rel="noopener"
+&gt;GitHub: [GraphRAGTestV040]&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>LightRAG 論文導讀 — Simple and Fast Retrieval-Augmented Generation 筆記</title><link>https://Dandelionlibra.github.io/post/paper/lightrag-paper-review/</link><pubDate>Tue, 22 Jul 2025 05:27:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/paper/lightrag-paper-review/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;本文整理自：&lt;a class="link" href="https://arxiv.org/abs/2410.05779" target="_blank" rel="noopener"
+&gt;LightRAG: Simple and Fast Retrieval-Augmented Generation&lt;/a&gt;&lt;br&gt;
+作者：Zirui Guo, Lianghao Xia, Yanhua Yu, Tu Ao, Chao Huang&lt;br&gt;
+發佈於 arXiv，2024年10月&lt;/p&gt;&lt;/blockquote&gt;
+&lt;h1 id="摘要"&gt;摘要
+&lt;/h1&gt;&lt;p&gt;RAG 透過整合外部知識來源，提升 LLMs 回應的準確性與上下文相關性，但面臨&lt;strong&gt;過度依賴平面資料表示&lt;/strong&gt; (flat data representations)、&lt;strong&gt;上下文感知能力不足&lt;/strong&gt; (inadequate contextual awareness)、&lt;strong&gt;導致生成碎片化答案&lt;/strong&gt; (fragmented answers)，無法捕捉複雜的相互依賴關係 (inter-dependencies)。&lt;br&gt;
+LightRAG，提出透過將圖結構 (graph structures) 引入文本的索引 (text indexing) 和檢索 (retrieval) 過程來解決上述問題。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h1 id="引言"&gt;引言
+&lt;/h1&gt;&lt;h2 id="現有-rag-系統的局限性"&gt;現有 RAG 系統的局限性
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;依賴平面資料表示：&lt;/strong&gt; 許多方法依賴於平面資料表示（flat data representations），限制了它們根據實體之間複雜關係來理解和檢索資訊的能力。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;缺乏上下文感知：&lt;/strong&gt; 這些系統通常缺乏維持不同實體及其相互關係之間連貫性所需的上下文感知能力，導致回應可能無法完全解決用戶查詢。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;例：考慮用戶提問「電動車的興起如何影響城市空氣品質和大眾運輸基礎設施？」現有 RAG 方法可能檢索到關於電動車、空氣污染和公共交通挑戰的獨立文檔，但難以將這些信息綜合為一個連貫的回應。它們可能無法解釋電動車的普及如何改善空氣品質，進而可能影響公共交通規劃，用戶可能收到一個碎片化的答案，未能充分捕捉這些主題之間複雜的相互依賴關係。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="lightrag-模型概述"&gt;LightRAG 模型概述
+&lt;/h2&gt;&lt;p&gt;增強了系統捕捉實體之間複雜相互依賴關係的能力，從而產生更連貫和上下文更豐富的回應。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;高效雙層檢索策略：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;低層次檢索（low-level retrieval）： 側重於關於特定實體及其關係的精確資訊。&lt;/li&gt;
+&lt;li&gt;高層次檢索（high-level retrieval）： 涵蓋更廣泛的主題和概念。&lt;/li&gt;
+&lt;li&gt;優勢： 透過結合詳細和概念性檢索，LightRAG 有效適應多樣化的查詢範圍，確保用戶收到符合其特定需求的相關且全面的回應。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;圖結構與向量表示的整合：&lt;/strong&gt; 透過將圖結構與向量表示整合在一起，本 LightRAG 促進了相關實體和關係的高效檢索，同時透過從所構建的知識圖中獲取相關結構信息，增強了結果的全面性。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="本研究在-rag-系統中的關注點"&gt;本研究在 RAG 系統中的關注點
+&lt;/h2&gt;&lt;!-- raw HTML omitted --&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;全面信息檢索&lt;/strong&gt; (Comprehensive Information Retrieval)： 索引功能 ϕ(⋅) 必須善於提取全局信息，這對於增強模型有效回答查詢的能力至關重要。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;高效且低成本檢索&lt;/strong&gt; (Efficient and Low-Cost Retrieval)： 索引化的資料結構 𝒟^ 必須能夠實現快速且具成本效益的檢索，以有效處理高容量的查詢。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;快速適應數據變化&lt;/strong&gt; (Fast Adaptation to Data Changes)： 能夠迅速有效地調整數據結構以整合來自外部知識庫的新信息，這對於確保系統在不斷變化的信息環境中保持更新和相關性至關重要。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h1 id="內文"&gt;內文
+&lt;/h1&gt;&lt;h2 id="lightrag-框架的整體架構"&gt;LightRAG 框架的整體架構
+&lt;/h2&gt;&lt;p&gt;&lt;img src="https://raw.githubusercontent.com/HKUDS/LightRAG/refs/heads/main/README.assets/b2aaf634151b4706892693ffb43d9093.png"
 loading="lazy"
 alt="LightRAG 框架總覽"
->&lt;br>
-&lt;em>圖 1. LightRAG 框架總覽（取自原論文）&lt;/em>&lt;/p>
-&lt;p>架構如圖 1 所示。&lt;/p>
-&lt;p>流程從&lt;strong>原始文本塊&lt;/strong>開始，這些文本塊首先透過&lt;strong>基於圖形的文本索引&lt;/strong>（Graph-based Text Indexing）階段進行處理，過程包含幾個關鍵子組件：&lt;strong>實體與關係提取&lt;/strong>（Entity &amp;amp; Rel Extraction）、&lt;strong>LLM 剖析&lt;/strong>（LLM Profiling）和&lt;strong>去重&lt;/strong>（Deduplication），最後的輸出是一個用於檢索的&lt;strong>索引圖&lt;/strong>（Index Graph）。&lt;br>
-接著，Query LLM 接收輸入查詢，並從中生成&lt;strong>低層級關鍵字&lt;/strong>（Low-level Keys，包括實體和關係）和&lt;strong>高層級關鍵字&lt;/strong>（High-level Keys，包括語境和原始文本塊）。這些關鍵字隨後被送入&lt;strong>雙層級檢索範式&lt;/strong>（Dual-level Retrieval Paradigm），此範式與「索引圖」和「原始文本塊」互動，以檢索相關資訊。最終，檢索到的資訊被傳回 Query LLM 進行檢索增強的答案生成（Retrieval-Augmented Answer Generation）。  
-圖中展示了以「索引圖」作為核心儲存庫，這張圖不僅用來整理新資訊（索引），也用來尋找資訊（檢索），這代表系統不再只是儲存一堆零散的文字片段，而是將知識組織成一個有結構的網路，能更智慧地找出事物之間的關聯。&lt;br>
-此外，處理查詢的 LLM 在 LightRAG 多次出現，它不只負責生成最終答案，還會參與理解問題、引導系統去尋找相關資訊，並將找到的資料整合起來。&lt;/p>
-&lt;hr>
-&lt;h2 id="基於圖形的文本索引">基於圖形的文本索引
-&lt;/h2>&lt;p>LightRAG 透過將文件分割成更小、更易於管理的片段來增強檢索系統。這種策略允許快速識別和存取相關資訊，而無需分析整個文件 。隨後，系統利用大型語言模型（LLMs）來識別和提取各種實體（例如，名稱、日期、位置和事件）以及它們之間的關係 。透過這個過程收集到的資訊將用於創建一個全面的知識圖譜，突顯整個文件集合中的連結和見解。&lt;/p>
-&lt;p>圖形生成模組正式表示為：&lt;/p>
-&lt;!-- raw HTML omitted -->
-&lt;ul>
-&lt;li>&lt;strong>實體與關係提取 (R(⋅))&lt;/strong>：
-&lt;ul>
-&lt;li>將文檔切分為更小的片段，方便快速檢索與處理。&lt;/li>
-&lt;li>使用大型語言模型抽取實體（如人名、地點、事件）以及它們之間的關係，構建知識圖譜。&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;ul>
-&lt;li>&lt;strong>LLM 剖析以生成鍵值對 (P(⋅))&lt;/strong>：為每個實體與關係生成索引鍵（key）與對應摘要文本（value），形成文本鍵值對（K, V）。實體通常採用名稱作為鍵；關係也由關聯實體摘要或主題語形成鍵。&lt;/li>
-&lt;/ul>
-&lt;ul>
-&lt;li>&lt;strong>去重以優化圖操作 (D(⋅))&lt;/strong>：合併相同的實體與關係，以減少圖的複雜度，優化後續運算效率。&lt;/li>
-&lt;/ul>
-&lt;ul>
-&lt;li>
-&lt;p>&lt;strong>優勢&lt;/strong>：&lt;/p>
-&lt;ul>
-&lt;li>全面性理解：透過多跳子圖 (multi-hop subgraphs) 強化對文本中跨關係依賴的理解。&lt;/li>
-&lt;li>檢索效率提升：採用鍵值對結構提升查詢精準度與速度，相較於傳統依賴 chunk traversal 方法更具效率。&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>增量更新 (Incremental Knowledge Base Update)&lt;/strong>：新文檔插入時，只對該文檔進行索引解析，並與原有圖進行合併，無需重建整個索引，極大降低計算成本並提升更新速度。&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;hr>
-&lt;h2 id="雙層次檢索機制-dual-level-retrieval-paradigm">雙層次檢索機制 (Dual-level Retrieval Paradigm)
-&lt;/h2>&lt;ol>
-&lt;li>&lt;strong>分類查詢類型&lt;/strong>&lt;/li>
-&lt;/ol>
-&lt;ul>
-&lt;li>Specific Queries：查找特定實體的資訊。&lt;br>
-ex. 誰寫了《Pride and Prejudice》？&lt;/li>
-&lt;li>Abstract Queries：探索概念性主題。&lt;br>
-ex. 人工智慧如何影響現代教育？&lt;/li>
-&lt;/ul>
-&lt;ol start="2">
-&lt;li>&lt;strong>查詢關鍵詞抽取 (Keyword Extraction)&lt;/strong>&lt;/li>
-&lt;/ol>
-&lt;ul>
-&lt;li>將查詢分為：
-&lt;ul>
-&lt;li>低階關鍵詞（Low‑level）——聚焦具體實體或關係（例：人名、事件）。&lt;/li>
-&lt;li>高階關鍵詞（High‑level）——概括性主題或概念（例：制度變革趨勢）。&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>低階檢索 (Low‑Level Retrieval)：透過低階鍵精確定位實體與其屬性或鄰近關係。&lt;/li>
-&lt;li>高階檢索 (High‑Level Retrieval)：透過高階鍵尋找涵蓋廣泛主題或總覽資訊。&lt;/li>
-&lt;/ul>
-&lt;ol start="3">
-&lt;li>&lt;strong>圖結構與向量結合檢索&lt;/strong>&lt;/li>
-&lt;/ol>
-&lt;ul>
-&lt;li>結合知識圖結構與向量表示（vector embeddings），在進行查詢時同時考量局部（local）與全局（global）語義。&lt;/li>
-&lt;li>並引入高階相關結構資訊（如一跳鄰居）加強檢索結果的完整性與關聯度。&lt;/li>
-&lt;/ul>
-&lt;hr>
-&lt;h2 id="檢索增強答案生成">檢索增強答案生成
-&lt;/h2>&lt;ol>
-&lt;li>
-&lt;p>使用檢索回來的資料，將所有相關的實體與關係摘要（由 profiling function 生成；P(⋅)）作為 LLM 的上下文輸入。&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>結合查詢與上下文生成回答，將查詢緊接相關資料餵給 LLM，生成上下文合宜、符合需求的回答。&lt;/p>
-&lt;/li>
-&lt;/ol>
-&lt;hr>
-&lt;h2 id="複雜度分析">複雜度分析
-&lt;/h2>&lt;ol>
-&lt;li>
-&lt;p>索引階段：對文本進行實體與關係抽取時，需對每個文本片段呼叫一次 LLM，不增加額外系統負擔。&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>檢索階段：相較於傳統高成本的 GraphRAG 社群遍歷，LightRAG 採用向量搜索與圖結構結合方式──只需一次 API 呼叫與少量 token，即完成檢索。&lt;/p>
-&lt;/li>
-&lt;/ol>
-&lt;hr>
-&lt;h1 id="結論重點整理">結論重點整理
-&lt;/h1>&lt;ol>
-&lt;li>圖結構索引（Graph-based Indexing）&lt;/li>
-&lt;/ol>
-&lt;ul>
-&lt;li>以實體與關係為核心建構知識圖，支援去重與增量更新，不必重建全索引。&lt;/li>
-&lt;/ul>
-&lt;ol start="2">
-&lt;li>雙層檢索（Dual-level Retrieval）&lt;/li>
-&lt;/ol>
-&lt;ul>
-&lt;li>低階檢索：精確定位實體與細節資訊。&lt;/li>
-&lt;li>高階檢索：捕捉抽象主題與全局脈絡。&lt;/li>
-&lt;li>兩者結合確保 全面性 + 精準性。&lt;/li>
-&lt;/ul>
-&lt;ol start="3">
-&lt;li>向量與圖結合（Hybrid Retrieval）&lt;/li>
-&lt;/ol>
-&lt;ul>
-&lt;li>結合向量相似度與多跳圖結構檢索，兼顧語義相關與結構關聯。&lt;/li>
-&lt;/ul>
-&lt;ol start="4">
-&lt;li>低成本高效率&lt;/li>
-&lt;/ol>
-&lt;ul>
-&lt;li>檢索階段僅需一次 API 呼叫、百級 token，較 GraphRAG 大幅節省計算與金錢成本。&lt;/li>
-&lt;/ul>
-&lt;ol start="5">
-&lt;li>動態適應性&lt;/li>
-&lt;/ol>
-&lt;ul>
-&lt;li>能即時合併新知識圖節點，適合動態更新的大型知識庫（如法律、醫療、科研）。&lt;/li>
-&lt;/ul>
-&lt;p>&lt;strong>LightRAG vs GraphRAG&lt;/strong>&lt;/p>
-&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th>面向&lt;/th>
-&lt;th>LightRAG&lt;/th>
-&lt;th>GraphRAG&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td>&lt;strong>索引結構&lt;/strong>&lt;/td>
-&lt;td>基於 &lt;strong>圖結構（Knowledge Graph）+ 向量索引&lt;/strong>，以實體與關係為鍵值對（Key-Value）存儲，支援去重與增量更新&lt;/td>
-&lt;td>基於 &lt;strong>圖結構社群（Graph Community）&lt;/strong>，以社群摘要為檢索單位&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>&lt;strong>檢索策略&lt;/strong>&lt;/td>
-&lt;td>&lt;strong>雙層檢索&lt;/strong>：低階（細節）+ 高階（主題）並結合多跳圖檢索與向量相似度&lt;/td>
-&lt;td>單層檢索：依社群摘要進行檢索，缺乏細粒度與多層結合&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>&lt;strong>生成過程&lt;/strong>&lt;/td>
-&lt;td>檢索到的實體與關係摘要直接送入 LLM，結構化輸入更精準&lt;/td>
-&lt;td>將社群摘要送入 LLM，依社群內容生成答案&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>&lt;strong>檢索成本&lt;/strong>&lt;/td>
-&lt;td>一次 API 呼叫&lt;/td>
-&lt;td>多次 API 呼叫&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>&lt;strong>增量更新&lt;/strong>&lt;/td>
-&lt;td>支援 &lt;strong>快速合併更新&lt;/strong>，僅更新新文檔的圖索引&lt;/td>
-&lt;td>需重建整個社群報告，成本高&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>&lt;strong>資訊完整性&lt;/strong>&lt;/td>
-&lt;td>低階檢索補足細節，高階檢索抓全局，全面性佳&lt;/td>
-&lt;td>依賴社群摘要，可能遺漏細節&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>&lt;strong>適用場景&lt;/strong>&lt;/td>
-&lt;td>資料頻繁更新、大型知識庫、多層次查詢需求&lt;/td>
-&lt;td>資料相對靜態、偏向高層總覽查詢&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;hr>
-&lt;hr>
-&lt;h1 id="reference">Reference
-&lt;/h1>&lt;ul>
-&lt;li>&lt;a class="link" href="https://ar5iv.labs.arxiv.org/html/2410.05779" target="_blank" rel="noopener"
->LightRAG: Simple and Fast Retrieval-Augmented Generation-ar5iv 可視化版本&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>Re2G 論文導讀 — Retrieve, Rerank, Generate 框架解析與應用</title><link>https://Dandelionlibra.github.io/post/paper/re2g-paper-review/</link><pubDate>Tue, 22 Jul 2025 01:31:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/paper/re2g-paper-review/</guid><description>&lt;blockquote>
-&lt;p>本文整理自：&lt;a class="link" href="https://arxiv.org/abs/2207.06300" target="_blank" rel="noopener"
->Re2G: Retrieve, Rerank, Generate&lt;/a>&lt;br>
-作者：Michael Glass, Gaetano Rossiello, Md Faisal Mahbub Chowdhury, Ankita Rajaram Naik, Pengshan Cai, Alfio Gliozzo&lt;br>
-發佈於 arXiv，2022年7月&lt;/p>&lt;/blockquote>
-&lt;h1 id="摘要">摘要
-&lt;/h1>&lt;p>大型 Transformer 模型在處理複雜任務時雖然表現強大，但在應對知識密集型任務時，仍會面臨顯著的計算成本與記憶體限制。此研究指出，非參數記憶和檢索技術能有效解決這些挑戰。&lt;br>
-基於此，Re&lt;!-- raw HTML omitted -->2&lt;!-- raw HTML omitted -->G 模型應運而生，它創新地整合了神經初始檢索與重新排序機制，並以 BART 框架為基礎進行序列到序列的生成。Re&lt;!-- raw HTML omitted -->2&lt;!-- raw HTML omitted -->G 的核心創新之處在於其獨特的重新排序功能。這使得模型能夠智慧地整合來自不同檢索源的結果，即使這些源的分數不可比較，例如同時融合傳統的 BM25 算法與神經檢索（如密集段落檢索，DPR）。透過引入重排序 (Reranker) 組件，模型得以統一處理並最大化初始候選池的質量。此外，Re&lt;!-- raw HTML omitted -->2&lt;!-- raw HTML omitted -->G 還引入了&lt;strong>線上知識蒸餾方法&lt;/strong>，實現了整個檢索與生成管道的端到端訓練。這種訓練方式將系統的所有組件串接成一個整體模型，直接以最終目標作為損失函數進行優化，從而無需分階段訓練，有效提升了系統的整體性能。&lt;/p>
-&lt;p>※ 在機器學習領域，「端到端訓練」（End-to-End Training）指的是將整個系統的所有組件（如檢索、重排序、生成）串接為一個整體模型，直接以最終目標（如生成正確答案）作為損失函數，反向傳播優化所有參數。這種方式不需分階段分別訓練各模組，而是讓模型自動協調各部分，最大化整體性能。&lt;/p>
-&lt;hr>
-&lt;h1 id="基本架構介紹">基本架構介紹
-&lt;/h1>&lt;p>RAG（Retrieval-Augmented Generation）與 Re&lt;!-- raw HTML omitted -->2&lt;!-- raw HTML omitted -->G（Retrieve, Rerank, Generate）架構模組如下圖所示：&lt;br>
+&gt;&lt;br&gt;
+&lt;em&gt;圖 1. LightRAG 框架總覽（取自原論文）&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;架構如圖 1 所示。&lt;/p&gt;
+&lt;p&gt;流程從&lt;strong&gt;原始文本塊&lt;/strong&gt;開始，這些文本塊首先透過&lt;strong&gt;基於圖形的文本索引&lt;/strong&gt;（Graph-based Text Indexing）階段進行處理，過程包含幾個關鍵子組件：&lt;strong&gt;實體與關係提取&lt;/strong&gt;（Entity &amp;amp; Rel Extraction）、&lt;strong&gt;LLM 剖析&lt;/strong&gt;（LLM Profiling）和&lt;strong&gt;去重&lt;/strong&gt;（Deduplication），最後的輸出是一個用於檢索的&lt;strong&gt;索引圖&lt;/strong&gt;（Index Graph）。&lt;br&gt;
+接著，Query LLM 接收輸入查詢，並從中生成&lt;strong&gt;低層級關鍵字&lt;/strong&gt;（Low-level Keys，包括實體和關係）和&lt;strong&gt;高層級關鍵字&lt;/strong&gt;（High-level Keys，包括語境和原始文本塊）。這些關鍵字隨後被送入&lt;strong&gt;雙層級檢索範式&lt;/strong&gt;（Dual-level Retrieval Paradigm），此範式與「索引圖」和「原始文本塊」互動，以檢索相關資訊。最終，檢索到的資訊被傳回 Query LLM 進行檢索增強的答案生成（Retrieval-Augmented Answer Generation）。  
+圖中展示了以「索引圖」作為核心儲存庫，這張圖不僅用來整理新資訊（索引），也用來尋找資訊（檢索），這代表系統不再只是儲存一堆零散的文字片段，而是將知識組織成一個有結構的網路，能更智慧地找出事物之間的關聯。&lt;br&gt;
+此外，處理查詢的 LLM 在 LightRAG 多次出現，它不只負責生成最終答案，還會參與理解問題、引導系統去尋找相關資訊，並將找到的資料整合起來。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="基於圖形的文本索引"&gt;基於圖形的文本索引
+&lt;/h2&gt;&lt;p&gt;LightRAG 透過將文件分割成更小、更易於管理的片段來增強檢索系統。這種策略允許快速識別和存取相關資訊，而無需分析整個文件 。隨後，系統利用大型語言模型（LLMs）來識別和提取各種實體（例如，名稱、日期、位置和事件）以及它們之間的關係 。透過這個過程收集到的資訊將用於創建一個全面的知識圖譜，突顯整個文件集合中的連結和見解。&lt;/p&gt;
+&lt;p&gt;圖形生成模組正式表示為：&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;實體與關係提取 (R(⋅))&lt;/strong&gt;：
+&lt;ul&gt;
+&lt;li&gt;將文檔切分為更小的片段，方便快速檢索與處理。&lt;/li&gt;
+&lt;li&gt;使用大型語言模型抽取實體（如人名、地點、事件）以及它們之間的關係，構建知識圖譜。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;LLM 剖析以生成鍵值對 (P(⋅))&lt;/strong&gt;：為每個實體與關係生成索引鍵（key）與對應摘要文本（value），形成文本鍵值對（K, V）。實體通常採用名稱作為鍵；關係也由關聯實體摘要或主題語形成鍵。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;去重以優化圖操作 (D(⋅))&lt;/strong&gt;：合併相同的實體與關係，以減少圖的複雜度，優化後續運算效率。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;優勢&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;全面性理解：透過多跳子圖 (multi-hop subgraphs) 強化對文本中跨關係依賴的理解。&lt;/li&gt;
+&lt;li&gt;檢索效率提升：採用鍵值對結構提升查詢精準度與速度，相較於傳統依賴 chunk traversal 方法更具效率。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;增量更新 (Incremental Knowledge Base Update)&lt;/strong&gt;：新文檔插入時，只對該文檔進行索引解析，並與原有圖進行合併，無需重建整個索引，極大降低計算成本並提升更新速度。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="雙層次檢索機制-dual-level-retrieval-paradigm"&gt;雙層次檢索機制 (Dual-level Retrieval Paradigm)
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;分類查詢類型&lt;/strong&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;Specific Queries：查找特定實體的資訊。&lt;br&gt;
+ex. 誰寫了《Pride and Prejudice》？&lt;/li&gt;
+&lt;li&gt;Abstract Queries：探索概念性主題。&lt;br&gt;
+ex. 人工智慧如何影響現代教育？&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start="2"&gt;
+&lt;li&gt;&lt;strong&gt;查詢關鍵詞抽取 (Keyword Extraction)&lt;/strong&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;將查詢分為：
+&lt;ul&gt;
+&lt;li&gt;低階關鍵詞（Low‑level）——聚焦具體實體或關係（例：人名、事件）。&lt;/li&gt;
+&lt;li&gt;高階關鍵詞（High‑level）——概括性主題或概念（例：制度變革趨勢）。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;低階檢索 (Low‑Level Retrieval)：透過低階鍵精確定位實體與其屬性或鄰近關係。&lt;/li&gt;
+&lt;li&gt;高階檢索 (High‑Level Retrieval)：透過高階鍵尋找涵蓋廣泛主題或總覽資訊。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start="3"&gt;
+&lt;li&gt;&lt;strong&gt;圖結構與向量結合檢索&lt;/strong&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;結合知識圖結構與向量表示（vector embeddings），在進行查詢時同時考量局部（local）與全局（global）語義。&lt;/li&gt;
+&lt;li&gt;並引入高階相關結構資訊（如一跳鄰居）加強檢索結果的完整性與關聯度。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="檢索增強答案生成"&gt;檢索增強答案生成
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;使用檢索回來的資料，將所有相關的實體與關係摘要（由 profiling function 生成；P(⋅)）作為 LLM 的上下文輸入。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;結合查詢與上下文生成回答，將查詢緊接相關資料餵給 LLM，生成上下文合宜、符合需求的回答。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h2 id="複雜度分析"&gt;複雜度分析
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;索引階段：對文本進行實體與關係抽取時，需對每個文本片段呼叫一次 LLM，不增加額外系統負擔。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;檢索階段：相較於傳統高成本的 GraphRAG 社群遍歷，LightRAG 採用向量搜索與圖結構結合方式──只需一次 API 呼叫與少量 token，即完成檢索。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h1 id="結論重點整理"&gt;結論重點整理
+&lt;/h1&gt;&lt;ol&gt;
+&lt;li&gt;圖結構索引（Graph-based Indexing）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;以實體與關係為核心建構知識圖，支援去重與增量更新，不必重建全索引。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start="2"&gt;
+&lt;li&gt;雙層檢索（Dual-level Retrieval）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;低階檢索：精確定位實體與細節資訊。&lt;/li&gt;
+&lt;li&gt;高階檢索：捕捉抽象主題與全局脈絡。&lt;/li&gt;
+&lt;li&gt;兩者結合確保 全面性 + 精準性。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start="3"&gt;
+&lt;li&gt;向量與圖結合（Hybrid Retrieval）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;結合向量相似度與多跳圖結構檢索，兼顧語義相關與結構關聯。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start="4"&gt;
+&lt;li&gt;低成本高效率&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;檢索階段僅需一次 API 呼叫、百級 token，較 GraphRAG 大幅節省計算與金錢成本。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start="5"&gt;
+&lt;li&gt;動態適應性&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;能即時合併新知識圖節點，適合動態更新的大型知識庫（如法律、醫療、科研）。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;LightRAG vs GraphRAG&lt;/strong&gt;&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;面向&lt;/th&gt;
+&lt;th&gt;LightRAG&lt;/th&gt;
+&lt;th&gt;GraphRAG&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;索引結構&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;基於 &lt;strong&gt;圖結構（Knowledge Graph）+ 向量索引&lt;/strong&gt;，以實體與關係為鍵值對（Key-Value）存儲，支援去重與增量更新&lt;/td&gt;
+&lt;td&gt;基於 &lt;strong&gt;圖結構社群（Graph Community）&lt;/strong&gt;，以社群摘要為檢索單位&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;檢索策略&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&lt;strong&gt;雙層檢索&lt;/strong&gt;：低階（細節）+ 高階（主題）並結合多跳圖檢索與向量相似度&lt;/td&gt;
+&lt;td&gt;單層檢索：依社群摘要進行檢索，缺乏細粒度與多層結合&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;生成過程&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;檢索到的實體與關係摘要直接送入 LLM，結構化輸入更精準&lt;/td&gt;
+&lt;td&gt;將社群摘要送入 LLM，依社群內容生成答案&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;檢索成本&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;一次 API 呼叫&lt;/td&gt;
+&lt;td&gt;多次 API 呼叫&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;增量更新&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;支援 &lt;strong&gt;快速合併更新&lt;/strong&gt;，僅更新新文檔的圖索引&lt;/td&gt;
+&lt;td&gt;需重建整個社群報告，成本高&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;資訊完整性&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;低階檢索補足細節，高階檢索抓全局，全面性佳&lt;/td&gt;
+&lt;td&gt;依賴社群摘要，可能遺漏細節&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;適用場景&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;資料頻繁更新、大型知識庫、多層次查詢需求&lt;/td&gt;
+&lt;td&gt;資料相對靜態、偏向高層總覽查詢&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;hr&gt;
+&lt;hr&gt;
+&lt;h1 id="reference"&gt;Reference
+&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="https://ar5iv.labs.arxiv.org/html/2410.05779" target="_blank" rel="noopener"
+&gt;LightRAG: Simple and Fast Retrieval-Augmented Generation-ar5iv 可視化版本&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Re2G 論文導讀 — Retrieve, Rerank, Generate 框架解析與應用</title><link>https://Dandelionlibra.github.io/post/paper/re2g-paper-review/</link><pubDate>Tue, 22 Jul 2025 01:31:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/paper/re2g-paper-review/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;本文整理自：&lt;a class="link" href="https://arxiv.org/abs/2207.06300" target="_blank" rel="noopener"
+&gt;Re2G: Retrieve, Rerank, Generate&lt;/a&gt;&lt;br&gt;
+作者：Michael Glass, Gaetano Rossiello, Md Faisal Mahbub Chowdhury, Ankita Rajaram Naik, Pengshan Cai, Alfio Gliozzo&lt;br&gt;
+發佈於 arXiv，2022年7月&lt;/p&gt;&lt;/blockquote&gt;
+&lt;h1 id="摘要"&gt;摘要
+&lt;/h1&gt;&lt;p&gt;大型 Transformer 模型在處理複雜任務時雖然表現強大，但在應對知識密集型任務時，仍會面臨顯著的計算成本與記憶體限制。此研究指出，非參數記憶和檢索技術能有效解決這些挑戰。&lt;br&gt;
+基於此，Re&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt;G 模型應運而生，它創新地整合了神經初始檢索與重新排序機制，並以 BART 框架為基礎進行序列到序列的生成。Re&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt;G 的核心創新之處在於其獨特的重新排序功能。這使得模型能夠智慧地整合來自不同檢索源的結果，即使這些源的分數不可比較，例如同時融合傳統的 BM25 算法與神經檢索（如密集段落檢索，DPR）。透過引入重排序 (Reranker) 組件，模型得以統一處理並最大化初始候選池的質量。此外，Re&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt;G 還引入了&lt;strong&gt;線上知識蒸餾方法&lt;/strong&gt;，實現了整個檢索與生成管道的端到端訓練。這種訓練方式將系統的所有組件串接成一個整體模型，直接以最終目標作為損失函數進行優化，從而無需分階段訓練，有效提升了系統的整體性能。&lt;/p&gt;
+&lt;p&gt;※ 在機器學習領域，「端到端訓練」（End-to-End Training）指的是將整個系統的所有組件（如檢索、重排序、生成）串接為一個整體模型，直接以最終目標（如生成正確答案）作為損失函數，反向傳播優化所有參數。這種方式不需分階段分別訓練各模組，而是讓模型自動協調各部分，最大化整體性能。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h1 id="基本架構介紹"&gt;基本架構介紹
+&lt;/h1&gt;&lt;p&gt;RAG（Retrieval-Augmented Generation）與 Re&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt;G（Retrieve, Rerank, Generate）架構模組如下圖所示：&lt;br&gt;
 &lt;img src="https://ar5iv.labs.arxiv.org/html/2207.06300/assets/x1.png"
 loading="lazy"
 alt="RAG 基本架構圖"
->&lt;br>
-圖 1. RAG 基本架構圖：RAG 基礎流程包含檢索器與生成器，將查詢與檢索到的外部知識片段一同輸入生成模型，產生最終回答。&lt;/p>
-&lt;p>&lt;img src="https://ar5iv.labs.arxiv.org/html/2207.06300/assets/x2.png"
+&gt;&lt;br&gt;
+圖 1. RAG 基本架構圖：RAG 基礎流程包含檢索器與生成器，將查詢與檢索到的外部知識片段一同輸入生成模型，產生最終回答。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://ar5iv.labs.arxiv.org/html/2207.06300/assets/x2.png"
 loading="lazy"
 alt="RAG 重排序架構圖"
->&lt;br>
-圖 2. Re&lt;!-- raw HTML omitted -->2&lt;!-- raw HTML omitted -->G (Retrieve, Rerank, Generate) 架構圖：進階版本在檢索後加入重排序（Rerank）模組，對候選片段進行排序優化，提升檢索結果品質與生成相關性。&lt;/p>
-&lt;p>&lt;strong>RAG 架構&lt;/strong>&lt;/p>
-&lt;ol>
-&lt;li>檢索器（Retriever）：從語料庫中檢索相關段落&lt;/li>
-&lt;li>生成器（Generator）：基於檢索結果生成回答&lt;/li>
-&lt;/ol>
-&lt;p>&lt;strong>Re&lt;!-- raw HTML omitted -->2&lt;!-- raw HTML omitted -->G 架構&lt;/strong>&lt;/p>
-&lt;ol>
-&lt;li>初始檢索層（Initial Retrieval Layer）：神經檢索 + 關鍵字檢索&lt;/li>
-&lt;li>重排序層（Reranker Layer）：融合多種檢索結果並重排序&lt;/li>
-&lt;li>生成層（Generation Layer）：基於重排序結果生成最終輸出&lt;/li>
-&lt;/ol>
-&lt;p>這種分層設計使 Re&lt;!-- raw HTML omitted -->2&lt;!-- raw HTML omitted -->G 能靈活結合多種檢索技術，並透過重排序提升候選質量，最終增強生成效果。&lt;/p>
-&lt;h1 id="re2g-核心概念與創新突破">Re&lt;!-- raw HTML omitted -->2&lt;!-- raw HTML omitted -->G 核心概念與創新突破
-&lt;/h1>&lt;p>Re&lt;!-- raw HTML omitted -->2&lt;!-- raw HTML omitted -->G 的兩大創新突破，分別體現在多源檢索結果的融合能力與創新的端到端訓練策略。
-首先，Re&lt;!-- raw HTML omitted -->2&lt;!-- raw HTML omitted -->G 的重排序方法打破了傳統檢索分數不可比的限制，能夠有效融合來自不同檢索機制的候選結果。其次，作者提出一種改良的知識蒸餾策略，使得整個系統能僅依賴目標序列輸出進行訓練，實現從初始檢索、重排序到序列生成端到端改善。這項設計解決了當重排序器主導運算後，查詢編碼器將無法從生成損失中獲得有效梯度的問題。透過在線知識蒸餾，Re&lt;!-- raw HTML omitted -->2&lt;!-- raw HTML omitted -->G 讓重排序器成為查詢編碼器的指導，重新建立了梯度流通路，深化多模組系統間的互動訓練。&lt;/p>
-&lt;p>主要流程是從大型語料庫中&lt;strong>檢索相關段落&lt;/strong>，隨後對這些初步檢索到的段落&lt;strong>進行精確的重排序&lt;/strong>，最後基於重排序後的結果&lt;strong>生成最終的輸出序列&lt;/strong>。&lt;/p>
-&lt;ol>
-&lt;li>
-&lt;p>&lt;strong>檢索相關段落&lt;/strong>&lt;br>
-從大型語料庫中，透過高效的初始檢索模型（如 DPR 或 BM25）篩選出與查詢相關的候選段落。&lt;br>
+&gt;&lt;br&gt;
+圖 2. Re&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt;G (Retrieve, Rerank, Generate) 架構圖：進階版本在檢索後加入重排序（Rerank）模組，對候選片段進行排序優化，提升檢索結果品質與生成相關性。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;RAG 架構&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;檢索器（Retriever）：從語料庫中檢索相關段落&lt;/li&gt;
+&lt;li&gt;生成器（Generator）：基於檢索結果生成回答&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;Re&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt;G 架構&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;初始檢索層（Initial Retrieval Layer）：神經檢索 + 關鍵字檢索&lt;/li&gt;
+&lt;li&gt;重排序層（Reranker Layer）：融合多種檢索結果並重排序&lt;/li&gt;
+&lt;li&gt;生成層（Generation Layer）：基於重排序結果生成最終輸出&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;這種分層設計使 Re&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt;G 能靈活結合多種檢索技術，並透過重排序提升候選質量，最終增強生成效果。&lt;/p&gt;
+&lt;h1 id="re2g-核心概念與創新突破"&gt;Re&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt;G 核心概念與創新突破
+&lt;/h1&gt;&lt;p&gt;Re&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt;G 的兩大創新突破，分別體現在多源檢索結果的融合能力與創新的端到端訓練策略。
+首先，Re&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt;G 的重排序方法打破了傳統檢索分數不可比的限制，能夠有效融合來自不同檢索機制的候選結果。其次，作者提出一種改良的知識蒸餾策略，使得整個系統能僅依賴目標序列輸出進行訓練，實現從初始檢索、重排序到序列生成端到端改善。這項設計解決了當重排序器主導運算後，查詢編碼器將無法從生成損失中獲得有效梯度的問題。透過在線知識蒸餾，Re&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt;G 讓重排序器成為查詢編碼器的指導，重新建立了梯度流通路，深化多模組系統間的互動訓練。&lt;/p&gt;
+&lt;p&gt;主要流程是從大型語料庫中&lt;strong&gt;檢索相關段落&lt;/strong&gt;，隨後對這些初步檢索到的段落&lt;strong&gt;進行精確的重排序&lt;/strong&gt;，最後基於重排序後的結果&lt;strong&gt;生成最終的輸出序列&lt;/strong&gt;。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;檢索相關段落&lt;/strong&gt;&lt;br&gt;
+從大型語料庫中，透過高效的初始檢索模型（如 DPR 或 BM25）篩選出與查詢相關的候選段落。&lt;br&gt;
 &lt;img src="https://ar5iv.labs.arxiv.org/html/2207.06300/assets/x4.png"
 loading="lazy"
 alt="雙編碼器表示模型 — 初始檢索器（DPR）"
->&lt;br>
-&lt;em>圖 3：表示模型（Bi-Encoder）運作方式：查詢（Query）與段落（Passage）分別透過獨立的 BERT 編碼器轉換為向量表示（r&lt;!-- raw HTML omitted -->q&lt;!-- raw HTML omitted --> 與 r&lt;!-- raw HTML omitted -->p&lt;!-- raw HTML omitted -->），之後透過 向量內積（Inner Product） 計算相似度，作為檢索排序的依據。&lt;/em>&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>精確的重排序&lt;/strong>&lt;br>
-對初步檢索到的候選段落，使用互動模型（Reranker）進行相關性重排序。&lt;br>
-此階段的關鍵創新在於能夠&lt;strong>整合多種來源的檢索結果&lt;/strong>，例如：&lt;/p>
-&lt;ul>
-&lt;li>&lt;strong>BM25&lt;/strong>：基於關鍵字的傳統檢索，分數反映字詞匹配頻率&lt;/li>
-&lt;li>&lt;strong>DPR&lt;/strong>：基於語意向量的神經檢索，分數來自內積相似度&lt;/li>
-&lt;/ul>
-&lt;p>然而，這些檢索分數性質不同，直接比對會產生偏誤。&lt;br>
-為此，Re&lt;!-- raw HTML omitted -->2&lt;!-- raw HTML omitted -->G 引入 &lt;strong>獨立的 Reranker 模組&lt;/strong>，將不同檢索來源的候選進行&lt;strong>統一評分&lt;/strong>，重排序後產出可比較的結果。&lt;br>
+&gt;&lt;br&gt;
+&lt;em&gt;圖 3：表示模型（Bi-Encoder）運作方式：查詢（Query）與段落（Passage）分別透過獨立的 BERT 編碼器轉換為向量表示（r&lt;!-- raw HTML omitted --&gt;q&lt;!-- raw HTML omitted --&gt; 與 r&lt;!-- raw HTML omitted --&gt;p&lt;!-- raw HTML omitted --&gt;），之後透過 向量內積（Inner Product） 計算相似度，作為檢索排序的依據。&lt;/em&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;精確的重排序&lt;/strong&gt;&lt;br&gt;
+對初步檢索到的候選段落，使用互動模型（Reranker）進行相關性重排序。&lt;br&gt;
+此階段的關鍵創新在於能夠&lt;strong&gt;整合多種來源的檢索結果&lt;/strong&gt;，例如：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;BM25&lt;/strong&gt;：基於關鍵字的傳統檢索，分數反映字詞匹配頻率&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;DPR&lt;/strong&gt;：基於語意向量的神經檢索，分數來自內積相似度&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;然而，這些檢索分數性質不同，直接比對會產生偏誤。&lt;br&gt;
+為此，Re&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt;G 引入 &lt;strong&gt;獨立的 Reranker 模組&lt;/strong&gt;，將不同檢索來源的候選進行&lt;strong&gt;統一評分&lt;/strong&gt;，重排序後產出可比較的結果。&lt;br&gt;
 &lt;img src="https://ar5iv.labs.arxiv.org/html/2207.06300/assets/x3.png"
 loading="lazy"
 alt="互動模型 — 重排序器（Reranker）"
->&lt;br>
-&lt;em>圖 4：互動模型（Interaction Model）運作方式 — 查詢與段落聯合輸入 BERT，透過交叉注意力捕捉語義關聯，最終由 [CLS] 預測相關性分數。&lt;/em>&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>基於重排序結果的生成&lt;/strong>&lt;br>
-最終，將排序靠前的 Top-K 段落，與查詢共同輸入到序列生成模型（如 BART）中，生成目標回答或回應。&lt;/p>
-&lt;/li>
-&lt;/ol>
-&lt;hr>
-&lt;h2 id="re2g-模型架構詳解">Re&lt;!-- raw HTML omitted -->2&lt;!-- raw HTML omitted -->G 模型架構詳解
-&lt;/h2>&lt;h3 id="初始檢索層dpr與bm25的協同作用">初始檢索層：DPR與BM25的協同作用
-&lt;/h3>&lt;p>目的是建立一個包含潛在相關段落的候選池，在此階段結合了兩種互補的檢索方法：&lt;/p>
-&lt;ul>
-&lt;li>
-&lt;p>DPR (Dense Passage Retrieval) 密集段落檢索：DPR 採用雙編碼器表示模型，其中查詢編碼器和段落編碼器（兩者均基於 BERT）獨立生成查詢和段落的表示向量。這種獨立編碼的設計允許在檢索前預先計算語料庫中所有段落的向量，並使用近似最近鄰 (ANN) 索引。在推斷時，輸入查詢會使用 DPR 查詢編碼器進行編碼，並從 HNSW 索引中快速檢索出最相關的 Top-12 段落。  &lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>BM25：作為一種傳統的基於關鍵字的檢索方法，BM25 擅長捕捉精確的詞彙匹配。在推斷時，查詢也會傳遞給 BM25 搜索（具體使用 Anserini 庫），並收集 Top-12 的 BM25 結果。&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;p>Re&lt;!-- raw HTML omitted -->2&lt;!-- raw HTML omitted -->G 在此層結合使用了 DPR (一種神經「表示模型」) 和 BM25 (一種詞彙匹配方法)。這兩種方法互補，共同產生一個初步的候選段落池，這兩種方法檢索到的段落隨後會被合併，為後續的重排序階段提供一個更全面且多樣化的候選集。&lt;/p>
-&lt;blockquote>
-&lt;p>舉例：&lt;br>
-&lt;strong>DPR 的檢索結果：&lt;/strong>
-DPR 模型會將文檔庫中的所有段落預先編碼成向量，並儲存在一個向量資料庫中，當有一個查詢進來時，DPR 會將這個查詢也編碼成一個向量，然後，它會在向量資料庫中進行「最近鄰搜索」，找出與查詢向量最相似的 K 個段落向量，這些被找出來的 K 個段落，就是 DPR 的「檢索結果」，它們是實際的文本段落。&lt;br>
-例如：「尼加拉瀑布位於加拿大和美國的邊界。」&lt;/p>
-&lt;p>&lt;strong>BM25 的檢索結果：&lt;/strong>
-BM25 演算法會根據查詢中的關鍵字，在文檔庫中計算每個段落與查詢的相關性分數，它會根據這些分數，找出相關性最高的 K 個段落，這些被找出來的 K 個段落，就是 BM25 的「檢索結果」，它們也是實際的文本段落。&lt;br>
-例如：「尼加拉瀑布是世界著名的瀑布。」&lt;/p>
-&lt;p>合併指的是將這兩個獨立檢索器（DPR 和 BM25）各自找出來的候選段落列表結合起來，形成一個更大的、包含更多潛在相關段落的集合。&lt;/p>
-&lt;p>例如：&lt;br>
-DPR 可能檢索到段落 A, B, C, D, E。&lt;br>
-BM25 可能檢索到段落 C, F, G, H, I。&lt;br>
-合併後，初始候選集就可能包含 A, B, C, D, E, F, G, H, I。&lt;/p>&lt;/blockquote>
-&lt;h3 id="重排序層互動模型的強大能力">重排序層：互動模型的強大能力
-&lt;/h3>&lt;p>重排序層的核心目的是精煉初始檢索結果的排名，並實現來自不同檢索方法結果的合併。&lt;/p>
-&lt;ul>
-&lt;li>&lt;strong>模型類型&lt;/strong>：Re&lt;!-- raw HTML omitted -->2&lt;!-- raw HTML omitted -->G 使用基於 Nogueira 和 Cho 序列對分類方法的「互動模型」進行重排序。&lt;/li>
-&lt;/ul>
-&lt;!-- raw HTML omitted -->
-&lt;hr>
-&lt;!-- raw HTML omitted -->
-&lt;hr>
-&lt;ul>
-&lt;li>
-&lt;p>&lt;strong>機制&lt;/strong>： 在互動模型中，查詢和段落會作為一個整體輸入到 BERT 變換器中，模型會在兩個序列的所有詞元上共同應用交叉注意力機制，從而捕捉查詢和段落之間更深層次的交互關係。  &lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>優勢&lt;/strong>：透過使用互動模型對來自表示模型的 Top-N 段落進行重排序，Re&lt;!-- raw HTML omitted -->2&lt;!-- raw HTML omitted -->G 能夠同時獲得兩種模型類型的優勢：互動模型帶來的更高準確性（因其能進行更細緻的交叉注意力計算），以及表示模型帶來的可擴展性（因其允許高效的初始檢索）。這種設計模式在許多大規模資訊檢索系統中非常有效，平衡了對大型語料庫的快速初始檢索與對較小候選集的精細排名。  &lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>初始化與推斷&lt;/strong>： 重排序器從 NBoost 在 MS MARCO 數據集上訓練的 BERT 模型初始化。在推斷時，從初始檢索層合併後的段落集會傳遞給重排序器進行評分，並選出 Top-5 的段落供生成器使用。  &lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;h3 id="生成層基於bart的序列生成">生成層：基於BART的序列生成
-&lt;/h3>&lt;p>生成層負責根據重排序後的段落和查詢生成最終的目標輸出序列。  &lt;/p>
-&lt;ul>
-&lt;li>
-&lt;p>&lt;strong>基礎模型&lt;/strong>：Re&lt;!-- raw HTML omitted -->2&lt;!-- raw HTML omitted -->G 使用基於 BART 的序列到序列生成模型，具體是 $BART_{LARGE}$。BART 結合了雙向編碼器（如 BERT）和自回歸解碼器（如 GPT）的優勢，使其非常適合序列到序列任務，並能有效地整合檢索到的資訊。這種選擇利用了現有的穩健生成模型，並透過外部知識增強了它們的能力。  &lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>生成器輸入與輸出&lt;/strong>：來自重排序器的 Top-5 段落會與原始查詢結合，作為 $BART_{LARGE}$ 的輸入以生成輸出。BART 生成的五個輸出序列隨後會根據重排序器分數的 softmax 進行加權，以產生最終的輸出。這個過程在 RAG 中稱為邊緣化 (marginalization)，它確保了檢索到的相關性信息能夠有效指導最終的生成。&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;hr>
-&lt;h2 id="四階段訓練方法與線上知識蒸餾">四階段訓練方法與線上知識蒸餾
-&lt;/h2>&lt;h3 id="第一階段dpr-訓練">第一階段：DPR 訓練
-&lt;/h3>&lt;p>訓練數據由查詢、正向段落（來自真實標籤的來源資訊）以及「硬負向」段落（從 BM25 檢索但非真實標籤的段落）的三元組組成，這些實例會被批次處理，並且批次中其他實例的正向和硬負向段落會被用作當前實例的「批次負向」，DPR 雙編碼器模型隨後會為每個查詢提供其對正向、硬負向和批次負向段落的概率分佈。此階段的損失函數是正向段落的負對數似然，完成此階段訓練後，語料庫中的所有段落都會使用分層可導航小世界圖 (HNSW) 結合 FAISS 庫進行索引，以便後續高效檢索。&lt;/p>
-&lt;h3 id="第二階段生成訓練">第二階段：生成訓練
-&lt;/h3>&lt;p>此階段的訓練目標是擴展查詢編碼器的訓練，並訓練 BART&lt;!-- raw HTML omitted -->LARGE&lt;!-- raw HTML omitted --> 序列到序列模型以生成最終的目標序列輸出。這個訓練過程與 Lewis 等人描述的 RAG 模型生成訓練方法一致。&lt;/p>
-&lt;h3 id="第三階段重排序訓練">第三階段：重排序訓練
-&lt;/h3>&lt;p>重排序器的獨立訓練始於收集訓練集上來自 DPR 和 BM25 的初始檢索結果，這些結果隨後會被合併，並作為重排序器的訓練數據。由於某些數據集可能存在多個正向段落，因此此階段採用的損失函數是這些正向段落負對數似然之和。&lt;/p>
-&lt;h3 id="第四階段端到端訓練">第四階段：端到端訓練
-&lt;/h3>&lt;p>端到端訓練帶來了一個特殊挑戰：在 Re&lt;!-- raw HTML omitted -->2&lt;!-- raw HTML omitted -->G 中，重排序器的分數而非初始檢索分數用於加權每個序列在生成中的影響。這意味著重排序器可以直接透過目標輸出的真實標籤進行訓練，但查詢編碼器的梯度將為零，因為邊緣化過程不再直接依賴於查詢和段落表示向量的內積。  &lt;/p>
-&lt;p>為了解決這個問題，Re&lt;!-- raw HTML omitted -->2&lt;!-- raw HTML omitted -->G 引入了一種新穎的線上知識蒸餾應用。在這種方法中，重排序器作為「教師模型」，為 DPR「學生模型」提供軟標籤。這種知識蒸餾是「線上」發生的，即在重排序器訓練的同時進行，實現了知識從一種架構（互動模型）到另一種架構（表示模型）的轉移。初始檢索（DPR）的損失函數是其在檢索到的段落上給出的概率分佈與重排序器在相同段落上給出的概率分佈之間的 KL 散度。為了平滑這些分佈、防止過度損失並穩定訓練，模型使用了溫度超參數 (T)。這種方法不僅提供了正向和負向實例的信號，還提供了「負向程度」的信號，並且能夠利用更多段落進行訓練（DPR 檢索 12 個段落，而生成只使用 Top-5），從而提供了比二元標籤更豐富的訓練信號。&lt;/p>
-&lt;hr>
-&lt;h2 id="實驗結果與性能分析">實驗結果與性能分析
-&lt;/h2>&lt;p>此部分尚未撰寫。&lt;/p>
-&lt;hr>
-&lt;h2 id="結論">結論
-&lt;/h2>&lt;p>Re&lt;!-- raw HTML omitted -->2&lt;!-- raw HTML omitted -->G 在槽填充、問答、事實核查和對話等任務中，無論是檢索還是端到端性能都得到了實質性提升。&lt;/p>
-&lt;p>本研究的關鍵成果包括：&lt;/p>
-&lt;ul>
-&lt;li>重排序器的有效性。  &lt;/li>
-&lt;li>線上知識蒸餾的成功。  &lt;/li>
-&lt;li>多源檢索的益處。&lt;/li>
-&lt;/ul>
-&lt;h2 id="reference">Reference
-&lt;/h2>&lt;ul>
-&lt;li>&lt;a class="link" href="https://ar5iv.labs.arxiv.org/html/2207.06300" target="_blank" rel="noopener"
->Re2G: Retrieve, Rerank, Generate-ar5iv 可視化版本&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>三種 RAG 架構比較與應用解析 — Naive、Advanced、Modular RAG 差異整理</title><link>https://Dandelionlibra.github.io/post/note/rag-type-compare-note/</link><pubDate>Mon, 21 Jul 2025 09:16:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/rag-type-compare-note/</guid><description>&lt;h1 id="三種-rag-技術架構比較naive-ragadvanced-rag-與-modular-rag">三種 RAG 技術架構比較：Naive RAG、Advanced RAG 與 Modular RAG
-&lt;/h1>&lt;p>本文比較《Retrieval-Augmented Generation for Large Language Models: A Survey》中提出的三種檢索增強生成（RAG）技術架構：Naive RAG、Advanced RAG 和 Modular RAG。RAG 旨在結合大型語言模型（LLM）的內部知識與外部資料檢索，以提升事實正確性與時效性。這三種架構代表了 RAG 技術的演進路徑，各自引入不同模組與策略來克服先前架構的侷限。本文將從架構組成、實作方式、技術細節、應用場景與優劣比較等面向，深入剖析三類架構的差異與適用性。&lt;/p>
-&lt;hr>
-&lt;h2 id="架構組成與流程差異">架構組成與流程差異
-&lt;/h2>&lt;h3 id="naive-rag">Naive RAG
-&lt;/h3>&lt;p>最早期且基礎的 RAG 架構，僅包含索引（Indexing）、檢索（Retrieval）與生成（Generation）三個串連模組。流程為：資料向量化 → 檢索前 $K$ 個相關片段 → 查詢與檢索結果一併餵給 LLM 產生回答。此架構流程簡單、模組單一，缺乏查詢優化或反饋機制，適合快速原型開發。&lt;/p>
-&lt;p>&lt;img src="https://www.ibm.com/content/dam/connectedassets-adobe-cms/worldwide-content/creative-assets/s-migr/ul/g/e0/d6/naive-rag.png"
+&gt;&lt;br&gt;
+&lt;em&gt;圖 4：互動模型（Interaction Model）運作方式 — 查詢與段落聯合輸入 BERT，透過交叉注意力捕捉語義關聯，最終由 [CLS] 預測相關性分數。&lt;/em&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;基於重排序結果的生成&lt;/strong&gt;&lt;br&gt;
+最終，將排序靠前的 Top-K 段落，與查詢共同輸入到序列生成模型（如 BART）中，生成目標回答或回應。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h2 id="re2g-模型架構詳解"&gt;Re&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt;G 模型架構詳解
+&lt;/h2&gt;&lt;h3 id="初始檢索層dpr與bm25的協同作用"&gt;初始檢索層：DPR與BM25的協同作用
+&lt;/h3&gt;&lt;p&gt;目的是建立一個包含潛在相關段落的候選池，在此階段結合了兩種互補的檢索方法：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;DPR (Dense Passage Retrieval) 密集段落檢索：DPR 採用雙編碼器表示模型，其中查詢編碼器和段落編碼器（兩者均基於 BERT）獨立生成查詢和段落的表示向量。這種獨立編碼的設計允許在檢索前預先計算語料庫中所有段落的向量，並使用近似最近鄰 (ANN) 索引。在推斷時，輸入查詢會使用 DPR 查詢編碼器進行編碼，並從 HNSW 索引中快速檢索出最相關的 Top-12 段落。  &lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;BM25：作為一種傳統的基於關鍵字的檢索方法，BM25 擅長捕捉精確的詞彙匹配。在推斷時，查詢也會傳遞給 BM25 搜索（具體使用 Anserini 庫），並收集 Top-12 的 BM25 結果。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Re&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt;G 在此層結合使用了 DPR (一種神經「表示模型」) 和 BM25 (一種詞彙匹配方法)。這兩種方法互補，共同產生一個初步的候選段落池，這兩種方法檢索到的段落隨後會被合併，為後續的重排序階段提供一個更全面且多樣化的候選集。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;舉例：&lt;br&gt;
+&lt;strong&gt;DPR 的檢索結果：&lt;/strong&gt;
+DPR 模型會將文檔庫中的所有段落預先編碼成向量，並儲存在一個向量資料庫中，當有一個查詢進來時，DPR 會將這個查詢也編碼成一個向量，然後，它會在向量資料庫中進行「最近鄰搜索」，找出與查詢向量最相似的 K 個段落向量，這些被找出來的 K 個段落，就是 DPR 的「檢索結果」，它們是實際的文本段落。&lt;br&gt;
+例如：「尼加拉瀑布位於加拿大和美國的邊界。」&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;BM25 的檢索結果：&lt;/strong&gt;
+BM25 演算法會根據查詢中的關鍵字，在文檔庫中計算每個段落與查詢的相關性分數，它會根據這些分數，找出相關性最高的 K 個段落，這些被找出來的 K 個段落，就是 BM25 的「檢索結果」，它們也是實際的文本段落。&lt;br&gt;
+例如：「尼加拉瀑布是世界著名的瀑布。」&lt;/p&gt;
+&lt;p&gt;合併指的是將這兩個獨立檢索器（DPR 和 BM25）各自找出來的候選段落列表結合起來，形成一個更大的、包含更多潛在相關段落的集合。&lt;/p&gt;
+&lt;p&gt;例如：&lt;br&gt;
+DPR 可能檢索到段落 A, B, C, D, E。&lt;br&gt;
+BM25 可能檢索到段落 C, F, G, H, I。&lt;br&gt;
+合併後，初始候選集就可能包含 A, B, C, D, E, F, G, H, I。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;h3 id="重排序層互動模型的強大能力"&gt;重排序層：互動模型的強大能力
+&lt;/h3&gt;&lt;p&gt;重排序層的核心目的是精煉初始檢索結果的排名，並實現來自不同檢索方法結果的合併。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;模型類型&lt;/strong&gt;：Re&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt;G 使用基於 Nogueira 和 Cho 序列對分類方法的「互動模型」進行重排序。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;hr&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;機制&lt;/strong&gt;： 在互動模型中，查詢和段落會作為一個整體輸入到 BERT 變換器中，模型會在兩個序列的所有詞元上共同應用交叉注意力機制，從而捕捉查詢和段落之間更深層次的交互關係。  &lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;優勢&lt;/strong&gt;：透過使用互動模型對來自表示模型的 Top-N 段落進行重排序，Re&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt;G 能夠同時獲得兩種模型類型的優勢：互動模型帶來的更高準確性（因其能進行更細緻的交叉注意力計算），以及表示模型帶來的可擴展性（因其允許高效的初始檢索）。這種設計模式在許多大規模資訊檢索系統中非常有效，平衡了對大型語料庫的快速初始檢索與對較小候選集的精細排名。  &lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;初始化與推斷&lt;/strong&gt;： 重排序器從 NBoost 在 MS MARCO 數據集上訓練的 BERT 模型初始化。在推斷時，從初始檢索層合併後的段落集會傳遞給重排序器進行評分，並選出 Top-5 的段落供生成器使用。  &lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="生成層基於bart的序列生成"&gt;生成層：基於BART的序列生成
+&lt;/h3&gt;&lt;p&gt;生成層負責根據重排序後的段落和查詢生成最終的目標輸出序列。  &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;基礎模型&lt;/strong&gt;：Re&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt;G 使用基於 BART 的序列到序列生成模型，具體是 $BART_{LARGE}$。BART 結合了雙向編碼器（如 BERT）和自回歸解碼器（如 GPT）的優勢，使其非常適合序列到序列任務，並能有效地整合檢索到的資訊。這種選擇利用了現有的穩健生成模型，並透過外部知識增強了它們的能力。  &lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;生成器輸入與輸出&lt;/strong&gt;：來自重排序器的 Top-5 段落會與原始查詢結合，作為 $BART_{LARGE}$ 的輸入以生成輸出。BART 生成的五個輸出序列隨後會根據重排序器分數的 softmax 進行加權，以產生最終的輸出。這個過程在 RAG 中稱為邊緣化 (marginalization)，它確保了檢索到的相關性信息能夠有效指導最終的生成。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="四階段訓練方法與線上知識蒸餾"&gt;四階段訓練方法與線上知識蒸餾
+&lt;/h2&gt;&lt;h3 id="第一階段dpr-訓練"&gt;第一階段：DPR 訓練
+&lt;/h3&gt;&lt;p&gt;訓練數據由查詢、正向段落（來自真實標籤的來源資訊）以及「硬負向」段落（從 BM25 檢索但非真實標籤的段落）的三元組組成，這些實例會被批次處理，並且批次中其他實例的正向和硬負向段落會被用作當前實例的「批次負向」，DPR 雙編碼器模型隨後會為每個查詢提供其對正向、硬負向和批次負向段落的概率分佈。此階段的損失函數是正向段落的負對數似然，完成此階段訓練後，語料庫中的所有段落都會使用分層可導航小世界圖 (HNSW) 結合 FAISS 庫進行索引，以便後續高效檢索。&lt;/p&gt;
+&lt;h3 id="第二階段生成訓練"&gt;第二階段：生成訓練
+&lt;/h3&gt;&lt;p&gt;此階段的訓練目標是擴展查詢編碼器的訓練，並訓練 BART&lt;!-- raw HTML omitted --&gt;LARGE&lt;!-- raw HTML omitted --&gt; 序列到序列模型以生成最終的目標序列輸出。這個訓練過程與 Lewis 等人描述的 RAG 模型生成訓練方法一致。&lt;/p&gt;
+&lt;h3 id="第三階段重排序訓練"&gt;第三階段：重排序訓練
+&lt;/h3&gt;&lt;p&gt;重排序器的獨立訓練始於收集訓練集上來自 DPR 和 BM25 的初始檢索結果，這些結果隨後會被合併，並作為重排序器的訓練數據。由於某些數據集可能存在多個正向段落，因此此階段採用的損失函數是這些正向段落負對數似然之和。&lt;/p&gt;
+&lt;h3 id="第四階段端到端訓練"&gt;第四階段：端到端訓練
+&lt;/h3&gt;&lt;p&gt;端到端訓練帶來了一個特殊挑戰：在 Re&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt;G 中，重排序器的分數而非初始檢索分數用於加權每個序列在生成中的影響。這意味著重排序器可以直接透過目標輸出的真實標籤進行訓練，但查詢編碼器的梯度將為零，因為邊緣化過程不再直接依賴於查詢和段落表示向量的內積。  &lt;/p&gt;
+&lt;p&gt;為了解決這個問題，Re&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt;G 引入了一種新穎的線上知識蒸餾應用。在這種方法中，重排序器作為「教師模型」，為 DPR「學生模型」提供軟標籤。這種知識蒸餾是「線上」發生的，即在重排序器訓練的同時進行，實現了知識從一種架構（互動模型）到另一種架構（表示模型）的轉移。初始檢索（DPR）的損失函數是其在檢索到的段落上給出的概率分佈與重排序器在相同段落上給出的概率分佈之間的 KL 散度。為了平滑這些分佈、防止過度損失並穩定訓練，模型使用了溫度超參數 (T)。這種方法不僅提供了正向和負向實例的信號，還提供了「負向程度」的信號，並且能夠利用更多段落進行訓練（DPR 檢索 12 個段落，而生成只使用 Top-5），從而提供了比二元標籤更豐富的訓練信號。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="實驗結果與性能分析"&gt;實驗結果與性能分析
+&lt;/h2&gt;&lt;p&gt;此部分尚未撰寫。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="結論"&gt;結論
+&lt;/h2&gt;&lt;p&gt;Re&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt;G 在槽填充、問答、事實核查和對話等任務中，無論是檢索還是端到端性能都得到了實質性提升。&lt;/p&gt;
+&lt;p&gt;本研究的關鍵成果包括：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;重排序器的有效性。  &lt;/li&gt;
+&lt;li&gt;線上知識蒸餾的成功。  &lt;/li&gt;
+&lt;li&gt;多源檢索的益處。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="reference"&gt;Reference
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="https://ar5iv.labs.arxiv.org/html/2207.06300" target="_blank" rel="noopener"
+&gt;Re2G: Retrieve, Rerank, Generate-ar5iv 可視化版本&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>三種 RAG 架構比較與應用解析 — Naive、Advanced、Modular RAG 差異整理</title><link>https://Dandelionlibra.github.io/post/note/rag-type-compare-note/</link><pubDate>Mon, 21 Jul 2025 09:16:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/rag-type-compare-note/</guid><description>&lt;h1 id="三種-rag-技術架構比較naive-ragadvanced-rag-與-modular-rag"&gt;三種 RAG 技術架構比較：Naive RAG、Advanced RAG 與 Modular RAG
+&lt;/h1&gt;&lt;p&gt;本文比較《Retrieval-Augmented Generation for Large Language Models: A Survey》中提出的三種檢索增強生成（RAG）技術架構：Naive RAG、Advanced RAG 和 Modular RAG。RAG 旨在結合大型語言模型（LLM）的內部知識與外部資料檢索，以提升事實正確性與時效性。這三種架構代表了 RAG 技術的演進路徑，各自引入不同模組與策略來克服先前架構的侷限。本文將從架構組成、實作方式、技術細節、應用場景與優劣比較等面向，深入剖析三類架構的差異與適用性。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="架構組成與流程差異"&gt;架構組成與流程差異
+&lt;/h2&gt;&lt;h3 id="naive-rag"&gt;Naive RAG
+&lt;/h3&gt;&lt;p&gt;最早期且基礎的 RAG 架構，僅包含索引（Indexing）、檢索（Retrieval）與生成（Generation）三個串連模組。流程為：資料向量化 → 檢索前 $K$ 個相關片段 → 查詢與檢索結果一併餵給 LLM 產生回答。此架構流程簡單、模組單一，缺乏查詢優化或反饋機制，適合快速原型開發。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://www.ibm.com/content/dam/connectedassets-adobe-cms/worldwide-content/creative-assets/s-migr/ul/g/e0/d6/naive-rag.png"
 loading="lazy"
 alt="Naive RAG 架構圖"
->&lt;/p>
-&lt;h3 id="advanced-rag">Advanced RAG
-&lt;/h3>&lt;p>在 Naive 基礎上增加前處理與後處理模組，如查詢優化、重排序、內容過濾/壓縮等。流程仍為索引→檢索→生成，但在檢索前後插入優化步驟，提升檢索品質與生成相關性。組件包含查詢改寫、混合檢索、重排序等，能針對性強化檢索與生成階段。&lt;/p>
-&lt;p>&lt;img src="https://www.ibm.com/content/dam/connectedassets-adobe-cms/worldwide-content/creative-assets/s-migr/ul/g/8f/cb/advances-rag.png"
+&gt;&lt;/p&gt;
+&lt;h3 id="advanced-rag"&gt;Advanced RAG
+&lt;/h3&gt;&lt;p&gt;在 Naive 基礎上增加前處理與後處理模組，如查詢優化、重排序、內容過濾/壓縮等。流程仍為索引→檢索→生成，但在檢索前後插入優化步驟，提升檢索品質與生成相關性。組件包含查詢改寫、混合檢索、重排序等，能針對性強化檢索與生成階段。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://www.ibm.com/content/dam/connectedassets-adobe-cms/worldwide-content/creative-assets/s-migr/ul/g/8f/cb/advances-rag.png"
 loading="lazy"
 alt="Advanced RAG 架構圖"
->&lt;/p>
-&lt;h3 id="modular-rag">Modular RAG
-&lt;/h3>&lt;p>最新階段，強調積木式模組化設計。除繼承前述流程外，允許多輪檢索-生成、平行資訊融合、自適應流程等。可靈活增減如網路搜尋、長程記憶、路由決策等模組，流程可重組、迭代或分支，適應複雜多變的任務需求。&lt;/p>
-&lt;p>&lt;img src="https://www.ibm.com/content/dam/connectedassets-adobe-cms/worldwide-content/creative-assets/s-migr/ul/g/a7/e6/modular-rag.component.crop-16by9-m.ts=1740501066286.png/content/adobe-cms/us/en/think/topics/rag-techniques/jcr:content/root/table_of_contents/body-article-8/image_1228195012"
+&gt;&lt;/p&gt;
+&lt;h3 id="modular-rag"&gt;Modular RAG
+&lt;/h3&gt;&lt;p&gt;最新階段，強調積木式模組化設計。除繼承前述流程外，允許多輪檢索-生成、平行資訊融合、自適應流程等。可靈活增減如網路搜尋、長程記憶、路由決策等模組，流程可重組、迭代或分支，適應複雜多變的任務需求。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://www.ibm.com/content/dam/connectedassets-adobe-cms/worldwide-content/creative-assets/s-migr/ul/g/a7/e6/modular-rag.component.crop-16by9-m.ts=1740501066286.png/content/adobe-cms/us/en/think/topics/rag-techniques/jcr:content/root/table_of_contents/body-article-8/image_1228195012"
 loading="lazy"
 alt="Modular RAG 架構圖"
->&lt;/p>
-&lt;hr>
-&lt;h2 id="實作方式與系統特性">實作方式與系統特性
-&lt;/h2>&lt;ul>
-&lt;li>&lt;strong>Naive RAG&lt;/strong>：實作最直接，僅需嵌入模型、向量資料庫與 LLM。模組線性串接，無需微調，部署維護成本低，適合簡單應用。&lt;/li>
-&lt;li>&lt;strong>Advanced RAG&lt;/strong>：需引入查詢優化、重排序等模組，常用 LlamaIndex、LangChain 等框架。系統複雜度提升，需調校多個子系統，適合中等複雜度任務。&lt;/li>
-&lt;li>&lt;strong>Modular RAG&lt;/strong>：高度模組化，常用流水線編排框架。每個功能獨立封裝，系統可為有向圖結構，便於擴充與維護，但開發協調成本高。&lt;/li>
-&lt;/ul>
-&lt;hr>
-&lt;h2 id="核心技術細節">核心技術細節
-&lt;/h2>&lt;h3 id="資料預處理與嵌入">資料預處理與嵌入
-&lt;/h3>&lt;ul>
-&lt;li>&lt;strong>Naive RAG&lt;/strong>：文本清洗、切分、嵌入，建立向量索引，重點在語義表示。&lt;/li>
-&lt;li>&lt;strong>Advanced RAG&lt;/strong>：細粒度切分、滑動視窗、metadata 標註、混合嵌入（密集+稀疏），提升檢索覆蓋率與精確性。&lt;/li>
-&lt;li>&lt;strong>Modular RAG&lt;/strong>：動態資料處理，可即時抓取新資料、多模態資料、記憶模組自我增強，嵌入策略多元且可演化。&lt;/li>
-&lt;/ul>
-&lt;h3 id="檢索策略與查詢優化">檢索策略與查詢優化
-&lt;/h3>&lt;ul>
-&lt;li>&lt;strong>Naive RAG&lt;/strong>：單輪語義相似度檢索，無查詢優化或多輪交互。&lt;/li>
-&lt;li>&lt;strong>Advanced RAG&lt;/strong>：查詢重寫/擴展、多次/混合檢索、重排序與過濾，提升檢索準確率與覆蓋率。&lt;/li>
-&lt;li>&lt;strong>Modular RAG&lt;/strong>：自適應多階段檢索、路由決策、平行多查詢、遞歸式檢索，根據任務動態調度檢索策略。&lt;/li>
-&lt;/ul>
-&lt;h3 id="上下文融合與資訊增強">上下文融合與資訊增強
-&lt;/h3>&lt;ul>
-&lt;li>&lt;strong>Naive RAG&lt;/strong>：直接拼接查詢與檢索內容，無額外處理，易受雜訊干擾。&lt;/li>
-&lt;li>&lt;strong>Advanced RAG&lt;/strong>：重排序、壓縮、過濾、明確引導模型引用檢索內容，提升訊息品質。&lt;/li>
-&lt;li>&lt;strong>Modular RAG&lt;/strong>：多步融合、示範-搜索-預測、動態記憶、事後校驗，深度整合外部知識與模型推理。&lt;/li>
-&lt;/ul>
-&lt;h3 id="回答生成與控制">回答生成與控制
-&lt;/h3>&lt;ul>
-&lt;li>&lt;strong>Naive RAG&lt;/strong>：LLM 直接生成，控制力弱，易出現幻覺或拼貼。&lt;/li>
-&lt;li>&lt;strong>Advanced RAG&lt;/strong>：提示工程、微調、反饋迴路、生成後過濾，強化可靠性與安全性。&lt;/li>
-&lt;li>&lt;strong>Modular RAG&lt;/strong>：示範模組、迭代生成、後處理校驗、用戶反饋迴路，實現嚴謹的生成管控。&lt;/li>
-&lt;/ul>
-&lt;hr>
-&lt;h2 id="適用場景與限制">適用場景與限制
-&lt;/h2>&lt;ul>
-&lt;li>&lt;strong>Naive RAG&lt;/strong>：適合原型、FAQ、內部知識庫等低複雜度場景，開發快但不適合高精度或多步推理任務。&lt;/li>
-&lt;li>&lt;strong>Advanced RAG&lt;/strong>：適用於醫療、法律、教育等知識密集型問答，能處理較大規模知識庫，但資源需求與維護成本較高。&lt;/li>
-&lt;li>&lt;strong>Modular RAG&lt;/strong>：適合大型企業、跨領域系統、需多階段推理或多源資訊整合的場景，擴展性與維護性最佳，但開發複雜度與初始成本高。&lt;/li>
-&lt;/ul>
-&lt;hr>
-&lt;h2 id="優劣比較">優劣比較
-&lt;/h2>&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th>架構&lt;/th>
-&lt;th>實用性&lt;/th>
-&lt;th>可擴展性&lt;/th>
-&lt;th>維護成本&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td>Naive RAG&lt;/td>
-&lt;td>高（易用）&lt;/td>
-&lt;td>低～中&lt;/td>
-&lt;td>低&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>Advanced RAG&lt;/td>
-&lt;td>中（需專業）&lt;/td>
-&lt;td>中～高&lt;/td>
-&lt;td>中&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>Modular RAG&lt;/td>
-&lt;td>低（複雜）&lt;/td>
-&lt;td>極高&lt;/td>
-&lt;td>高（初始），低（局部維護）&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;ul>
-&lt;li>&lt;strong>Naive RAG&lt;/strong>：簡單易用、成本低，但遇到複雜任務易達天花板。&lt;/li>
-&lt;li>&lt;strong>Advanced RAG&lt;/strong>：性能與複雜度平衡，適合多數專業應用，維護需專業投入。&lt;/li>
-&lt;li>&lt;strong>Modular RAG&lt;/strong>：彈性與擴展性最強，適合高端需求，但開發與協調成本高。&lt;/li>
-&lt;/ul>
-&lt;hr>
-&lt;h2 id="結論">結論
-&lt;/h2>&lt;p>三種 RAG 架構各有適用場景與優劣。Naive RAG 適合快速原型與簡單應用，Advanced RAG 適合專業領域與中大型知識庫，Modular RAG 則為高複雜度、需長期演化的系統提供最佳解決方案。選擇何種架構，應根據實際需求、資源與長期維護考量權衡取捨。&lt;/p>
-&lt;h2 id="reference">Reference
-&lt;/h2>&lt;ul>
-&lt;li>&lt;a class="link" href="https://arxiv.org/abs/2312.10997" target="_blank" rel="noopener"
->Retrieval-Augmented Generation for Large Language Models: A Survey&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://www.thecloudgirl.dev/blog/three-paradigms-of-retrieval-augmented-generation-rag-for-llms#:~:text=,on%20embeddings%20from%20language%20models" target="_blank" rel="noopener"
->Three Paradigms of Retrieval-Augmented Generation (RAG) for LLMs&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://www.ibm.com/think/topics/rag-techniques#:~:" target="_blank" rel="noopener"
->RAG Techniques | IBM Think&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>檢索增強大型語言模型綜述 — RA-LLMs 系統性回顧與應用解析</title><link>https://Dandelionlibra.github.io/post/paper/rag-llms-survey-note/</link><pubDate>Sun, 20 Jul 2025 08:50:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/paper/rag-llms-survey-note/</guid><description>&lt;blockquote>
-&lt;p>本文整理自：&lt;a class="link" href="https://arxiv.org/abs/2405.06211" target="_blank" rel="noopener"
->A Survey on RAG Meeting LLMs: Towards Retrieval-Augmented Large Language Models&lt;/a>&lt;br>
-作者：Wenqi Fan, Yujuan Ding, Liangbo Ning, Shijie Wang, Hengyun Li, Dawei Yin, Tat-Seng Chua, Qing Li&lt;br>
-發佈於 arXiv，2024年5月&lt;/p>&lt;/blockquote>
-&lt;h1 id="摘要">摘要
-&lt;/h1>&lt;p>大型語言模型（LLMs）雖展現強大生成能力，但受限於內部知識與幻覺問題。檢索增強生成（Retrieval-Augmented Generation;RAG）透過即時檢索外部資訊，提升回應的可靠性與時效性。本文整理 RA-LLMs 的架構、訓練策略與應用，並探討其面臨的挑戰與未來發展，展現檢索對提升 LLM 實用性的關鍵價值。&lt;/p>
-&lt;h1 id="前言">前言
-&lt;/h1>&lt;p>檢索增強生成（RAG）技術透過結合資訊檢索與大型語言模型（LLMs），補足模型知識不足與幻覺問題，近年受到廣泛關注。LLMs 雖具強大生成能力，卻常受限於知識時效與專領域應用，而 RA-LLMs 則透過檢索外部資料提升生成品質。&lt;/p>
-&lt;h1 id="背景">背景
-&lt;/h1>&lt;h2 id="大型語言模型">大型語言模型
-&lt;/h2>&lt;ul>
-&lt;li>
-&lt;p>應用&lt;/p>
-&lt;ul>
-&lt;li>在特定資料集上進行微調，LLM 可以適應各種下游任務，使其能夠專注於特定領域或應用。&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>
-&lt;p>架構:&lt;/p>
-&lt;ul>
-&lt;li>Encoder-only 模型，雙向編碼，可同時考慮單詞左右語境。&lt;br>
-ex. BERT&lt;/li>
-&lt;li>Decoder-only 模型，單向生成（左至右），根據前文預測下個字元。&lt;br>
-ex. GPT&lt;/li>
-&lt;li>Encoder-Decoder 模型，將輸入編碼後，再由解碼器生成對應輸出。&lt;br>
-ex. T5&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;h2 id="提示學習">提示學習
-&lt;/h2>&lt;h3 id="提示工程prompt-engineering">提示工程（Prompt Engineering）
-&lt;/h3>&lt;p>因為 LLM 的參數量通常非常龐大，因此提示學習的發展可使 LLM 不需為了特定任務進行大量微調，就可以實現各項任務。&lt;br>
-缺點：當缺乏專業領域知識時，生成結果可能不夠精確。&lt;/p>
-&lt;h3 id="上下文學習in-context-learning-icl">上下文學習（In-Context Learning, ICL）
-&lt;/h3>&lt;p>為提示學習的一種形式，透過在提示中提供範例示範，讓 LLM 觀察並學習任務模式。&lt;br>
-缺點：成效高度依賴範例品質、當缺乏必要知識或資訊時，可能導致生成結果不理想。&lt;/p>
-&lt;p>為克服這些問題，發展出 RAG（檢索增強生成）技術，RAG 結合檢索與生成，提升 LLM 在多任務中的表現與適應性。&lt;/p>
-&lt;h1 id="內文">內文
-&lt;/h1>&lt;p>LLMs 時代的 RAG 架構大致包含檢索、產生和增強三個主要流程。&lt;/p>
-&lt;p>&lt;img src="https://ar5iv.labs.arxiv.org/html/2405.06211/assets/x2.png"
+&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="實作方式與系統特性"&gt;實作方式與系統特性
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Naive RAG&lt;/strong&gt;：實作最直接，僅需嵌入模型、向量資料庫與 LLM。模組線性串接，無需微調，部署維護成本低，適合簡單應用。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Advanced RAG&lt;/strong&gt;：需引入查詢優化、重排序等模組，常用 LlamaIndex、LangChain 等框架。系統複雜度提升，需調校多個子系統，適合中等複雜度任務。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Modular RAG&lt;/strong&gt;：高度模組化，常用流水線編排框架。每個功能獨立封裝，系統可為有向圖結構，便於擴充與維護，但開發協調成本高。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="核心技術細節"&gt;核心技術細節
+&lt;/h2&gt;&lt;h3 id="資料預處理與嵌入"&gt;資料預處理與嵌入
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Naive RAG&lt;/strong&gt;：文本清洗、切分、嵌入，建立向量索引，重點在語義表示。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Advanced RAG&lt;/strong&gt;：細粒度切分、滑動視窗、metadata 標註、混合嵌入（密集+稀疏），提升檢索覆蓋率與精確性。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Modular RAG&lt;/strong&gt;：動態資料處理，可即時抓取新資料、多模態資料、記憶模組自我增強，嵌入策略多元且可演化。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="檢索策略與查詢優化"&gt;檢索策略與查詢優化
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Naive RAG&lt;/strong&gt;：單輪語義相似度檢索，無查詢優化或多輪交互。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Advanced RAG&lt;/strong&gt;：查詢重寫/擴展、多次/混合檢索、重排序與過濾，提升檢索準確率與覆蓋率。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Modular RAG&lt;/strong&gt;：自適應多階段檢索、路由決策、平行多查詢、遞歸式檢索，根據任務動態調度檢索策略。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="上下文融合與資訊增強"&gt;上下文融合與資訊增強
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Naive RAG&lt;/strong&gt;：直接拼接查詢與檢索內容，無額外處理，易受雜訊干擾。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Advanced RAG&lt;/strong&gt;：重排序、壓縮、過濾、明確引導模型引用檢索內容，提升訊息品質。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Modular RAG&lt;/strong&gt;：多步融合、示範-搜索-預測、動態記憶、事後校驗，深度整合外部知識與模型推理。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="回答生成與控制"&gt;回答生成與控制
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Naive RAG&lt;/strong&gt;：LLM 直接生成，控制力弱，易出現幻覺或拼貼。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Advanced RAG&lt;/strong&gt;：提示工程、微調、反饋迴路、生成後過濾，強化可靠性與安全性。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Modular RAG&lt;/strong&gt;：示範模組、迭代生成、後處理校驗、用戶反饋迴路，實現嚴謹的生成管控。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="適用場景與限制"&gt;適用場景與限制
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Naive RAG&lt;/strong&gt;：適合原型、FAQ、內部知識庫等低複雜度場景，開發快但不適合高精度或多步推理任務。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Advanced RAG&lt;/strong&gt;：適用於醫療、法律、教育等知識密集型問答，能處理較大規模知識庫，但資源需求與維護成本較高。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Modular RAG&lt;/strong&gt;：適合大型企業、跨領域系統、需多階段推理或多源資訊整合的場景，擴展性與維護性最佳，但開發複雜度與初始成本高。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="優劣比較"&gt;優劣比較
+&lt;/h2&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;架構&lt;/th&gt;
+&lt;th&gt;實用性&lt;/th&gt;
+&lt;th&gt;可擴展性&lt;/th&gt;
+&lt;th&gt;維護成本&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Naive RAG&lt;/td&gt;
+&lt;td&gt;高（易用）&lt;/td&gt;
+&lt;td&gt;低～中&lt;/td&gt;
+&lt;td&gt;低&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Advanced RAG&lt;/td&gt;
+&lt;td&gt;中（需專業）&lt;/td&gt;
+&lt;td&gt;中～高&lt;/td&gt;
+&lt;td&gt;中&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Modular RAG&lt;/td&gt;
+&lt;td&gt;低（複雜）&lt;/td&gt;
+&lt;td&gt;極高&lt;/td&gt;
+&lt;td&gt;高（初始），低（局部維護）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Naive RAG&lt;/strong&gt;：簡單易用、成本低，但遇到複雜任務易達天花板。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Advanced RAG&lt;/strong&gt;：性能與複雜度平衡，適合多數專業應用，維護需專業投入。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Modular RAG&lt;/strong&gt;：彈性與擴展性最強，適合高端需求，但開發與協調成本高。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="結論"&gt;結論
+&lt;/h2&gt;&lt;p&gt;三種 RAG 架構各有適用場景與優劣。Naive RAG 適合快速原型與簡單應用，Advanced RAG 適合專業領域與中大型知識庫，Modular RAG 則為高複雜度、需長期演化的系統提供最佳解決方案。選擇何種架構，應根據實際需求、資源與長期維護考量權衡取捨。&lt;/p&gt;
+&lt;h2 id="reference"&gt;Reference
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="https://arxiv.org/abs/2312.10997" target="_blank" rel="noopener"
+&gt;Retrieval-Augmented Generation for Large Language Models: A Survey&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://www.thecloudgirl.dev/blog/three-paradigms-of-retrieval-augmented-generation-rag-for-llms#:~:text=,on%20embeddings%20from%20language%20models" target="_blank" rel="noopener"
+&gt;Three Paradigms of Retrieval-Augmented Generation (RAG) for LLMs&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://www.ibm.com/think/topics/rag-techniques#:~:" target="_blank" rel="noopener"
+&gt;RAG Techniques | IBM Think&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>檢索增強大型語言模型綜述 — RA-LLMs 系統性回顧與應用解析</title><link>https://Dandelionlibra.github.io/post/paper/rag-llms-survey-note/</link><pubDate>Sun, 20 Jul 2025 08:50:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/paper/rag-llms-survey-note/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;本文整理自：&lt;a class="link" href="https://arxiv.org/abs/2405.06211" target="_blank" rel="noopener"
+&gt;A Survey on RAG Meeting LLMs: Towards Retrieval-Augmented Large Language Models&lt;/a&gt;&lt;br&gt;
+作者：Wenqi Fan, Yujuan Ding, Liangbo Ning, Shijie Wang, Hengyun Li, Dawei Yin, Tat-Seng Chua, Qing Li&lt;br&gt;
+發佈於 arXiv，2024年5月&lt;/p&gt;&lt;/blockquote&gt;
+&lt;h1 id="摘要"&gt;摘要
+&lt;/h1&gt;&lt;p&gt;大型語言模型（LLMs）雖展現強大生成能力，但受限於內部知識與幻覺問題。檢索增強生成（Retrieval-Augmented Generation;RAG）透過即時檢索外部資訊，提升回應的可靠性與時效性。本文整理 RA-LLMs 的架構、訓練策略與應用，並探討其面臨的挑戰與未來發展，展現檢索對提升 LLM 實用性的關鍵價值。&lt;/p&gt;
+&lt;h1 id="前言"&gt;前言
+&lt;/h1&gt;&lt;p&gt;檢索增強生成（RAG）技術透過結合資訊檢索與大型語言模型（LLMs），補足模型知識不足與幻覺問題，近年受到廣泛關注。LLMs 雖具強大生成能力，卻常受限於知識時效與專領域應用，而 RA-LLMs 則透過檢索外部資料提升生成品質。&lt;/p&gt;
+&lt;h1 id="背景"&gt;背景
+&lt;/h1&gt;&lt;h2 id="大型語言模型"&gt;大型語言模型
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;應用&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;在特定資料集上進行微調，LLM 可以適應各種下游任務，使其能夠專注於特定領域或應用。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;架構:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Encoder-only 模型，雙向編碼，可同時考慮單詞左右語境。&lt;br&gt;
+ex. BERT&lt;/li&gt;
+&lt;li&gt;Decoder-only 模型，單向生成（左至右），根據前文預測下個字元。&lt;br&gt;
+ex. GPT&lt;/li&gt;
+&lt;li&gt;Encoder-Decoder 模型，將輸入編碼後，再由解碼器生成對應輸出。&lt;br&gt;
+ex. T5&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="提示學習"&gt;提示學習
+&lt;/h2&gt;&lt;h3 id="提示工程prompt-engineering"&gt;提示工程（Prompt Engineering）
+&lt;/h3&gt;&lt;p&gt;因為 LLM 的參數量通常非常龐大，因此提示學習的發展可使 LLM 不需為了特定任務進行大量微調，就可以實現各項任務。&lt;br&gt;
+缺點：當缺乏專業領域知識時，生成結果可能不夠精確。&lt;/p&gt;
+&lt;h3 id="上下文學習in-context-learning-icl"&gt;上下文學習（In-Context Learning, ICL）
+&lt;/h3&gt;&lt;p&gt;為提示學習的一種形式，透過在提示中提供範例示範，讓 LLM 觀察並學習任務模式。&lt;br&gt;
+缺點：成效高度依賴範例品質、當缺乏必要知識或資訊時，可能導致生成結果不理想。&lt;/p&gt;
+&lt;p&gt;為克服這些問題，發展出 RAG（檢索增強生成）技術，RAG 結合檢索與生成，提升 LLM 在多任務中的表現與適應性。&lt;/p&gt;
+&lt;h1 id="內文"&gt;內文
+&lt;/h1&gt;&lt;p&gt;LLMs 時代的 RAG 架構大致包含檢索、產生和增強三個主要流程。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://ar5iv.labs.arxiv.org/html/2405.06211/assets/x2.png"
 loading="lazy"
 alt="RAG 系統總覽"
->&lt;br>
-&lt;em>圖 1：RAG 系統總覽，涵蓋檢索、生成與增強三大流程。來源：原論文&lt;/em>&lt;/p>
-&lt;p>&lt;img src="https://ar5iv.labs.arxiv.org/html/2405.06211/assets/x3.png"
+&gt;&lt;br&gt;
+&lt;em&gt;圖 1：RAG 系統總覽，涵蓋檢索、生成與增強三大流程。來源：原論文&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://ar5iv.labs.arxiv.org/html/2405.06211/assets/x3.png"
 loading="lazy"
 alt="RAG 系統細節流程"
->&lt;br>
-&lt;em>圖 2：RAG 在 RA-LLM 中的流程圖，展示各模組間的互動。來源：原論文&lt;/em>&lt;/p>
-&lt;h2 id="retrieval">Retrieval
-&lt;/h2>&lt;p>RAG 旨在從外部知識源提供關鍵訊息給 LLM。&lt;/p>
-&lt;h3 id="retriever-type">Retriever Type
-&lt;/h3>&lt;p>依照資訊編碼區分。&lt;/p>
-&lt;ul>
-&lt;li>稀疏檢索（Sparse Retrieval）：直接匹配詞彙並依頻率排名。&lt;/li>
-&lt;li>稠密檢索（Dense Retrieval）：將查詢與文檔嵌入為向量，透過語意相似度檢索。&lt;/li>
-&lt;/ul>
-&lt;h3 id="retrieval-granularity">Retrieval Granularity
-&lt;/h3>&lt;p>檢索單位的選擇對效能與計算成本有重大影響。&lt;/p>
-&lt;ul>
-&lt;li>Chunk(passages): 包含緊湊且完整的資訊，冗餘和不相關性較少，是 RAG 中主流的檢索文本粒度。&lt;/li>
-&lt;li>Token: 實現更快的搜尋，但會給資料庫儲存帶來更多負擔。適用於需要稀有模式或領域外資料的情況。&lt;/li>
-&lt;li>Entity: 實體檢索是從知識而非語言的角度檢索，對於以實體為中心的任務更有效，並且與詞元檢索相比，在空間上更高效。&lt;/li>
-&lt;/ul>
-&lt;h3 id="retrieval-enhancement-strategies">Retrieval Enhancement strategies
-&lt;/h3>&lt;ul>
-&lt;li>
-&lt;p>檢索前優化（Pre-retrieval）&lt;/p>
-&lt;ul>
-&lt;li>
-&lt;p>Query Expansion (查詢擴展)：透過加入相關詞彙或概念來擴大原始查詢的範圍。例如，利用大型語言模型 (LLM) 生成偽文件，並從中提取相關資訊來擴展查詢，有助於消除歧義並引導檢索器。&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>Query Rewrite (查詢重寫)：旨在重新彌合原始查詢，使其更適合檢索。這可能涉及澄清查詢意圖、使其更精確，或是將其轉換為檢索功能更容易理解的形式。例如，利用 LLM 將原始問題重寫為更利於檢索的版本。&lt;br>
-舉例，&lt;strong>多次&lt;/strong>詢問模型他的檢索資料是否正確。&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>Query Augmentation (查詢增強)：將原始查詢與初步生成的內容結合，形成一個新的查詢。這種策略可以增加查詢與潛在相關文件之間的詞彙和語義重疊，有助於檢索出更多有助於答案生成的資訊。&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>
-&lt;p>檢索後優化（Post-retrieval）&lt;/p>
-&lt;ul>
-&lt;li>
-&lt;p>重排序與過濾&lt;br>
-對檢索到的文件進行重新排序，將最相關的資訊排在前面，並過濾掉不相關或低品質的文件。例如，透過不同的檢索方法組裝文件並進行重排序，以提升檢索結果的穩健性。&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>雜訊過濾與整合&lt;br>
-處理檢索到的資訊中可能存在的雜訊或不相關內容，以避免其對生成過程產生負面影響。同時，將清洗過的資訊有效地整合進生成模型。&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>壓縮與摘要&lt;br>
-針對檢索到的長篇文件，進行壓縮或生成摘要，以解決大型語言模型輸入長度限制的問題。例如，將檢索到的文件處理成文本摘要，再用於模型生成。&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;h3 id="database">Database
-&lt;/h3>&lt;p>RA-LLM 的檢索資料庫可為封閉式或開放式來源。&lt;/p>
-&lt;ul>
-&lt;li>封閉式資料庫:
-通常以鍵值對 (key-value pairs) 的形式儲存知識。&lt;/li>
-&lt;li>開放式資料庫:
-利用搜尋引擎（如 Bing、Google）獲取即時資訊。&lt;/li>
-&lt;/ul>
-&lt;h2 id="生成generation">生成（Generation）
-&lt;/h2>&lt;p>生成模組的設計高度依賴於下游任務需求，因而得以適應不同的任務需求。&lt;/p>
-&lt;h3 id="可調參數生成器白箱parameter-accessible-generators">可調參數生成器（白箱，Parameter-Accessible Generators）
-&lt;/h3>&lt;ul>
-&lt;li>
-&lt;p>Encoder-Decoder&lt;/p>
-&lt;ul>
-&lt;li>擁有獨立的編碼器（Encoder）與解碼器（Decoder），分別處理輸入與生成的目標。&lt;/li>
-&lt;li>Encoder 先將輸入編碼為上下文表示，Decoder 以 Cross-Attention 讀取 Encoder 輸出，逐步生成結果。&lt;/li>
-&lt;li>模型的目標是「根據編碼後的輸入與先前生成的結果，預測下一個 token」。&lt;/li>
-&lt;/ul>
-&lt;pre tabindex="0">&lt;code>輸入：請介紹 Transformer。
+&gt;&lt;br&gt;
+&lt;em&gt;圖 2：RAG 在 RA-LLM 中的流程圖，展示各模組間的互動。來源：原論文&lt;/em&gt;&lt;/p&gt;
+&lt;h2 id="retrieval"&gt;Retrieval
+&lt;/h2&gt;&lt;p&gt;RAG 旨在從外部知識源提供關鍵訊息給 LLM。&lt;/p&gt;
+&lt;h3 id="retriever-type"&gt;Retriever Type
+&lt;/h3&gt;&lt;p&gt;依照資訊編碼區分。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;稀疏檢索（Sparse Retrieval）：直接匹配詞彙並依頻率排名。&lt;/li&gt;
+&lt;li&gt;稠密檢索（Dense Retrieval）：將查詢與文檔嵌入為向量，透過語意相似度檢索。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="retrieval-granularity"&gt;Retrieval Granularity
+&lt;/h3&gt;&lt;p&gt;檢索單位的選擇對效能與計算成本有重大影響。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Chunk(passages): 包含緊湊且完整的資訊，冗餘和不相關性較少，是 RAG 中主流的檢索文本粒度。&lt;/li&gt;
+&lt;li&gt;Token: 實現更快的搜尋，但會給資料庫儲存帶來更多負擔。適用於需要稀有模式或領域外資料的情況。&lt;/li&gt;
+&lt;li&gt;Entity: 實體檢索是從知識而非語言的角度檢索，對於以實體為中心的任務更有效，並且與詞元檢索相比，在空間上更高效。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="retrieval-enhancement-strategies"&gt;Retrieval Enhancement strategies
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;檢索前優化（Pre-retrieval）&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Query Expansion (查詢擴展)：透過加入相關詞彙或概念來擴大原始查詢的範圍。例如，利用大型語言模型 (LLM) 生成偽文件，並從中提取相關資訊來擴展查詢，有助於消除歧義並引導檢索器。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Query Rewrite (查詢重寫)：旨在重新彌合原始查詢，使其更適合檢索。這可能涉及澄清查詢意圖、使其更精確，或是將其轉換為檢索功能更容易理解的形式。例如，利用 LLM 將原始問題重寫為更利於檢索的版本。&lt;br&gt;
+舉例，&lt;strong&gt;多次&lt;/strong&gt;詢問模型他的檢索資料是否正確。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Query Augmentation (查詢增強)：將原始查詢與初步生成的內容結合，形成一個新的查詢。這種策略可以增加查詢與潛在相關文件之間的詞彙和語義重疊，有助於檢索出更多有助於答案生成的資訊。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;檢索後優化（Post-retrieval）&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;重排序與過濾&lt;br&gt;
+對檢索到的文件進行重新排序，將最相關的資訊排在前面，並過濾掉不相關或低品質的文件。例如，透過不同的檢索方法組裝文件並進行重排序，以提升檢索結果的穩健性。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;雜訊過濾與整合&lt;br&gt;
+處理檢索到的資訊中可能存在的雜訊或不相關內容，以避免其對生成過程產生負面影響。同時，將清洗過的資訊有效地整合進生成模型。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;壓縮與摘要&lt;br&gt;
+針對檢索到的長篇文件，進行壓縮或生成摘要，以解決大型語言模型輸入長度限制的問題。例如，將檢索到的文件處理成文本摘要，再用於模型生成。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="database"&gt;Database
+&lt;/h3&gt;&lt;p&gt;RA-LLM 的檢索資料庫可為封閉式或開放式來源。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;封閉式資料庫:
+通常以鍵值對 (key-value pairs) 的形式儲存知識。&lt;/li&gt;
+&lt;li&gt;開放式資料庫:
+利用搜尋引擎（如 Bing、Google）獲取即時資訊。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="生成generation"&gt;生成（Generation）
+&lt;/h2&gt;&lt;p&gt;生成模組的設計高度依賴於下游任務需求，因而得以適應不同的任務需求。&lt;/p&gt;
+&lt;h3 id="可調參數生成器白箱parameter-accessible-generators"&gt;可調參數生成器（白箱，Parameter-Accessible Generators）
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Encoder-Decoder&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;擁有獨立的編碼器（Encoder）與解碼器（Decoder），分別處理輸入與生成的目標。&lt;/li&gt;
+&lt;li&gt;Encoder 先將輸入編碼為上下文表示，Decoder 以 Cross-Attention 讀取 Encoder 輸出，逐步生成結果。&lt;/li&gt;
+&lt;li&gt;模型的目標是「根據編碼後的輸入與先前生成的結果，預測下一個 token」。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;輸入：請介紹 Transformer。
 Encoder 編碼後 → [內部上下文表示]
 Decoder 讀取表示 → 生成：Transformer 是一種...
-&lt;/code>&lt;/pre>&lt;/li>
-&lt;li>
-&lt;p>Decoder-only&lt;/p>
-&lt;ul>
-&lt;li>沒有獨立的編碼器。&lt;/li>
-&lt;li>輸入（如問題、提示） 和 目標（要生成的內容） 會被串接成同一序列，並從左到右進行處理。&lt;/li>
-&lt;li>模型的目標是學會「根據前面內容，預測下一個 token」。&lt;/li>
-&lt;/ul>
-&lt;pre tabindex="0">&lt;code>輸入：請介紹 Transformer。
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Decoder-only&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;沒有獨立的編碼器。&lt;/li&gt;
+&lt;li&gt;輸入（如問題、提示） 和 目標（要生成的內容） 會被串接成同一序列，並從左到右進行處理。&lt;/li&gt;
+&lt;li&gt;模型的目標是學會「根據前面內容，預測下一個 token」。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;輸入：請介紹 Transformer。
 模型看到的內容：請介紹 Transformer。&amp;lt;接著是生成的回答...&amp;gt;
-&lt;/code>&lt;/pre>&lt;/li>
-&lt;/ul>
-&lt;h3 id="不可調參數生成器黑箱parameter-inaccessible-generators">不可調參數生成器（黑箱，Parameter-Inaccessible Generators）
-&lt;/h3>&lt;p>無法直接修改模型本身，且難以進行微調，因此更側重於優化檢索和增強的過程。它們的目標是透過為輸入 (prompts) 提供更優質的知識、指導或範例來增強 Generator 的性能。&lt;/p>
-&lt;h2 id="增強augmentation">增強（Augmentation）
-&lt;/h2>&lt;h3 id="input-layer-integration">Input-Layer Integration:
-&lt;/h3>&lt;ul>
-&lt;li>
-&lt;p>&lt;strong>串聯整合&lt;/strong>：如 In-Context RALM (Ram et al., 2023)，將原始輸入與所有檢索文件串聯為單一序列輸入生成模型。&lt;/p>
-&lt;ul>
-&lt;li>問題：輸入長度易超過模型處理上限，需移除部分詞元，可能導致資訊遺失。&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>平行整合&lt;/strong>：如 FID (Izacard and Grave, 2021b)、Atlas、REPLUG，將每個檢索文件獨立編碼，僅在後續步驟聚合結果。&lt;/p>
-&lt;ul>
-&lt;li>優點：更能擴展至大量上下文，減少資訊丟失風險。&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>
-&lt;p>通常，大多數基於黑盒生成的 RAG 方法都採用此法，因為生成模型的中間層和輸出分佈都無法存取。&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;h3 id="output-layer-integration">Output-Layer Integration:
-&lt;/h3>&lt;p>一種後處理 (post-hoc) 的檢索增強方式，它不直接干預生成模型的內部運作或其生成過程，而是在模型產生初步結果之後，才將檢索到的資訊與這些結果進行結合。&lt;/p>
-&lt;h3 id="intermediate-layer-integration">Intermediate-Layer Integration:
-&lt;/h3>&lt;p>在生成模型內部的中間層注入檢索資訊，相較於輸入層與輸出層整合，屬於 半參數式（Semi-parametric） 的強化方式，具有更高的資訊融合深度與潛力。&lt;/p>
-&lt;h3 id="34retrieval-augmentation-necessity-and-frequency">3.4.Retrieval Augmentation Necessity and Frequency
-&lt;/h3>&lt;p>基於 LLM 的生成中，檢索操作旨在補充知識以增強生成。儘管檢索增強模型前景光明，但若不加區分地使用不相關的段落進行增強，可能會覆蓋 LLM 已有的正確知識，導致錯誤回應，甚至使幻覺率翻倍。因此，對於檢索增強型 LLM (RA-LLMs) 來說，&lt;strong>準確回憶先驗知識並僅在必要時選擇性地整合檢索資訊&lt;/strong>至關重要，這是實現穩健 RA-LLMs 的關鍵。&lt;/p>
-&lt;h4 id="檢索必要性判斷">檢索必要性判斷
-&lt;/h4>&lt;p>大多數方法基於 LLM 的初步答案或內部推理結果來判斷是否需要檢索：&lt;/p>
-&lt;ul>
-&lt;li>&lt;strong>特殊標記控制&lt;/strong>：如 Self-RAG，引入特殊標記評估檢索必要性並控制行為。&lt;/li>
-&lt;li>&lt;strong>迭代提示決策&lt;/strong>：設計迭代提示決定生成中是否需要額外資訊。&lt;/li>
-&lt;li>&lt;strong>基於信賴度 (Logits Confidence)&lt;/strong>：傳統 RAG 中透過評估生成模型輸出的 logits 信賴度來判斷。如 FLARE，當 logits 低於閾值時動態觸發 RAG。&lt;/li>
-&lt;li>&lt;strong>協同檢測&lt;/strong>：如 SlimPLM，利用輕量級代理模型生成「啟發式答案」檢測 LLM 缺失知識，並用於查詢重寫以促進檢索。&lt;/li>
-&lt;/ul>
-&lt;h4 id="檢索頻率-retrieval-frequency">檢索頻率 (Retrieval Frequency)
-&lt;/h4>&lt;p>檢索頻率（或稱檢索步長）是決定生成過程中檢索使用程度的重要設計考量，影響模型的效率和有效性。當不考慮檢索必要性時，檢索頻率通常是預定義和固定的，主要有三種設定：&lt;/p>
-&lt;ul>
-&lt;li>
-&lt;p>&lt;strong>一次性檢索 (One-time retrieval)&lt;/strong>：&lt;/p>
-&lt;ul>
-&lt;li>&lt;strong>方式&lt;/strong>：在生成過程開始時只調用一次檢索功能，檢索所有所需資訊，然後提供給生成模型。&lt;/li>
-&lt;li>&lt;strong>適用場景&lt;/strong>：外部資料庫資訊需求對 LLM 來說很明確的情況。&lt;/li>
-&lt;li>&lt;strong>限制&lt;/strong>：對於需要長篇輸出的任務（如開放域摘要），預先檢索的文件可能不足以支持整個生成序列，需要生成中進行檢索操作。&lt;/li>
-&lt;li>&lt;strong>範例&lt;/strong>：REALM。&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>每 N 個詞元檢索 (Every-n-token retrieval)&lt;/strong>：&lt;/p>
-&lt;ul>
-&lt;li>&lt;strong>方式&lt;/strong>：在生成過程中每隔 N 個詞元觸發一次檢索。&lt;/li>
-&lt;li>&lt;strong>適用場景&lt;/strong>：需要持續資訊補充的長篇生成任務。&lt;/li>
-&lt;li>&lt;strong>範例&lt;/strong>：In-Context RALM、RETRO。&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>每個詞元檢索 (Every-token retrieval)&lt;/strong>：&lt;/p>
-&lt;ul>
-&lt;li>&lt;strong>方式&lt;/strong>：在生成過程中，為每個詞元的預測都檢索資訊。&lt;/li>
-&lt;li>&lt;strong>頻率&lt;/strong>：最頻繁的檢索策略。&lt;/li>
-&lt;li>&lt;strong>範例&lt;/strong>：kNN-LM。&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;p>&lt;strong>權衡&lt;/strong>：
-總體而言，檢索頻率影響 RAG 方法的有效性和效率。更頻繁的檢索通常帶來更好的性能，但也顯著增加計算成本。&lt;/p>
-&lt;h2 id="ra-llms-訓練策略概述">RA-LLMs 訓練策略概述
-&lt;/h2>&lt;p>&lt;img src="https://ar5iv.labs.arxiv.org/html/2405.06211/assets/x4.png"
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="不可調參數生成器黑箱parameter-inaccessible-generators"&gt;不可調參數生成器（黑箱，Parameter-Inaccessible Generators）
+&lt;/h3&gt;&lt;p&gt;無法直接修改模型本身，且難以進行微調，因此更側重於優化檢索和增強的過程。它們的目標是透過為輸入 (prompts) 提供更優質的知識、指導或範例來增強 Generator 的性能。&lt;/p&gt;
+&lt;h2 id="增強augmentation"&gt;增強（Augmentation）
+&lt;/h2&gt;&lt;h3 id="input-layer-integration"&gt;Input-Layer Integration:
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;串聯整合&lt;/strong&gt;：如 In-Context RALM (Ram et al., 2023)，將原始輸入與所有檢索文件串聯為單一序列輸入生成模型。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;問題：輸入長度易超過模型處理上限，需移除部分詞元，可能導致資訊遺失。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;平行整合&lt;/strong&gt;：如 FID (Izacard and Grave, 2021b)、Atlas、REPLUG，將每個檢索文件獨立編碼，僅在後續步驟聚合結果。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;優點：更能擴展至大量上下文，減少資訊丟失風險。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;通常，大多數基於黑盒生成的 RAG 方法都採用此法，因為生成模型的中間層和輸出分佈都無法存取。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="output-layer-integration"&gt;Output-Layer Integration:
+&lt;/h3&gt;&lt;p&gt;一種後處理 (post-hoc) 的檢索增強方式，它不直接干預生成模型的內部運作或其生成過程，而是在模型產生初步結果之後，才將檢索到的資訊與這些結果進行結合。&lt;/p&gt;
+&lt;h3 id="intermediate-layer-integration"&gt;Intermediate-Layer Integration:
+&lt;/h3&gt;&lt;p&gt;在生成模型內部的中間層注入檢索資訊，相較於輸入層與輸出層整合，屬於 半參數式（Semi-parametric） 的強化方式，具有更高的資訊融合深度與潛力。&lt;/p&gt;
+&lt;h3 id="34retrieval-augmentation-necessity-and-frequency"&gt;3.4.Retrieval Augmentation Necessity and Frequency
+&lt;/h3&gt;&lt;p&gt;基於 LLM 的生成中，檢索操作旨在補充知識以增強生成。儘管檢索增強模型前景光明，但若不加區分地使用不相關的段落進行增強，可能會覆蓋 LLM 已有的正確知識，導致錯誤回應，甚至使幻覺率翻倍。因此，對於檢索增強型 LLM (RA-LLMs) 來說，&lt;strong&gt;準確回憶先驗知識並僅在必要時選擇性地整合檢索資訊&lt;/strong&gt;至關重要，這是實現穩健 RA-LLMs 的關鍵。&lt;/p&gt;
+&lt;h4 id="檢索必要性判斷"&gt;檢索必要性判斷
+&lt;/h4&gt;&lt;p&gt;大多數方法基於 LLM 的初步答案或內部推理結果來判斷是否需要檢索：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;特殊標記控制&lt;/strong&gt;：如 Self-RAG，引入特殊標記評估檢索必要性並控制行為。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;迭代提示決策&lt;/strong&gt;：設計迭代提示決定生成中是否需要額外資訊。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;基於信賴度 (Logits Confidence)&lt;/strong&gt;：傳統 RAG 中透過評估生成模型輸出的 logits 信賴度來判斷。如 FLARE，當 logits 低於閾值時動態觸發 RAG。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;協同檢測&lt;/strong&gt;：如 SlimPLM，利用輕量級代理模型生成「啟發式答案」檢測 LLM 缺失知識，並用於查詢重寫以促進檢索。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id="檢索頻率-retrieval-frequency"&gt;檢索頻率 (Retrieval Frequency)
+&lt;/h4&gt;&lt;p&gt;檢索頻率（或稱檢索步長）是決定生成過程中檢索使用程度的重要設計考量，影響模型的效率和有效性。當不考慮檢索必要性時，檢索頻率通常是預定義和固定的，主要有三種設定：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;一次性檢索 (One-time retrieval)&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;方式&lt;/strong&gt;：在生成過程開始時只調用一次檢索功能，檢索所有所需資訊，然後提供給生成模型。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;適用場景&lt;/strong&gt;：外部資料庫資訊需求對 LLM 來說很明確的情況。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;限制&lt;/strong&gt;：對於需要長篇輸出的任務（如開放域摘要），預先檢索的文件可能不足以支持整個生成序列，需要生成中進行檢索操作。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;範例&lt;/strong&gt;：REALM。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;每 N 個詞元檢索 (Every-n-token retrieval)&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;方式&lt;/strong&gt;：在生成過程中每隔 N 個詞元觸發一次檢索。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;適用場景&lt;/strong&gt;：需要持續資訊補充的長篇生成任務。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;範例&lt;/strong&gt;：In-Context RALM、RETRO。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;每個詞元檢索 (Every-token retrieval)&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;方式&lt;/strong&gt;：在生成過程中，為每個詞元的預測都檢索資訊。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;頻率&lt;/strong&gt;：最頻繁的檢索策略。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;範例&lt;/strong&gt;：kNN-LM。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;權衡&lt;/strong&gt;：
+總體而言，檢索頻率影響 RAG 方法的有效性和效率。更頻繁的檢索通常帶來更好的性能，但也顯著增加計算成本。&lt;/p&gt;
+&lt;h2 id="ra-llms-訓練策略概述"&gt;RA-LLMs 訓練策略概述
+&lt;/h2&gt;&lt;p&gt;&lt;img src="https://ar5iv.labs.arxiv.org/html/2405.06211/assets/x4.png"
 loading="lazy"
 alt="RA-LLMs 訓練策略總覽"
->&lt;br>
-&lt;em>圖 3：RA-LLMs 訓練策略總覽，涵蓋免訓練與需訓練方法。來源：原論文&lt;/em>&lt;/p>
-&lt;h3 id="免訓練方法training-free">免訓練方法（Training-Free）
-&lt;/h3>&lt;h4 id="prompt-engineering-based-methods">Prompt Engineering-based Methods
-&lt;/h4>&lt;p>將檢索到的外部知識，直接整合進 LLM 的提示（Prompt），作為上下文輔助模型生成。&lt;br>
-舉例，In-Context RALM 在不改動 LLM 參數的情況下，直接將檢索到的文件插入於原始提示之前，增強生成過程。IRCoT 則交錯進行 chain-of-thought（CoT）生成與知識檢索步驟，使每一步推理都能檢索到更相關的資訊。GENREAD 不是從大型語料庫檢索知識，而是先讓 LLM 根據查詢生成上下文文件，再根據這些上下文與問題產生答案。SKR 則引導 LLM 判斷是否能僅依靠內部知識回答問題，若不足再選擇性調用檢索器，靈活結合內外部知識。TOC 針對模糊問題，先檢索相關知識，並遞迴將問題拆解為多個明確子問題，最終聚合生成長篇答案。&lt;/p>
-&lt;ul>
-&lt;li>特點：
-&lt;ul>
-&lt;li>無需模型訓練&lt;/li>
-&lt;li>靠設計合理的提示與檢索流程提升效果&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;h4 id="retrieval-guided-token-generation-methods">Retrieval-Guided Token Generation Methods
-&lt;/h4>&lt;p>透過檢索結果來調整 LLM 的 Token 預測分布，影響每一步的生成。&lt;br>
-舉例，例如 KNN-LMs 會根據當前查詢從資料庫檢索出 k 個最相關的上下文，計算鄰近分布，並將其與原模型的輸出分布進行插值校正，以提升生成結果的準確性。Rest 則以非參數檢索資料庫取代傳統的參數式草稿模型，根據當前上下文檢索相關 token，輔助推測式生成（speculative decoding）。&lt;/p>
-&lt;ul>
-&lt;li>特點：
-&lt;ul>
-&lt;li>不更改模型權重&lt;/li>
-&lt;li>通常作為後處理或推測性生成的輔助&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;p>※ 這兩類免訓練方法，分別著重於：&lt;/p>
-&lt;ul>
-&lt;li>提示工程 — 調整輸入&lt;/li>
-&lt;li>生成控制 — 調整輸出過程&lt;/li>
-&lt;/ul>
-&lt;hr>
-&lt;h3 id="需訓練方法training-based">需訓練方法（Training-Based）
-&lt;/h3>&lt;ol>
-&lt;li>Independent Training&lt;br>
-獨立訓練方法會將 RAG 流程中的每個組件分開、獨立地進行訓練，這意味著在訓練過程中，這兩個組件之間沒有任何交互作用。&lt;/li>
-&lt;/ol>
-&lt;p>&lt;strong>目的與優勢：&lt;/strong>&lt;br>
-相較於無需訓練的方法，獨立訓練能有效提升 RAG 模型的性能。&lt;br>
-1. 訓練 LLMs 以更好地利用檢索到的知識。&lt;br>
-2. 訓練檢索器以彌合資訊檢索與語言生成之間的差距。&lt;/p>
-&lt;p>&lt;strong>檢索器類型：&lt;/strong>
+&gt;&lt;br&gt;
+&lt;em&gt;圖 3：RA-LLMs 訓練策略總覽，涵蓋免訓練與需訓練方法。來源：原論文&lt;/em&gt;&lt;/p&gt;
+&lt;h3 id="免訓練方法training-free"&gt;免訓練方法（Training-Free）
+&lt;/h3&gt;&lt;h4 id="prompt-engineering-based-methods"&gt;Prompt Engineering-based Methods
+&lt;/h4&gt;&lt;p&gt;將檢索到的外部知識，直接整合進 LLM 的提示（Prompt），作為上下文輔助模型生成。&lt;br&gt;
+舉例，In-Context RALM 在不改動 LLM 參數的情況下，直接將檢索到的文件插入於原始提示之前，增強生成過程。IRCoT 則交錯進行 chain-of-thought（CoT）生成與知識檢索步驟，使每一步推理都能檢索到更相關的資訊。GENREAD 不是從大型語料庫檢索知識，而是先讓 LLM 根據查詢生成上下文文件，再根據這些上下文與問題產生答案。SKR 則引導 LLM 判斷是否能僅依靠內部知識回答問題，若不足再選擇性調用檢索器，靈活結合內外部知識。TOC 針對模糊問題，先檢索相關知識，並遞迴將問題拆解為多個明確子問題，最終聚合生成長篇答案。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;特點：
+&lt;ul&gt;
+&lt;li&gt;無需模型訓練&lt;/li&gt;
+&lt;li&gt;靠設計合理的提示與檢索流程提升效果&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id="retrieval-guided-token-generation-methods"&gt;Retrieval-Guided Token Generation Methods
+&lt;/h4&gt;&lt;p&gt;透過檢索結果來調整 LLM 的 Token 預測分布，影響每一步的生成。&lt;br&gt;
+舉例，例如 KNN-LMs 會根據當前查詢從資料庫檢索出 k 個最相關的上下文，計算鄰近分布，並將其與原模型的輸出分布進行插值校正，以提升生成結果的準確性。Rest 則以非參數檢索資料庫取代傳統的參數式草稿模型，根據當前上下文檢索相關 token，輔助推測式生成（speculative decoding）。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;特點：
+&lt;ul&gt;
+&lt;li&gt;不更改模型權重&lt;/li&gt;
+&lt;li&gt;通常作為後處理或推測性生成的輔助&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;※ 這兩類免訓練方法，分別著重於：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;提示工程 — 調整輸入&lt;/li&gt;
+&lt;li&gt;生成控制 — 調整輸出過程&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h3 id="需訓練方法training-based"&gt;需訓練方法（Training-Based）
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;Independent Training&lt;br&gt;
+獨立訓練方法會將 RAG 流程中的每個組件分開、獨立地進行訓練，這意味著在訓練過程中，這兩個組件之間沒有任何交互作用。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;目的與優勢：&lt;/strong&gt;&lt;br&gt;
+相較於無需訓練的方法，獨立訓練能有效提升 RAG 模型的性能。&lt;br&gt;
+1. 訓練 LLMs 以更好地利用檢索到的知識。&lt;br&gt;
+2. 訓練檢索器以彌合資訊檢索與語言生成之間的差距。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;檢索器類型：&lt;/strong&gt;
 * 稀疏檢索器 (Sparse Retriever) ：
-這類檢索器通常利用稀疏特徵，例如詞頻，來表示文件，並根據任務特定的指標（如 TF-IDF 和 BM25）計算相關性分數 。&lt;/p>
-&lt;pre>&lt;code>* 密集檢索器 (Dense Retriever) ：
+這類檢索器通常利用稀疏特徵，例如詞頻，來表示文件，並根據任務特定的指標（如 TF-IDF 和 BM25）計算相關性分數 。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;* 密集檢索器 (Dense Retriever) ：
 密集檢索器則採用深度神經網絡將查詢和文件編碼成密集表示 (dense representations)。然後，通常使用內積計算相關性分數並檢索相關的外部知識。序列訓練透過協調訓練的方式，尋求更深層次的整合效果。
-&lt;/code>&lt;/pre>
-&lt;ol start="2">
-&lt;li>
-&lt;p>Sequential Training&lt;br>
-序列訓練方法則採取分階段的訓練方式。首先訓練一個模組（例如檢索器），然後再利用這個訓練好的模組去指導另一個模組（例如生成器）的調整過程，目的在改善模組間的協同作用。&lt;/p>
-&lt;p>&lt;strong>訓練流程：&lt;/strong> 序列訓練通常分為兩個階段&lt;/p>
-&lt;ol>
-&lt;li>**初始預訓練：**首先對檢索器或生成器中的一個模組進行獨立的預訓練。&lt;/li>
-&lt;li>**固定與訓練：**一旦其中一個模組完成預訓練，它就會被固定（freeze）下來，而另一個模組則在其輔助下進行訓練。&lt;/li>
-&lt;/ol>
-&lt;p>&lt;strong>優勢與靈活性：&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>協同增益：與獨立訓練相比，序列訓練的優勢在於可訓練的模組能夠受益於固定模組的引導和協助，從而更好地適應彼此。&lt;/li>
-&lt;li>利用現有模型：值得注意的是，許多已經預訓練好的強大模型（例如 BERT、CLIP、T5）可以直接作為固定模組使用，從而省略了初始的預訓練步驟，進一步提高了效率。&lt;/li>
-&lt;/ul>
-&lt;p>&lt;strong>根據檢索器和生成器之間的訓練順序，序列訓練可分為兩大類：&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>檢索器優先 (Retriever First)：&lt;br>
-此類方法首先訓練檢索器，然後將其固定，再訓練生成器。&lt;/li>
-&lt;li>LLMs 優先 (LLMs First)：&lt;br>
-此類方法則相反，先訓練 LLM，再將其固定，然後訓練檢索器。&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>
-&lt;p>Joint Training&lt;br>
-聯合訓練方法則是同時訓練檢索器和生成器，這種方式是為了讓兩個模組在訓練過程中相互協調、共同進步。&lt;/p>
-&lt;/li>
-&lt;/ol></description></item></channel></rss>
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ol start="2"&gt;
+&lt;li&gt;
+&lt;p&gt;Sequential Training&lt;br&gt;
+序列訓練方法則採取分階段的訓練方式。首先訓練一個模組（例如檢索器），然後再利用這個訓練好的模組去指導另一個模組（例如生成器）的調整過程，目的在改善模組間的協同作用。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;訓練流程：&lt;/strong&gt; 序列訓練通常分為兩個階段&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;**初始預訓練：**首先對檢索器或生成器中的一個模組進行獨立的預訓練。&lt;/li&gt;
+&lt;li&gt;**固定與訓練：**一旦其中一個模組完成預訓練，它就會被固定（freeze）下來，而另一個模組則在其輔助下進行訓練。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;優勢與靈活性：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;協同增益：與獨立訓練相比，序列訓練的優勢在於可訓練的模組能夠受益於固定模組的引導和協助，從而更好地適應彼此。&lt;/li&gt;
+&lt;li&gt;利用現有模型：值得注意的是，許多已經預訓練好的強大模型（例如 BERT、CLIP、T5）可以直接作為固定模組使用，從而省略了初始的預訓練步驟，進一步提高了效率。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;根據檢索器和生成器之間的訓練順序，序列訓練可分為兩大類：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;檢索器優先 (Retriever First)：&lt;br&gt;
+此類方法首先訓練檢索器，然後將其固定，再訓練生成器。&lt;/li&gt;
+&lt;li&gt;LLMs 優先 (LLMs First)：&lt;br&gt;
+此類方法則相反，先訓練 LLM，再將其固定，然後訓練檢索器。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Joint Training&lt;br&gt;
+聯合訓練方法則是同時訓練檢索器和生成器，這種方式是為了讓兩個模組在訓練過程中相互協調、共同進步。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;</description></item></channel></rss>

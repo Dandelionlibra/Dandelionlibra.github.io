@@ -1,270 +1,270 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>BGE on YuChen</title><link>https://Dandelionlibra.github.io/tags/bge/</link><description>Recent content in BGE on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Wed, 23 Jul 2025 03:51:00 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/tags/bge/index.xml" rel="self" type="application/rss+xml"/><item><title>BAAI/bge-reranker-v2-m3 — Hugging Face 官方整理</title><link>https://Dandelionlibra.github.io/post/note/bge-reranker-hf-flagembedding-note/</link><pubDate>Wed, 23 Jul 2025 03:51:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/bge-reranker-hf-flagembedding-note/</guid><description>&lt;h2 id="reranker-模型與函式庫使用差異筆記">Reranker 模型與函式庫使用差異筆記
-&lt;/h2>&lt;p>這份筆記整理了 FlagEmbedding 和 Hugging Face Transformers 在實作不同 Reranker 模型（標準型、LLM 型、分層式 LLM 型）時的關鍵差異。&lt;/p>
-&lt;hr>
-&lt;h3 id="核心實作比較">核心實作比較
-&lt;/h3>&lt;h4 id="flagembedding">FlagEmbedding
-&lt;/h4>&lt;p>&lt;code>FlagEmbedding&lt;/code> 函式庫提供了更簡潔、高度封裝的 API，適合快速整合和高效能應用。&lt;/p>
-&lt;ol>
-&lt;li>標準 Reranker (bge-reranker-base / large / v2-m3)&lt;/li>
-&lt;/ol>
-&lt;ul>
-&lt;li>方法: 使用 &lt;code>FlagReranker&lt;/code> 類別。&lt;/li>
-&lt;li>特點: 最直接、優化的方法，簡化模型載入和計算。&lt;/li>
-&lt;li>程式碼範例:
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> FlagEmbedding &lt;span style="color:#f92672">import&lt;/span> FlagReranker
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Setting use_fp16 to True speeds up computation with a slight performance degradation&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>reranker &lt;span style="color:#f92672">=&lt;/span> FlagReranker(&lt;span style="color:#e6db74">&amp;#39;BAAI/bge-reranker-v2-m3&amp;#39;&lt;/span>, use_fp16&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">True&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>score &lt;span style="color:#f92672">=&lt;/span> reranker&lt;span style="color:#f92672">.&lt;/span>compute_score([&lt;span style="color:#e6db74">&amp;#39;query&amp;#39;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;passage&amp;#39;&lt;/span>])
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>print(score) &lt;span style="color:#75715e"># -5.65234375&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Map the scores into 0-1 by set &amp;#34;normalize=True&amp;#34;, which will apply sigmoid function to the score&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>score &lt;span style="color:#f92672">=&lt;/span> reranker&lt;span style="color:#f92672">.&lt;/span>compute_score([&lt;span style="color:#e6db74">&amp;#39;query&amp;#39;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;passage&amp;#39;&lt;/span>], normalize&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">True&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>print(score) &lt;span style="color:#75715e"># 0.003497010252573502&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>scores &lt;span style="color:#f92672">=&lt;/span> reranker&lt;span style="color:#f92672">.&lt;/span>compute_score([[&lt;span style="color:#e6db74">&amp;#39;what is panda?&amp;#39;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;hi&amp;#39;&lt;/span>], [&lt;span style="color:#e6db74">&amp;#39;what is panda?&amp;#39;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;The giant panda (Ailuropoda melanoleuca), sometimes called a panda bear or simply panda, is a bear species endemic to China.&amp;#39;&lt;/span>]])
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>print(scores) &lt;span style="color:#75715e"># [-8.1875, 5.26171875]&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># set &amp;#34;normalize=True&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>scores &lt;span style="color:#f92672">=&lt;/span> reranker&lt;span style="color:#f92672">.&lt;/span>compute_score([[&lt;span style="color:#e6db74">&amp;#39;what is panda?&amp;#39;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;hi&amp;#39;&lt;/span>], [&lt;span style="color:#e6db74">&amp;#39;what is panda?&amp;#39;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;The giant panda (Ailuropoda melanoleuca), sometimes called a panda bear or simply panda, is a bear species endemic to China.&amp;#39;&lt;/span>]], normalize&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">True&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>print(scores) &lt;span style="color:#75715e"># [0.00027803096387751553, 0.9948403768236574]&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
-&lt;/ul>
-&lt;ol start="2">
-&lt;li>LLM-based Reranker&lt;/li>
-&lt;/ol>
-&lt;ul>
-&lt;li>方法: 利用 &lt;code>FlagLLMReranker&lt;/code> 類別。&lt;/li>
-&lt;li>特點: 將大型語言模型（如 Llama）作為 Reranker，利用其語言理解能力進行細緻排序。需要大量 VRAM (&amp;gt;40G)。&lt;/li>
-&lt;li>程式碼範例:
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> FlagEmbedding &lt;span style="color:#f92672">import&lt;/span> FlagLLMReranker
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Setting use_fp16 to True speeds up computation with a slight performance degradation&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>reranker &lt;span style="color:#f92672">=&lt;/span> FlagLLMReranker(&lt;span style="color:#e6db74">&amp;#39;BAAI/bge-reranker-v2-gemma&amp;#39;&lt;/span>, use_fp16&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">True&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>score &lt;span style="color:#f92672">=&lt;/span> reranker&lt;span style="color:#f92672">.&lt;/span>compute_score([&lt;span style="color:#e6db74">&amp;#39;query&amp;#39;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;passage&amp;#39;&lt;/span>])
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>print(score)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>scores &lt;span style="color:#f92672">=&lt;/span> reranker&lt;span style="color:#f92672">.&lt;/span>compute_score([[&lt;span style="color:#e6db74">&amp;#39;what is panda?&amp;#39;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;hi&amp;#39;&lt;/span>], [&lt;span style="color:#e6db74">&amp;#39;what is panda?&amp;#39;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;The giant panda (Ailuropoda melanoleuca), sometimes called a panda bear or simply panda, is a bear species endemic to China.&amp;#39;&lt;/span>]])
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>print(scores)
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
-&lt;/ul>
-&lt;ol start="3">
-&lt;li>LLM-based Layerwise Reranker&lt;/li>
-&lt;/ol>
-&lt;ul>
-&lt;li>方法: 透過 FlagLLMReranker 的 compute_score_layerwise 方法。&lt;/li>
-&lt;li>特點: 可從 LLM 的不同層獲取分數，提供對模型決策過程的深入洞察。&lt;/li>
-&lt;li>程式碼範例:
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> FlagEmbedding &lt;span style="color:#f92672">import&lt;/span> LayerWiseFlagLLMReranker
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Setting use_fp16 to True speeds up computation with a slight performance degradation&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>reranker &lt;span style="color:#f92672">=&lt;/span> LayerWiseFlagLLMReranker(&lt;span style="color:#e6db74">&amp;#39;BAAI/bge-reranker-v2-minicpm-layerwise&amp;#39;&lt;/span>, use_fp16&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">True&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Adjusting &amp;#39;cutoff_layers&amp;#39; to pick which layers are used for computing the score.&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>score &lt;span style="color:#f92672">=&lt;/span> reranker&lt;span style="color:#f92672">.&lt;/span>compute_score([&lt;span style="color:#e6db74">&amp;#39;query&amp;#39;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;passage&amp;#39;&lt;/span>], cutoff_layers&lt;span style="color:#f92672">=&lt;/span>[&lt;span style="color:#ae81ff">28&lt;/span>])
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>print(score)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>scores &lt;span style="color:#f92672">=&lt;/span> reranker&lt;span style="color:#f92672">.&lt;/span>compute_score([[&lt;span style="color:#e6db74">&amp;#39;what is panda?&amp;#39;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;hi&amp;#39;&lt;/span>], [&lt;span style="color:#e6db74">&amp;#39;what is panda?&amp;#39;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;The giant panda (Ailuropoda melanoleuca), sometimes called a panda bear or simply panda, is a bear species endemic to China.&amp;#39;&lt;/span>]], cutoff_layers&lt;span style="color:#f92672">=&lt;/span>[&lt;span style="color:#ae81ff">28&lt;/span>])
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>print(scores)
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
-&lt;/ul>
-&lt;hr>
-&lt;h4 id="hugging-face-transformers">Hugging Face Transformers
-&lt;/h4>&lt;p>Hugging Face Transformers 函式庫提供了更通用和靈活的方法，適合需要深度自訂和學術研究的場景。&lt;/p>
-&lt;ol>
-&lt;li>標準 Reranker (bge-reranker-base / large / v2-m3)&lt;/li>
-&lt;/ol>
-&lt;ul>
-&lt;li>方法: 載入 AutoTokenizer 和 AutoModelForSequenceClassification。&lt;/li>
-&lt;li>特點: 標準流程，提供更多自訂空間。&lt;/li>
-&lt;li>程式碼範例:
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> torch
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> transformers &lt;span style="color:#f92672">import&lt;/span> AutoModelForSequenceClassification, AutoTokenizer
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>tokenizer &lt;span style="color:#f92672">=&lt;/span> AutoTokenizer&lt;span style="color:#f92672">.&lt;/span>from_pretrained(&lt;span style="color:#e6db74">&amp;#39;BAAI/bge-reranker-v2-m3&amp;#39;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>model &lt;span style="color:#f92672">=&lt;/span> AutoModelForSequenceClassification&lt;span style="color:#f92672">.&lt;/span>from_pretrained(&lt;span style="color:#e6db74">&amp;#39;BAAI/bge-reranker-v2-m3&amp;#39;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>model&lt;span style="color:#f92672">.&lt;/span>eval()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>pairs &lt;span style="color:#f92672">=&lt;/span> [[&lt;span style="color:#e6db74">&amp;#39;what is panda?&amp;#39;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;hi&amp;#39;&lt;/span>], [&lt;span style="color:#e6db74">&amp;#39;what is panda?&amp;#39;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;The giant panda (Ailuropoda melanoleuca), sometimes called a panda bear or simply panda, is a bear species endemic to China.&amp;#39;&lt;/span>]]
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">with&lt;/span> torch&lt;span style="color:#f92672">.&lt;/span>no_grad(): &lt;span style="color:#75715e"># 無梯度下降&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> inputs &lt;span style="color:#f92672">=&lt;/span> tokenizer(pairs, padding&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">True&lt;/span>, truncation&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">True&lt;/span>, return_tensors&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#39;pt&amp;#39;&lt;/span>, max_length&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">512&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> scores &lt;span style="color:#f92672">=&lt;/span> model(&lt;span style="color:#f92672">**&lt;/span>inputs, return_dict&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">True&lt;/span>)&lt;span style="color:#f92672">.&lt;/span>logits&lt;span style="color:#f92672">.&lt;/span>view(&lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>, )&lt;span style="color:#f92672">.&lt;/span>float()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> print(scores)
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
-&lt;/ul>
-&lt;ol start="2">
-&lt;li>LLM-based Reranker&lt;/li>
-&lt;/ol>
-&lt;ul>
-&lt;li>方法: 載入 AutoTokenizer 和 AutoModelForCausalLM。&lt;/li>
-&lt;li>特點: 需要手動處理模型輸出以獲得分數，提供最大的靈活性和控制力。&lt;/li>
-&lt;li>程式碼範例:
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> torch
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> transformers &lt;span style="color:#f92672">import&lt;/span> AutoModelForCausalLM, AutoTokenizer
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">get_inputs&lt;/span>(pairs, tokenizer, prompt&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">None&lt;/span>, max_length&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">1024&lt;/span>):
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> prompt &lt;span style="color:#f92672">is&lt;/span> &lt;span style="color:#66d9ef">None&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> prompt &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;Given a query A and a passage B, determine whether the passage contains an answer to the query by providing a prediction of either &amp;#39;Yes&amp;#39; or &amp;#39;No&amp;#39;.&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> sep &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;&lt;/span>&lt;span style="color:#ae81ff">\n&lt;/span>&lt;span style="color:#e6db74">&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> prompt_inputs &lt;span style="color:#f92672">=&lt;/span> tokenizer(prompt,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> return_tensors&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">None&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> add_special_tokens&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">False&lt;/span>)[&lt;span style="color:#e6db74">&amp;#39;input_ids&amp;#39;&lt;/span>]
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> sep_inputs &lt;span style="color:#f92672">=&lt;/span> tokenizer(sep,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> return_tensors&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">None&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> add_special_tokens&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">False&lt;/span>)[&lt;span style="color:#e6db74">&amp;#39;input_ids&amp;#39;&lt;/span>]
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> inputs &lt;span style="color:#f92672">=&lt;/span> []
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span> query, passage &lt;span style="color:#f92672">in&lt;/span> pairs:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> query_inputs &lt;span style="color:#f92672">=&lt;/span> tokenizer(&lt;span style="color:#e6db74">f&lt;/span>&lt;span style="color:#e6db74">&amp;#39;A: &lt;/span>&lt;span style="color:#e6db74">{&lt;/span>query&lt;span style="color:#e6db74">}&lt;/span>&lt;span style="color:#e6db74">&amp;#39;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> return_tensors&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">None&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> add_special_tokens&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">False&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> max_length&lt;span style="color:#f92672">=&lt;/span>max_length &lt;span style="color:#f92672">*&lt;/span> &lt;span style="color:#ae81ff">3&lt;/span> &lt;span style="color:#f92672">//&lt;/span> &lt;span style="color:#ae81ff">4&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> truncation&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">True&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> passage_inputs &lt;span style="color:#f92672">=&lt;/span> tokenizer(&lt;span style="color:#e6db74">f&lt;/span>&lt;span style="color:#e6db74">&amp;#39;B: &lt;/span>&lt;span style="color:#e6db74">{&lt;/span>passage&lt;span style="color:#e6db74">}&lt;/span>&lt;span style="color:#e6db74">&amp;#39;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> return_tensors&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">None&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> add_special_tokens&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">False&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> max_length&lt;span style="color:#f92672">=&lt;/span>max_length,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> truncation&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">True&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> item &lt;span style="color:#f92672">=&lt;/span> tokenizer&lt;span style="color:#f92672">.&lt;/span>prepare_for_model(
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> [tokenizer&lt;span style="color:#f92672">.&lt;/span>bos_token_id] &lt;span style="color:#f92672">+&lt;/span> query_inputs[&lt;span style="color:#e6db74">&amp;#39;input_ids&amp;#39;&lt;/span>],
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> sep_inputs &lt;span style="color:#f92672">+&lt;/span> passage_inputs[&lt;span style="color:#e6db74">&amp;#39;input_ids&amp;#39;&lt;/span>],
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> truncation&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#39;only_second&amp;#39;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> max_length&lt;span style="color:#f92672">=&lt;/span>max_length,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> padding&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">False&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> return_attention_mask&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">False&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> return_token_type_ids&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">False&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> add_special_tokens&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">False&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> )
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> item[&lt;span style="color:#e6db74">&amp;#39;input_ids&amp;#39;&lt;/span>] &lt;span style="color:#f92672">=&lt;/span> item[&lt;span style="color:#e6db74">&amp;#39;input_ids&amp;#39;&lt;/span>] &lt;span style="color:#f92672">+&lt;/span> sep_inputs &lt;span style="color:#f92672">+&lt;/span> prompt_inputs
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> item[&lt;span style="color:#e6db74">&amp;#39;attention_mask&amp;#39;&lt;/span>] &lt;span style="color:#f92672">=&lt;/span> [&lt;span style="color:#ae81ff">1&lt;/span>] &lt;span style="color:#f92672">*&lt;/span> len(item[&lt;span style="color:#e6db74">&amp;#39;input_ids&amp;#39;&lt;/span>])
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> inputs&lt;span style="color:#f92672">.&lt;/span>append(item)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> tokenizer&lt;span style="color:#f92672">.&lt;/span>pad(
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> inputs,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> padding&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">True&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> max_length&lt;span style="color:#f92672">=&lt;/span>max_length &lt;span style="color:#f92672">+&lt;/span> len(sep_inputs) &lt;span style="color:#f92672">+&lt;/span> len(prompt_inputs),
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> pad_to_multiple_of&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">8&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> return_tensors&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#39;pt&amp;#39;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> )
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>tokenizer &lt;span style="color:#f92672">=&lt;/span> AutoTokenizer&lt;span style="color:#f92672">.&lt;/span>from_pretrained(&lt;span style="color:#e6db74">&amp;#39;BAAI/bge-reranker-v2-gemma&amp;#39;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>model &lt;span style="color:#f92672">=&lt;/span> AutoModelForCausalLM&lt;span style="color:#f92672">.&lt;/span>from_pretrained(&lt;span style="color:#e6db74">&amp;#39;BAAI/bge-reranker-v2-gemma&amp;#39;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>yes_loc &lt;span style="color:#f92672">=&lt;/span> tokenizer(&lt;span style="color:#e6db74">&amp;#39;Yes&amp;#39;&lt;/span>, add_special_tokens&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">False&lt;/span>)[&lt;span style="color:#e6db74">&amp;#39;input_ids&amp;#39;&lt;/span>][&lt;span style="color:#ae81ff">0&lt;/span>]
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>model&lt;span style="color:#f92672">.&lt;/span>eval()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>pairs &lt;span style="color:#f92672">=&lt;/span> [[&lt;span style="color:#e6db74">&amp;#39;what is panda?&amp;#39;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;hi&amp;#39;&lt;/span>], [&lt;span style="color:#e6db74">&amp;#39;what is panda?&amp;#39;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;The giant panda (Ailuropoda melanoleuca), sometimes called a panda bear or simply panda, is a bear species endemic to China.&amp;#39;&lt;/span>]]
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">with&lt;/span> torch&lt;span style="color:#f92672">.&lt;/span>no_grad():
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> inputs &lt;span style="color:#f92672">=&lt;/span> get_inputs(pairs, tokenizer)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> scores &lt;span style="color:#f92672">=&lt;/span> model(&lt;span style="color:#f92672">**&lt;/span>inputs, return_dict&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">True&lt;/span>)&lt;span style="color:#f92672">.&lt;/span>logits[:, &lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>, yes_loc]&lt;span style="color:#f92672">.&lt;/span>view(&lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>, )&lt;span style="color:#f92672">.&lt;/span>float()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> print(scores)
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
-&lt;/ul>
-&lt;ol start="3">
-&lt;li>LLM-based Layerwise Reranker&lt;/li>
-&lt;/ol>
-&lt;ul>
-&lt;li>方法: 透過手動存取 AutoModelForCausalLM 的隱藏層輸出或注意力權重，並自行計算分數。&lt;/li>
-&lt;li>特點: 提供對 LLM 內部決策過程最細緻的控制和分析，但實作複雜度高，需要深入理解模型架構。&lt;/li>
-&lt;li>程式碼範例:
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> torch
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> transformers &lt;span style="color:#f92672">import&lt;/span> AutoModelForCausalLM, AutoTokenizer
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">get_inputs&lt;/span>(pairs, tokenizer, prompt&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">None&lt;/span>, max_length&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">1024&lt;/span>):
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> prompt &lt;span style="color:#f92672">is&lt;/span> &lt;span style="color:#66d9ef">None&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> prompt &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;Given a query A and a passage B, determine whether the passage contains an answer to the query by providing a prediction of either &amp;#39;Yes&amp;#39; or &amp;#39;No&amp;#39;.&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> sep &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;&lt;/span>&lt;span style="color:#ae81ff">\n&lt;/span>&lt;span style="color:#e6db74">&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> prompt_inputs &lt;span style="color:#f92672">=&lt;/span> tokenizer(prompt,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> return_tensors&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">None&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> add_special_tokens&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">False&lt;/span>)[&lt;span style="color:#e6db74">&amp;#39;input_ids&amp;#39;&lt;/span>]
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> sep_inputs &lt;span style="color:#f92672">=&lt;/span> tokenizer(sep,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> return_tensors&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">None&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> add_special_tokens&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">False&lt;/span>)[&lt;span style="color:#e6db74">&amp;#39;input_ids&amp;#39;&lt;/span>]
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> inputs &lt;span style="color:#f92672">=&lt;/span> []
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span> query, passage &lt;span style="color:#f92672">in&lt;/span> pairs:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> query_inputs &lt;span style="color:#f92672">=&lt;/span> tokenizer(&lt;span style="color:#e6db74">f&lt;/span>&lt;span style="color:#e6db74">&amp;#39;A: &lt;/span>&lt;span style="color:#e6db74">{&lt;/span>query&lt;span style="color:#e6db74">}&lt;/span>&lt;span style="color:#e6db74">&amp;#39;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> return_tensors&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">None&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> add_special_tokens&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">False&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> max_length&lt;span style="color:#f92672">=&lt;/span>max_length &lt;span style="color:#f92672">*&lt;/span> &lt;span style="color:#ae81ff">3&lt;/span> &lt;span style="color:#f92672">//&lt;/span> &lt;span style="color:#ae81ff">4&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> truncation&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">True&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> passage_inputs &lt;span style="color:#f92672">=&lt;/span> tokenizer(&lt;span style="color:#e6db74">f&lt;/span>&lt;span style="color:#e6db74">&amp;#39;B: &lt;/span>&lt;span style="color:#e6db74">{&lt;/span>passage&lt;span style="color:#e6db74">}&lt;/span>&lt;span style="color:#e6db74">&amp;#39;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> return_tensors&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">None&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> add_special_tokens&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">False&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> max_length&lt;span style="color:#f92672">=&lt;/span>max_length,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> truncation&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">True&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> item &lt;span style="color:#f92672">=&lt;/span> tokenizer&lt;span style="color:#f92672">.&lt;/span>prepare_for_model(
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> [tokenizer&lt;span style="color:#f92672">.&lt;/span>bos_token_id] &lt;span style="color:#f92672">+&lt;/span> query_inputs[&lt;span style="color:#e6db74">&amp;#39;input_ids&amp;#39;&lt;/span>],
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> sep_inputs &lt;span style="color:#f92672">+&lt;/span> passage_inputs[&lt;span style="color:#e6db74">&amp;#39;input_ids&amp;#39;&lt;/span>],
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> truncation&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#39;only_second&amp;#39;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> max_length&lt;span style="color:#f92672">=&lt;/span>max_length,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> padding&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">False&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> return_attention_mask&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">False&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> return_token_type_ids&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">False&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> add_special_tokens&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">False&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> )
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> item[&lt;span style="color:#e6db74">&amp;#39;input_ids&amp;#39;&lt;/span>] &lt;span style="color:#f92672">=&lt;/span> item[&lt;span style="color:#e6db74">&amp;#39;input_ids&amp;#39;&lt;/span>] &lt;span style="color:#f92672">+&lt;/span> sep_inputs &lt;span style="color:#f92672">+&lt;/span> prompt_inputs
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> item[&lt;span style="color:#e6db74">&amp;#39;attention_mask&amp;#39;&lt;/span>] &lt;span style="color:#f92672">=&lt;/span> [&lt;span style="color:#ae81ff">1&lt;/span>] &lt;span style="color:#f92672">*&lt;/span> len(item[&lt;span style="color:#e6db74">&amp;#39;input_ids&amp;#39;&lt;/span>])
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> inputs&lt;span style="color:#f92672">.&lt;/span>append(item)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> tokenizer&lt;span style="color:#f92672">.&lt;/span>pad(
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> inputs,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> padding&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">True&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> max_length&lt;span style="color:#f92672">=&lt;/span>max_length &lt;span style="color:#f92672">+&lt;/span> len(sep_inputs) &lt;span style="color:#f92672">+&lt;/span> len(prompt_inputs),
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> pad_to_multiple_of&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">8&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> return_tensors&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#39;pt&amp;#39;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> )
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>tokenizer &lt;span style="color:#f92672">=&lt;/span> AutoTokenizer&lt;span style="color:#f92672">.&lt;/span>from_pretrained(&lt;span style="color:#e6db74">&amp;#39;BAAI/bge-reranker-v2-minicpm-layerwise&amp;#39;&lt;/span>, trust_remote_code&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">True&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>model &lt;span style="color:#f92672">=&lt;/span> AutoModelForCausalLM&lt;span style="color:#f92672">.&lt;/span>from_pretrained(&lt;span style="color:#e6db74">&amp;#39;BAAI/bge-reranker-v2-minicpm-layerwise&amp;#39;&lt;/span>, trust_remote_code&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">True&lt;/span>, torch_dtype&lt;span style="color:#f92672">=&lt;/span>torch&lt;span style="color:#f92672">.&lt;/span>bfloat16)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>model &lt;span style="color:#f92672">=&lt;/span> model&lt;span style="color:#f92672">.&lt;/span>to(&lt;span style="color:#e6db74">&amp;#39;cuda&amp;#39;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>model&lt;span style="color:#f92672">.&lt;/span>eval()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>pairs &lt;span style="color:#f92672">=&lt;/span> [[&lt;span style="color:#e6db74">&amp;#39;what is panda?&amp;#39;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;hi&amp;#39;&lt;/span>], [&lt;span style="color:#e6db74">&amp;#39;what is panda?&amp;#39;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;The giant panda (Ailuropoda melanoleuca), sometimes called a panda bear or simply panda, is a bear species endemic to China.&amp;#39;&lt;/span>]]
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">with&lt;/span> torch&lt;span style="color:#f92672">.&lt;/span>no_grad():
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> inputs &lt;span style="color:#f92672">=&lt;/span> get_inputs(pairs, tokenizer)&lt;span style="color:#f92672">.&lt;/span>to(model&lt;span style="color:#f92672">.&lt;/span>device)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> all_scores &lt;span style="color:#f92672">=&lt;/span> model(&lt;span style="color:#f92672">**&lt;/span>inputs, return_dict&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">True&lt;/span>, cutoff_layers&lt;span style="color:#f92672">=&lt;/span>[&lt;span style="color:#ae81ff">28&lt;/span>])
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> all_scores &lt;span style="color:#f92672">=&lt;/span> [scores[:, &lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>]&lt;span style="color:#f92672">.&lt;/span>view(&lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>, )&lt;span style="color:#f92672">.&lt;/span>float() &lt;span style="color:#66d9ef">for&lt;/span> scores &lt;span style="color:#f92672">in&lt;/span> all_scores[&lt;span style="color:#ae81ff">0&lt;/span>]]
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> print(all_scores)
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
-&lt;/ul>
-&lt;hr>
-&lt;h3 id="核心概念解析">核心概念解析
-&lt;/h3>&lt;h4 id="標準-reranker-cross-encoder">標準 Reranker (Cross-Encoder)
-&lt;/h4>&lt;ul>
-&lt;li>原理: 將「查詢」和「文件」成對地同時輸入到模型中，模型利用兩者之間的交互資訊判斷相關性。&lt;/li>
-&lt;li>輸出: 單一相關性分數。&lt;/li>
-&lt;li>流程: 查詢 + 文件 → Cross-Encoder 模型 → 相關性分數&lt;/li>
-&lt;/ul>
-&lt;h4 id="llm-based-reranker">LLM-based Reranker
-&lt;/h4>&lt;ul>
-&lt;li>原理: 使用完整的大型語言模型（LLM）作為 Reranker，利用其龐大知識和推理能力理解深層語義關係。&lt;/li>
-&lt;li>輸出: 通常透過特定 token（如 [Yes] 或 [No]）的機率計算分數。&lt;/li>
-&lt;li>流程: 查詢 + 文件 → 大型語言模型 (LLM) → 基於生成機率的分數&lt;/li>
-&lt;/ul>
-&lt;h4 id="總結與比較">總結與比較
-&lt;/h4>&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th>比較維度&lt;/th>
-&lt;th>FlagEmbedding&lt;/th>
-&lt;th>Hugging Face Transformers&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td>易用性&lt;/td>
-&lt;td>高（API 封裝良好）&lt;/td>
-&lt;td>中（需要更多手動設定）&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>靈活性&lt;/td>
-&lt;td>中（專為 Reranking 優化）&lt;/td>
-&lt;td>高（可完全自訂流程）&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>特色功能&lt;/td>
-&lt;td>Layerwise 分數計算&lt;/td>
-&lt;td>與整個 Hugging Face 生態系無縫接軌&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>推薦使用情境&lt;/td>
-&lt;td>需要快速實現高效能 Reranking 的應用&lt;/td>
-&lt;td>需要深度自訂模型行為或進行學術研究&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>BGE on YuChen</title><link>https://Dandelionlibra.github.io/tags/bge/</link><description>Recent content in BGE on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Wed, 23 Jul 2025 03:51:00 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/tags/bge/index.xml" rel="self" type="application/rss+xml"/><item><title>BAAI/bge-reranker-v2-m3 — Hugging Face 官方整理</title><link>https://Dandelionlibra.github.io/post/note/bge-reranker-hf-flagembedding-note/</link><pubDate>Wed, 23 Jul 2025 03:51:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/bge-reranker-hf-flagembedding-note/</guid><description>&lt;h2 id="reranker-模型與函式庫使用差異筆記"&gt;Reranker 模型與函式庫使用差異筆記
+&lt;/h2&gt;&lt;p&gt;這份筆記整理了 FlagEmbedding 和 Hugging Face Transformers 在實作不同 Reranker 模型（標準型、LLM 型、分層式 LLM 型）時的關鍵差異。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id="核心實作比較"&gt;核心實作比較
+&lt;/h3&gt;&lt;h4 id="flagembedding"&gt;FlagEmbedding
+&lt;/h4&gt;&lt;p&gt;&lt;code&gt;FlagEmbedding&lt;/code&gt; 函式庫提供了更簡潔、高度封裝的 API，適合快速整合和高效能應用。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;標準 Reranker (bge-reranker-base / large / v2-m3)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;方法: 使用 &lt;code&gt;FlagReranker&lt;/code&gt; 類別。&lt;/li&gt;
+&lt;li&gt;特點: 最直接、優化的方法，簡化模型載入和計算。&lt;/li&gt;
+&lt;li&gt;程式碼範例:
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; FlagEmbedding &lt;span style="color:#f92672"&gt;import&lt;/span&gt; FlagReranker
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Setting use_fp16 to True speeds up computation with a slight performance degradation&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;reranker &lt;span style="color:#f92672"&gt;=&lt;/span&gt; FlagReranker(&lt;span style="color:#e6db74"&gt;&amp;#39;BAAI/bge-reranker-v2-m3&amp;#39;&lt;/span&gt;, use_fp16&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;score &lt;span style="color:#f92672"&gt;=&lt;/span&gt; reranker&lt;span style="color:#f92672"&gt;.&lt;/span&gt;compute_score([&lt;span style="color:#e6db74"&gt;&amp;#39;query&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;passage&amp;#39;&lt;/span&gt;])
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(score) &lt;span style="color:#75715e"&gt;# -5.65234375&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Map the scores into 0-1 by set &amp;#34;normalize=True&amp;#34;, which will apply sigmoid function to the score&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;score &lt;span style="color:#f92672"&gt;=&lt;/span&gt; reranker&lt;span style="color:#f92672"&gt;.&lt;/span&gt;compute_score([&lt;span style="color:#e6db74"&gt;&amp;#39;query&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;passage&amp;#39;&lt;/span&gt;], normalize&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(score) &lt;span style="color:#75715e"&gt;# 0.003497010252573502&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;scores &lt;span style="color:#f92672"&gt;=&lt;/span&gt; reranker&lt;span style="color:#f92672"&gt;.&lt;/span&gt;compute_score([[&lt;span style="color:#e6db74"&gt;&amp;#39;what is panda?&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;hi&amp;#39;&lt;/span&gt;], [&lt;span style="color:#e6db74"&gt;&amp;#39;what is panda?&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;The giant panda (Ailuropoda melanoleuca), sometimes called a panda bear or simply panda, is a bear species endemic to China.&amp;#39;&lt;/span&gt;]])
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(scores) &lt;span style="color:#75715e"&gt;# [-8.1875, 5.26171875]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# set &amp;#34;normalize=True&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;scores &lt;span style="color:#f92672"&gt;=&lt;/span&gt; reranker&lt;span style="color:#f92672"&gt;.&lt;/span&gt;compute_score([[&lt;span style="color:#e6db74"&gt;&amp;#39;what is panda?&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;hi&amp;#39;&lt;/span&gt;], [&lt;span style="color:#e6db74"&gt;&amp;#39;what is panda?&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;The giant panda (Ailuropoda melanoleuca), sometimes called a panda bear or simply panda, is a bear species endemic to China.&amp;#39;&lt;/span&gt;]], normalize&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(scores) &lt;span style="color:#75715e"&gt;# [0.00027803096387751553, 0.9948403768236574]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start="2"&gt;
+&lt;li&gt;LLM-based Reranker&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;方法: 利用 &lt;code&gt;FlagLLMReranker&lt;/code&gt; 類別。&lt;/li&gt;
+&lt;li&gt;特點: 將大型語言模型（如 Llama）作為 Reranker，利用其語言理解能力進行細緻排序。需要大量 VRAM (&amp;gt;40G)。&lt;/li&gt;
+&lt;li&gt;程式碼範例:
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; FlagEmbedding &lt;span style="color:#f92672"&gt;import&lt;/span&gt; FlagLLMReranker
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Setting use_fp16 to True speeds up computation with a slight performance degradation&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;reranker &lt;span style="color:#f92672"&gt;=&lt;/span&gt; FlagLLMReranker(&lt;span style="color:#e6db74"&gt;&amp;#39;BAAI/bge-reranker-v2-gemma&amp;#39;&lt;/span&gt;, use_fp16&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;score &lt;span style="color:#f92672"&gt;=&lt;/span&gt; reranker&lt;span style="color:#f92672"&gt;.&lt;/span&gt;compute_score([&lt;span style="color:#e6db74"&gt;&amp;#39;query&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;passage&amp;#39;&lt;/span&gt;])
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(score)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;scores &lt;span style="color:#f92672"&gt;=&lt;/span&gt; reranker&lt;span style="color:#f92672"&gt;.&lt;/span&gt;compute_score([[&lt;span style="color:#e6db74"&gt;&amp;#39;what is panda?&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;hi&amp;#39;&lt;/span&gt;], [&lt;span style="color:#e6db74"&gt;&amp;#39;what is panda?&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;The giant panda (Ailuropoda melanoleuca), sometimes called a panda bear or simply panda, is a bear species endemic to China.&amp;#39;&lt;/span&gt;]])
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(scores)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start="3"&gt;
+&lt;li&gt;LLM-based Layerwise Reranker&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;方法: 透過 FlagLLMReranker 的 compute_score_layerwise 方法。&lt;/li&gt;
+&lt;li&gt;特點: 可從 LLM 的不同層獲取分數，提供對模型決策過程的深入洞察。&lt;/li&gt;
+&lt;li&gt;程式碼範例:
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; FlagEmbedding &lt;span style="color:#f92672"&gt;import&lt;/span&gt; LayerWiseFlagLLMReranker
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Setting use_fp16 to True speeds up computation with a slight performance degradation&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;reranker &lt;span style="color:#f92672"&gt;=&lt;/span&gt; LayerWiseFlagLLMReranker(&lt;span style="color:#e6db74"&gt;&amp;#39;BAAI/bge-reranker-v2-minicpm-layerwise&amp;#39;&lt;/span&gt;, use_fp16&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Adjusting &amp;#39;cutoff_layers&amp;#39; to pick which layers are used for computing the score.&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;score &lt;span style="color:#f92672"&gt;=&lt;/span&gt; reranker&lt;span style="color:#f92672"&gt;.&lt;/span&gt;compute_score([&lt;span style="color:#e6db74"&gt;&amp;#39;query&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;passage&amp;#39;&lt;/span&gt;], cutoff_layers&lt;span style="color:#f92672"&gt;=&lt;/span&gt;[&lt;span style="color:#ae81ff"&gt;28&lt;/span&gt;])
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(score)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;scores &lt;span style="color:#f92672"&gt;=&lt;/span&gt; reranker&lt;span style="color:#f92672"&gt;.&lt;/span&gt;compute_score([[&lt;span style="color:#e6db74"&gt;&amp;#39;what is panda?&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;hi&amp;#39;&lt;/span&gt;], [&lt;span style="color:#e6db74"&gt;&amp;#39;what is panda?&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;The giant panda (Ailuropoda melanoleuca), sometimes called a panda bear or simply panda, is a bear species endemic to China.&amp;#39;&lt;/span&gt;]], cutoff_layers&lt;span style="color:#f92672"&gt;=&lt;/span&gt;[&lt;span style="color:#ae81ff"&gt;28&lt;/span&gt;])
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(scores)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h4 id="hugging-face-transformers"&gt;Hugging Face Transformers
+&lt;/h4&gt;&lt;p&gt;Hugging Face Transformers 函式庫提供了更通用和靈活的方法，適合需要深度自訂和學術研究的場景。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;標準 Reranker (bge-reranker-base / large / v2-m3)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;方法: 載入 AutoTokenizer 和 AutoModelForSequenceClassification。&lt;/li&gt;
+&lt;li&gt;特點: 標準流程，提供更多自訂空間。&lt;/li&gt;
+&lt;li&gt;程式碼範例:
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; torch
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; transformers &lt;span style="color:#f92672"&gt;import&lt;/span&gt; AutoModelForSequenceClassification, AutoTokenizer
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tokenizer &lt;span style="color:#f92672"&gt;=&lt;/span&gt; AutoTokenizer&lt;span style="color:#f92672"&gt;.&lt;/span&gt;from_pretrained(&lt;span style="color:#e6db74"&gt;&amp;#39;BAAI/bge-reranker-v2-m3&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;model &lt;span style="color:#f92672"&gt;=&lt;/span&gt; AutoModelForSequenceClassification&lt;span style="color:#f92672"&gt;.&lt;/span&gt;from_pretrained(&lt;span style="color:#e6db74"&gt;&amp;#39;BAAI/bge-reranker-v2-m3&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;model&lt;span style="color:#f92672"&gt;.&lt;/span&gt;eval()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pairs &lt;span style="color:#f92672"&gt;=&lt;/span&gt; [[&lt;span style="color:#e6db74"&gt;&amp;#39;what is panda?&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;hi&amp;#39;&lt;/span&gt;], [&lt;span style="color:#e6db74"&gt;&amp;#39;what is panda?&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;The giant panda (Ailuropoda melanoleuca), sometimes called a panda bear or simply panda, is a bear species endemic to China.&amp;#39;&lt;/span&gt;]]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;with&lt;/span&gt; torch&lt;span style="color:#f92672"&gt;.&lt;/span&gt;no_grad(): &lt;span style="color:#75715e"&gt;# 無梯度下降&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; inputs &lt;span style="color:#f92672"&gt;=&lt;/span&gt; tokenizer(pairs, padding&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;, truncation&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;, return_tensors&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;pt&amp;#39;&lt;/span&gt;, max_length&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;512&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; scores &lt;span style="color:#f92672"&gt;=&lt;/span&gt; model(&lt;span style="color:#f92672"&gt;**&lt;/span&gt;inputs, return_dict&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;)&lt;span style="color:#f92672"&gt;.&lt;/span&gt;logits&lt;span style="color:#f92672"&gt;.&lt;/span&gt;view(&lt;span style="color:#f92672"&gt;-&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;, )&lt;span style="color:#f92672"&gt;.&lt;/span&gt;float()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; print(scores)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start="2"&gt;
+&lt;li&gt;LLM-based Reranker&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;方法: 載入 AutoTokenizer 和 AutoModelForCausalLM。&lt;/li&gt;
+&lt;li&gt;特點: 需要手動處理模型輸出以獲得分數，提供最大的靈活性和控制力。&lt;/li&gt;
+&lt;li&gt;程式碼範例:
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; torch
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; transformers &lt;span style="color:#f92672"&gt;import&lt;/span&gt; AutoModelForCausalLM, AutoTokenizer
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;get_inputs&lt;/span&gt;(pairs, tokenizer, prompt&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;, max_length&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;1024&lt;/span&gt;):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; prompt &lt;span style="color:#f92672"&gt;is&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; prompt &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;Given a query A and a passage B, determine whether the passage contains an answer to the query by providing a prediction of either &amp;#39;Yes&amp;#39; or &amp;#39;No&amp;#39;.&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; sep &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;\n&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; prompt_inputs &lt;span style="color:#f92672"&gt;=&lt;/span&gt; tokenizer(prompt,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; return_tensors&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; add_special_tokens&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;False&lt;/span&gt;)[&lt;span style="color:#e6db74"&gt;&amp;#39;input_ids&amp;#39;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; sep_inputs &lt;span style="color:#f92672"&gt;=&lt;/span&gt; tokenizer(sep,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; return_tensors&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; add_special_tokens&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;False&lt;/span&gt;)[&lt;span style="color:#e6db74"&gt;&amp;#39;input_ids&amp;#39;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; inputs &lt;span style="color:#f92672"&gt;=&lt;/span&gt; []
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; query, passage &lt;span style="color:#f92672"&gt;in&lt;/span&gt; pairs:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; query_inputs &lt;span style="color:#f92672"&gt;=&lt;/span&gt; tokenizer(&lt;span style="color:#e6db74"&gt;f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;A: &lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;query&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; return_tensors&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; add_special_tokens&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;False&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; max_length&lt;span style="color:#f92672"&gt;=&lt;/span&gt;max_length &lt;span style="color:#f92672"&gt;*&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;3&lt;/span&gt; &lt;span style="color:#f92672"&gt;//&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;4&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; truncation&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; passage_inputs &lt;span style="color:#f92672"&gt;=&lt;/span&gt; tokenizer(&lt;span style="color:#e6db74"&gt;f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;B: &lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;passage&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; return_tensors&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; add_special_tokens&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;False&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; max_length&lt;span style="color:#f92672"&gt;=&lt;/span&gt;max_length,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; truncation&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; item &lt;span style="color:#f92672"&gt;=&lt;/span&gt; tokenizer&lt;span style="color:#f92672"&gt;.&lt;/span&gt;prepare_for_model(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; [tokenizer&lt;span style="color:#f92672"&gt;.&lt;/span&gt;bos_token_id] &lt;span style="color:#f92672"&gt;+&lt;/span&gt; query_inputs[&lt;span style="color:#e6db74"&gt;&amp;#39;input_ids&amp;#39;&lt;/span&gt;],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; sep_inputs &lt;span style="color:#f92672"&gt;+&lt;/span&gt; passage_inputs[&lt;span style="color:#e6db74"&gt;&amp;#39;input_ids&amp;#39;&lt;/span&gt;],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; truncation&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;only_second&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; max_length&lt;span style="color:#f92672"&gt;=&lt;/span&gt;max_length,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; padding&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;False&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; return_attention_mask&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;False&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; return_token_type_ids&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;False&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; add_special_tokens&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;False&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; )
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; item[&lt;span style="color:#e6db74"&gt;&amp;#39;input_ids&amp;#39;&lt;/span&gt;] &lt;span style="color:#f92672"&gt;=&lt;/span&gt; item[&lt;span style="color:#e6db74"&gt;&amp;#39;input_ids&amp;#39;&lt;/span&gt;] &lt;span style="color:#f92672"&gt;+&lt;/span&gt; sep_inputs &lt;span style="color:#f92672"&gt;+&lt;/span&gt; prompt_inputs
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; item[&lt;span style="color:#e6db74"&gt;&amp;#39;attention_mask&amp;#39;&lt;/span&gt;] &lt;span style="color:#f92672"&gt;=&lt;/span&gt; [&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;] &lt;span style="color:#f92672"&gt;*&lt;/span&gt; len(item[&lt;span style="color:#e6db74"&gt;&amp;#39;input_ids&amp;#39;&lt;/span&gt;])
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; inputs&lt;span style="color:#f92672"&gt;.&lt;/span&gt;append(item)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; tokenizer&lt;span style="color:#f92672"&gt;.&lt;/span&gt;pad(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; inputs,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; padding&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; max_length&lt;span style="color:#f92672"&gt;=&lt;/span&gt;max_length &lt;span style="color:#f92672"&gt;+&lt;/span&gt; len(sep_inputs) &lt;span style="color:#f92672"&gt;+&lt;/span&gt; len(prompt_inputs),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; pad_to_multiple_of&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;8&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; return_tensors&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;pt&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; )
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tokenizer &lt;span style="color:#f92672"&gt;=&lt;/span&gt; AutoTokenizer&lt;span style="color:#f92672"&gt;.&lt;/span&gt;from_pretrained(&lt;span style="color:#e6db74"&gt;&amp;#39;BAAI/bge-reranker-v2-gemma&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;model &lt;span style="color:#f92672"&gt;=&lt;/span&gt; AutoModelForCausalLM&lt;span style="color:#f92672"&gt;.&lt;/span&gt;from_pretrained(&lt;span style="color:#e6db74"&gt;&amp;#39;BAAI/bge-reranker-v2-gemma&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;yes_loc &lt;span style="color:#f92672"&gt;=&lt;/span&gt; tokenizer(&lt;span style="color:#e6db74"&gt;&amp;#39;Yes&amp;#39;&lt;/span&gt;, add_special_tokens&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;False&lt;/span&gt;)[&lt;span style="color:#e6db74"&gt;&amp;#39;input_ids&amp;#39;&lt;/span&gt;][&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;model&lt;span style="color:#f92672"&gt;.&lt;/span&gt;eval()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pairs &lt;span style="color:#f92672"&gt;=&lt;/span&gt; [[&lt;span style="color:#e6db74"&gt;&amp;#39;what is panda?&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;hi&amp;#39;&lt;/span&gt;], [&lt;span style="color:#e6db74"&gt;&amp;#39;what is panda?&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;The giant panda (Ailuropoda melanoleuca), sometimes called a panda bear or simply panda, is a bear species endemic to China.&amp;#39;&lt;/span&gt;]]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;with&lt;/span&gt; torch&lt;span style="color:#f92672"&gt;.&lt;/span&gt;no_grad():
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; inputs &lt;span style="color:#f92672"&gt;=&lt;/span&gt; get_inputs(pairs, tokenizer)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; scores &lt;span style="color:#f92672"&gt;=&lt;/span&gt; model(&lt;span style="color:#f92672"&gt;**&lt;/span&gt;inputs, return_dict&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;)&lt;span style="color:#f92672"&gt;.&lt;/span&gt;logits[:, &lt;span style="color:#f92672"&gt;-&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;, yes_loc]&lt;span style="color:#f92672"&gt;.&lt;/span&gt;view(&lt;span style="color:#f92672"&gt;-&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;, )&lt;span style="color:#f92672"&gt;.&lt;/span&gt;float()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; print(scores)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start="3"&gt;
+&lt;li&gt;LLM-based Layerwise Reranker&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;方法: 透過手動存取 AutoModelForCausalLM 的隱藏層輸出或注意力權重，並自行計算分數。&lt;/li&gt;
+&lt;li&gt;特點: 提供對 LLM 內部決策過程最細緻的控制和分析，但實作複雜度高，需要深入理解模型架構。&lt;/li&gt;
+&lt;li&gt;程式碼範例:
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; torch
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; transformers &lt;span style="color:#f92672"&gt;import&lt;/span&gt; AutoModelForCausalLM, AutoTokenizer
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;get_inputs&lt;/span&gt;(pairs, tokenizer, prompt&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;, max_length&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;1024&lt;/span&gt;):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; prompt &lt;span style="color:#f92672"&gt;is&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; prompt &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;Given a query A and a passage B, determine whether the passage contains an answer to the query by providing a prediction of either &amp;#39;Yes&amp;#39; or &amp;#39;No&amp;#39;.&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; sep &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;\n&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; prompt_inputs &lt;span style="color:#f92672"&gt;=&lt;/span&gt; tokenizer(prompt,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; return_tensors&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; add_special_tokens&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;False&lt;/span&gt;)[&lt;span style="color:#e6db74"&gt;&amp;#39;input_ids&amp;#39;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; sep_inputs &lt;span style="color:#f92672"&gt;=&lt;/span&gt; tokenizer(sep,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; return_tensors&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; add_special_tokens&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;False&lt;/span&gt;)[&lt;span style="color:#e6db74"&gt;&amp;#39;input_ids&amp;#39;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; inputs &lt;span style="color:#f92672"&gt;=&lt;/span&gt; []
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; query, passage &lt;span style="color:#f92672"&gt;in&lt;/span&gt; pairs:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; query_inputs &lt;span style="color:#f92672"&gt;=&lt;/span&gt; tokenizer(&lt;span style="color:#e6db74"&gt;f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;A: &lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;query&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; return_tensors&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; add_special_tokens&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;False&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; max_length&lt;span style="color:#f92672"&gt;=&lt;/span&gt;max_length &lt;span style="color:#f92672"&gt;*&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;3&lt;/span&gt; &lt;span style="color:#f92672"&gt;//&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;4&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; truncation&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; passage_inputs &lt;span style="color:#f92672"&gt;=&lt;/span&gt; tokenizer(&lt;span style="color:#e6db74"&gt;f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;B: &lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;passage&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; return_tensors&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; add_special_tokens&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;False&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; max_length&lt;span style="color:#f92672"&gt;=&lt;/span&gt;max_length,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; truncation&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; item &lt;span style="color:#f92672"&gt;=&lt;/span&gt; tokenizer&lt;span style="color:#f92672"&gt;.&lt;/span&gt;prepare_for_model(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; [tokenizer&lt;span style="color:#f92672"&gt;.&lt;/span&gt;bos_token_id] &lt;span style="color:#f92672"&gt;+&lt;/span&gt; query_inputs[&lt;span style="color:#e6db74"&gt;&amp;#39;input_ids&amp;#39;&lt;/span&gt;],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; sep_inputs &lt;span style="color:#f92672"&gt;+&lt;/span&gt; passage_inputs[&lt;span style="color:#e6db74"&gt;&amp;#39;input_ids&amp;#39;&lt;/span&gt;],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; truncation&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;only_second&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; max_length&lt;span style="color:#f92672"&gt;=&lt;/span&gt;max_length,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; padding&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;False&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; return_attention_mask&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;False&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; return_token_type_ids&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;False&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; add_special_tokens&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;False&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; )
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; item[&lt;span style="color:#e6db74"&gt;&amp;#39;input_ids&amp;#39;&lt;/span&gt;] &lt;span style="color:#f92672"&gt;=&lt;/span&gt; item[&lt;span style="color:#e6db74"&gt;&amp;#39;input_ids&amp;#39;&lt;/span&gt;] &lt;span style="color:#f92672"&gt;+&lt;/span&gt; sep_inputs &lt;span style="color:#f92672"&gt;+&lt;/span&gt; prompt_inputs
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; item[&lt;span style="color:#e6db74"&gt;&amp;#39;attention_mask&amp;#39;&lt;/span&gt;] &lt;span style="color:#f92672"&gt;=&lt;/span&gt; [&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;] &lt;span style="color:#f92672"&gt;*&lt;/span&gt; len(item[&lt;span style="color:#e6db74"&gt;&amp;#39;input_ids&amp;#39;&lt;/span&gt;])
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; inputs&lt;span style="color:#f92672"&gt;.&lt;/span&gt;append(item)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; tokenizer&lt;span style="color:#f92672"&gt;.&lt;/span&gt;pad(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; inputs,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; padding&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; max_length&lt;span style="color:#f92672"&gt;=&lt;/span&gt;max_length &lt;span style="color:#f92672"&gt;+&lt;/span&gt; len(sep_inputs) &lt;span style="color:#f92672"&gt;+&lt;/span&gt; len(prompt_inputs),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; pad_to_multiple_of&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;8&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; return_tensors&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;pt&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; )
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tokenizer &lt;span style="color:#f92672"&gt;=&lt;/span&gt; AutoTokenizer&lt;span style="color:#f92672"&gt;.&lt;/span&gt;from_pretrained(&lt;span style="color:#e6db74"&gt;&amp;#39;BAAI/bge-reranker-v2-minicpm-layerwise&amp;#39;&lt;/span&gt;, trust_remote_code&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;model &lt;span style="color:#f92672"&gt;=&lt;/span&gt; AutoModelForCausalLM&lt;span style="color:#f92672"&gt;.&lt;/span&gt;from_pretrained(&lt;span style="color:#e6db74"&gt;&amp;#39;BAAI/bge-reranker-v2-minicpm-layerwise&amp;#39;&lt;/span&gt;, trust_remote_code&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;, torch_dtype&lt;span style="color:#f92672"&gt;=&lt;/span&gt;torch&lt;span style="color:#f92672"&gt;.&lt;/span&gt;bfloat16)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;model &lt;span style="color:#f92672"&gt;=&lt;/span&gt; model&lt;span style="color:#f92672"&gt;.&lt;/span&gt;to(&lt;span style="color:#e6db74"&gt;&amp;#39;cuda&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;model&lt;span style="color:#f92672"&gt;.&lt;/span&gt;eval()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pairs &lt;span style="color:#f92672"&gt;=&lt;/span&gt; [[&lt;span style="color:#e6db74"&gt;&amp;#39;what is panda?&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;hi&amp;#39;&lt;/span&gt;], [&lt;span style="color:#e6db74"&gt;&amp;#39;what is panda?&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;The giant panda (Ailuropoda melanoleuca), sometimes called a panda bear or simply panda, is a bear species endemic to China.&amp;#39;&lt;/span&gt;]]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;with&lt;/span&gt; torch&lt;span style="color:#f92672"&gt;.&lt;/span&gt;no_grad():
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; inputs &lt;span style="color:#f92672"&gt;=&lt;/span&gt; get_inputs(pairs, tokenizer)&lt;span style="color:#f92672"&gt;.&lt;/span&gt;to(model&lt;span style="color:#f92672"&gt;.&lt;/span&gt;device)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; all_scores &lt;span style="color:#f92672"&gt;=&lt;/span&gt; model(&lt;span style="color:#f92672"&gt;**&lt;/span&gt;inputs, return_dict&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;, cutoff_layers&lt;span style="color:#f92672"&gt;=&lt;/span&gt;[&lt;span style="color:#ae81ff"&gt;28&lt;/span&gt;])
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; all_scores &lt;span style="color:#f92672"&gt;=&lt;/span&gt; [scores[:, &lt;span style="color:#f92672"&gt;-&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;]&lt;span style="color:#f92672"&gt;.&lt;/span&gt;view(&lt;span style="color:#f92672"&gt;-&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;, )&lt;span style="color:#f92672"&gt;.&lt;/span&gt;float() &lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; scores &lt;span style="color:#f92672"&gt;in&lt;/span&gt; all_scores[&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;]]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; print(all_scores)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h3 id="核心概念解析"&gt;核心概念解析
+&lt;/h3&gt;&lt;h4 id="標準-reranker-cross-encoder"&gt;標準 Reranker (Cross-Encoder)
+&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;原理: 將「查詢」和「文件」成對地同時輸入到模型中，模型利用兩者之間的交互資訊判斷相關性。&lt;/li&gt;
+&lt;li&gt;輸出: 單一相關性分數。&lt;/li&gt;
+&lt;li&gt;流程: 查詢 + 文件 → Cross-Encoder 模型 → 相關性分數&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id="llm-based-reranker"&gt;LLM-based Reranker
+&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;原理: 使用完整的大型語言模型（LLM）作為 Reranker，利用其龐大知識和推理能力理解深層語義關係。&lt;/li&gt;
+&lt;li&gt;輸出: 通常透過特定 token（如 [Yes] 或 [No]）的機率計算分數。&lt;/li&gt;
+&lt;li&gt;流程: 查詢 + 文件 → 大型語言模型 (LLM) → 基於生成機率的分數&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id="總結與比較"&gt;總結與比較
+&lt;/h4&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;比較維度&lt;/th&gt;
+&lt;th&gt;FlagEmbedding&lt;/th&gt;
+&lt;th&gt;Hugging Face Transformers&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;易用性&lt;/td&gt;
+&lt;td&gt;高（API 封裝良好）&lt;/td&gt;
+&lt;td&gt;中（需要更多手動設定）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;靈活性&lt;/td&gt;
+&lt;td&gt;中（專為 Reranking 優化）&lt;/td&gt;
+&lt;td&gt;高（可完全自訂流程）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;特色功能&lt;/td&gt;
+&lt;td&gt;Layerwise 分數計算&lt;/td&gt;
+&lt;td&gt;與整個 Hugging Face 生態系無縫接軌&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;推薦使用情境&lt;/td&gt;
+&lt;td&gt;需要快速實現高效能 Reranking 的應用&lt;/td&gt;
+&lt;td&gt;需要深度自訂模型行為或進行學術研究&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;</description></item></channel></rss>

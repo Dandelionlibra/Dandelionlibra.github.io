@@ -1,141 +1,141 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Leetcode on YuChen</title><link>https://Dandelionlibra.github.io/tags/leetcode/</link><description>Recent content in Leetcode on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Sun, 02 Feb 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/tags/leetcode/index.xml" rel="self" type="application/rss+xml"/><item><title>31. Next Permutation</title><link>https://Dandelionlibra.github.io/post/leetcode/31/leetcode/</link><pubDate>Sun, 02 Feb 2025 00:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/leetcode/31/leetcode/</guid><description>&lt;h2 id="題目">題目
-&lt;/h2>&lt;p>A permutation of an array of integers is an arrangement of its members into a sequence or linear order.&lt;/p>
-&lt;p>For example, for arr = [1,2,3], the following are all the permutations of arr: [1,2,3], [1,3,2], [2, 1, 3], [2, 3, 1], [3,1,2], [3,2,1].
-The next permutation of an array of integers is the next lexicographically greater permutation of its integer. More formally, if all the permutations of the array are sorted in one container according to their lexicographical order, then the next permutation of that array is the permutation that follows it in the sorted container. If such arrangement is not possible, the array must be rearranged as the lowest possible order (i.e., sorted in ascending order).&lt;/p>
-&lt;p>For example, the next permutation of arr = [1,2,3] is [1,3,2].
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Leetcode on YuChen</title><link>https://Dandelionlibra.github.io/tags/leetcode/</link><description>Recent content in Leetcode on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Sun, 02 Feb 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/tags/leetcode/index.xml" rel="self" type="application/rss+xml"/><item><title>31. Next Permutation</title><link>https://Dandelionlibra.github.io/post/leetcode/31/leetcode/</link><pubDate>Sun, 02 Feb 2025 00:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/leetcode/31/leetcode/</guid><description>&lt;h2 id="題目"&gt;題目
+&lt;/h2&gt;&lt;p&gt;A permutation of an array of integers is an arrangement of its members into a sequence or linear order.&lt;/p&gt;
+&lt;p&gt;For example, for arr = [1,2,3], the following are all the permutations of arr: [1,2,3], [1,3,2], [2, 1, 3], [2, 3, 1], [3,1,2], [3,2,1].
+The next permutation of an array of integers is the next lexicographically greater permutation of its integer. More formally, if all the permutations of the array are sorted in one container according to their lexicographical order, then the next permutation of that array is the permutation that follows it in the sorted container. If such arrangement is not possible, the array must be rearranged as the lowest possible order (i.e., sorted in ascending order).&lt;/p&gt;
+&lt;p&gt;For example, the next permutation of arr = [1,2,3] is [1,3,2].
 Similarly, the next permutation of arr = [2,3,1] is [3,1,2].
 While the next permutation of arr = [3,2,1] is [1,2,3] because [3,2,1] does not have a lexicographical larger rearrangement.
-Given an array of integers nums, find the next permutation of nums.&lt;/p>
-&lt;p>The replacement must be in place and use only constant extra memory.&lt;/p>
-&lt;h3 id="constraints">Constraints:
-&lt;/h3>&lt;ul>
-&lt;li>1 &amp;lt;= nums.length &amp;lt;= 100&lt;/li>
-&lt;li>0 &amp;lt;= nums[i] &amp;lt;= 100&lt;/li>
-&lt;/ul>
-&lt;h3 id="example-1">Example 1:
-&lt;/h3>&lt;blockquote>
-&lt;p>Input: nums = [1,2,3]&lt;br>
-Output: [1,3,2]&lt;/p>&lt;/blockquote>
-&lt;h3 id="example-2">Example 2:
-&lt;/h3>&lt;blockquote>
-&lt;p>Input: nums = [3,2,1]&lt;br>
-Output: [1,2,3]&lt;/p>&lt;/blockquote>
-&lt;h3 id="example-2-1">Example 2:
-&lt;/h3>&lt;blockquote>
-&lt;p>Input: nums = [1,1,5]&lt;br>
-Output: [1,5,1]&lt;/p>&lt;/blockquote>
-&lt;h2 id="解題方法">解題方法
-&lt;/h2>&lt;ol>
-&lt;li>
-&lt;p>從右向左尋找遞減序列的轉折點：
-找到第一個位置 i，使得 nums[i] &amp;lt; nums[i + 1]。這表示從 i 之後的數字是遞減的。&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>如果找不到，說明當前排列是最大的，直接反轉陣列：
-如果整個陣列是遞減的（如 [3, 2, 1]），則直接反轉整個陣列變為最小排列（如 [1, 2, 3]）。&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>找到比 nums[i] 大的最小數字並交換：
-在 i 右邊的數字中，找到最接近且比 nums[i] 大的數字 nums[j]，然後交換 nums[i] 和 nums[j]。&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>反轉 i + 1 之後的子陣列：
-這樣能保證轉折點後的數字變為最小排列，確保整體是下一個排列。&lt;/p>
-&lt;/li>
-&lt;/ol>
-&lt;h2 id="程式">程式
-&lt;/h2>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-C" data-lang="C">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;bits/stdc++.h&amp;gt;&lt;/span>&lt;span style="color:#75715e">
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>using namespace std;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>class Solution {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>public:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">void&lt;/span> &lt;span style="color:#a6e22e">nextPermutation&lt;/span>(vector&lt;span style="color:#f92672">&amp;lt;&lt;/span>&lt;span style="color:#66d9ef">int&lt;/span>&lt;span style="color:#f92672">&amp;gt;&amp;amp;&lt;/span> nums) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">int&lt;/span> size &lt;span style="color:#f92672">=&lt;/span> nums.&lt;span style="color:#a6e22e">size&lt;/span>();
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> cout &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> size ;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>};
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>(){
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Solution sol;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> cout &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> sol.&lt;span style="color:#a6e22e">divide&lt;/span>(&lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#ae81ff">2147483648&lt;/span>, &lt;span style="color:#ae81ff">3&lt;/span>) &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> endl;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
-&lt;p>Photo by &lt;a class="link" href="https://unsplash.com/@pawel_czerwinski" target="_blank" rel="noopener"
->Pawel Czerwinski&lt;/a> on &lt;a class="link" href="https://unsplash.com/" target="_blank" rel="noopener"
->Unsplash&lt;/a>&lt;/p>&lt;/blockquote></description></item><item><title>29. Divide Two Integers</title><link>https://Dandelionlibra.github.io/post/leetcode/29/leetcode/</link><pubDate>Sat, 01 Feb 2025 00:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/leetcode/29/leetcode/</guid><description>&lt;h2 id="題目">題目
-&lt;/h2>&lt;p>Given two integers dividend and divisor, divide two integers without using multiplication, division, and mod operator.&lt;/p>
-&lt;p>The integer division should truncate toward zero, which means losing its fractional part. For example, 8.345 would be truncated to 8, and -2.7335 would be truncated to -2.&lt;/p>
-&lt;p>Return the quotient after dividing dividend by divisor.&lt;/p>
-&lt;p>Note: Assume we are dealing with an environment that could only store integers within the 32-bit signed integer range: $[−2^{31}, 2^{31} − 1]$. For this problem, if the quotient is strictly greater than $2^{31} - 1$, then return $2^{31} - 1$, and if the quotient is strictly less than $-2^{31}$, then return $-2^{31}$.&lt;/p>
-&lt;h3 id="constraints">Constraints:
-&lt;/h3>&lt;ul>
-&lt;li>$-2^{31}$ &amp;lt;= dividend, divisor &amp;lt;= $-2^{31}-1$&lt;/li>
-&lt;li>divisor != 0&lt;/li>
-&lt;/ul>
-&lt;h3 id="example-1">Example 1:
-&lt;/h3>&lt;blockquote>
-&lt;p>Input: dividend = 10, divisor = 3&lt;br>
-Output: 3&lt;br>
-Explanation: 10/3 = 3.33333.. which is truncated to 3.&lt;/p>&lt;/blockquote>
-&lt;h3 id="example-2">Example 2:
-&lt;/h3>&lt;blockquote>
-&lt;p>Input: dividend = 7, divisor = -3&lt;br>
-Output: -2&lt;br>
-Explanation: 7/-3 = -2.33333.. which is truncated to -2.&lt;/p>&lt;/blockquote>
-&lt;h2 id="解題方法">解題方法
-&lt;/h2>&lt;h2 id="程式">程式
-&lt;/h2>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-C" data-lang="C">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;bits/stdc++.h&amp;gt;&lt;/span>&lt;span style="color:#75715e">
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>using namespace std;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>class Solution {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>public:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#a6e22e">divide&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> dividend, &lt;span style="color:#66d9ef">int&lt;/span> divisor) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// 特殊情況處理，避免溢出
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">if&lt;/span> (dividend &lt;span style="color:#f92672">==&lt;/span> INT_MIN &lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span> divisor &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>) &lt;span style="color:#66d9ef">return&lt;/span> INT_MAX;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> (dividend &lt;span style="color:#f92672">==&lt;/span> INT_MIN &lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span> divisor &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>) &lt;span style="color:#66d9ef">return&lt;/span> INT_MIN;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// 計算商的正負
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">bool&lt;/span> positive &lt;span style="color:#f92672">=&lt;/span> (dividend &lt;span style="color:#f92672">&amp;gt;&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>) &lt;span style="color:#f92672">==&lt;/span> (divisor &lt;span style="color:#f92672">&amp;gt;&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// 使用 long long 來避免 INT_MIN 的溢出
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">long&lt;/span> divd &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">labs&lt;/span>(dividend);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">long&lt;/span> div &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">labs&lt;/span>(divisor);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">long&lt;/span> result &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// 當被除數大於除數時，進行除法
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">while&lt;/span> (divd &lt;span style="color:#f92672">&amp;gt;=&lt;/span> div) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">long&lt;/span> temp &lt;span style="color:#f92672">=&lt;/span> div, multiple &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// 進行倍增操作，找到最大的倍數
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">while&lt;/span> (divd &lt;span style="color:#f92672">&amp;gt;=&lt;/span> (temp &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>)) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> temp &lt;span style="color:#f92672">&amp;lt;&amp;lt;=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> multiple &lt;span style="color:#f92672">&amp;lt;&amp;lt;=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// 減去倍數對應的部分，並將商加到結果中
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> divd &lt;span style="color:#f92672">-=&lt;/span> temp;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> result &lt;span style="color:#f92672">+=&lt;/span> multiple;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// 根據正負符號調整結果
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> result &lt;span style="color:#f92672">=&lt;/span> positive &lt;span style="color:#f92672">?&lt;/span> result : &lt;span style="color:#f92672">-&lt;/span>result;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// 最後檢查是否溢出
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">return&lt;/span> result &lt;span style="color:#f92672">&amp;gt;&lt;/span> INT_MAX &lt;span style="color:#f92672">?&lt;/span> INT_MAX : (result &lt;span style="color:#f92672">&amp;lt;&lt;/span> INT_MIN &lt;span style="color:#f92672">?&lt;/span> INT_MIN : result);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>};
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>(){
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Solution sol;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> cout &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> sol.&lt;span style="color:#a6e22e">divide&lt;/span>(&lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#ae81ff">2147483648&lt;/span>, &lt;span style="color:#ae81ff">3&lt;/span>) &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> endl;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
-&lt;p>Photo by &lt;a class="link" href="https://unsplash.com/@pawel_czerwinski" target="_blank" rel="noopener"
->Pawel Czerwinski&lt;/a> on &lt;a class="link" href="https://unsplash.com/" target="_blank" rel="noopener"
->Unsplash&lt;/a>&lt;/p>&lt;/blockquote></description></item></channel></rss>
+Given an array of integers nums, find the next permutation of nums.&lt;/p&gt;
+&lt;p&gt;The replacement must be in place and use only constant extra memory.&lt;/p&gt;
+&lt;h3 id="constraints"&gt;Constraints:
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;1 &amp;lt;= nums.length &amp;lt;= 100&lt;/li&gt;
+&lt;li&gt;0 &amp;lt;= nums[i] &amp;lt;= 100&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="example-1"&gt;Example 1:
+&lt;/h3&gt;&lt;blockquote&gt;
+&lt;p&gt;Input: nums = [1,2,3]&lt;br&gt;
+Output: [1,3,2]&lt;/p&gt;&lt;/blockquote&gt;
+&lt;h3 id="example-2"&gt;Example 2:
+&lt;/h3&gt;&lt;blockquote&gt;
+&lt;p&gt;Input: nums = [3,2,1]&lt;br&gt;
+Output: [1,2,3]&lt;/p&gt;&lt;/blockquote&gt;
+&lt;h3 id="example-2-1"&gt;Example 2:
+&lt;/h3&gt;&lt;blockquote&gt;
+&lt;p&gt;Input: nums = [1,1,5]&lt;br&gt;
+Output: [1,5,1]&lt;/p&gt;&lt;/blockquote&gt;
+&lt;h2 id="解題方法"&gt;解題方法
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;從右向左尋找遞減序列的轉折點：
+找到第一個位置 i，使得 nums[i] &amp;lt; nums[i + 1]。這表示從 i 之後的數字是遞減的。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;如果找不到，說明當前排列是最大的，直接反轉陣列：
+如果整個陣列是遞減的（如 [3, 2, 1]），則直接反轉整個陣列變為最小排列（如 [1, 2, 3]）。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;找到比 nums[i] 大的最小數字並交換：
+在 i 右邊的數字中，找到最接近且比 nums[i] 大的數字 nums[j]，然後交換 nums[i] 和 nums[j]。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;反轉 i + 1 之後的子陣列：
+這樣能保證轉折點後的數字變為最小排列，確保整體是下一個排列。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="程式"&gt;程式
+&lt;/h2&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-C" data-lang="C"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#include&lt;/span&gt; &lt;span style="color:#75715e"&gt;&amp;lt;bits/stdc++.h&amp;gt;&lt;/span&gt;&lt;span style="color:#75715e"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&lt;/span&gt;using namespace std;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;class Solution {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;public:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;void&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;nextPermutation&lt;/span&gt;(vector&lt;span style="color:#f92672"&gt;&amp;lt;&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;int&lt;/span&gt;&lt;span style="color:#f92672"&gt;&amp;gt;&amp;amp;&lt;/span&gt; nums) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;int&lt;/span&gt; size &lt;span style="color:#f92672"&gt;=&lt;/span&gt; nums.&lt;span style="color:#a6e22e"&gt;size&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; cout &lt;span style="color:#f92672"&gt;&amp;lt;&amp;lt;&lt;/span&gt; size ;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;};
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;int&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;main&lt;/span&gt;(){
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Solution sol;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; cout &lt;span style="color:#f92672"&gt;&amp;lt;&amp;lt;&lt;/span&gt; sol.&lt;span style="color:#a6e22e"&gt;divide&lt;/span&gt;(&lt;span style="color:#f92672"&gt;-&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;2147483648&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;3&lt;/span&gt;) &lt;span style="color:#f92672"&gt;&amp;lt;&amp;lt;&lt;/span&gt; endl;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;Photo by &lt;a class="link" href="https://unsplash.com/@pawel_czerwinski" target="_blank" rel="noopener"
+&gt;Pawel Czerwinski&lt;/a&gt; on &lt;a class="link" href="https://unsplash.com/" target="_blank" rel="noopener"
+&gt;Unsplash&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;</description></item><item><title>29. Divide Two Integers</title><link>https://Dandelionlibra.github.io/post/leetcode/29/leetcode/</link><pubDate>Sat, 01 Feb 2025 00:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/leetcode/29/leetcode/</guid><description>&lt;h2 id="題目"&gt;題目
+&lt;/h2&gt;&lt;p&gt;Given two integers dividend and divisor, divide two integers without using multiplication, division, and mod operator.&lt;/p&gt;
+&lt;p&gt;The integer division should truncate toward zero, which means losing its fractional part. For example, 8.345 would be truncated to 8, and -2.7335 would be truncated to -2.&lt;/p&gt;
+&lt;p&gt;Return the quotient after dividing dividend by divisor.&lt;/p&gt;
+&lt;p&gt;Note: Assume we are dealing with an environment that could only store integers within the 32-bit signed integer range: $[−2^{31}, 2^{31} − 1]$. For this problem, if the quotient is strictly greater than $2^{31} - 1$, then return $2^{31} - 1$, and if the quotient is strictly less than $-2^{31}$, then return $-2^{31}$.&lt;/p&gt;
+&lt;h3 id="constraints"&gt;Constraints:
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;$-2^{31}$ &amp;lt;= dividend, divisor &amp;lt;= $-2^{31}-1$&lt;/li&gt;
+&lt;li&gt;divisor != 0&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="example-1"&gt;Example 1:
+&lt;/h3&gt;&lt;blockquote&gt;
+&lt;p&gt;Input: dividend = 10, divisor = 3&lt;br&gt;
+Output: 3&lt;br&gt;
+Explanation: 10/3 = 3.33333.. which is truncated to 3.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;h3 id="example-2"&gt;Example 2:
+&lt;/h3&gt;&lt;blockquote&gt;
+&lt;p&gt;Input: dividend = 7, divisor = -3&lt;br&gt;
+Output: -2&lt;br&gt;
+Explanation: 7/-3 = -2.33333.. which is truncated to -2.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;h2 id="解題方法"&gt;解題方法
+&lt;/h2&gt;&lt;h2 id="程式"&gt;程式
+&lt;/h2&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-C" data-lang="C"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#include&lt;/span&gt; &lt;span style="color:#75715e"&gt;&amp;lt;bits/stdc++.h&amp;gt;&lt;/span&gt;&lt;span style="color:#75715e"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&lt;/span&gt;using namespace std;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;class Solution {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;public:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;int&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;divide&lt;/span&gt;(&lt;span style="color:#66d9ef"&gt;int&lt;/span&gt; dividend, &lt;span style="color:#66d9ef"&gt;int&lt;/span&gt; divisor) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// 特殊情況處理，避免溢出
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; (dividend &lt;span style="color:#f92672"&gt;==&lt;/span&gt; INT_MIN &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; divisor &lt;span style="color:#f92672"&gt;==&lt;/span&gt; &lt;span style="color:#f92672"&gt;-&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;) &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; INT_MAX;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; (dividend &lt;span style="color:#f92672"&gt;==&lt;/span&gt; INT_MIN &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; divisor &lt;span style="color:#f92672"&gt;==&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;) &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; INT_MIN;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// 計算商的正負
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;bool&lt;/span&gt; positive &lt;span style="color:#f92672"&gt;=&lt;/span&gt; (dividend &lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;) &lt;span style="color:#f92672"&gt;==&lt;/span&gt; (divisor &lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// 使用 long long 來避免 INT_MIN 的溢出
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;long&lt;/span&gt; divd &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;labs&lt;/span&gt;(dividend);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;long&lt;/span&gt; div &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;labs&lt;/span&gt;(divisor);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;long&lt;/span&gt; result &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// 當被除數大於除數時，進行除法
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;while&lt;/span&gt; (divd &lt;span style="color:#f92672"&gt;&amp;gt;=&lt;/span&gt; div) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;long&lt;/span&gt; temp &lt;span style="color:#f92672"&gt;=&lt;/span&gt; div, multiple &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// 進行倍增操作，找到最大的倍數
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;while&lt;/span&gt; (divd &lt;span style="color:#f92672"&gt;&amp;gt;=&lt;/span&gt; (temp &lt;span style="color:#f92672"&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;)) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; temp &lt;span style="color:#f92672"&gt;&amp;lt;&amp;lt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; multiple &lt;span style="color:#f92672"&gt;&amp;lt;&amp;lt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// 減去倍數對應的部分，並將商加到結果中
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&lt;/span&gt; divd &lt;span style="color:#f92672"&gt;-=&lt;/span&gt; temp;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; result &lt;span style="color:#f92672"&gt;+=&lt;/span&gt; multiple;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// 根據正負符號調整結果
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&lt;/span&gt; result &lt;span style="color:#f92672"&gt;=&lt;/span&gt; positive &lt;span style="color:#f92672"&gt;?&lt;/span&gt; result : &lt;span style="color:#f92672"&gt;-&lt;/span&gt;result;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// 最後檢查是否溢出
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; result &lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt; INT_MAX &lt;span style="color:#f92672"&gt;?&lt;/span&gt; INT_MAX : (result &lt;span style="color:#f92672"&gt;&amp;lt;&lt;/span&gt; INT_MIN &lt;span style="color:#f92672"&gt;?&lt;/span&gt; INT_MIN : result);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;};
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;int&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;main&lt;/span&gt;(){
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Solution sol;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; cout &lt;span style="color:#f92672"&gt;&amp;lt;&amp;lt;&lt;/span&gt; sol.&lt;span style="color:#a6e22e"&gt;divide&lt;/span&gt;(&lt;span style="color:#f92672"&gt;-&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;2147483648&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;3&lt;/span&gt;) &lt;span style="color:#f92672"&gt;&amp;lt;&amp;lt;&lt;/span&gt; endl;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;Photo by &lt;a class="link" href="https://unsplash.com/@pawel_czerwinski" target="_blank" rel="noopener"
+&gt;Pawel Czerwinski&lt;/a&gt; on &lt;a class="link" href="https://unsplash.com/" target="_blank" rel="noopener"
+&gt;Unsplash&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;</description></item></channel></rss>

@@ -1,172 +1,172 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Note on YuChen</title><link>https://Dandelionlibra.github.io/categories/note/</link><description>Recent content in Note on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Wed, 06 Aug 2025 09:03:00 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/categories/note/index.xml" rel="self" type="application/rss+xml"/><item><title>LightRAG Server 檔案儲存基本介紹</title><link>https://Dandelionlibra.github.io/post/note/lightrag-json-db/</link><pubDate>Wed, 06 Aug 2025 09:03:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/lightrag-json-db/</guid><description>&lt;h1 id="lightrag-api-server-教學快速上手指南">LightRAG API Server 教學：快速上手指南
-&lt;/h1>&lt;p>&lt;a class="link" href="https://github.com/HKUDS/LightRAG" target="_blank" rel="noopener"
->LightRAG&lt;/a> 是一個輕量級、模組化的 RAG（檢索增強生成）框架，旨在簡化 RAG 應用的開發與部署。其內建的 API Server 遵循 OpenAI API 標準，並提供一套完整的 Web UI API 來管理文件與知識圖譜，讓開發者能輕易地將自訂的 RAG 流程封裝成服務，並與現有生態系無縫接軌。本文將引導初學者完成從環境設定到 API 呼叫的完整流程。&lt;/p>
-&lt;hr>
-&lt;h1 id="lightrag-支援的儲存類型">LightRAG 支援的儲存類型
-&lt;/h1>&lt;ul>
-&lt;li>KV_STORAGE：llm 回應快取、文字區塊、文件訊息&lt;/li>
-&lt;li>VECTOR_STORAGE：實體向量、關係向量、區塊向量&lt;/li>
-&lt;li>GRAPH_STORAGE：實體關係圖&lt;/li>
-&lt;li>DOC_STATUS_STORAGE：文檔索引狀態&lt;/li>
-&lt;/ul>
-&lt;h2 id="1-kv_store_doc_statusjson">1. kv_store_doc_status.json
-&lt;/h2>&lt;p>功能：紀錄每份文件在知識庫中的處理狀態與相關資訊。&lt;/p>
-&lt;p>&lt;strong>主要欄位&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>__id__&lt;/code>：文件的唯一識別碼。&lt;/li>
-&lt;li>&lt;code>file_path&lt;/code>：原始文件檔名或路徑。&lt;/li>
-&lt;li>&lt;code>status&lt;/code>：處理狀態（如：processed, pending, error）。&lt;/li>
-&lt;li>&lt;code>updated_at&lt;/code>：最後更新時間。&lt;/li>
-&lt;/ul>
-&lt;p>&lt;strong>用途&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>監控文件是否已完成切割、嵌入與存入向量資料庫。&lt;/li>
-&lt;li>方便追蹤與除錯。&lt;/li>
-&lt;/ul>
-&lt;hr>
-&lt;h2 id="2-kv_store_full_docsjson">2. kv_store_full_docs.json
-&lt;/h2>&lt;p>功能：儲存完整的原始文檔，作為語義檢索的來源。&lt;/p>
-&lt;p>&lt;strong>主要欄位&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>__id__&lt;/code>：文件唯一 ID。&lt;/li>
-&lt;li>&lt;code>file_path&lt;/code>：檔案來源路徑。&lt;/li>
-&lt;li>&lt;code>content&lt;/code>：完整文件的文字內容。&lt;/li>
-&lt;li>&lt;code>metadata&lt;/code>：附屬資訊（如標題、作者、分類）。&lt;/li>
-&lt;/ul>
-&lt;p>&lt;strong>用途&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>保留完整語境，便於 LLM 在回答時回溯全文。&lt;/li>
-&lt;li>提供「非分塊」的全文檢索。&lt;/li>
-&lt;/ul>
-&lt;hr>
-&lt;h2 id="3-kv_store_llm_response_cachejson">3. kv_store_llm_response_cache.json
-&lt;/h2>&lt;p>功能：作為 LLM 查詢結果的快取，避免重複計算。&lt;/p>
-&lt;p>&lt;strong>主要欄位&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>query&lt;/code>：使用者輸入的查詢字串。&lt;/li>
-&lt;li>&lt;code>response&lt;/code>：LLM 生成的回答。&lt;/li>
-&lt;li>&lt;code>timestamp&lt;/code>：快取生成時間。&lt;/li>
-&lt;li>&lt;code>hit_count&lt;/code>：該查詢被重複使用的次數。&lt;/li>
-&lt;/ul>
-&lt;p>&lt;strong>用途&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>提升系統效能，減少模型重複推理。&lt;/li>
-&lt;li>允許分析熱門查詢。&lt;/li>
-&lt;/ul>
-&lt;hr>
-&lt;h2 id="4-kv_store_text_chunksjson">4. kv_store_text_chunks.json
-&lt;/h2>&lt;p>功能：儲存將文件切割後的小片段（chunks），方便向量檢索。&lt;/p>
-&lt;p>&lt;strong>主要欄位&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>__id__&lt;/code>：文本片段 ID。&lt;/li>
-&lt;li>&lt;code>file_path&lt;/code>：來源文件名稱。&lt;/li>
-&lt;li>&lt;code>chunk_index&lt;/code>：片段順序號。&lt;/li>
-&lt;li>&lt;code>content&lt;/code>：片段內容文字。&lt;/li>
-&lt;li>&lt;code>embedding_vector&lt;/code>（可選）：對應的向量嵌入。&lt;/li>
-&lt;/ul>
-&lt;p>&lt;strong>用途&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>支援語意檢索（RAG: Retrieval-Augmented Generation）。&lt;/li>
-&lt;li>每個 chunk 對應一組 embedding，利於近似搜尋。&lt;/li>
-&lt;/ul>
-&lt;p>存有 token 數。&lt;/p>
-&lt;hr>
-&lt;h2 id="vdb_chunksjson">vdb_chunks.json
-&lt;/h2>&lt;p>功能：儲存經嵌入處理的文本向量（Vector DB 核心）。&lt;/p>
-&lt;p>&lt;strong>主要欄位&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>__id__&lt;/code>：chunk 的唯一識別碼。&lt;/li>
-&lt;li>&lt;code>embedding_dim&lt;/code>：向量維度（如 1024）。&lt;/li>
-&lt;li>&lt;code>embedding_vector&lt;/code>：嵌入向量。&lt;/li>
-&lt;li>&lt;code>content&lt;/code>：對應文本。&lt;/li>
-&lt;li>&lt;code>source_id&lt;/code>：來源 chunk 的 ID。&lt;/li>
-&lt;/ul>
-&lt;p>&lt;strong>用途&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>提供高效相似度搜尋。&lt;/li>
-&lt;li>是 RAG 系統的核心檢索資料來源。&lt;/li>
-&lt;/ul>
-&lt;hr>
-&lt;h2 id="vdb_entitiesjson">vdb_entities.json
-&lt;/h2>&lt;p>功能：儲存從文本中抽取的命名實體與相關描述。&lt;/p>
-&lt;p>&lt;strong>主要欄位&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>__id__&lt;/code>：實體 ID。&lt;/li>
-&lt;li>&lt;code>entity_name&lt;/code>：實體名稱（如「林致远」「阿墨」）。&lt;/li>
-&lt;li>&lt;code>content&lt;/code>：實體的描述或定義。&lt;/li>
-&lt;li>&lt;code>file_path&lt;/code>：來源檔案。&lt;/li>
-&lt;li>&lt;code>source_id&lt;/code>：對應文本片段 ID。&lt;/li>
-&lt;li>&lt;code>__created_at__&lt;/code>：建立時間戳。&lt;/li>
-&lt;li>&lt;code>embedding_dim&lt;/code>：嵌入向量維度（如 1024）。&lt;/li>
-&lt;/ul>
-&lt;p>&lt;strong>特色&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>一個實體可能來自多個文本片段，用 &lt;!-- raw HTML omitted --> 分隔。&lt;/li>
-&lt;li>可支援多語言或多版本（如 知一书屋 vs 知一書屋）。&lt;/li>
-&lt;/ul>
-&lt;p>&lt;strong>用途&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>為知識圖譜中的節點（entities）。&lt;/li>
-&lt;li>支援語義關聯檢索與上下文補全。&lt;/li>
-&lt;/ul>
-&lt;hr>
-&lt;h2 id="vdb_relationshipsjson">vdb_relationships.json
-&lt;/h2>&lt;p>功能：儲存實體之間的語義關係，形成知識圖譜 (Knowledge Graph)。&lt;/p>
-&lt;p>&lt;strong>主要欄位&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>__id__&lt;/code>：關係 ID。&lt;/li>
-&lt;li>&lt;code>src_id&lt;/code>：關係的起始實體名稱。&lt;/li>
-&lt;li>&lt;code>tgt_id&lt;/code>：關係的目標實體名稱。&lt;/li>
-&lt;li>&lt;code>content&lt;/code>：關係的描述與類別（可能包含多種語意標籤，如 companionship, ownership）。&lt;/li>
-&lt;li>&lt;code>file_path&lt;/code>：來源文件。&lt;/li>
-&lt;li>&lt;code>source_id&lt;/code>：對應的文本 chunk。&lt;/li>
-&lt;li>&lt;code>__created_at__&lt;/code>：建立時間。&lt;/li>
-&lt;/ul>
-&lt;p>&lt;strong>用途&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>支援「語義圖譜檢索」，例如：&lt;br>
-問「阿墨和林致远的關係？」 → 檢索 companionship 與 mysterious connection。&lt;/li>
-&lt;li>提供結構化的語意推理，補強向量檢索。&lt;/li>
-&lt;/ul>
-&lt;hr>
-&lt;h2 id="4-總結">4. 總結
-&lt;/h2>&lt;ul>
-&lt;li>kv_store* 系列 → 偏向文件與片段的管理、狀態與快取。&lt;/li>
-&lt;li>vdb* 系列 → 偏向語義層面的知識圖譜與向量檢索。&lt;/li>
-&lt;li>entities 與 relationships → 構成知識圖譜 (Knowledge Graph)。&lt;/li>
-&lt;li>chunks 與 embeddings → 構成語意檢索的基礎。&lt;/li>
-&lt;/ul></description></item><item><title>LightRAG API Server 教學：快速上手指南</title><link>https://Dandelionlibra.github.io/post/note/lightrag-api-server-tutorial/</link><pubDate>Fri, 01 Aug 2025 06:00:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/lightrag-api-server-tutorial/</guid><description>&lt;h1 id="lightrag-api-server-教學快速上手指南">LightRAG API Server 教學：快速上手指南
-&lt;/h1>&lt;p>&lt;a class="link" href="https://github.com/HKUDS/LightRAG" target="_blank" rel="noopener"
->LightRAG&lt;/a> 是一個輕量級、模組化的 RAG（檢索增強生成）框架，旨在簡化 RAG 應用的開發與部署。其內建的 API Server 遵循 OpenAI API 標準，並提供一套完整的 Web UI API 來管理文件與知識圖譜，讓開發者能輕易地將自訂的 RAG 流程封裝成服務，並與現有生態系無縫接軌。本文將引導初學者完成從環境設定到 API 呼叫的完整流程。&lt;/p>
-&lt;hr>
-&lt;h2 id="1-安裝與環境設定">1. 安裝與環境設定
-&lt;/h2>&lt;h3 id="11-安裝-lightrag">1.1. 安裝 LightRAG
-&lt;/h3>&lt;ul>
-&lt;li>install from PyPl&lt;/li>
-&lt;/ul>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>pip install &lt;span style="color:#e6db74">&amp;#34;lightrag-hku[api]&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
-&lt;li>Installation from Source&lt;/li>
-&lt;/ul>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 1. Clone the repository&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>git clone https://github.com/HKUDS/LightRAG.git
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cd LightRAG
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 2. create a Python virtual environment if necessary&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 3. Install in editable mode with API support&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>pip install -e &lt;span style="color:#e6db74">&amp;#34;.[api]&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 4. 修改範例環境文件&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cp env.example .env
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 5. 啟動 API Server&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>lightrag-server
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="12-環境文件設定">1.2. 環境文件設定
-&lt;/h3>&lt;ul>
-&lt;li>OpenAI LLM + Ollama Embedding:&lt;/li>
-&lt;/ul>
-&lt;pre tabindex="0">&lt;code>LLM_BINDING=openai
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Note on YuChen</title><link>https://Dandelionlibra.github.io/categories/note/</link><description>Recent content in Note on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Wed, 06 Aug 2025 09:03:00 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/categories/note/index.xml" rel="self" type="application/rss+xml"/><item><title>LightRAG Server 檔案儲存基本介紹</title><link>https://Dandelionlibra.github.io/post/note/lightrag-json-db/</link><pubDate>Wed, 06 Aug 2025 09:03:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/lightrag-json-db/</guid><description>&lt;h1 id="lightrag-api-server-教學快速上手指南"&gt;LightRAG API Server 教學：快速上手指南
+&lt;/h1&gt;&lt;p&gt;&lt;a class="link" href="https://github.com/HKUDS/LightRAG" target="_blank" rel="noopener"
+&gt;LightRAG&lt;/a&gt; 是一個輕量級、模組化的 RAG（檢索增強生成）框架，旨在簡化 RAG 應用的開發與部署。其內建的 API Server 遵循 OpenAI API 標準，並提供一套完整的 Web UI API 來管理文件與知識圖譜，讓開發者能輕易地將自訂的 RAG 流程封裝成服務，並與現有生態系無縫接軌。本文將引導初學者完成從環境設定到 API 呼叫的完整流程。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h1 id="lightrag-支援的儲存類型"&gt;LightRAG 支援的儲存類型
+&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;KV_STORAGE：llm 回應快取、文字區塊、文件訊息&lt;/li&gt;
+&lt;li&gt;VECTOR_STORAGE：實體向量、關係向量、區塊向量&lt;/li&gt;
+&lt;li&gt;GRAPH_STORAGE：實體關係圖&lt;/li&gt;
+&lt;li&gt;DOC_STATUS_STORAGE：文檔索引狀態&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="1-kv_store_doc_statusjson"&gt;1. kv_store_doc_status.json
+&lt;/h2&gt;&lt;p&gt;功能：紀錄每份文件在知識庫中的處理狀態與相關資訊。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;主要欄位&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;__id__&lt;/code&gt;：文件的唯一識別碼。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;file_path&lt;/code&gt;：原始文件檔名或路徑。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;status&lt;/code&gt;：處理狀態（如：processed, pending, error）。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;updated_at&lt;/code&gt;：最後更新時間。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;用途&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;監控文件是否已完成切割、嵌入與存入向量資料庫。&lt;/li&gt;
+&lt;li&gt;方便追蹤與除錯。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="2-kv_store_full_docsjson"&gt;2. kv_store_full_docs.json
+&lt;/h2&gt;&lt;p&gt;功能：儲存完整的原始文檔，作為語義檢索的來源。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;主要欄位&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;__id__&lt;/code&gt;：文件唯一 ID。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;file_path&lt;/code&gt;：檔案來源路徑。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;content&lt;/code&gt;：完整文件的文字內容。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;metadata&lt;/code&gt;：附屬資訊（如標題、作者、分類）。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;用途&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;保留完整語境，便於 LLM 在回答時回溯全文。&lt;/li&gt;
+&lt;li&gt;提供「非分塊」的全文檢索。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="3-kv_store_llm_response_cachejson"&gt;3. kv_store_llm_response_cache.json
+&lt;/h2&gt;&lt;p&gt;功能：作為 LLM 查詢結果的快取，避免重複計算。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;主要欄位&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;query&lt;/code&gt;：使用者輸入的查詢字串。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;response&lt;/code&gt;：LLM 生成的回答。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;timestamp&lt;/code&gt;：快取生成時間。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;hit_count&lt;/code&gt;：該查詢被重複使用的次數。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;用途&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;提升系統效能，減少模型重複推理。&lt;/li&gt;
+&lt;li&gt;允許分析熱門查詢。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="4-kv_store_text_chunksjson"&gt;4. kv_store_text_chunks.json
+&lt;/h2&gt;&lt;p&gt;功能：儲存將文件切割後的小片段（chunks），方便向量檢索。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;主要欄位&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;__id__&lt;/code&gt;：文本片段 ID。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;file_path&lt;/code&gt;：來源文件名稱。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;chunk_index&lt;/code&gt;：片段順序號。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;content&lt;/code&gt;：片段內容文字。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;embedding_vector&lt;/code&gt;（可選）：對應的向量嵌入。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;用途&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;支援語意檢索（RAG: Retrieval-Augmented Generation）。&lt;/li&gt;
+&lt;li&gt;每個 chunk 對應一組 embedding，利於近似搜尋。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;存有 token 數。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="vdb_chunksjson"&gt;vdb_chunks.json
+&lt;/h2&gt;&lt;p&gt;功能：儲存經嵌入處理的文本向量（Vector DB 核心）。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;主要欄位&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;__id__&lt;/code&gt;：chunk 的唯一識別碼。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;embedding_dim&lt;/code&gt;：向量維度（如 1024）。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;embedding_vector&lt;/code&gt;：嵌入向量。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;content&lt;/code&gt;：對應文本。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;source_id&lt;/code&gt;：來源 chunk 的 ID。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;用途&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;提供高效相似度搜尋。&lt;/li&gt;
+&lt;li&gt;是 RAG 系統的核心檢索資料來源。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="vdb_entitiesjson"&gt;vdb_entities.json
+&lt;/h2&gt;&lt;p&gt;功能：儲存從文本中抽取的命名實體與相關描述。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;主要欄位&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;__id__&lt;/code&gt;：實體 ID。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;entity_name&lt;/code&gt;：實體名稱（如「林致远」「阿墨」）。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;content&lt;/code&gt;：實體的描述或定義。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;file_path&lt;/code&gt;：來源檔案。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;source_id&lt;/code&gt;：對應文本片段 ID。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;__created_at__&lt;/code&gt;：建立時間戳。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;embedding_dim&lt;/code&gt;：嵌入向量維度（如 1024）。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;特色&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;一個實體可能來自多個文本片段，用 &lt;!-- raw HTML omitted --&gt; 分隔。&lt;/li&gt;
+&lt;li&gt;可支援多語言或多版本（如 知一书屋 vs 知一書屋）。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;用途&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;為知識圖譜中的節點（entities）。&lt;/li&gt;
+&lt;li&gt;支援語義關聯檢索與上下文補全。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="vdb_relationshipsjson"&gt;vdb_relationships.json
+&lt;/h2&gt;&lt;p&gt;功能：儲存實體之間的語義關係，形成知識圖譜 (Knowledge Graph)。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;主要欄位&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;__id__&lt;/code&gt;：關係 ID。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;src_id&lt;/code&gt;：關係的起始實體名稱。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;tgt_id&lt;/code&gt;：關係的目標實體名稱。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;content&lt;/code&gt;：關係的描述與類別（可能包含多種語意標籤，如 companionship, ownership）。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;file_path&lt;/code&gt;：來源文件。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;source_id&lt;/code&gt;：對應的文本 chunk。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;__created_at__&lt;/code&gt;：建立時間。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;用途&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;支援「語義圖譜檢索」，例如：&lt;br&gt;
+問「阿墨和林致远的關係？」 → 檢索 companionship 與 mysterious connection。&lt;/li&gt;
+&lt;li&gt;提供結構化的語意推理，補強向量檢索。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="4-總結"&gt;4. 總結
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;kv_store* 系列 → 偏向文件與片段的管理、狀態與快取。&lt;/li&gt;
+&lt;li&gt;vdb* 系列 → 偏向語義層面的知識圖譜與向量檢索。&lt;/li&gt;
+&lt;li&gt;entities 與 relationships → 構成知識圖譜 (Knowledge Graph)。&lt;/li&gt;
+&lt;li&gt;chunks 與 embeddings → 構成語意檢索的基礎。&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>LightRAG API Server 教學：快速上手指南</title><link>https://Dandelionlibra.github.io/post/note/lightrag-api-server-tutorial/</link><pubDate>Fri, 01 Aug 2025 06:00:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/lightrag-api-server-tutorial/</guid><description>&lt;h1 id="lightrag-api-server-教學快速上手指南"&gt;LightRAG API Server 教學：快速上手指南
+&lt;/h1&gt;&lt;p&gt;&lt;a class="link" href="https://github.com/HKUDS/LightRAG" target="_blank" rel="noopener"
+&gt;LightRAG&lt;/a&gt; 是一個輕量級、模組化的 RAG（檢索增強生成）框架，旨在簡化 RAG 應用的開發與部署。其內建的 API Server 遵循 OpenAI API 標準，並提供一套完整的 Web UI API 來管理文件與知識圖譜，讓開發者能輕易地將自訂的 RAG 流程封裝成服務，並與現有生態系無縫接軌。本文將引導初學者完成從環境設定到 API 呼叫的完整流程。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="1-安裝與環境設定"&gt;1. 安裝與環境設定
+&lt;/h2&gt;&lt;h3 id="11-安裝-lightrag"&gt;1.1. 安裝 LightRAG
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;install from PyPl&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pip install &lt;span style="color:#e6db74"&gt;&amp;#34;lightrag-hku[api]&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;Installation from Source&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 1. Clone the repository&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git clone https://github.com/HKUDS/LightRAG.git
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cd LightRAG
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 2. create a Python virtual environment if necessary&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 3. Install in editable mode with API support&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pip install -e &lt;span style="color:#e6db74"&gt;&amp;#34;.[api]&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 4. 修改範例環境文件&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cp env.example .env
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 5. 啟動 API Server&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;lightrag-server
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="12-環境文件設定"&gt;1.2. 環境文件設定
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;OpenAI LLM + Ollama Embedding:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;LLM_BINDING=openai
 LLM_MODEL=gpt-4o
 LLM_BINDING_HOST=https://api.openai.com/v1
 LLM_BINDING_API_KEY=your_api_key
@@ -175,10 +175,10 @@ EMBEDDING_BINDING_HOST=http://localhost:11434
 EMBEDDING_MODEL=bge-m3:latest
 EMBEDDING_DIM=1024
 # EMBEDDING_BINDING_API_KEY=your_api_key
-&lt;/code>&lt;/pre>&lt;ul>
-&lt;li>Ollama LLM + Ollama Embedding:&lt;/li>
-&lt;/ul>
-&lt;pre tabindex="0">&lt;code>LLM_BINDING=ollama
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;Ollama LLM + Ollama Embedding:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;LLM_BINDING=ollama
 LLM_MODEL=mistral-nemo:latest
 LLM_BINDING_HOST=http://localhost:11434
 # LLM_BINDING_API_KEY=your_api_key
@@ -189,22 +189,22 @@ EMBEDDING_BINDING_HOST=http://localhost:11434
 EMBEDDING_MODEL=bge-m3:latest
 EMBEDDING_DIM=1024
 # EMBEDDING_BINDING_API_KEY=your_api_key
-&lt;/code>&lt;/pre>&lt;ul>
-&lt;li>其他環境設定參數：
-&lt;ul>
-&lt;li>&lt;code>--host&lt;/code>：伺服器監聽位址（預設：0.0.0.0）&lt;/li>
-&lt;li>&lt;code>--port&lt;/code>：伺服器監聽連接埠（預設：9621）&lt;/li>
-&lt;li>&lt;code>--timeout&lt;/code>：LLM 請求逾時（預設值：150 秒）&lt;/li>
-&lt;li>&lt;code>--log-level&lt;/code>：日誌等級（預設：INFO）&lt;/li>
-&lt;li>&lt;code>--working-dir&lt;/code>：資料庫持久目錄（預設：./rag_storage）&lt;/li>
-&lt;li>&lt;code>--input-dir&lt;/code>：上傳檔案的目錄（預設值：./inputs）&lt;/li>
-&lt;li>&lt;code>--workspace&lt;/code>：工作區名稱，用於邏輯隔離多個 LightRAG 實例之間的資料（預設：空），及所以工作共用同一個資料目錄&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;h3 id="13-使用-docker-啟動-lightrag-伺服器">1.3. 使用 Docker 啟動 LightRAG 伺服器
-&lt;/h3>&lt;p>建立名為 &lt;code>docker compose.yml&lt;/code> 的檔案：&lt;/p>
-&lt;pre tabindex="0">&lt;code>services:
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;其他環境設定參數：
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;--host&lt;/code&gt;：伺服器監聽位址（預設：0.0.0.0）&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--port&lt;/code&gt;：伺服器監聽連接埠（預設：9621）&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--timeout&lt;/code&gt;：LLM 請求逾時（預設值：150 秒）&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--log-level&lt;/code&gt;：日誌等級（預設：INFO）&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--working-dir&lt;/code&gt;：資料庫持久目錄（預設：./rag_storage）&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--input-dir&lt;/code&gt;：上傳檔案的目錄（預設值：./inputs）&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--workspace&lt;/code&gt;：工作區名稱，用於邏輯隔離多個 LightRAG 實例之間的資料（預設：空），及所以工作共用同一個資料目錄&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="13-使用-docker-啟動-lightrag-伺服器"&gt;1.3. 使用 Docker 啟動 LightRAG 伺服器
+&lt;/h3&gt;&lt;p&gt;建立名為 &lt;code&gt;docker compose.yml&lt;/code&gt; 的檔案：&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;services:
 lightrag:
 container_name: lightrag
 image: ghcr.io/hkuds/lightrag:latest
@@ -220,16 +220,16 @@ env_file:
 restart: unless-stopped
 extra_hosts:
 - &amp;#34;host.docker.internal:host-gateway&amp;#34;
-&lt;/code>&lt;/pre>&lt;p>啟動 LightRAG 伺服器：&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>docker compose up
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># If you want the program to run in the background after startup, add the -d parameter at the end of the command.&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;hr>
-&lt;h2 id="2-啟動-api-server">2. 啟動 API Server
-&lt;/h2>&lt;p>LightRAG 使用一個 YAML 檔案來設定 API Server，包含端口、API 路徑以及要載入的模型。專案內已提供一個範例設定檔 &lt;code>lightrag_webui/config.yaml&lt;/code>。&lt;/p>
-&lt;p>進入容器後使用以下指令啟動伺服器：&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>lightrag-server
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Server 成功啟動後，您會看到類似以下的輸出，代表伺服器正在 &lt;code>localhost:9621&lt;/code> 上運行：&lt;/p>
-&lt;pre tabindex="0">&lt;code> ╔══════════════════════════════════════════════════════════════╗
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;啟動 LightRAG 伺服器：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker compose up
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# If you want the program to run in the background after startup, add the -d parameter at the end of the command.&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="2-啟動-api-server"&gt;2. 啟動 API Server
+&lt;/h2&gt;&lt;p&gt;LightRAG 使用一個 YAML 檔案來設定 API Server，包含端口、API 路徑以及要載入的模型。專案內已提供一個範例設定檔 &lt;code&gt;lightrag_webui/config.yaml&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;進入容器後使用以下指令啟動伺服器：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;lightrag-server
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Server 成功啟動後，您會看到類似以下的輸出，代表伺服器正在 &lt;code&gt;localhost:9621&lt;/code&gt; 上運行：&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt; ╔══════════════════════════════════════════════════════════════╗
 ║ LightRAG Server v1.4.4/0189 ║
 ║ Fast, Lightweight RAG Server Implementation ║
 ╚══════════════════════════════════════════════════════════════╝
@@ -245,55 +245,55 @@ extra_hosts:
 ├─ History Turns: 0
 ├─ API Key: Not Set
 └─ JWT Auth: Disabled
-&lt;/code>&lt;/pre>&lt;hr>
-&lt;h2 id="3-api-端點詳解">3. API 端點詳解
-&lt;/h2>&lt;p>&lt;code>-X&lt;/code>: 指定 HTTP 方法&lt;br>
-&lt;code>-H&lt;/code>: 加入 HTTP 標頭&lt;/p>
-&lt;blockquote>
-&lt;p>ex. &lt;code>-H &amp;quot;Content-Type: application/json&amp;quot;&lt;/code> 用於告知伺服器此次請求的資料格式是 JSON。&lt;br>
-可多次使用 &lt;code>-H&lt;/code> 加標頭。&lt;/p>&lt;/blockquote>
-&lt;p>&lt;code>-d&lt;/code>: 傳送請求資料，常搭配 &lt;code>POST&lt;/code>,&lt;code>PUT&lt;/code> 使用，當指定 &lt;code>Content-Type: application/json&lt;/code> 時，會把內容當 JSON 傳送。&lt;br>
-&lt;code>-v&lt;/code>: verbose 模式，顯示完整請求與回應過程，主要用於除錯。&lt;br>
-&lt;code>-o &amp;lt;file&amp;gt;&lt;/code>: 輸出到檔案中。&lt;/p>
-&lt;hr>
-&lt;p>&lt;strong>獲取文件 api 教學&lt;/strong>&lt;/p>
-&lt;pre tabindex="0">&lt;code>lightrag-server --help
-&lt;/code>&lt;/pre>&lt;p>或在連上 server 後開啟: http://localhost:9621/redoc#tag/documents/operation&lt;/p>
-&lt;hr>
-&lt;h3 id="31-documents">3.1. Documents
-&lt;/h3>&lt;hr>
-&lt;h4 id="311-scan-for-new-documents">3.1.1. Scan For New Documents
-&lt;/h4>&lt;p>&lt;code>POST&lt;/code>: &lt;code>/documents/scan&lt;/code>&lt;br>
-啟動背景掃描，去檢查輸入目錄中是否有新的文件，若有則讀取這些文件。&lt;/p>
-&lt;p>&lt;strong>回傳內容&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>status&lt;/code>(required): Status of the scanning operation.&lt;br>
-value: &lt;code>scanning_started&lt;/code>&lt;/li>
-&lt;li>&lt;code>message&lt;/code>: Additional details about the scanning operation.&lt;/li>
-&lt;/ul>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>curl -X POST &lt;span style="color:#e6db74">&amp;#34;http://localhost:9621/documents/scan&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;hr>
-&lt;h4 id="312-upload-to-input-dir">3.1.2. Upload To Input Dir
-&lt;/h4>&lt;p>&lt;code>POST&lt;/code>: &lt;code>/documents/upload&lt;/code>&lt;br>
-將檔案上傳到指定的目錄，再對其進行索引，以便檢索。&lt;/p>
-&lt;p>&lt;strong>傳入參數&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>file&lt;/code>(required): 要上傳的檔案。&lt;/li>
-&lt;li>&lt;code>api_key_header_value&lt;/code>: 有些伺服器可能需要 API Key 做身份驗證。&lt;/li>
-&lt;/ul>
-&lt;p>&lt;strong>回傳內容&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>status&lt;/code>(required): Status of the uploadding operation.&lt;br>
-Enum: &lt;code>success&lt;/code>、&lt;code>duplicated&lt;/code>、&lt;code>partial_success&lt;/code>、&lt;code>failure&lt;/code>&lt;/li>
-&lt;li>&lt;code>message&lt;/code>(required): Message describing the operation result.&lt;/li>
-&lt;/ul>
-&lt;p>※&lt;code>-F &amp;quot;file=@檔案路徑&amp;quot;&lt;/code> 用於傳 multipart/form-data。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>curl -X POST &lt;span style="color:#e6db74">&amp;#34;http://localhost:9621/documents/upload&amp;#34;&lt;/span> &lt;span style="color:#ae81ff">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> -F &lt;span style="color:#e6db74">&amp;#34;file=@./../prince_docs/little_prince_1.txt&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;hr>
-&lt;hr>
-&lt;h3 id="32-query">3.2. Query
-&lt;/h3>&lt;pre>&lt;code>mode: Literal[&amp;quot;local&amp;quot;, &amp;quot;global&amp;quot;, &amp;quot;hybrid&amp;quot;, &amp;quot;naive&amp;quot;, &amp;quot;mix&amp;quot;, &amp;quot;bypass&amp;quot;] = &amp;quot;global&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;hr&gt;
+&lt;h2 id="3-api-端點詳解"&gt;3. API 端點詳解
+&lt;/h2&gt;&lt;p&gt;&lt;code&gt;-X&lt;/code&gt;: 指定 HTTP 方法&lt;br&gt;
+&lt;code&gt;-H&lt;/code&gt;: 加入 HTTP 標頭&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;ex. &lt;code&gt;-H &amp;quot;Content-Type: application/json&amp;quot;&lt;/code&gt; 用於告知伺服器此次請求的資料格式是 JSON。&lt;br&gt;
+可多次使用 &lt;code&gt;-H&lt;/code&gt; 加標頭。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;&lt;code&gt;-d&lt;/code&gt;: 傳送請求資料，常搭配 &lt;code&gt;POST&lt;/code&gt;,&lt;code&gt;PUT&lt;/code&gt; 使用，當指定 &lt;code&gt;Content-Type: application/json&lt;/code&gt; 時，會把內容當 JSON 傳送。&lt;br&gt;
+&lt;code&gt;-v&lt;/code&gt;: verbose 模式，顯示完整請求與回應過程，主要用於除錯。&lt;br&gt;
+&lt;code&gt;-o &amp;lt;file&amp;gt;&lt;/code&gt;: 輸出到檔案中。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;獲取文件 api 教學&lt;/strong&gt;&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;lightrag-server --help
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;或在連上 server 後開啟: http://localhost:9621/redoc#tag/documents/operation&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id="31-documents"&gt;3.1. Documents
+&lt;/h3&gt;&lt;hr&gt;
+&lt;h4 id="311-scan-for-new-documents"&gt;3.1.1. Scan For New Documents
+&lt;/h4&gt;&lt;p&gt;&lt;code&gt;POST&lt;/code&gt;: &lt;code&gt;/documents/scan&lt;/code&gt;&lt;br&gt;
+啟動背景掃描，去檢查輸入目錄中是否有新的文件，若有則讀取這些文件。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;回傳內容&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;status&lt;/code&gt;(required): Status of the scanning operation.&lt;br&gt;
+value: &lt;code&gt;scanning_started&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;message&lt;/code&gt;: Additional details about the scanning operation.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -X POST &lt;span style="color:#e6db74"&gt;&amp;#34;http://localhost:9621/documents/scan&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h4 id="312-upload-to-input-dir"&gt;3.1.2. Upload To Input Dir
+&lt;/h4&gt;&lt;p&gt;&lt;code&gt;POST&lt;/code&gt;: &lt;code&gt;/documents/upload&lt;/code&gt;&lt;br&gt;
+將檔案上傳到指定的目錄，再對其進行索引，以便檢索。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;傳入參數&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;file&lt;/code&gt;(required): 要上傳的檔案。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;api_key_header_value&lt;/code&gt;: 有些伺服器可能需要 API Key 做身份驗證。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;回傳內容&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;status&lt;/code&gt;(required): Status of the uploadding operation.&lt;br&gt;
+Enum: &lt;code&gt;success&lt;/code&gt;、&lt;code&gt;duplicated&lt;/code&gt;、&lt;code&gt;partial_success&lt;/code&gt;、&lt;code&gt;failure&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;message&lt;/code&gt;(required): Message describing the operation result.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;※&lt;code&gt;-F &amp;quot;file=@檔案路徑&amp;quot;&lt;/code&gt; 用於傳 multipart/form-data。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -X POST &lt;span style="color:#e6db74"&gt;&amp;#34;http://localhost:9621/documents/upload&amp;#34;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;&lt;/span&gt; -F &lt;span style="color:#e6db74"&gt;&amp;#34;file=@./../prince_docs/little_prince_1.txt&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;hr&gt;
+&lt;h3 id="32-query"&gt;3.2. Query
+&lt;/h3&gt;&lt;pre&gt;&lt;code&gt;mode: Literal[&amp;quot;local&amp;quot;, &amp;quot;global&amp;quot;, &amp;quot;hybrid&amp;quot;, &amp;quot;naive&amp;quot;, &amp;quot;mix&amp;quot;, &amp;quot;bypass&amp;quot;] = &amp;quot;global&amp;quot;
 &amp;quot;&amp;quot;&amp;quot;Specifies the retrieval mode:
 - &amp;quot;local&amp;quot;: Focuses on context-dependent information.
 - &amp;quot;global&amp;quot;: Utilizes global knowledge.
@@ -301,736 +301,736 @@ Enum: &lt;code>success&lt;/code>、&lt;code>duplicated&lt;/code>、&lt;code>part
 - &amp;quot;naive&amp;quot;: Performs a basic search without advanced techniques.
 - &amp;quot;mix&amp;quot;: Integrates knowledge graph and vector retrieval.
 &amp;quot;&amp;quot;&amp;quot;
-&lt;/code>&lt;/pre>
-&lt;hr>
-&lt;h3 id="33-documents">3.3. Documents
-&lt;/h3>&lt;p>LightRAG API Server 提供兩類主要的端點：一類是遵循 OpenAI 標準的核心聊天 API，另一類是 Web UI 用於管理資料的 API。&lt;/p>
-&lt;h3 id="31-openai-標準-api">3.1. OpenAI 標準 API
-&lt;/h3>&lt;p>這組 API 讓 LightRAG 可以輕易地整合進現有的 OpenAI 生態系。&lt;/p>
-&lt;h4 id="311-get-apiv1models">3.1.1. &lt;code>GET /api/v1/models&lt;/code>
-&lt;/h4>&lt;p>此端點用於查詢當前伺服器上所有可用的模型。&lt;/p>
-&lt;ul>
-&lt;li>&lt;strong>功能&lt;/strong>: 列出在設定檔中定義的所有模型名稱。&lt;/li>
-&lt;li>&lt;strong>範例&lt;/strong>:
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>curl -X GET http://localhost:8008/api/v1/models
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
-&lt;li>&lt;strong>回應&lt;/strong>:
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;object&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;list&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;data&amp;#34;&lt;/span>: [
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;LightRAG&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;object&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;model&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;created&amp;#34;&lt;/span>: &lt;span style="color:#ae81ff">1721615822&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;owned_by&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;lightrag&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ]
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
-&lt;/ul>
-&lt;h4 id="312-post-apiv1chatcompletions">3.1.2. &lt;code>POST /api/v1/chat/completions&lt;/code>
-&lt;/h4>&lt;p>這是核心的聊天互動端點，功能與 OpenAI 的 Chat Completions API 完全相容。它接收使用者輸入，執行 RAG 流程，並回傳 LLM 生成的答案。&lt;/p>
-&lt;ul>
-&lt;li>&lt;strong>功能&lt;/strong>: 執行一個完整的 RAG 查詢。&lt;/li>
-&lt;li>&lt;strong>範例&lt;/strong>:
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>curl -X POST http://localhost:8008/api/v1/chat/completions &lt;span style="color:#ae81ff">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span>-H &lt;span style="color:#e6db74">&amp;#34;Content-Type: application/json&amp;#34;&lt;/span> &lt;span style="color:#ae81ff">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span>-d &lt;span style="color:#e6db74">&amp;#39;{
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> &amp;#34;model&amp;#34;: &amp;#34;LightRAG&amp;#34;,
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> &amp;#34;messages&amp;#34;: [
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> {
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> &amp;#34;role&amp;#34;: &amp;#34;user&amp;#34;,
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> &amp;#34;content&amp;#34;: &amp;#34;What is Retrieval-Augmented Generation?&amp;#34;
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> }
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> ]
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74">}&amp;#39;&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
-&lt;/ul>
-&lt;h3 id="32-web-ui-api-總覽">3.2. Web UI API 總覽
-&lt;/h3>&lt;p>這組 API 主要由 LightRAG 的 Web UI 使用，提供文件處理、查詢、知識圖譜管理等進階功能。&lt;/p>
-&lt;h4 id="321-文件-documents-api">3.2.1. 文件 (Documents) API
-&lt;/h4>&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th style="text-align: left">方法&lt;/th>
-&lt;th style="text-align: left">路徑&lt;/th>
-&lt;th style="text-align: left">說明&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td style="text-align: left">&lt;code>POST&lt;/code>&lt;/td>
-&lt;td style="text-align: left">&lt;code>/documents/scan&lt;/code>&lt;/td>
-&lt;td style="text-align: left">掃描輸入資料夾中的新文件並進行處理。&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align: left">&lt;code>POST&lt;/code>&lt;/td>
-&lt;td style="text-align: left">&lt;code>/documents/upload&lt;/code>&lt;/td>
-&lt;td style="text-align: left">上傳文件至輸入資料夾。&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align: left">&lt;code>POST&lt;/code>&lt;/td>
-&lt;td style="text-align: left">&lt;code>/documents/text&lt;/code>&lt;/td>
-&lt;td style="text-align: left">插入單筆文字資料。&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align: left">&lt;code>POST&lt;/code>&lt;/td>
-&lt;td style="text-align: left">&lt;code>/documents/texts&lt;/code>&lt;/td>
-&lt;td style="text-align: left">插入多筆文字資料。&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align: left">&lt;code>DELETE&lt;/code>&lt;/td>
-&lt;td style="text-align: left">&lt;code>/documents&lt;/code>&lt;/td>
-&lt;td style="text-align: left">清除所有已處理的文件資料。&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align: left">&lt;code>GET&lt;/code>&lt;/td>
-&lt;td style="text-align: left">&lt;code>/documents&lt;/code>&lt;/td>
-&lt;td style="text-align: left">獲取已處理的文件列表。&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align: left">&lt;code>GET&lt;/code>&lt;/td>
-&lt;td style="text-align: left">&lt;code>/documents/pipeline_status&lt;/code>&lt;/td>
-&lt;td style="text-align: left">獲取文件處理管道的狀態。&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align: left">&lt;code>DELETE&lt;/code>&lt;/td>
-&lt;td style="text-align: left">&lt;code>/documents/delete_document&lt;/code>&lt;/td>
-&lt;td style="text-align: left">根據文件 ID 刪除指定文件及其相關資料。&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align: left">&lt;code>POST&lt;/code>&lt;/td>
-&lt;td style="text-align: left">&lt;code>/documents/clear_cache&lt;/code>&lt;/td>
-&lt;td style="text-align: left">清除快取。&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align: left">&lt;code>DELETE&lt;/code>&lt;/td>
-&lt;td style="text-align: left">&lt;code>/documents/delete_entity&lt;/code>&lt;/td>
-&lt;td style="text-align: left">刪除指定的實體。&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align: left">&lt;code>DELETE&lt;/code>&lt;/td>
-&lt;td style="text-align: left">&lt;code>/documents/delete_relation&lt;/code>&lt;/td>
-&lt;td style="text-align: left">刪除指定的關係。&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;h4 id="322-查詢-query-api">3.2.2. 查詢 (Query) API
-&lt;/h4>&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th style="text-align: left">方法&lt;/th>
-&lt;th style="text-align: left">路徑&lt;/th>
-&lt;th style="text-align: left">說明&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td style="text-align: left">&lt;code>POST&lt;/code>&lt;/td>
-&lt;td style="text-align: left">&lt;code>/query&lt;/code>&lt;/td>
-&lt;td style="text-align: left">提交一個查詢並獲取一次性回覆。&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align: left">&lt;code>POST&lt;/code>&lt;/td>
-&lt;td style="text-align: left">&lt;code>/query/stream&lt;/code>&lt;/td>
-&lt;td style="text-align: left">提交一個查詢並以串流方式獲取回覆。&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;h4 id="323-知識圖譜-graph-api">3.2.3. 知識圖譜 (Graph) API
-&lt;/h4>&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th style="text-align: left">方法&lt;/th>
-&lt;th style="text-align: left">路徑&lt;/th>
-&lt;th style="text-align: left">說明&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td style="text-align: left">&lt;code>GET&lt;/code>&lt;/td>
-&lt;td style="text-align: left">&lt;code>/graph/label/list&lt;/code>&lt;/td>
-&lt;td style="text-align: left">獲取知識圖譜中所有的標籤 (Labels)。&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align: left">&lt;code>GET&lt;/code>&lt;/td>
-&lt;td style="text-align: left">&lt;code>/graphs&lt;/code>&lt;/td>
-&lt;td style="text-align: left">獲取完整的知識圖譜資料。&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align: left">&lt;code>GET&lt;/code>&lt;/td>
-&lt;td style="text-align: left">&lt;code>/graph/entity/exists&lt;/code>&lt;/td>
-&lt;td style="text-align: left">檢查指定的實體是否存在。&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align: left">&lt;code>POST&lt;/code>&lt;/td>
-&lt;td style="text-align: left">&lt;code>/graph/entity/edit&lt;/code>&lt;/td>
-&lt;td style="text-align: left">更新一個實體的資訊。&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align: left">&lt;code>POST&lt;/code>&lt;/td>
-&lt;td style="text-align: left">&lt;code>/graph/relation/edit&lt;/code>&lt;/td>
-&lt;td style="text-align: left">更新一個關係的資訊。&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;h4 id="324-ollama-相容-api">3.2.4. Ollama 相容 API
-&lt;/h4>&lt;p>LightRAG 也提供與 Ollama 相容的 API 端點，方便與相關工具整合。&lt;/p>
-&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th style="text-align: left">方法&lt;/th>
-&lt;th style="text-align: left">路徑&lt;/th>
-&lt;th style="text-align: left">說明&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td style="text-align: left">&lt;code>GET&lt;/code>&lt;/td>
-&lt;td style="text-align: left">&lt;code>/api/version&lt;/code>&lt;/td>
-&lt;td style="text-align: left">獲取 API 版本。&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align: left">&lt;code>GET&lt;/code>&lt;/td>
-&lt;td style="text-align: left">&lt;code>/api/tags&lt;/code>&lt;/td>
-&lt;td style="text-align: left">獲取可用的模型標籤。&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align: left">&lt;code>GET&lt;/code>&lt;/td>
-&lt;td style="text-align: left">&lt;code>/api/ps&lt;/code>&lt;/td>
-&lt;td style="text-align: left">獲取正在運行的模型。&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align: left">&lt;code>POST&lt;/code>&lt;/td>
-&lt;td style="text-align: left">&lt;code>/api/generate&lt;/code>&lt;/td>
-&lt;td style="text-align: left">根據提示生成文字。&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td style="text-align: left">&lt;code>POST&lt;/code>&lt;/td>
-&lt;td style="text-align: left">&lt;code>/api/chat&lt;/code>&lt;/td>
-&lt;td style="text-align: left">進行聊天互動。&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;hr>
-&lt;h2 id="4-總結">4. 總結
-&lt;/h2>&lt;p>LightRAG 的 API Server 提供了一個標準化且功能豐富的介面，讓開發者能將複雜的 RAG 流程部署為一個獨立服務。透過遵循 OpenAI 的 API 格式並提供完整的文件管理 API，它極大地降低了整合門檻，無論是進行快速原型設計，還是將其整合到現有的應用程式中，都變得非常方便。希望本篇教學能幫助您順利踏出使用 LightRAG 的第一步。&lt;/p></description></item><item><title>GraphRAG vs LightRAG</title><link>https://Dandelionlibra.github.io/post/note/graphrag-lightrag-compare/</link><pubDate>Thu, 31 Jul 2025 03:24:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/graphrag-lightrag-compare/</guid><description>&lt;h1 id="rag-種類">RAG 種類
-&lt;/h1>&lt;h2 id="native-rag">Native RAG
-&lt;/h2>&lt;p>嘗試解決內部資訊缺失的問題。&lt;br>
-RAG 在回答前會先基於提問與資料庫中內容的語意相似度篩選出最具關連的段落 (chunk) 再將這些資訊傳給 LLM 進行回答，但受限於檢索到的 chunk 內容，因此若是詢問的問題比較全面，例如主題大綱等等，因為需要全面的資料內容，但檢索後卻使會提供給 LLM 部分內容而已，因此可預測回答準確率大概不高，但是若是法規等問題回答結果會更精確。&lt;/p>
-&lt;h2 id="graph-rag">Graph RAG
-&lt;/h2>&lt;p>嘗試解決 Native RAG 回答不精確的問題。&lt;/p>
-&lt;h2 id="light-rag">Light RAG
-&lt;/h2>&lt;hr>
-&lt;h1 id="引言">引言
-&lt;/h1>&lt;h2 id="現有-rag-系統的局限性">現有 RAG 系統的局限性
-&lt;/h2>&lt;ul>
-&lt;li>
-&lt;p>&lt;strong>依賴平面資料表示：&lt;/strong> 許多方法依賴於平面資料表示（flat data representations），限制了它們根據實體之間複雜關係來理解和檢索資訊的能力。&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>缺乏上下文感知：&lt;/strong> 這些系統通常缺乏維持不同實體及其相互關係之間連貫性所需的上下文感知能力，導致回應可能無法完全解決用戶查詢。&lt;/p>
-&lt;blockquote>
-&lt;p>例：考慮用戶提問「電動車的興起如何影響城市空氣品質和大眾運輸基礎設施？」現有 RAG 方法可能檢索到關於電動車、空氣污染和公共交通挑戰的獨立文檔，但難以將這些信息綜合為一個連貫的回應。它們可能無法解釋電動車的普及如何改善空氣品質，進而可能影響公共交通規劃，用戶可能收到一個碎片化的答案，未能充分捕捉這些主題之間複雜的相互依賴關係。&lt;/p>&lt;/blockquote>
-&lt;/li>
-&lt;/ul>
-&lt;h2 id="lightrag-模型概述">LightRAG 模型概述
-&lt;/h2>&lt;p>增強了系統捕捉實體之間複雜相互依賴關係的能力，從而產生更連貫和上下文更豐富的回應。&lt;/p>
-&lt;hr>
-&lt;h1 id="內文">內文
-&lt;/h1>&lt;h2 id="lightrag-框架的整體架構">LightRAG 框架的整體架構
-&lt;/h2>&lt;p>&lt;img src="https://raw.githubusercontent.com/HKUDS/LightRAG/refs/heads/main/README.assets/b2aaf634151b4706892693ffb43d9093.png"
+&lt;/code&gt;&lt;/pre&gt;
+&lt;hr&gt;
+&lt;h3 id="33-documents"&gt;3.3. Documents
+&lt;/h3&gt;&lt;p&gt;LightRAG API Server 提供兩類主要的端點：一類是遵循 OpenAI 標準的核心聊天 API，另一類是 Web UI 用於管理資料的 API。&lt;/p&gt;
+&lt;h3 id="31-openai-標準-api"&gt;3.1. OpenAI 標準 API
+&lt;/h3&gt;&lt;p&gt;這組 API 讓 LightRAG 可以輕易地整合進現有的 OpenAI 生態系。&lt;/p&gt;
+&lt;h4 id="311-get-apiv1models"&gt;3.1.1. &lt;code&gt;GET /api/v1/models&lt;/code&gt;
+&lt;/h4&gt;&lt;p&gt;此端點用於查詢當前伺服器上所有可用的模型。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;功能&lt;/strong&gt;: 列出在設定檔中定義的所有模型名稱。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;範例&lt;/strong&gt;:
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -X GET http://localhost:8008/api/v1/models
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;回應&lt;/strong&gt;:
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;object&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;list&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;data&amp;#34;&lt;/span&gt;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;id&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;LightRAG&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;object&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;model&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;created&amp;#34;&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;1721615822&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;owned_by&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;lightrag&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id="312-post-apiv1chatcompletions"&gt;3.1.2. &lt;code&gt;POST /api/v1/chat/completions&lt;/code&gt;
+&lt;/h4&gt;&lt;p&gt;這是核心的聊天互動端點，功能與 OpenAI 的 Chat Completions API 完全相容。它接收使用者輸入，執行 RAG 流程，並回傳 LLM 生成的答案。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;功能&lt;/strong&gt;: 執行一個完整的 RAG 查詢。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;範例&lt;/strong&gt;:
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -X POST http://localhost:8008/api/v1/chat/completions &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;&lt;/span&gt;-H &lt;span style="color:#e6db74"&gt;&amp;#34;Content-Type: application/json&amp;#34;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;&lt;/span&gt;-d &lt;span style="color:#e6db74"&gt;&amp;#39;{
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; &amp;#34;model&amp;#34;: &amp;#34;LightRAG&amp;#34;,
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; &amp;#34;messages&amp;#34;: [
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; &amp;#34;role&amp;#34;: &amp;#34;user&amp;#34;,
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; &amp;#34;content&amp;#34;: &amp;#34;What is Retrieval-Augmented Generation?&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;}&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="32-web-ui-api-總覽"&gt;3.2. Web UI API 總覽
+&lt;/h3&gt;&lt;p&gt;這組 API 主要由 LightRAG 的 Web UI 使用，提供文件處理、查詢、知識圖譜管理等進階功能。&lt;/p&gt;
+&lt;h4 id="321-文件-documents-api"&gt;3.2.1. 文件 (Documents) API
+&lt;/h4&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style="text-align: left"&gt;方法&lt;/th&gt;
+&lt;th style="text-align: left"&gt;路徑&lt;/th&gt;
+&lt;th style="text-align: left"&gt;說明&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;POST&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;/documents/scan&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;掃描輸入資料夾中的新文件並進行處理。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;POST&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;/documents/upload&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;上傳文件至輸入資料夾。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;POST&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;/documents/text&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;插入單筆文字資料。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;POST&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;/documents/texts&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;插入多筆文字資料。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;DELETE&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;/documents&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;清除所有已處理的文件資料。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;GET&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;/documents&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;獲取已處理的文件列表。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;GET&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;/documents/pipeline_status&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;獲取文件處理管道的狀態。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;DELETE&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;/documents/delete_document&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;根據文件 ID 刪除指定文件及其相關資料。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;POST&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;/documents/clear_cache&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;清除快取。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;DELETE&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;/documents/delete_entity&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;刪除指定的實體。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;DELETE&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;/documents/delete_relation&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;刪除指定的關係。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id="322-查詢-query-api"&gt;3.2.2. 查詢 (Query) API
+&lt;/h4&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style="text-align: left"&gt;方法&lt;/th&gt;
+&lt;th style="text-align: left"&gt;路徑&lt;/th&gt;
+&lt;th style="text-align: left"&gt;說明&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;POST&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;/query&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;提交一個查詢並獲取一次性回覆。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;POST&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;/query/stream&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;提交一個查詢並以串流方式獲取回覆。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id="323-知識圖譜-graph-api"&gt;3.2.3. 知識圖譜 (Graph) API
+&lt;/h4&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style="text-align: left"&gt;方法&lt;/th&gt;
+&lt;th style="text-align: left"&gt;路徑&lt;/th&gt;
+&lt;th style="text-align: left"&gt;說明&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;GET&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;/graph/label/list&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;獲取知識圖譜中所有的標籤 (Labels)。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;GET&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;/graphs&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;獲取完整的知識圖譜資料。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;GET&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;/graph/entity/exists&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;檢查指定的實體是否存在。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;POST&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;/graph/entity/edit&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;更新一個實體的資訊。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;POST&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;/graph/relation/edit&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;更新一個關係的資訊。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id="324-ollama-相容-api"&gt;3.2.4. Ollama 相容 API
+&lt;/h4&gt;&lt;p&gt;LightRAG 也提供與 Ollama 相容的 API 端點，方便與相關工具整合。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style="text-align: left"&gt;方法&lt;/th&gt;
+&lt;th style="text-align: left"&gt;路徑&lt;/th&gt;
+&lt;th style="text-align: left"&gt;說明&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;GET&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;/api/version&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;獲取 API 版本。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;GET&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;/api/tags&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;獲取可用的模型標籤。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;GET&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;/api/ps&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;獲取正在運行的模型。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;POST&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;/api/generate&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;根據提示生成文字。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;POST&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;&lt;code&gt;/api/chat&lt;/code&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;進行聊天互動。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;hr&gt;
+&lt;h2 id="4-總結"&gt;4. 總結
+&lt;/h2&gt;&lt;p&gt;LightRAG 的 API Server 提供了一個標準化且功能豐富的介面，讓開發者能將複雜的 RAG 流程部署為一個獨立服務。透過遵循 OpenAI 的 API 格式並提供完整的文件管理 API，它極大地降低了整合門檻，無論是進行快速原型設計，還是將其整合到現有的應用程式中，都變得非常方便。希望本篇教學能幫助您順利踏出使用 LightRAG 的第一步。&lt;/p&gt;</description></item><item><title>GraphRAG vs LightRAG</title><link>https://Dandelionlibra.github.io/post/note/graphrag-lightrag-compare/</link><pubDate>Thu, 31 Jul 2025 03:24:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/graphrag-lightrag-compare/</guid><description>&lt;h1 id="rag-種類"&gt;RAG 種類
+&lt;/h1&gt;&lt;h2 id="native-rag"&gt;Native RAG
+&lt;/h2&gt;&lt;p&gt;嘗試解決內部資訊缺失的問題。&lt;br&gt;
+RAG 在回答前會先基於提問與資料庫中內容的語意相似度篩選出最具關連的段落 (chunk) 再將這些資訊傳給 LLM 進行回答，但受限於檢索到的 chunk 內容，因此若是詢問的問題比較全面，例如主題大綱等等，因為需要全面的資料內容，但檢索後卻使會提供給 LLM 部分內容而已，因此可預測回答準確率大概不高，但是若是法規等問題回答結果會更精確。&lt;/p&gt;
+&lt;h2 id="graph-rag"&gt;Graph RAG
+&lt;/h2&gt;&lt;p&gt;嘗試解決 Native RAG 回答不精確的問題。&lt;/p&gt;
+&lt;h2 id="light-rag"&gt;Light RAG
+&lt;/h2&gt;&lt;hr&gt;
+&lt;h1 id="引言"&gt;引言
+&lt;/h1&gt;&lt;h2 id="現有-rag-系統的局限性"&gt;現有 RAG 系統的局限性
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;依賴平面資料表示：&lt;/strong&gt; 許多方法依賴於平面資料表示（flat data representations），限制了它們根據實體之間複雜關係來理解和檢索資訊的能力。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;缺乏上下文感知：&lt;/strong&gt; 這些系統通常缺乏維持不同實體及其相互關係之間連貫性所需的上下文感知能力，導致回應可能無法完全解決用戶查詢。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;例：考慮用戶提問「電動車的興起如何影響城市空氣品質和大眾運輸基礎設施？」現有 RAG 方法可能檢索到關於電動車、空氣污染和公共交通挑戰的獨立文檔，但難以將這些信息綜合為一個連貫的回應。它們可能無法解釋電動車的普及如何改善空氣品質，進而可能影響公共交通規劃，用戶可能收到一個碎片化的答案，未能充分捕捉這些主題之間複雜的相互依賴關係。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="lightrag-模型概述"&gt;LightRAG 模型概述
+&lt;/h2&gt;&lt;p&gt;增強了系統捕捉實體之間複雜相互依賴關係的能力，從而產生更連貫和上下文更豐富的回應。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h1 id="內文"&gt;內文
+&lt;/h1&gt;&lt;h2 id="lightrag-框架的整體架構"&gt;LightRAG 框架的整體架構
+&lt;/h2&gt;&lt;p&gt;&lt;img src="https://raw.githubusercontent.com/HKUDS/LightRAG/refs/heads/main/README.assets/b2aaf634151b4706892693ffb43d9093.png"
 loading="lazy"
 alt="LightRAG 框架總覽"
->&lt;br>
-&lt;em>圖 1. LightRAG 框架總覽（取自原論文）&lt;/em>&lt;/p>
-&lt;p>架構如圖 1 所示。&lt;/p>
-&lt;hr>
-&lt;h1 id="實驗">實驗
-&lt;/h1>&lt;hr>
-&lt;hr>
-&lt;h1 id="reference">Reference
-&lt;/h1>&lt;ul>
-&lt;li>&lt;a class="link" href="https://www.youtube.com/watch?v=-O5ATdQcefo" target="_blank" rel="noopener"
->LightRAG与GraphRAG对比评测，从索引构建、本地检索、全局检索、混合检索等维度对请求大模型次数、Token消耗、金额消耗、检索质量等方面进行全面对比&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://github.com/NanGePlus/LightRAGTest" target="_blank" rel="noopener"
->GitHub: [LightRAGTest]&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>GraphRAG 概論</title><link>https://Dandelionlibra.github.io/post/note/graphrag-overview/</link><pubDate>Thu, 31 Jul 2025 03:24:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/graphrag-overview/</guid><description>&lt;h1 id="graph-rag-基本介紹">Graph RAG 基本介紹
-&lt;/h1>&lt;h2 id="graph-rag">Graph RAG
-&lt;/h2>&lt;p>Native RAG 嘗試解決內部資訊缺失的問題，但受限於檢索到的 chunk 內容，因此若是詢問的問題比較全面，例如主題大綱等等，因為需要全面的資料內容，但檢索後卻只會提供給 LLM 部分內容而已。而為了解決全域資訊缺失的問題因而誕生了 Graph RAG。&lt;/p>
-&lt;p>Graph RAG 透過將非結構化文本轉換為知識圖譜來解決 Native RAG 的問題。它不僅僅是檢索文本片段，而是理解實體之間的關係，從而能夠回答更複雜、需要綜合多方面資訊的問題。&lt;/p>
-&lt;p>node 表示每個主體，而 edge 則是表示了每個 entity 間的關係。&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/Dandelionlibra/Dandelionlibra.github.io/refs/heads/main/content/post/note/assert/GraphRag%20relation%20graph.png"
+&gt;&lt;br&gt;
+&lt;em&gt;圖 1. LightRAG 框架總覽（取自原論文）&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;架構如圖 1 所示。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h1 id="實驗"&gt;實驗
+&lt;/h1&gt;&lt;hr&gt;
+&lt;hr&gt;
+&lt;h1 id="reference"&gt;Reference
+&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="https://www.youtube.com/watch?v=-O5ATdQcefo" target="_blank" rel="noopener"
+&gt;LightRAG与GraphRAG对比评测，从索引构建、本地检索、全局检索、混合检索等维度对请求大模型次数、Token消耗、金额消耗、检索质量等方面进行全面对比&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://github.com/NanGePlus/LightRAGTest" target="_blank" rel="noopener"
+&gt;GitHub: [LightRAGTest]&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>GraphRAG 概論</title><link>https://Dandelionlibra.github.io/post/note/graphrag-overview/</link><pubDate>Thu, 31 Jul 2025 03:24:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/graphrag-overview/</guid><description>&lt;h1 id="graph-rag-基本介紹"&gt;Graph RAG 基本介紹
+&lt;/h1&gt;&lt;h2 id="graph-rag"&gt;Graph RAG
+&lt;/h2&gt;&lt;p&gt;Native RAG 嘗試解決內部資訊缺失的問題，但受限於檢索到的 chunk 內容，因此若是詢問的問題比較全面，例如主題大綱等等，因為需要全面的資料內容，但檢索後卻只會提供給 LLM 部分內容而已。而為了解決全域資訊缺失的問題因而誕生了 Graph RAG。&lt;/p&gt;
+&lt;p&gt;Graph RAG 透過將非結構化文本轉換為知識圖譜來解決 Native RAG 的問題。它不僅僅是檢索文本片段，而是理解實體之間的關係，從而能夠回答更複雜、需要綜合多方面資訊的問題。&lt;/p&gt;
+&lt;p&gt;node 表示每個主體，而 edge 則是表示了每個 entity 間的關係。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://raw.githubusercontent.com/Dandelionlibra/Dandelionlibra.github.io/refs/heads/main/content/post/note/assert/GraphRag%20relation%20graph.png"
 loading="lazy"
 alt="Graph RAG 關係圖"
->
-&lt;em>圖：Graph RAG 將文本中的實體和關係抽取出來，構建成知識圖譜。（圖片來源：&lt;a class="link" href="https://www.youtube.com/watch?v=A1XSpKC2GHc&amp;amp;t=360s" target="_blank" rel="noopener"
->Microsoft Graph RAG 介紹&lt;/a>）&lt;/em>&lt;/p>
-&lt;hr>
-&lt;h1 id="graph-rag-pipeline">Graph RAG Pipeline
-&lt;/h1>&lt;p>&lt;img src="https://raw.githubusercontent.com/Dandelionlibra/Dandelionlibra.github.io/refs/heads/main/content/post/note/assert/GraphRag%20pipline.png"
+&gt;
+&lt;em&gt;圖：Graph RAG 將文本中的實體和關係抽取出來，構建成知識圖譜。（圖片來源：&lt;a class="link" href="https://www.youtube.com/watch?v=A1XSpKC2GHc&amp;amp;t=360s" target="_blank" rel="noopener"
+&gt;Microsoft Graph RAG 介紹&lt;/a&gt;）&lt;/em&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h1 id="graph-rag-pipeline"&gt;Graph RAG Pipeline
+&lt;/h1&gt;&lt;p&gt;&lt;img src="https://raw.githubusercontent.com/Dandelionlibra/Dandelionlibra.github.io/refs/heads/main/content/post/note/assert/GraphRag%20pipline.png"
 loading="lazy"
 alt="Graph RAG pipline"
->
-&lt;em>圖：Graph RAG 將文本中的實體和關係抽取出來，構建成知識圖譜。（圖片來源：&lt;a class="link" href="https://arxiv.org/abs/2404.16130" target="_blank" rel="noopener"
->Microsoft Graph RAG 介紹&lt;/a>）&lt;/em>&lt;/p>
-&lt;h2 id="1-source-documents--text-chunks">1. Source Documents → Text Chunks
-&lt;/h2>&lt;p>將長文件轉換成小 chunks，每個 chunks size 越大則產生的 chunk 越少。&lt;/p>
-&lt;h2 id="2-text-chunks--element-instances">2. Text Chunks → Element Instances
-&lt;/h2>&lt;p>使用多輪對 LLM 的問答以完善所有主體與彼此之間的關聯。&lt;br>
-例，讓 LLM 生成資料庫中資訊的關係，接著拿生成的東西去詢問 LLM 生成的結果是否還有缺失?&lt;br>
-若有，則再次讓 LLM 補全，一直重複到 LLM 回答可以為止。&lt;/p>
-&lt;h2 id="3-element-instances--element-summaries">3. Element Instances → Element Summaries
-&lt;/h2>&lt;p>使用一個額外的 LLM 輸入 Entity 與他的 Relationship，輸出針對此 Entity Summary 的描述。&lt;/p>
-&lt;h2 id="4-element-summaries--graph-communities">4. Element Summaries → Graph Communities
-&lt;/h2>&lt;p>將相同主題的內容框成同樣的 Community。&lt;br>
-使用的演算法是 Leiden community detection algorithm，原則上是相同 Community 中的 entity 間的關係越複雜越好，而不同 Community 中的 entity 間關係越簡單越好。&lt;br>
+&gt;
+&lt;em&gt;圖：Graph RAG 將文本中的實體和關係抽取出來，構建成知識圖譜。（圖片來源：&lt;a class="link" href="https://arxiv.org/abs/2404.16130" target="_blank" rel="noopener"
+&gt;Microsoft Graph RAG 介紹&lt;/a&gt;）&lt;/em&gt;&lt;/p&gt;
+&lt;h2 id="1-source-documents--text-chunks"&gt;1. Source Documents → Text Chunks
+&lt;/h2&gt;&lt;p&gt;將長文件轉換成小 chunks，每個 chunks size 越大則產生的 chunk 越少。&lt;/p&gt;
+&lt;h2 id="2-text-chunks--element-instances"&gt;2. Text Chunks → Element Instances
+&lt;/h2&gt;&lt;p&gt;使用多輪對 LLM 的問答以完善所有主體與彼此之間的關聯。&lt;br&gt;
+例，讓 LLM 生成資料庫中資訊的關係，接著拿生成的東西去詢問 LLM 生成的結果是否還有缺失?&lt;br&gt;
+若有，則再次讓 LLM 補全，一直重複到 LLM 回答可以為止。&lt;/p&gt;
+&lt;h2 id="3-element-instances--element-summaries"&gt;3. Element Instances → Element Summaries
+&lt;/h2&gt;&lt;p&gt;使用一個額外的 LLM 輸入 Entity 與他的 Relationship，輸出針對此 Entity Summary 的描述。&lt;/p&gt;
+&lt;h2 id="4-element-summaries--graph-communities"&gt;4. Element Summaries → Graph Communities
+&lt;/h2&gt;&lt;p&gt;將相同主題的內容框成同樣的 Community。&lt;br&gt;
+使用的演算法是 Leiden community detection algorithm，原則上是相同 Community 中的 entity 間的關係越複雜越好，而不同 Community 中的 entity 間關係越簡單越好。&lt;br&gt;
 &lt;img src="https://raw.githubusercontent.com/Dandelionlibra/Dandelionlibra.github.io/refs/heads/main/content/post/note/assert/GraphRag%20relation%20graph-2.png"
 loading="lazy"
 alt="Graph RAG 關係圖"
->
-&lt;em>圖：Graph RAG community detection。（圖片來源：&lt;a class="link" href="https://www.youtube.com/watch?v=A1XSpKC2GHc&amp;amp;t=780s" target="_blank" rel="noopener"
->Microsoft Graph RAG 介紹&lt;/a>）&lt;/em>&lt;/p>
-&lt;h2 id="5-graph-communities--community-summaries">5. Graph Communities → Community Summaries
-&lt;/h2>&lt;p>將同一個 community 中的 entity 都組合起來，詢問 LLM 整個此類別 community 的摘要，以第四點的圖為例，就會產生三個 Community Summaries。&lt;br>
-若知識圖譜非常大，則可能無法將所有 entity 都傳給 LLM 則可以依照 community 中 entity 的重要性決定是否要先放入(重要性依照單一 node 的 relation 數量決定)。&lt;/p>
-&lt;h2 id="6-community-summaries--community-answers--global-answer">6. Community Summaries → Community Answers → Global Answer
-&lt;/h2>&lt;p>依據 Community Summaries 回答問題。&lt;br>
-將問題拿去一一問每個 Community Summaries，得到各自的 Community 回答後，再將這些比較片面的回答整合成 global answer。&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/Dandelionlibra/Dandelionlibra.github.io/refs/heads/main/content/post/note/assert/step6%20GraphRag%20pipline.png"
+&gt;
+&lt;em&gt;圖：Graph RAG community detection。（圖片來源：&lt;a class="link" href="https://www.youtube.com/watch?v=A1XSpKC2GHc&amp;amp;t=780s" target="_blank" rel="noopener"
+&gt;Microsoft Graph RAG 介紹&lt;/a&gt;）&lt;/em&gt;&lt;/p&gt;
+&lt;h2 id="5-graph-communities--community-summaries"&gt;5. Graph Communities → Community Summaries
+&lt;/h2&gt;&lt;p&gt;將同一個 community 中的 entity 都組合起來，詢問 LLM 整個此類別 community 的摘要，以第四點的圖為例，就會產生三個 Community Summaries。&lt;br&gt;
+若知識圖譜非常大，則可能無法將所有 entity 都傳給 LLM 則可以依照 community 中 entity 的重要性決定是否要先放入(重要性依照單一 node 的 relation 數量決定)。&lt;/p&gt;
+&lt;h2 id="6-community-summaries--community-answers--global-answer"&gt;6. Community Summaries → Community Answers → Global Answer
+&lt;/h2&gt;&lt;p&gt;依據 Community Summaries 回答問題。&lt;br&gt;
+將問題拿去一一問每個 Community Summaries，得到各自的 Community 回答後，再將這些比較片面的回答整合成 global answer。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://raw.githubusercontent.com/Dandelionlibra/Dandelionlibra.github.io/refs/heads/main/content/post/note/assert/step6%20GraphRag%20pipline.png"
 loading="lazy"
 alt="Graph RAG 關係圖"
->
-&lt;em>圖：Community Summaries → Community Answers → Global Answer。（圖片來源：&lt;a class="link" href="https://www.youtube.com/watch?v=A1XSpKC2GHc&amp;amp;t=1040s" target="_blank" rel="noopener"
->Microsoft Graph RAG 介紹&lt;/a>）&lt;/em>&lt;/p>
-&lt;p>如此就可以解決 Native RAG 只看部分資訊，而使的回答缺少其餘資訊的可能。&lt;/p>
-&lt;hr>
-&lt;h1 id="結論">結論
-&lt;/h1>&lt;ul>
-&lt;li>GraphRAG 展現了更好的全域檢索能力。&lt;/li>
-&lt;li>建造知識圖譜花費的成本遠高於 Native RAG。&lt;/li>
-&lt;/ul>
-&lt;hr>
-&lt;h1 id="reference">Reference
-&lt;/h1>&lt;ul>
-&lt;li>&lt;a class="link" href="https://www.youtube.com/watch?v=A1XSpKC2GHc&amp;amp;t=240s" target="_blank" rel="noopener"
->Microsoft Graph RAG 介紹：用 Knowledge Graph 來做 RAG＋Colab 實作&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://www.youtube.com/watch?v=7WFMd8U8C7E" target="_blank" rel="noopener"
->GraphRAG发布重大更新！增量更新索引终于来并新增DRIFT图推理搜索查询，带你手把手全流程实操新功能，源码分析，同时支持GPT、国产大模型、本地大模型等&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://github.com/NanGePlus/GraphRAGTestV040" target="_blank" rel="noopener"
->GitHub: [GraphRAGTestV040]&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>BAAI/bge-reranker-v2-m3 — Hugging Face 官方整理</title><link>https://Dandelionlibra.github.io/post/note/bge-reranker-hf-flagembedding-note/</link><pubDate>Wed, 23 Jul 2025 03:51:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/bge-reranker-hf-flagembedding-note/</guid><description>&lt;h2 id="reranker-模型與函式庫使用差異筆記">Reranker 模型與函式庫使用差異筆記
-&lt;/h2>&lt;p>這份筆記整理了 FlagEmbedding 和 Hugging Face Transformers 在實作不同 Reranker 模型（標準型、LLM 型、分層式 LLM 型）時的關鍵差異。&lt;/p>
-&lt;hr>
-&lt;h3 id="核心實作比較">核心實作比較
-&lt;/h3>&lt;h4 id="flagembedding">FlagEmbedding
-&lt;/h4>&lt;p>&lt;code>FlagEmbedding&lt;/code> 函式庫提供了更簡潔、高度封裝的 API，適合快速整合和高效能應用。&lt;/p>
-&lt;ol>
-&lt;li>標準 Reranker (bge-reranker-base / large / v2-m3)&lt;/li>
-&lt;/ol>
-&lt;ul>
-&lt;li>方法: 使用 &lt;code>FlagReranker&lt;/code> 類別。&lt;/li>
-&lt;li>特點: 最直接、優化的方法，簡化模型載入和計算。&lt;/li>
-&lt;li>程式碼範例:
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> FlagEmbedding &lt;span style="color:#f92672">import&lt;/span> FlagReranker
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Setting use_fp16 to True speeds up computation with a slight performance degradation&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>reranker &lt;span style="color:#f92672">=&lt;/span> FlagReranker(&lt;span style="color:#e6db74">&amp;#39;BAAI/bge-reranker-v2-m3&amp;#39;&lt;/span>, use_fp16&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">True&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>score &lt;span style="color:#f92672">=&lt;/span> reranker&lt;span style="color:#f92672">.&lt;/span>compute_score([&lt;span style="color:#e6db74">&amp;#39;query&amp;#39;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;passage&amp;#39;&lt;/span>])
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>print(score) &lt;span style="color:#75715e"># -5.65234375&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Map the scores into 0-1 by set &amp;#34;normalize=True&amp;#34;, which will apply sigmoid function to the score&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>score &lt;span style="color:#f92672">=&lt;/span> reranker&lt;span style="color:#f92672">.&lt;/span>compute_score([&lt;span style="color:#e6db74">&amp;#39;query&amp;#39;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;passage&amp;#39;&lt;/span>], normalize&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">True&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>print(score) &lt;span style="color:#75715e"># 0.003497010252573502&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>scores &lt;span style="color:#f92672">=&lt;/span> reranker&lt;span style="color:#f92672">.&lt;/span>compute_score([[&lt;span style="color:#e6db74">&amp;#39;what is panda?&amp;#39;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;hi&amp;#39;&lt;/span>], [&lt;span style="color:#e6db74">&amp;#39;what is panda?&amp;#39;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;The giant panda (Ailuropoda melanoleuca), sometimes called a panda bear or simply panda, is a bear species endemic to China.&amp;#39;&lt;/span>]])
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>print(scores) &lt;span style="color:#75715e"># [-8.1875, 5.26171875]&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># set &amp;#34;normalize=True&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>scores &lt;span style="color:#f92672">=&lt;/span> reranker&lt;span style="color:#f92672">.&lt;/span>compute_score([[&lt;span style="color:#e6db74">&amp;#39;what is panda?&amp;#39;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;hi&amp;#39;&lt;/span>], [&lt;span style="color:#e6db74">&amp;#39;what is panda?&amp;#39;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;The giant panda (Ailuropoda melanoleuca), sometimes called a panda bear or simply panda, is a bear species endemic to China.&amp;#39;&lt;/span>]], normalize&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">True&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>print(scores) &lt;span style="color:#75715e"># [0.00027803096387751553, 0.9948403768236574]&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
-&lt;/ul>
-&lt;ol start="2">
-&lt;li>LLM-based Reranker&lt;/li>
-&lt;/ol>
-&lt;ul>
-&lt;li>方法: 利用 &lt;code>FlagLLMReranker&lt;/code> 類別。&lt;/li>
-&lt;li>特點: 將大型語言模型（如 Llama）作為 Reranker，利用其語言理解能力進行細緻排序。需要大量 VRAM (&amp;gt;40G)。&lt;/li>
-&lt;li>程式碼範例:
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> FlagEmbedding &lt;span style="color:#f92672">import&lt;/span> FlagLLMReranker
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Setting use_fp16 to True speeds up computation with a slight performance degradation&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>reranker &lt;span style="color:#f92672">=&lt;/span> FlagLLMReranker(&lt;span style="color:#e6db74">&amp;#39;BAAI/bge-reranker-v2-gemma&amp;#39;&lt;/span>, use_fp16&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">True&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>score &lt;span style="color:#f92672">=&lt;/span> reranker&lt;span style="color:#f92672">.&lt;/span>compute_score([&lt;span style="color:#e6db74">&amp;#39;query&amp;#39;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;passage&amp;#39;&lt;/span>])
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>print(score)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>scores &lt;span style="color:#f92672">=&lt;/span> reranker&lt;span style="color:#f92672">.&lt;/span>compute_score([[&lt;span style="color:#e6db74">&amp;#39;what is panda?&amp;#39;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;hi&amp;#39;&lt;/span>], [&lt;span style="color:#e6db74">&amp;#39;what is panda?&amp;#39;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;The giant panda (Ailuropoda melanoleuca), sometimes called a panda bear or simply panda, is a bear species endemic to China.&amp;#39;&lt;/span>]])
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>print(scores)
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
-&lt;/ul>
-&lt;ol start="3">
-&lt;li>LLM-based Layerwise Reranker&lt;/li>
-&lt;/ol>
-&lt;ul>
-&lt;li>方法: 透過 FlagLLMReranker 的 compute_score_layerwise 方法。&lt;/li>
-&lt;li>特點: 可從 LLM 的不同層獲取分數，提供對模型決策過程的深入洞察。&lt;/li>
-&lt;li>程式碼範例:
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> FlagEmbedding &lt;span style="color:#f92672">import&lt;/span> LayerWiseFlagLLMReranker
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Setting use_fp16 to True speeds up computation with a slight performance degradation&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>reranker &lt;span style="color:#f92672">=&lt;/span> LayerWiseFlagLLMReranker(&lt;span style="color:#e6db74">&amp;#39;BAAI/bge-reranker-v2-minicpm-layerwise&amp;#39;&lt;/span>, use_fp16&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">True&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Adjusting &amp;#39;cutoff_layers&amp;#39; to pick which layers are used for computing the score.&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>score &lt;span style="color:#f92672">=&lt;/span> reranker&lt;span style="color:#f92672">.&lt;/span>compute_score([&lt;span style="color:#e6db74">&amp;#39;query&amp;#39;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;passage&amp;#39;&lt;/span>], cutoff_layers&lt;span style="color:#f92672">=&lt;/span>[&lt;span style="color:#ae81ff">28&lt;/span>])
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>print(score)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>scores &lt;span style="color:#f92672">=&lt;/span> reranker&lt;span style="color:#f92672">.&lt;/span>compute_score([[&lt;span style="color:#e6db74">&amp;#39;what is panda?&amp;#39;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;hi&amp;#39;&lt;/span>], [&lt;span style="color:#e6db74">&amp;#39;what is panda?&amp;#39;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;The giant panda (Ailuropoda melanoleuca), sometimes called a panda bear or simply panda, is a bear species endemic to China.&amp;#39;&lt;/span>]], cutoff_layers&lt;span style="color:#f92672">=&lt;/span>[&lt;span style="color:#ae81ff">28&lt;/span>])
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>print(scores)
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
-&lt;/ul>
-&lt;hr>
-&lt;h4 id="hugging-face-transformers">Hugging Face Transformers
-&lt;/h4>&lt;p>Hugging Face Transformers 函式庫提供了更通用和靈活的方法，適合需要深度自訂和學術研究的場景。&lt;/p>
-&lt;ol>
-&lt;li>標準 Reranker (bge-reranker-base / large / v2-m3)&lt;/li>
-&lt;/ol>
-&lt;ul>
-&lt;li>方法: 載入 AutoTokenizer 和 AutoModelForSequenceClassification。&lt;/li>
-&lt;li>特點: 標準流程，提供更多自訂空間。&lt;/li>
-&lt;li>程式碼範例:
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> torch
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> transformers &lt;span style="color:#f92672">import&lt;/span> AutoModelForSequenceClassification, AutoTokenizer
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>tokenizer &lt;span style="color:#f92672">=&lt;/span> AutoTokenizer&lt;span style="color:#f92672">.&lt;/span>from_pretrained(&lt;span style="color:#e6db74">&amp;#39;BAAI/bge-reranker-v2-m3&amp;#39;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>model &lt;span style="color:#f92672">=&lt;/span> AutoModelForSequenceClassification&lt;span style="color:#f92672">.&lt;/span>from_pretrained(&lt;span style="color:#e6db74">&amp;#39;BAAI/bge-reranker-v2-m3&amp;#39;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>model&lt;span style="color:#f92672">.&lt;/span>eval()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>pairs &lt;span style="color:#f92672">=&lt;/span> [[&lt;span style="color:#e6db74">&amp;#39;what is panda?&amp;#39;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;hi&amp;#39;&lt;/span>], [&lt;span style="color:#e6db74">&amp;#39;what is panda?&amp;#39;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;The giant panda (Ailuropoda melanoleuca), sometimes called a panda bear or simply panda, is a bear species endemic to China.&amp;#39;&lt;/span>]]
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">with&lt;/span> torch&lt;span style="color:#f92672">.&lt;/span>no_grad(): &lt;span style="color:#75715e"># 無梯度下降&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> inputs &lt;span style="color:#f92672">=&lt;/span> tokenizer(pairs, padding&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">True&lt;/span>, truncation&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">True&lt;/span>, return_tensors&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#39;pt&amp;#39;&lt;/span>, max_length&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">512&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> scores &lt;span style="color:#f92672">=&lt;/span> model(&lt;span style="color:#f92672">**&lt;/span>inputs, return_dict&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">True&lt;/span>)&lt;span style="color:#f92672">.&lt;/span>logits&lt;span style="color:#f92672">.&lt;/span>view(&lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>, )&lt;span style="color:#f92672">.&lt;/span>float()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> print(scores)
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
-&lt;/ul>
-&lt;ol start="2">
-&lt;li>LLM-based Reranker&lt;/li>
-&lt;/ol>
-&lt;ul>
-&lt;li>方法: 載入 AutoTokenizer 和 AutoModelForCausalLM。&lt;/li>
-&lt;li>特點: 需要手動處理模型輸出以獲得分數，提供最大的靈活性和控制力。&lt;/li>
-&lt;li>程式碼範例:
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> torch
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> transformers &lt;span style="color:#f92672">import&lt;/span> AutoModelForCausalLM, AutoTokenizer
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">get_inputs&lt;/span>(pairs, tokenizer, prompt&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">None&lt;/span>, max_length&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">1024&lt;/span>):
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> prompt &lt;span style="color:#f92672">is&lt;/span> &lt;span style="color:#66d9ef">None&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> prompt &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;Given a query A and a passage B, determine whether the passage contains an answer to the query by providing a prediction of either &amp;#39;Yes&amp;#39; or &amp;#39;No&amp;#39;.&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> sep &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;&lt;/span>&lt;span style="color:#ae81ff">\n&lt;/span>&lt;span style="color:#e6db74">&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> prompt_inputs &lt;span style="color:#f92672">=&lt;/span> tokenizer(prompt,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> return_tensors&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">None&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> add_special_tokens&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">False&lt;/span>)[&lt;span style="color:#e6db74">&amp;#39;input_ids&amp;#39;&lt;/span>]
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> sep_inputs &lt;span style="color:#f92672">=&lt;/span> tokenizer(sep,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> return_tensors&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">None&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> add_special_tokens&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">False&lt;/span>)[&lt;span style="color:#e6db74">&amp;#39;input_ids&amp;#39;&lt;/span>]
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> inputs &lt;span style="color:#f92672">=&lt;/span> []
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span> query, passage &lt;span style="color:#f92672">in&lt;/span> pairs:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> query_inputs &lt;span style="color:#f92672">=&lt;/span> tokenizer(&lt;span style="color:#e6db74">f&lt;/span>&lt;span style="color:#e6db74">&amp;#39;A: &lt;/span>&lt;span style="color:#e6db74">{&lt;/span>query&lt;span style="color:#e6db74">}&lt;/span>&lt;span style="color:#e6db74">&amp;#39;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> return_tensors&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">None&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> add_special_tokens&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">False&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> max_length&lt;span style="color:#f92672">=&lt;/span>max_length &lt;span style="color:#f92672">*&lt;/span> &lt;span style="color:#ae81ff">3&lt;/span> &lt;span style="color:#f92672">//&lt;/span> &lt;span style="color:#ae81ff">4&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> truncation&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">True&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> passage_inputs &lt;span style="color:#f92672">=&lt;/span> tokenizer(&lt;span style="color:#e6db74">f&lt;/span>&lt;span style="color:#e6db74">&amp;#39;B: &lt;/span>&lt;span style="color:#e6db74">{&lt;/span>passage&lt;span style="color:#e6db74">}&lt;/span>&lt;span style="color:#e6db74">&amp;#39;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> return_tensors&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">None&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> add_special_tokens&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">False&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> max_length&lt;span style="color:#f92672">=&lt;/span>max_length,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> truncation&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">True&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> item &lt;span style="color:#f92672">=&lt;/span> tokenizer&lt;span style="color:#f92672">.&lt;/span>prepare_for_model(
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> [tokenizer&lt;span style="color:#f92672">.&lt;/span>bos_token_id] &lt;span style="color:#f92672">+&lt;/span> query_inputs[&lt;span style="color:#e6db74">&amp;#39;input_ids&amp;#39;&lt;/span>],
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> sep_inputs &lt;span style="color:#f92672">+&lt;/span> passage_inputs[&lt;span style="color:#e6db74">&amp;#39;input_ids&amp;#39;&lt;/span>],
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> truncation&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#39;only_second&amp;#39;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> max_length&lt;span style="color:#f92672">=&lt;/span>max_length,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> padding&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">False&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> return_attention_mask&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">False&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> return_token_type_ids&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">False&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> add_special_tokens&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">False&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> )
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> item[&lt;span style="color:#e6db74">&amp;#39;input_ids&amp;#39;&lt;/span>] &lt;span style="color:#f92672">=&lt;/span> item[&lt;span style="color:#e6db74">&amp;#39;input_ids&amp;#39;&lt;/span>] &lt;span style="color:#f92672">+&lt;/span> sep_inputs &lt;span style="color:#f92672">+&lt;/span> prompt_inputs
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> item[&lt;span style="color:#e6db74">&amp;#39;attention_mask&amp;#39;&lt;/span>] &lt;span style="color:#f92672">=&lt;/span> [&lt;span style="color:#ae81ff">1&lt;/span>] &lt;span style="color:#f92672">*&lt;/span> len(item[&lt;span style="color:#e6db74">&amp;#39;input_ids&amp;#39;&lt;/span>])
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> inputs&lt;span style="color:#f92672">.&lt;/span>append(item)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> tokenizer&lt;span style="color:#f92672">.&lt;/span>pad(
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> inputs,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> padding&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">True&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> max_length&lt;span style="color:#f92672">=&lt;/span>max_length &lt;span style="color:#f92672">+&lt;/span> len(sep_inputs) &lt;span style="color:#f92672">+&lt;/span> len(prompt_inputs),
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> pad_to_multiple_of&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">8&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> return_tensors&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#39;pt&amp;#39;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> )
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>tokenizer &lt;span style="color:#f92672">=&lt;/span> AutoTokenizer&lt;span style="color:#f92672">.&lt;/span>from_pretrained(&lt;span style="color:#e6db74">&amp;#39;BAAI/bge-reranker-v2-gemma&amp;#39;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>model &lt;span style="color:#f92672">=&lt;/span> AutoModelForCausalLM&lt;span style="color:#f92672">.&lt;/span>from_pretrained(&lt;span style="color:#e6db74">&amp;#39;BAAI/bge-reranker-v2-gemma&amp;#39;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>yes_loc &lt;span style="color:#f92672">=&lt;/span> tokenizer(&lt;span style="color:#e6db74">&amp;#39;Yes&amp;#39;&lt;/span>, add_special_tokens&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">False&lt;/span>)[&lt;span style="color:#e6db74">&amp;#39;input_ids&amp;#39;&lt;/span>][&lt;span style="color:#ae81ff">0&lt;/span>]
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>model&lt;span style="color:#f92672">.&lt;/span>eval()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>pairs &lt;span style="color:#f92672">=&lt;/span> [[&lt;span style="color:#e6db74">&amp;#39;what is panda?&amp;#39;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;hi&amp;#39;&lt;/span>], [&lt;span style="color:#e6db74">&amp;#39;what is panda?&amp;#39;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;The giant panda (Ailuropoda melanoleuca), sometimes called a panda bear or simply panda, is a bear species endemic to China.&amp;#39;&lt;/span>]]
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">with&lt;/span> torch&lt;span style="color:#f92672">.&lt;/span>no_grad():
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> inputs &lt;span style="color:#f92672">=&lt;/span> get_inputs(pairs, tokenizer)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> scores &lt;span style="color:#f92672">=&lt;/span> model(&lt;span style="color:#f92672">**&lt;/span>inputs, return_dict&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">True&lt;/span>)&lt;span style="color:#f92672">.&lt;/span>logits[:, &lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>, yes_loc]&lt;span style="color:#f92672">.&lt;/span>view(&lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>, )&lt;span style="color:#f92672">.&lt;/span>float()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> print(scores)
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
-&lt;/ul>
-&lt;ol start="3">
-&lt;li>LLM-based Layerwise Reranker&lt;/li>
-&lt;/ol>
-&lt;ul>
-&lt;li>方法: 透過手動存取 AutoModelForCausalLM 的隱藏層輸出或注意力權重，並自行計算分數。&lt;/li>
-&lt;li>特點: 提供對 LLM 內部決策過程最細緻的控制和分析，但實作複雜度高，需要深入理解模型架構。&lt;/li>
-&lt;li>程式碼範例:
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> torch
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> transformers &lt;span style="color:#f92672">import&lt;/span> AutoModelForCausalLM, AutoTokenizer
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">get_inputs&lt;/span>(pairs, tokenizer, prompt&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">None&lt;/span>, max_length&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">1024&lt;/span>):
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> prompt &lt;span style="color:#f92672">is&lt;/span> &lt;span style="color:#66d9ef">None&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> prompt &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;Given a query A and a passage B, determine whether the passage contains an answer to the query by providing a prediction of either &amp;#39;Yes&amp;#39; or &amp;#39;No&amp;#39;.&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> sep &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;&lt;/span>&lt;span style="color:#ae81ff">\n&lt;/span>&lt;span style="color:#e6db74">&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> prompt_inputs &lt;span style="color:#f92672">=&lt;/span> tokenizer(prompt,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> return_tensors&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">None&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> add_special_tokens&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">False&lt;/span>)[&lt;span style="color:#e6db74">&amp;#39;input_ids&amp;#39;&lt;/span>]
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> sep_inputs &lt;span style="color:#f92672">=&lt;/span> tokenizer(sep,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> return_tensors&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">None&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> add_special_tokens&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">False&lt;/span>)[&lt;span style="color:#e6db74">&amp;#39;input_ids&amp;#39;&lt;/span>]
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> inputs &lt;span style="color:#f92672">=&lt;/span> []
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span> query, passage &lt;span style="color:#f92672">in&lt;/span> pairs:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> query_inputs &lt;span style="color:#f92672">=&lt;/span> tokenizer(&lt;span style="color:#e6db74">f&lt;/span>&lt;span style="color:#e6db74">&amp;#39;A: &lt;/span>&lt;span style="color:#e6db74">{&lt;/span>query&lt;span style="color:#e6db74">}&lt;/span>&lt;span style="color:#e6db74">&amp;#39;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> return_tensors&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">None&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> add_special_tokens&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">False&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> max_length&lt;span style="color:#f92672">=&lt;/span>max_length &lt;span style="color:#f92672">*&lt;/span> &lt;span style="color:#ae81ff">3&lt;/span> &lt;span style="color:#f92672">//&lt;/span> &lt;span style="color:#ae81ff">4&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> truncation&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">True&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> passage_inputs &lt;span style="color:#f92672">=&lt;/span> tokenizer(&lt;span style="color:#e6db74">f&lt;/span>&lt;span style="color:#e6db74">&amp;#39;B: &lt;/span>&lt;span style="color:#e6db74">{&lt;/span>passage&lt;span style="color:#e6db74">}&lt;/span>&lt;span style="color:#e6db74">&amp;#39;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> return_tensors&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">None&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> add_special_tokens&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">False&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> max_length&lt;span style="color:#f92672">=&lt;/span>max_length,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> truncation&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">True&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> item &lt;span style="color:#f92672">=&lt;/span> tokenizer&lt;span style="color:#f92672">.&lt;/span>prepare_for_model(
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> [tokenizer&lt;span style="color:#f92672">.&lt;/span>bos_token_id] &lt;span style="color:#f92672">+&lt;/span> query_inputs[&lt;span style="color:#e6db74">&amp;#39;input_ids&amp;#39;&lt;/span>],
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> sep_inputs &lt;span style="color:#f92672">+&lt;/span> passage_inputs[&lt;span style="color:#e6db74">&amp;#39;input_ids&amp;#39;&lt;/span>],
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> truncation&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#39;only_second&amp;#39;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> max_length&lt;span style="color:#f92672">=&lt;/span>max_length,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> padding&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">False&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> return_attention_mask&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">False&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> return_token_type_ids&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">False&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> add_special_tokens&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">False&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> )
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> item[&lt;span style="color:#e6db74">&amp;#39;input_ids&amp;#39;&lt;/span>] &lt;span style="color:#f92672">=&lt;/span> item[&lt;span style="color:#e6db74">&amp;#39;input_ids&amp;#39;&lt;/span>] &lt;span style="color:#f92672">+&lt;/span> sep_inputs &lt;span style="color:#f92672">+&lt;/span> prompt_inputs
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> item[&lt;span style="color:#e6db74">&amp;#39;attention_mask&amp;#39;&lt;/span>] &lt;span style="color:#f92672">=&lt;/span> [&lt;span style="color:#ae81ff">1&lt;/span>] &lt;span style="color:#f92672">*&lt;/span> len(item[&lt;span style="color:#e6db74">&amp;#39;input_ids&amp;#39;&lt;/span>])
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> inputs&lt;span style="color:#f92672">.&lt;/span>append(item)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> tokenizer&lt;span style="color:#f92672">.&lt;/span>pad(
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> inputs,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> padding&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">True&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> max_length&lt;span style="color:#f92672">=&lt;/span>max_length &lt;span style="color:#f92672">+&lt;/span> len(sep_inputs) &lt;span style="color:#f92672">+&lt;/span> len(prompt_inputs),
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> pad_to_multiple_of&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">8&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> return_tensors&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#39;pt&amp;#39;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> )
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>tokenizer &lt;span style="color:#f92672">=&lt;/span> AutoTokenizer&lt;span style="color:#f92672">.&lt;/span>from_pretrained(&lt;span style="color:#e6db74">&amp;#39;BAAI/bge-reranker-v2-minicpm-layerwise&amp;#39;&lt;/span>, trust_remote_code&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">True&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>model &lt;span style="color:#f92672">=&lt;/span> AutoModelForCausalLM&lt;span style="color:#f92672">.&lt;/span>from_pretrained(&lt;span style="color:#e6db74">&amp;#39;BAAI/bge-reranker-v2-minicpm-layerwise&amp;#39;&lt;/span>, trust_remote_code&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">True&lt;/span>, torch_dtype&lt;span style="color:#f92672">=&lt;/span>torch&lt;span style="color:#f92672">.&lt;/span>bfloat16)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>model &lt;span style="color:#f92672">=&lt;/span> model&lt;span style="color:#f92672">.&lt;/span>to(&lt;span style="color:#e6db74">&amp;#39;cuda&amp;#39;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>model&lt;span style="color:#f92672">.&lt;/span>eval()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>pairs &lt;span style="color:#f92672">=&lt;/span> [[&lt;span style="color:#e6db74">&amp;#39;what is panda?&amp;#39;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;hi&amp;#39;&lt;/span>], [&lt;span style="color:#e6db74">&amp;#39;what is panda?&amp;#39;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;The giant panda (Ailuropoda melanoleuca), sometimes called a panda bear or simply panda, is a bear species endemic to China.&amp;#39;&lt;/span>]]
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">with&lt;/span> torch&lt;span style="color:#f92672">.&lt;/span>no_grad():
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> inputs &lt;span style="color:#f92672">=&lt;/span> get_inputs(pairs, tokenizer)&lt;span style="color:#f92672">.&lt;/span>to(model&lt;span style="color:#f92672">.&lt;/span>device)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> all_scores &lt;span style="color:#f92672">=&lt;/span> model(&lt;span style="color:#f92672">**&lt;/span>inputs, return_dict&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">True&lt;/span>, cutoff_layers&lt;span style="color:#f92672">=&lt;/span>[&lt;span style="color:#ae81ff">28&lt;/span>])
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> all_scores &lt;span style="color:#f92672">=&lt;/span> [scores[:, &lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>]&lt;span style="color:#f92672">.&lt;/span>view(&lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>, )&lt;span style="color:#f92672">.&lt;/span>float() &lt;span style="color:#66d9ef">for&lt;/span> scores &lt;span style="color:#f92672">in&lt;/span> all_scores[&lt;span style="color:#ae81ff">0&lt;/span>]]
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> print(all_scores)
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
-&lt;/ul>
-&lt;hr>
-&lt;h3 id="核心概念解析">核心概念解析
-&lt;/h3>&lt;h4 id="標準-reranker-cross-encoder">標準 Reranker (Cross-Encoder)
-&lt;/h4>&lt;ul>
-&lt;li>原理: 將「查詢」和「文件」成對地同時輸入到模型中，模型利用兩者之間的交互資訊判斷相關性。&lt;/li>
-&lt;li>輸出: 單一相關性分數。&lt;/li>
-&lt;li>流程: 查詢 + 文件 → Cross-Encoder 模型 → 相關性分數&lt;/li>
-&lt;/ul>
-&lt;h4 id="llm-based-reranker">LLM-based Reranker
-&lt;/h4>&lt;ul>
-&lt;li>原理: 使用完整的大型語言模型（LLM）作為 Reranker，利用其龐大知識和推理能力理解深層語義關係。&lt;/li>
-&lt;li>輸出: 通常透過特定 token（如 [Yes] 或 [No]）的機率計算分數。&lt;/li>
-&lt;li>流程: 查詢 + 文件 → 大型語言模型 (LLM) → 基於生成機率的分數&lt;/li>
-&lt;/ul>
-&lt;h4 id="總結與比較">總結與比較
-&lt;/h4>&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th>比較維度&lt;/th>
-&lt;th>FlagEmbedding&lt;/th>
-&lt;th>Hugging Face Transformers&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td>易用性&lt;/td>
-&lt;td>高（API 封裝良好）&lt;/td>
-&lt;td>中（需要更多手動設定）&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>靈活性&lt;/td>
-&lt;td>中（專為 Reranking 優化）&lt;/td>
-&lt;td>高（可完全自訂流程）&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>特色功能&lt;/td>
-&lt;td>Layerwise 分數計算&lt;/td>
-&lt;td>與整個 Hugging Face 生態系無縫接軌&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>推薦使用情境&lt;/td>
-&lt;td>需要快速實現高效能 Reranking 的應用&lt;/td>
-&lt;td>需要深度自訂模型行為或進行學術研究&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table></description></item><item><title>三種 RAG 架構比較與應用解析 — Naive、Advanced、Modular RAG 差異整理</title><link>https://Dandelionlibra.github.io/post/note/rag-type-compare-note/</link><pubDate>Mon, 21 Jul 2025 09:16:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/rag-type-compare-note/</guid><description>&lt;h1 id="三種-rag-技術架構比較naive-ragadvanced-rag-與-modular-rag">三種 RAG 技術架構比較：Naive RAG、Advanced RAG 與 Modular RAG
-&lt;/h1>&lt;p>本文比較《Retrieval-Augmented Generation for Large Language Models: A Survey》中提出的三種檢索增強生成（RAG）技術架構：Naive RAG、Advanced RAG 和 Modular RAG。RAG 旨在結合大型語言模型（LLM）的內部知識與外部資料檢索，以提升事實正確性與時效性。這三種架構代表了 RAG 技術的演進路徑，各自引入不同模組與策略來克服先前架構的侷限。本文將從架構組成、實作方式、技術細節、應用場景與優劣比較等面向，深入剖析三類架構的差異與適用性。&lt;/p>
-&lt;hr>
-&lt;h2 id="架構組成與流程差異">架構組成與流程差異
-&lt;/h2>&lt;h3 id="naive-rag">Naive RAG
-&lt;/h3>&lt;p>最早期且基礎的 RAG 架構，僅包含索引（Indexing）、檢索（Retrieval）與生成（Generation）三個串連模組。流程為：資料向量化 → 檢索前 $K$ 個相關片段 → 查詢與檢索結果一併餵給 LLM 產生回答。此架構流程簡單、模組單一，缺乏查詢優化或反饋機制，適合快速原型開發。&lt;/p>
-&lt;p>&lt;img src="https://www.ibm.com/content/dam/connectedassets-adobe-cms/worldwide-content/creative-assets/s-migr/ul/g/e0/d6/naive-rag.png"
+&gt;
+&lt;em&gt;圖：Community Summaries → Community Answers → Global Answer。（圖片來源：&lt;a class="link" href="https://www.youtube.com/watch?v=A1XSpKC2GHc&amp;amp;t=1040s" target="_blank" rel="noopener"
+&gt;Microsoft Graph RAG 介紹&lt;/a&gt;）&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;如此就可以解決 Native RAG 只看部分資訊，而使的回答缺少其餘資訊的可能。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h1 id="結論"&gt;結論
+&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;GraphRAG 展現了更好的全域檢索能力。&lt;/li&gt;
+&lt;li&gt;建造知識圖譜花費的成本遠高於 Native RAG。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h1 id="reference"&gt;Reference
+&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="https://www.youtube.com/watch?v=A1XSpKC2GHc&amp;amp;t=240s" target="_blank" rel="noopener"
+&gt;Microsoft Graph RAG 介紹：用 Knowledge Graph 來做 RAG＋Colab 實作&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://www.youtube.com/watch?v=7WFMd8U8C7E" target="_blank" rel="noopener"
+&gt;GraphRAG发布重大更新！增量更新索引终于来并新增DRIFT图推理搜索查询，带你手把手全流程实操新功能，源码分析，同时支持GPT、国产大模型、本地大模型等&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://github.com/NanGePlus/GraphRAGTestV040" target="_blank" rel="noopener"
+&gt;GitHub: [GraphRAGTestV040]&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>BAAI/bge-reranker-v2-m3 — Hugging Face 官方整理</title><link>https://Dandelionlibra.github.io/post/note/bge-reranker-hf-flagembedding-note/</link><pubDate>Wed, 23 Jul 2025 03:51:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/bge-reranker-hf-flagembedding-note/</guid><description>&lt;h2 id="reranker-模型與函式庫使用差異筆記"&gt;Reranker 模型與函式庫使用差異筆記
+&lt;/h2&gt;&lt;p&gt;這份筆記整理了 FlagEmbedding 和 Hugging Face Transformers 在實作不同 Reranker 模型（標準型、LLM 型、分層式 LLM 型）時的關鍵差異。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id="核心實作比較"&gt;核心實作比較
+&lt;/h3&gt;&lt;h4 id="flagembedding"&gt;FlagEmbedding
+&lt;/h4&gt;&lt;p&gt;&lt;code&gt;FlagEmbedding&lt;/code&gt; 函式庫提供了更簡潔、高度封裝的 API，適合快速整合和高效能應用。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;標準 Reranker (bge-reranker-base / large / v2-m3)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;方法: 使用 &lt;code&gt;FlagReranker&lt;/code&gt; 類別。&lt;/li&gt;
+&lt;li&gt;特點: 最直接、優化的方法，簡化模型載入和計算。&lt;/li&gt;
+&lt;li&gt;程式碼範例:
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; FlagEmbedding &lt;span style="color:#f92672"&gt;import&lt;/span&gt; FlagReranker
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Setting use_fp16 to True speeds up computation with a slight performance degradation&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;reranker &lt;span style="color:#f92672"&gt;=&lt;/span&gt; FlagReranker(&lt;span style="color:#e6db74"&gt;&amp;#39;BAAI/bge-reranker-v2-m3&amp;#39;&lt;/span&gt;, use_fp16&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;score &lt;span style="color:#f92672"&gt;=&lt;/span&gt; reranker&lt;span style="color:#f92672"&gt;.&lt;/span&gt;compute_score([&lt;span style="color:#e6db74"&gt;&amp;#39;query&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;passage&amp;#39;&lt;/span&gt;])
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(score) &lt;span style="color:#75715e"&gt;# -5.65234375&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Map the scores into 0-1 by set &amp;#34;normalize=True&amp;#34;, which will apply sigmoid function to the score&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;score &lt;span style="color:#f92672"&gt;=&lt;/span&gt; reranker&lt;span style="color:#f92672"&gt;.&lt;/span&gt;compute_score([&lt;span style="color:#e6db74"&gt;&amp;#39;query&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;passage&amp;#39;&lt;/span&gt;], normalize&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(score) &lt;span style="color:#75715e"&gt;# 0.003497010252573502&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;scores &lt;span style="color:#f92672"&gt;=&lt;/span&gt; reranker&lt;span style="color:#f92672"&gt;.&lt;/span&gt;compute_score([[&lt;span style="color:#e6db74"&gt;&amp;#39;what is panda?&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;hi&amp;#39;&lt;/span&gt;], [&lt;span style="color:#e6db74"&gt;&amp;#39;what is panda?&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;The giant panda (Ailuropoda melanoleuca), sometimes called a panda bear or simply panda, is a bear species endemic to China.&amp;#39;&lt;/span&gt;]])
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(scores) &lt;span style="color:#75715e"&gt;# [-8.1875, 5.26171875]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# set &amp;#34;normalize=True&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;scores &lt;span style="color:#f92672"&gt;=&lt;/span&gt; reranker&lt;span style="color:#f92672"&gt;.&lt;/span&gt;compute_score([[&lt;span style="color:#e6db74"&gt;&amp;#39;what is panda?&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;hi&amp;#39;&lt;/span&gt;], [&lt;span style="color:#e6db74"&gt;&amp;#39;what is panda?&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;The giant panda (Ailuropoda melanoleuca), sometimes called a panda bear or simply panda, is a bear species endemic to China.&amp;#39;&lt;/span&gt;]], normalize&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(scores) &lt;span style="color:#75715e"&gt;# [0.00027803096387751553, 0.9948403768236574]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start="2"&gt;
+&lt;li&gt;LLM-based Reranker&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;方法: 利用 &lt;code&gt;FlagLLMReranker&lt;/code&gt; 類別。&lt;/li&gt;
+&lt;li&gt;特點: 將大型語言模型（如 Llama）作為 Reranker，利用其語言理解能力進行細緻排序。需要大量 VRAM (&amp;gt;40G)。&lt;/li&gt;
+&lt;li&gt;程式碼範例:
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; FlagEmbedding &lt;span style="color:#f92672"&gt;import&lt;/span&gt; FlagLLMReranker
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Setting use_fp16 to True speeds up computation with a slight performance degradation&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;reranker &lt;span style="color:#f92672"&gt;=&lt;/span&gt; FlagLLMReranker(&lt;span style="color:#e6db74"&gt;&amp;#39;BAAI/bge-reranker-v2-gemma&amp;#39;&lt;/span&gt;, use_fp16&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;score &lt;span style="color:#f92672"&gt;=&lt;/span&gt; reranker&lt;span style="color:#f92672"&gt;.&lt;/span&gt;compute_score([&lt;span style="color:#e6db74"&gt;&amp;#39;query&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;passage&amp;#39;&lt;/span&gt;])
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(score)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;scores &lt;span style="color:#f92672"&gt;=&lt;/span&gt; reranker&lt;span style="color:#f92672"&gt;.&lt;/span&gt;compute_score([[&lt;span style="color:#e6db74"&gt;&amp;#39;what is panda?&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;hi&amp;#39;&lt;/span&gt;], [&lt;span style="color:#e6db74"&gt;&amp;#39;what is panda?&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;The giant panda (Ailuropoda melanoleuca), sometimes called a panda bear or simply panda, is a bear species endemic to China.&amp;#39;&lt;/span&gt;]])
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(scores)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start="3"&gt;
+&lt;li&gt;LLM-based Layerwise Reranker&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;方法: 透過 FlagLLMReranker 的 compute_score_layerwise 方法。&lt;/li&gt;
+&lt;li&gt;特點: 可從 LLM 的不同層獲取分數，提供對模型決策過程的深入洞察。&lt;/li&gt;
+&lt;li&gt;程式碼範例:
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; FlagEmbedding &lt;span style="color:#f92672"&gt;import&lt;/span&gt; LayerWiseFlagLLMReranker
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Setting use_fp16 to True speeds up computation with a slight performance degradation&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;reranker &lt;span style="color:#f92672"&gt;=&lt;/span&gt; LayerWiseFlagLLMReranker(&lt;span style="color:#e6db74"&gt;&amp;#39;BAAI/bge-reranker-v2-minicpm-layerwise&amp;#39;&lt;/span&gt;, use_fp16&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Adjusting &amp;#39;cutoff_layers&amp;#39; to pick which layers are used for computing the score.&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;score &lt;span style="color:#f92672"&gt;=&lt;/span&gt; reranker&lt;span style="color:#f92672"&gt;.&lt;/span&gt;compute_score([&lt;span style="color:#e6db74"&gt;&amp;#39;query&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;passage&amp;#39;&lt;/span&gt;], cutoff_layers&lt;span style="color:#f92672"&gt;=&lt;/span&gt;[&lt;span style="color:#ae81ff"&gt;28&lt;/span&gt;])
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(score)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;scores &lt;span style="color:#f92672"&gt;=&lt;/span&gt; reranker&lt;span style="color:#f92672"&gt;.&lt;/span&gt;compute_score([[&lt;span style="color:#e6db74"&gt;&amp;#39;what is panda?&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;hi&amp;#39;&lt;/span&gt;], [&lt;span style="color:#e6db74"&gt;&amp;#39;what is panda?&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;The giant panda (Ailuropoda melanoleuca), sometimes called a panda bear or simply panda, is a bear species endemic to China.&amp;#39;&lt;/span&gt;]], cutoff_layers&lt;span style="color:#f92672"&gt;=&lt;/span&gt;[&lt;span style="color:#ae81ff"&gt;28&lt;/span&gt;])
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(scores)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h4 id="hugging-face-transformers"&gt;Hugging Face Transformers
+&lt;/h4&gt;&lt;p&gt;Hugging Face Transformers 函式庫提供了更通用和靈活的方法，適合需要深度自訂和學術研究的場景。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;標準 Reranker (bge-reranker-base / large / v2-m3)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;方法: 載入 AutoTokenizer 和 AutoModelForSequenceClassification。&lt;/li&gt;
+&lt;li&gt;特點: 標準流程，提供更多自訂空間。&lt;/li&gt;
+&lt;li&gt;程式碼範例:
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; torch
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; transformers &lt;span style="color:#f92672"&gt;import&lt;/span&gt; AutoModelForSequenceClassification, AutoTokenizer
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tokenizer &lt;span style="color:#f92672"&gt;=&lt;/span&gt; AutoTokenizer&lt;span style="color:#f92672"&gt;.&lt;/span&gt;from_pretrained(&lt;span style="color:#e6db74"&gt;&amp;#39;BAAI/bge-reranker-v2-m3&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;model &lt;span style="color:#f92672"&gt;=&lt;/span&gt; AutoModelForSequenceClassification&lt;span style="color:#f92672"&gt;.&lt;/span&gt;from_pretrained(&lt;span style="color:#e6db74"&gt;&amp;#39;BAAI/bge-reranker-v2-m3&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;model&lt;span style="color:#f92672"&gt;.&lt;/span&gt;eval()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pairs &lt;span style="color:#f92672"&gt;=&lt;/span&gt; [[&lt;span style="color:#e6db74"&gt;&amp;#39;what is panda?&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;hi&amp;#39;&lt;/span&gt;], [&lt;span style="color:#e6db74"&gt;&amp;#39;what is panda?&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;The giant panda (Ailuropoda melanoleuca), sometimes called a panda bear or simply panda, is a bear species endemic to China.&amp;#39;&lt;/span&gt;]]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;with&lt;/span&gt; torch&lt;span style="color:#f92672"&gt;.&lt;/span&gt;no_grad(): &lt;span style="color:#75715e"&gt;# 無梯度下降&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; inputs &lt;span style="color:#f92672"&gt;=&lt;/span&gt; tokenizer(pairs, padding&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;, truncation&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;, return_tensors&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;pt&amp;#39;&lt;/span&gt;, max_length&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;512&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; scores &lt;span style="color:#f92672"&gt;=&lt;/span&gt; model(&lt;span style="color:#f92672"&gt;**&lt;/span&gt;inputs, return_dict&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;)&lt;span style="color:#f92672"&gt;.&lt;/span&gt;logits&lt;span style="color:#f92672"&gt;.&lt;/span&gt;view(&lt;span style="color:#f92672"&gt;-&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;, )&lt;span style="color:#f92672"&gt;.&lt;/span&gt;float()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; print(scores)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start="2"&gt;
+&lt;li&gt;LLM-based Reranker&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;方法: 載入 AutoTokenizer 和 AutoModelForCausalLM。&lt;/li&gt;
+&lt;li&gt;特點: 需要手動處理模型輸出以獲得分數，提供最大的靈活性和控制力。&lt;/li&gt;
+&lt;li&gt;程式碼範例:
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; torch
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; transformers &lt;span style="color:#f92672"&gt;import&lt;/span&gt; AutoModelForCausalLM, AutoTokenizer
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;get_inputs&lt;/span&gt;(pairs, tokenizer, prompt&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;, max_length&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;1024&lt;/span&gt;):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; prompt &lt;span style="color:#f92672"&gt;is&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; prompt &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;Given a query A and a passage B, determine whether the passage contains an answer to the query by providing a prediction of either &amp;#39;Yes&amp;#39; or &amp;#39;No&amp;#39;.&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; sep &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;\n&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; prompt_inputs &lt;span style="color:#f92672"&gt;=&lt;/span&gt; tokenizer(prompt,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; return_tensors&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; add_special_tokens&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;False&lt;/span&gt;)[&lt;span style="color:#e6db74"&gt;&amp;#39;input_ids&amp;#39;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; sep_inputs &lt;span style="color:#f92672"&gt;=&lt;/span&gt; tokenizer(sep,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; return_tensors&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; add_special_tokens&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;False&lt;/span&gt;)[&lt;span style="color:#e6db74"&gt;&amp;#39;input_ids&amp;#39;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; inputs &lt;span style="color:#f92672"&gt;=&lt;/span&gt; []
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; query, passage &lt;span style="color:#f92672"&gt;in&lt;/span&gt; pairs:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; query_inputs &lt;span style="color:#f92672"&gt;=&lt;/span&gt; tokenizer(&lt;span style="color:#e6db74"&gt;f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;A: &lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;query&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; return_tensors&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; add_special_tokens&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;False&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; max_length&lt;span style="color:#f92672"&gt;=&lt;/span&gt;max_length &lt;span style="color:#f92672"&gt;*&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;3&lt;/span&gt; &lt;span style="color:#f92672"&gt;//&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;4&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; truncation&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; passage_inputs &lt;span style="color:#f92672"&gt;=&lt;/span&gt; tokenizer(&lt;span style="color:#e6db74"&gt;f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;B: &lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;passage&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; return_tensors&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; add_special_tokens&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;False&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; max_length&lt;span style="color:#f92672"&gt;=&lt;/span&gt;max_length,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; truncation&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; item &lt;span style="color:#f92672"&gt;=&lt;/span&gt; tokenizer&lt;span style="color:#f92672"&gt;.&lt;/span&gt;prepare_for_model(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; [tokenizer&lt;span style="color:#f92672"&gt;.&lt;/span&gt;bos_token_id] &lt;span style="color:#f92672"&gt;+&lt;/span&gt; query_inputs[&lt;span style="color:#e6db74"&gt;&amp;#39;input_ids&amp;#39;&lt;/span&gt;],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; sep_inputs &lt;span style="color:#f92672"&gt;+&lt;/span&gt; passage_inputs[&lt;span style="color:#e6db74"&gt;&amp;#39;input_ids&amp;#39;&lt;/span&gt;],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; truncation&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;only_second&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; max_length&lt;span style="color:#f92672"&gt;=&lt;/span&gt;max_length,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; padding&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;False&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; return_attention_mask&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;False&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; return_token_type_ids&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;False&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; add_special_tokens&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;False&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; )
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; item[&lt;span style="color:#e6db74"&gt;&amp;#39;input_ids&amp;#39;&lt;/span&gt;] &lt;span style="color:#f92672"&gt;=&lt;/span&gt; item[&lt;span style="color:#e6db74"&gt;&amp;#39;input_ids&amp;#39;&lt;/span&gt;] &lt;span style="color:#f92672"&gt;+&lt;/span&gt; sep_inputs &lt;span style="color:#f92672"&gt;+&lt;/span&gt; prompt_inputs
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; item[&lt;span style="color:#e6db74"&gt;&amp;#39;attention_mask&amp;#39;&lt;/span&gt;] &lt;span style="color:#f92672"&gt;=&lt;/span&gt; [&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;] &lt;span style="color:#f92672"&gt;*&lt;/span&gt; len(item[&lt;span style="color:#e6db74"&gt;&amp;#39;input_ids&amp;#39;&lt;/span&gt;])
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; inputs&lt;span style="color:#f92672"&gt;.&lt;/span&gt;append(item)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; tokenizer&lt;span style="color:#f92672"&gt;.&lt;/span&gt;pad(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; inputs,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; padding&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; max_length&lt;span style="color:#f92672"&gt;=&lt;/span&gt;max_length &lt;span style="color:#f92672"&gt;+&lt;/span&gt; len(sep_inputs) &lt;span style="color:#f92672"&gt;+&lt;/span&gt; len(prompt_inputs),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; pad_to_multiple_of&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;8&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; return_tensors&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;pt&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; )
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tokenizer &lt;span style="color:#f92672"&gt;=&lt;/span&gt; AutoTokenizer&lt;span style="color:#f92672"&gt;.&lt;/span&gt;from_pretrained(&lt;span style="color:#e6db74"&gt;&amp;#39;BAAI/bge-reranker-v2-gemma&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;model &lt;span style="color:#f92672"&gt;=&lt;/span&gt; AutoModelForCausalLM&lt;span style="color:#f92672"&gt;.&lt;/span&gt;from_pretrained(&lt;span style="color:#e6db74"&gt;&amp;#39;BAAI/bge-reranker-v2-gemma&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;yes_loc &lt;span style="color:#f92672"&gt;=&lt;/span&gt; tokenizer(&lt;span style="color:#e6db74"&gt;&amp;#39;Yes&amp;#39;&lt;/span&gt;, add_special_tokens&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;False&lt;/span&gt;)[&lt;span style="color:#e6db74"&gt;&amp;#39;input_ids&amp;#39;&lt;/span&gt;][&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;model&lt;span style="color:#f92672"&gt;.&lt;/span&gt;eval()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pairs &lt;span style="color:#f92672"&gt;=&lt;/span&gt; [[&lt;span style="color:#e6db74"&gt;&amp;#39;what is panda?&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;hi&amp;#39;&lt;/span&gt;], [&lt;span style="color:#e6db74"&gt;&amp;#39;what is panda?&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;The giant panda (Ailuropoda melanoleuca), sometimes called a panda bear or simply panda, is a bear species endemic to China.&amp;#39;&lt;/span&gt;]]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;with&lt;/span&gt; torch&lt;span style="color:#f92672"&gt;.&lt;/span&gt;no_grad():
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; inputs &lt;span style="color:#f92672"&gt;=&lt;/span&gt; get_inputs(pairs, tokenizer)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; scores &lt;span style="color:#f92672"&gt;=&lt;/span&gt; model(&lt;span style="color:#f92672"&gt;**&lt;/span&gt;inputs, return_dict&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;)&lt;span style="color:#f92672"&gt;.&lt;/span&gt;logits[:, &lt;span style="color:#f92672"&gt;-&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;, yes_loc]&lt;span style="color:#f92672"&gt;.&lt;/span&gt;view(&lt;span style="color:#f92672"&gt;-&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;, )&lt;span style="color:#f92672"&gt;.&lt;/span&gt;float()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; print(scores)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start="3"&gt;
+&lt;li&gt;LLM-based Layerwise Reranker&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;方法: 透過手動存取 AutoModelForCausalLM 的隱藏層輸出或注意力權重，並自行計算分數。&lt;/li&gt;
+&lt;li&gt;特點: 提供對 LLM 內部決策過程最細緻的控制和分析，但實作複雜度高，需要深入理解模型架構。&lt;/li&gt;
+&lt;li&gt;程式碼範例:
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; torch
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; transformers &lt;span style="color:#f92672"&gt;import&lt;/span&gt; AutoModelForCausalLM, AutoTokenizer
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;get_inputs&lt;/span&gt;(pairs, tokenizer, prompt&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;, max_length&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;1024&lt;/span&gt;):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; prompt &lt;span style="color:#f92672"&gt;is&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; prompt &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;Given a query A and a passage B, determine whether the passage contains an answer to the query by providing a prediction of either &amp;#39;Yes&amp;#39; or &amp;#39;No&amp;#39;.&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; sep &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;\n&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; prompt_inputs &lt;span style="color:#f92672"&gt;=&lt;/span&gt; tokenizer(prompt,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; return_tensors&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; add_special_tokens&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;False&lt;/span&gt;)[&lt;span style="color:#e6db74"&gt;&amp;#39;input_ids&amp;#39;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; sep_inputs &lt;span style="color:#f92672"&gt;=&lt;/span&gt; tokenizer(sep,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; return_tensors&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; add_special_tokens&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;False&lt;/span&gt;)[&lt;span style="color:#e6db74"&gt;&amp;#39;input_ids&amp;#39;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; inputs &lt;span style="color:#f92672"&gt;=&lt;/span&gt; []
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; query, passage &lt;span style="color:#f92672"&gt;in&lt;/span&gt; pairs:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; query_inputs &lt;span style="color:#f92672"&gt;=&lt;/span&gt; tokenizer(&lt;span style="color:#e6db74"&gt;f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;A: &lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;query&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; return_tensors&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; add_special_tokens&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;False&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; max_length&lt;span style="color:#f92672"&gt;=&lt;/span&gt;max_length &lt;span style="color:#f92672"&gt;*&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;3&lt;/span&gt; &lt;span style="color:#f92672"&gt;//&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;4&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; truncation&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; passage_inputs &lt;span style="color:#f92672"&gt;=&lt;/span&gt; tokenizer(&lt;span style="color:#e6db74"&gt;f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;B: &lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;passage&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; return_tensors&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; add_special_tokens&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;False&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; max_length&lt;span style="color:#f92672"&gt;=&lt;/span&gt;max_length,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; truncation&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; item &lt;span style="color:#f92672"&gt;=&lt;/span&gt; tokenizer&lt;span style="color:#f92672"&gt;.&lt;/span&gt;prepare_for_model(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; [tokenizer&lt;span style="color:#f92672"&gt;.&lt;/span&gt;bos_token_id] &lt;span style="color:#f92672"&gt;+&lt;/span&gt; query_inputs[&lt;span style="color:#e6db74"&gt;&amp;#39;input_ids&amp;#39;&lt;/span&gt;],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; sep_inputs &lt;span style="color:#f92672"&gt;+&lt;/span&gt; passage_inputs[&lt;span style="color:#e6db74"&gt;&amp;#39;input_ids&amp;#39;&lt;/span&gt;],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; truncation&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;only_second&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; max_length&lt;span style="color:#f92672"&gt;=&lt;/span&gt;max_length,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; padding&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;False&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; return_attention_mask&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;False&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; return_token_type_ids&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;False&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; add_special_tokens&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;False&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; )
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; item[&lt;span style="color:#e6db74"&gt;&amp;#39;input_ids&amp;#39;&lt;/span&gt;] &lt;span style="color:#f92672"&gt;=&lt;/span&gt; item[&lt;span style="color:#e6db74"&gt;&amp;#39;input_ids&amp;#39;&lt;/span&gt;] &lt;span style="color:#f92672"&gt;+&lt;/span&gt; sep_inputs &lt;span style="color:#f92672"&gt;+&lt;/span&gt; prompt_inputs
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; item[&lt;span style="color:#e6db74"&gt;&amp;#39;attention_mask&amp;#39;&lt;/span&gt;] &lt;span style="color:#f92672"&gt;=&lt;/span&gt; [&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;] &lt;span style="color:#f92672"&gt;*&lt;/span&gt; len(item[&lt;span style="color:#e6db74"&gt;&amp;#39;input_ids&amp;#39;&lt;/span&gt;])
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; inputs&lt;span style="color:#f92672"&gt;.&lt;/span&gt;append(item)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; tokenizer&lt;span style="color:#f92672"&gt;.&lt;/span&gt;pad(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; inputs,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; padding&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; max_length&lt;span style="color:#f92672"&gt;=&lt;/span&gt;max_length &lt;span style="color:#f92672"&gt;+&lt;/span&gt; len(sep_inputs) &lt;span style="color:#f92672"&gt;+&lt;/span&gt; len(prompt_inputs),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; pad_to_multiple_of&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;8&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; return_tensors&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;pt&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; )
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tokenizer &lt;span style="color:#f92672"&gt;=&lt;/span&gt; AutoTokenizer&lt;span style="color:#f92672"&gt;.&lt;/span&gt;from_pretrained(&lt;span style="color:#e6db74"&gt;&amp;#39;BAAI/bge-reranker-v2-minicpm-layerwise&amp;#39;&lt;/span&gt;, trust_remote_code&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;model &lt;span style="color:#f92672"&gt;=&lt;/span&gt; AutoModelForCausalLM&lt;span style="color:#f92672"&gt;.&lt;/span&gt;from_pretrained(&lt;span style="color:#e6db74"&gt;&amp;#39;BAAI/bge-reranker-v2-minicpm-layerwise&amp;#39;&lt;/span&gt;, trust_remote_code&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;, torch_dtype&lt;span style="color:#f92672"&gt;=&lt;/span&gt;torch&lt;span style="color:#f92672"&gt;.&lt;/span&gt;bfloat16)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;model &lt;span style="color:#f92672"&gt;=&lt;/span&gt; model&lt;span style="color:#f92672"&gt;.&lt;/span&gt;to(&lt;span style="color:#e6db74"&gt;&amp;#39;cuda&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;model&lt;span style="color:#f92672"&gt;.&lt;/span&gt;eval()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pairs &lt;span style="color:#f92672"&gt;=&lt;/span&gt; [[&lt;span style="color:#e6db74"&gt;&amp;#39;what is panda?&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;hi&amp;#39;&lt;/span&gt;], [&lt;span style="color:#e6db74"&gt;&amp;#39;what is panda?&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;The giant panda (Ailuropoda melanoleuca), sometimes called a panda bear or simply panda, is a bear species endemic to China.&amp;#39;&lt;/span&gt;]]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;with&lt;/span&gt; torch&lt;span style="color:#f92672"&gt;.&lt;/span&gt;no_grad():
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; inputs &lt;span style="color:#f92672"&gt;=&lt;/span&gt; get_inputs(pairs, tokenizer)&lt;span style="color:#f92672"&gt;.&lt;/span&gt;to(model&lt;span style="color:#f92672"&gt;.&lt;/span&gt;device)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; all_scores &lt;span style="color:#f92672"&gt;=&lt;/span&gt; model(&lt;span style="color:#f92672"&gt;**&lt;/span&gt;inputs, return_dict&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;, cutoff_layers&lt;span style="color:#f92672"&gt;=&lt;/span&gt;[&lt;span style="color:#ae81ff"&gt;28&lt;/span&gt;])
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; all_scores &lt;span style="color:#f92672"&gt;=&lt;/span&gt; [scores[:, &lt;span style="color:#f92672"&gt;-&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;]&lt;span style="color:#f92672"&gt;.&lt;/span&gt;view(&lt;span style="color:#f92672"&gt;-&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;, )&lt;span style="color:#f92672"&gt;.&lt;/span&gt;float() &lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; scores &lt;span style="color:#f92672"&gt;in&lt;/span&gt; all_scores[&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;]]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; print(all_scores)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h3 id="核心概念解析"&gt;核心概念解析
+&lt;/h3&gt;&lt;h4 id="標準-reranker-cross-encoder"&gt;標準 Reranker (Cross-Encoder)
+&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;原理: 將「查詢」和「文件」成對地同時輸入到模型中，模型利用兩者之間的交互資訊判斷相關性。&lt;/li&gt;
+&lt;li&gt;輸出: 單一相關性分數。&lt;/li&gt;
+&lt;li&gt;流程: 查詢 + 文件 → Cross-Encoder 模型 → 相關性分數&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id="llm-based-reranker"&gt;LLM-based Reranker
+&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;原理: 使用完整的大型語言模型（LLM）作為 Reranker，利用其龐大知識和推理能力理解深層語義關係。&lt;/li&gt;
+&lt;li&gt;輸出: 通常透過特定 token（如 [Yes] 或 [No]）的機率計算分數。&lt;/li&gt;
+&lt;li&gt;流程: 查詢 + 文件 → 大型語言模型 (LLM) → 基於生成機率的分數&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id="總結與比較"&gt;總結與比較
+&lt;/h4&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;比較維度&lt;/th&gt;
+&lt;th&gt;FlagEmbedding&lt;/th&gt;
+&lt;th&gt;Hugging Face Transformers&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;易用性&lt;/td&gt;
+&lt;td&gt;高（API 封裝良好）&lt;/td&gt;
+&lt;td&gt;中（需要更多手動設定）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;靈活性&lt;/td&gt;
+&lt;td&gt;中（專為 Reranking 優化）&lt;/td&gt;
+&lt;td&gt;高（可完全自訂流程）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;特色功能&lt;/td&gt;
+&lt;td&gt;Layerwise 分數計算&lt;/td&gt;
+&lt;td&gt;與整個 Hugging Face 生態系無縫接軌&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;推薦使用情境&lt;/td&gt;
+&lt;td&gt;需要快速實現高效能 Reranking 的應用&lt;/td&gt;
+&lt;td&gt;需要深度自訂模型行為或進行學術研究&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;</description></item><item><title>三種 RAG 架構比較與應用解析 — Naive、Advanced、Modular RAG 差異整理</title><link>https://Dandelionlibra.github.io/post/note/rag-type-compare-note/</link><pubDate>Mon, 21 Jul 2025 09:16:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/rag-type-compare-note/</guid><description>&lt;h1 id="三種-rag-技術架構比較naive-ragadvanced-rag-與-modular-rag"&gt;三種 RAG 技術架構比較：Naive RAG、Advanced RAG 與 Modular RAG
+&lt;/h1&gt;&lt;p&gt;本文比較《Retrieval-Augmented Generation for Large Language Models: A Survey》中提出的三種檢索增強生成（RAG）技術架構：Naive RAG、Advanced RAG 和 Modular RAG。RAG 旨在結合大型語言模型（LLM）的內部知識與外部資料檢索，以提升事實正確性與時效性。這三種架構代表了 RAG 技術的演進路徑，各自引入不同模組與策略來克服先前架構的侷限。本文將從架構組成、實作方式、技術細節、應用場景與優劣比較等面向，深入剖析三類架構的差異與適用性。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="架構組成與流程差異"&gt;架構組成與流程差異
+&lt;/h2&gt;&lt;h3 id="naive-rag"&gt;Naive RAG
+&lt;/h3&gt;&lt;p&gt;最早期且基礎的 RAG 架構，僅包含索引（Indexing）、檢索（Retrieval）與生成（Generation）三個串連模組。流程為：資料向量化 → 檢索前 $K$ 個相關片段 → 查詢與檢索結果一併餵給 LLM 產生回答。此架構流程簡單、模組單一，缺乏查詢優化或反饋機制，適合快速原型開發。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://www.ibm.com/content/dam/connectedassets-adobe-cms/worldwide-content/creative-assets/s-migr/ul/g/e0/d6/naive-rag.png"
 loading="lazy"
 alt="Naive RAG 架構圖"
->&lt;/p>
-&lt;h3 id="advanced-rag">Advanced RAG
-&lt;/h3>&lt;p>在 Naive 基礎上增加前處理與後處理模組，如查詢優化、重排序、內容過濾/壓縮等。流程仍為索引→檢索→生成，但在檢索前後插入優化步驟，提升檢索品質與生成相關性。組件包含查詢改寫、混合檢索、重排序等，能針對性強化檢索與生成階段。&lt;/p>
-&lt;p>&lt;img src="https://www.ibm.com/content/dam/connectedassets-adobe-cms/worldwide-content/creative-assets/s-migr/ul/g/8f/cb/advances-rag.png"
+&gt;&lt;/p&gt;
+&lt;h3 id="advanced-rag"&gt;Advanced RAG
+&lt;/h3&gt;&lt;p&gt;在 Naive 基礎上增加前處理與後處理模組，如查詢優化、重排序、內容過濾/壓縮等。流程仍為索引→檢索→生成，但在檢索前後插入優化步驟，提升檢索品質與生成相關性。組件包含查詢改寫、混合檢索、重排序等，能針對性強化檢索與生成階段。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://www.ibm.com/content/dam/connectedassets-adobe-cms/worldwide-content/creative-assets/s-migr/ul/g/8f/cb/advances-rag.png"
 loading="lazy"
 alt="Advanced RAG 架構圖"
->&lt;/p>
-&lt;h3 id="modular-rag">Modular RAG
-&lt;/h3>&lt;p>最新階段，強調積木式模組化設計。除繼承前述流程外，允許多輪檢索-生成、平行資訊融合、自適應流程等。可靈活增減如網路搜尋、長程記憶、路由決策等模組，流程可重組、迭代或分支，適應複雜多變的任務需求。&lt;/p>
-&lt;p>&lt;img src="https://www.ibm.com/content/dam/connectedassets-adobe-cms/worldwide-content/creative-assets/s-migr/ul/g/a7/e6/modular-rag.component.crop-16by9-m.ts=1740501066286.png/content/adobe-cms/us/en/think/topics/rag-techniques/jcr:content/root/table_of_contents/body-article-8/image_1228195012"
+&gt;&lt;/p&gt;
+&lt;h3 id="modular-rag"&gt;Modular RAG
+&lt;/h3&gt;&lt;p&gt;最新階段，強調積木式模組化設計。除繼承前述流程外，允許多輪檢索-生成、平行資訊融合、自適應流程等。可靈活增減如網路搜尋、長程記憶、路由決策等模組，流程可重組、迭代或分支，適應複雜多變的任務需求。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://www.ibm.com/content/dam/connectedassets-adobe-cms/worldwide-content/creative-assets/s-migr/ul/g/a7/e6/modular-rag.component.crop-16by9-m.ts=1740501066286.png/content/adobe-cms/us/en/think/topics/rag-techniques/jcr:content/root/table_of_contents/body-article-8/image_1228195012"
 loading="lazy"
 alt="Modular RAG 架構圖"
->&lt;/p>
-&lt;hr>
-&lt;h2 id="實作方式與系統特性">實作方式與系統特性
-&lt;/h2>&lt;ul>
-&lt;li>&lt;strong>Naive RAG&lt;/strong>：實作最直接，僅需嵌入模型、向量資料庫與 LLM。模組線性串接，無需微調，部署維護成本低，適合簡單應用。&lt;/li>
-&lt;li>&lt;strong>Advanced RAG&lt;/strong>：需引入查詢優化、重排序等模組，常用 LlamaIndex、LangChain 等框架。系統複雜度提升，需調校多個子系統，適合中等複雜度任務。&lt;/li>
-&lt;li>&lt;strong>Modular RAG&lt;/strong>：高度模組化，常用流水線編排框架。每個功能獨立封裝，系統可為有向圖結構，便於擴充與維護，但開發協調成本高。&lt;/li>
-&lt;/ul>
-&lt;hr>
-&lt;h2 id="核心技術細節">核心技術細節
-&lt;/h2>&lt;h3 id="資料預處理與嵌入">資料預處理與嵌入
-&lt;/h3>&lt;ul>
-&lt;li>&lt;strong>Naive RAG&lt;/strong>：文本清洗、切分、嵌入，建立向量索引，重點在語義表示。&lt;/li>
-&lt;li>&lt;strong>Advanced RAG&lt;/strong>：細粒度切分、滑動視窗、metadata 標註、混合嵌入（密集+稀疏），提升檢索覆蓋率與精確性。&lt;/li>
-&lt;li>&lt;strong>Modular RAG&lt;/strong>：動態資料處理，可即時抓取新資料、多模態資料、記憶模組自我增強，嵌入策略多元且可演化。&lt;/li>
-&lt;/ul>
-&lt;h3 id="檢索策略與查詢優化">檢索策略與查詢優化
-&lt;/h3>&lt;ul>
-&lt;li>&lt;strong>Naive RAG&lt;/strong>：單輪語義相似度檢索，無查詢優化或多輪交互。&lt;/li>
-&lt;li>&lt;strong>Advanced RAG&lt;/strong>：查詢重寫/擴展、多次/混合檢索、重排序與過濾，提升檢索準確率與覆蓋率。&lt;/li>
-&lt;li>&lt;strong>Modular RAG&lt;/strong>：自適應多階段檢索、路由決策、平行多查詢、遞歸式檢索，根據任務動態調度檢索策略。&lt;/li>
-&lt;/ul>
-&lt;h3 id="上下文融合與資訊增強">上下文融合與資訊增強
-&lt;/h3>&lt;ul>
-&lt;li>&lt;strong>Naive RAG&lt;/strong>：直接拼接查詢與檢索內容，無額外處理，易受雜訊干擾。&lt;/li>
-&lt;li>&lt;strong>Advanced RAG&lt;/strong>：重排序、壓縮、過濾、明確引導模型引用檢索內容，提升訊息品質。&lt;/li>
-&lt;li>&lt;strong>Modular RAG&lt;/strong>：多步融合、示範-搜索-預測、動態記憶、事後校驗，深度整合外部知識與模型推理。&lt;/li>
-&lt;/ul>
-&lt;h3 id="回答生成與控制">回答生成與控制
-&lt;/h3>&lt;ul>
-&lt;li>&lt;strong>Naive RAG&lt;/strong>：LLM 直接生成，控制力弱，易出現幻覺或拼貼。&lt;/li>
-&lt;li>&lt;strong>Advanced RAG&lt;/strong>：提示工程、微調、反饋迴路、生成後過濾，強化可靠性與安全性。&lt;/li>
-&lt;li>&lt;strong>Modular RAG&lt;/strong>：示範模組、迭代生成、後處理校驗、用戶反饋迴路，實現嚴謹的生成管控。&lt;/li>
-&lt;/ul>
-&lt;hr>
-&lt;h2 id="適用場景與限制">適用場景與限制
-&lt;/h2>&lt;ul>
-&lt;li>&lt;strong>Naive RAG&lt;/strong>：適合原型、FAQ、內部知識庫等低複雜度場景，開發快但不適合高精度或多步推理任務。&lt;/li>
-&lt;li>&lt;strong>Advanced RAG&lt;/strong>：適用於醫療、法律、教育等知識密集型問答，能處理較大規模知識庫，但資源需求與維護成本較高。&lt;/li>
-&lt;li>&lt;strong>Modular RAG&lt;/strong>：適合大型企業、跨領域系統、需多階段推理或多源資訊整合的場景，擴展性與維護性最佳，但開發複雜度與初始成本高。&lt;/li>
-&lt;/ul>
-&lt;hr>
-&lt;h2 id="優劣比較">優劣比較
-&lt;/h2>&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th>架構&lt;/th>
-&lt;th>實用性&lt;/th>
-&lt;th>可擴展性&lt;/th>
-&lt;th>維護成本&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td>Naive RAG&lt;/td>
-&lt;td>高（易用）&lt;/td>
-&lt;td>低～中&lt;/td>
-&lt;td>低&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>Advanced RAG&lt;/td>
-&lt;td>中（需專業）&lt;/td>
-&lt;td>中～高&lt;/td>
-&lt;td>中&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>Modular RAG&lt;/td>
-&lt;td>低（複雜）&lt;/td>
-&lt;td>極高&lt;/td>
-&lt;td>高（初始），低（局部維護）&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;ul>
-&lt;li>&lt;strong>Naive RAG&lt;/strong>：簡單易用、成本低，但遇到複雜任務易達天花板。&lt;/li>
-&lt;li>&lt;strong>Advanced RAG&lt;/strong>：性能與複雜度平衡，適合多數專業應用，維護需專業投入。&lt;/li>
-&lt;li>&lt;strong>Modular RAG&lt;/strong>：彈性與擴展性最強，適合高端需求，但開發與協調成本高。&lt;/li>
-&lt;/ul>
-&lt;hr>
-&lt;h2 id="結論">結論
-&lt;/h2>&lt;p>三種 RAG 架構各有適用場景與優劣。Naive RAG 適合快速原型與簡單應用，Advanced RAG 適合專業領域與中大型知識庫，Modular RAG 則為高複雜度、需長期演化的系統提供最佳解決方案。選擇何種架構，應根據實際需求、資源與長期維護考量權衡取捨。&lt;/p>
-&lt;h2 id="reference">Reference
-&lt;/h2>&lt;ul>
-&lt;li>&lt;a class="link" href="https://arxiv.org/abs/2312.10997" target="_blank" rel="noopener"
->Retrieval-Augmented Generation for Large Language Models: A Survey&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://www.thecloudgirl.dev/blog/three-paradigms-of-retrieval-augmented-generation-rag-for-llms#:~:text=,on%20embeddings%20from%20language%20models" target="_blank" rel="noopener"
->Three Paradigms of Retrieval-Augmented Generation (RAG) for LLMs&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://www.ibm.com/think/topics/rag-techniques#:~:" target="_blank" rel="noopener"
->RAG Techniques | IBM Think&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>微表情(Micro Facial Expression)</title><link>https://Dandelionlibra.github.io/post/note/micro_facial_expression/</link><pubDate>Sun, 20 Oct 2024 00:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/note/micro_facial_expression/</guid><description>&lt;img src="https://Dandelionlibra.github.io/unsplash.jpg" alt="Featured image of post 微表情(Micro Facial Expression)" />&lt;h2 id="臉部表情種類">臉部表情種類
-&lt;/h2>&lt;p>&lt;a class="link" href="https://zh.wikipedia.org/zh-tw/%E4%BF%9D%E7%BD%97%C2%B7%E8%89%BE%E5%85%8B%E6%9B%BC" target="_blank" rel="noopener"
->保羅·艾克曼&lt;/a>（Paul Ekman）從1970年代以來的研究，把臉部微表情分成：&lt;/p>
-&lt;ul>
-&lt;li>快樂(happy)&lt;/li>
-&lt;li>悲傷(sad)&lt;/li>
-&lt;li>生氣(angry)&lt;/li>
-&lt;li>驚訝(surprised)&lt;/li>
-&lt;li>害怕(scared)&lt;/li>
-&lt;li>厭惡(disgusted)&lt;/li>
-&lt;li>鄙視(contempt)&lt;/li>
-&lt;li>中性(neutral)&lt;/li>
-&lt;/ul>
-&lt;h2 id="微表情應用">微表情應用
-&lt;/h2>&lt;blockquote>
-&lt;p>臺師大邱美虹：「我希望用新興科技找到學生在學習科學知識時的難點，改善科學學習時的困境。而其中的一步，就是用辨識微表情的AI系統，找出學生面對非預期的科學現象和多重表徵的解釋所出現的某些特定微表情時所代表的意義，以瞭解學生面對這些情況時的反應與效益，以便設計有意義的學習和教學策略。」&lt;br>
+&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="實作方式與系統特性"&gt;實作方式與系統特性
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Naive RAG&lt;/strong&gt;：實作最直接，僅需嵌入模型、向量資料庫與 LLM。模組線性串接，無需微調，部署維護成本低，適合簡單應用。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Advanced RAG&lt;/strong&gt;：需引入查詢優化、重排序等模組，常用 LlamaIndex、LangChain 等框架。系統複雜度提升，需調校多個子系統，適合中等複雜度任務。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Modular RAG&lt;/strong&gt;：高度模組化，常用流水線編排框架。每個功能獨立封裝，系統可為有向圖結構，便於擴充與維護，但開發協調成本高。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="核心技術細節"&gt;核心技術細節
+&lt;/h2&gt;&lt;h3 id="資料預處理與嵌入"&gt;資料預處理與嵌入
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Naive RAG&lt;/strong&gt;：文本清洗、切分、嵌入，建立向量索引，重點在語義表示。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Advanced RAG&lt;/strong&gt;：細粒度切分、滑動視窗、metadata 標註、混合嵌入（密集+稀疏），提升檢索覆蓋率與精確性。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Modular RAG&lt;/strong&gt;：動態資料處理，可即時抓取新資料、多模態資料、記憶模組自我增強，嵌入策略多元且可演化。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="檢索策略與查詢優化"&gt;檢索策略與查詢優化
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Naive RAG&lt;/strong&gt;：單輪語義相似度檢索，無查詢優化或多輪交互。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Advanced RAG&lt;/strong&gt;：查詢重寫/擴展、多次/混合檢索、重排序與過濾，提升檢索準確率與覆蓋率。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Modular RAG&lt;/strong&gt;：自適應多階段檢索、路由決策、平行多查詢、遞歸式檢索，根據任務動態調度檢索策略。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="上下文融合與資訊增強"&gt;上下文融合與資訊增強
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Naive RAG&lt;/strong&gt;：直接拼接查詢與檢索內容，無額外處理，易受雜訊干擾。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Advanced RAG&lt;/strong&gt;：重排序、壓縮、過濾、明確引導模型引用檢索內容，提升訊息品質。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Modular RAG&lt;/strong&gt;：多步融合、示範-搜索-預測、動態記憶、事後校驗，深度整合外部知識與模型推理。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="回答生成與控制"&gt;回答生成與控制
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Naive RAG&lt;/strong&gt;：LLM 直接生成，控制力弱，易出現幻覺或拼貼。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Advanced RAG&lt;/strong&gt;：提示工程、微調、反饋迴路、生成後過濾，強化可靠性與安全性。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Modular RAG&lt;/strong&gt;：示範模組、迭代生成、後處理校驗、用戶反饋迴路，實現嚴謹的生成管控。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="適用場景與限制"&gt;適用場景與限制
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Naive RAG&lt;/strong&gt;：適合原型、FAQ、內部知識庫等低複雜度場景，開發快但不適合高精度或多步推理任務。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Advanced RAG&lt;/strong&gt;：適用於醫療、法律、教育等知識密集型問答，能處理較大規模知識庫，但資源需求與維護成本較高。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Modular RAG&lt;/strong&gt;：適合大型企業、跨領域系統、需多階段推理或多源資訊整合的場景，擴展性與維護性最佳，但開發複雜度與初始成本高。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="優劣比較"&gt;優劣比較
+&lt;/h2&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;架構&lt;/th&gt;
+&lt;th&gt;實用性&lt;/th&gt;
+&lt;th&gt;可擴展性&lt;/th&gt;
+&lt;th&gt;維護成本&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Naive RAG&lt;/td&gt;
+&lt;td&gt;高（易用）&lt;/td&gt;
+&lt;td&gt;低～中&lt;/td&gt;
+&lt;td&gt;低&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Advanced RAG&lt;/td&gt;
+&lt;td&gt;中（需專業）&lt;/td&gt;
+&lt;td&gt;中～高&lt;/td&gt;
+&lt;td&gt;中&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Modular RAG&lt;/td&gt;
+&lt;td&gt;低（複雜）&lt;/td&gt;
+&lt;td&gt;極高&lt;/td&gt;
+&lt;td&gt;高（初始），低（局部維護）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Naive RAG&lt;/strong&gt;：簡單易用、成本低，但遇到複雜任務易達天花板。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Advanced RAG&lt;/strong&gt;：性能與複雜度平衡，適合多數專業應用，維護需專業投入。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Modular RAG&lt;/strong&gt;：彈性與擴展性最強，適合高端需求，但開發與協調成本高。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="結論"&gt;結論
+&lt;/h2&gt;&lt;p&gt;三種 RAG 架構各有適用場景與優劣。Naive RAG 適合快速原型與簡單應用，Advanced RAG 適合專業領域與中大型知識庫，Modular RAG 則為高複雜度、需長期演化的系統提供最佳解決方案。選擇何種架構，應根據實際需求、資源與長期維護考量權衡取捨。&lt;/p&gt;
+&lt;h2 id="reference"&gt;Reference
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="https://arxiv.org/abs/2312.10997" target="_blank" rel="noopener"
+&gt;Retrieval-Augmented Generation for Large Language Models: A Survey&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://www.thecloudgirl.dev/blog/three-paradigms-of-retrieval-augmented-generation-rag-for-llms#:~:text=,on%20embeddings%20from%20language%20models" target="_blank" rel="noopener"
+&gt;Three Paradigms of Retrieval-Augmented Generation (RAG) for LLMs&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://www.ibm.com/think/topics/rag-techniques#:~:" target="_blank" rel="noopener"
+&gt;RAG Techniques | IBM Think&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>微表情(Micro Facial Expression)</title><link>https://Dandelionlibra.github.io/post/note/micro_facial_expression/</link><pubDate>Sun, 20 Oct 2024 00:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/note/micro_facial_expression/</guid><description>&lt;img src="https://Dandelionlibra.github.io/unsplash.jpg" alt="Featured image of post 微表情(Micro Facial Expression)" /&gt;&lt;h2 id="臉部表情種類"&gt;臉部表情種類
+&lt;/h2&gt;&lt;p&gt;&lt;a class="link" href="https://zh.wikipedia.org/zh-tw/%E4%BF%9D%E7%BD%97%C2%B7%E8%89%BE%E5%85%8B%E6%9B%BC" target="_blank" rel="noopener"
+&gt;保羅·艾克曼&lt;/a&gt;（Paul Ekman）從1970年代以來的研究，把臉部微表情分成：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;快樂(happy)&lt;/li&gt;
+&lt;li&gt;悲傷(sad)&lt;/li&gt;
+&lt;li&gt;生氣(angry)&lt;/li&gt;
+&lt;li&gt;驚訝(surprised)&lt;/li&gt;
+&lt;li&gt;害怕(scared)&lt;/li&gt;
+&lt;li&gt;厭惡(disgusted)&lt;/li&gt;
+&lt;li&gt;鄙視(contempt)&lt;/li&gt;
+&lt;li&gt;中性(neutral)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="微表情應用"&gt;微表情應用
+&lt;/h2&gt;&lt;blockquote&gt;
+&lt;p&gt;臺師大邱美虹：「我希望用新興科技找到學生在學習科學知識時的難點，改善科學學習時的困境。而其中的一步，就是用辨識微表情的AI系統，找出學生面對非預期的科學現象和多重表徵的解釋所出現的某些特定微表情時所代表的意義，以瞭解學生面對這些情況時的反應與效益，以便設計有意義的學習和教學策略。」&lt;br&gt;
 &lt;a class="link" href="https://humanityisland.nccu.edu.tw/qiumeihong_a/" target="_blank" rel="noopener"
->文章報導&lt;/a>&lt;/p>&lt;/blockquote>
-&lt;blockquote>
-&lt;p>迪士尼研究中心(FVAE – 深度學習觀眾表情，安排劇情走向)，在黑暗的影廳內觀察觀眾的臉部表情，並學習分辨微笑、大笑等不同程度的情緒。這樣的神經網絡學習，不只要調查你有多喜歡當下的劇情，更要預測你是否可能喜歡接下來的走向，它能根據過去學習的結果，在開演的前十分鐘就預測觀眾之後的情緒！&lt;br>
+&gt;文章報導&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;迪士尼研究中心(FVAE – 深度學習觀眾表情，安排劇情走向)，在黑暗的影廳內觀察觀眾的臉部表情，並學習分辨微笑、大笑等不同程度的情緒。這樣的神經網絡學習，不只要調查你有多喜歡當下的劇情，更要預測你是否可能喜歡接下來的走向，它能根據過去學習的結果，在開演的前十分鐘就預測觀眾之後的情緒！&lt;br&gt;
 &lt;a class="link" href="https://mile.cloud/zh/resources/blog/facial-detection-technology-is-popular-quantifying-micro-expressions-into-big-data_39" target="_blank" rel="noopener"
->文章報導&lt;/a>&lt;/p>&lt;/blockquote>
-&lt;blockquote>
-&lt;p>將微表情應用於面試上，也能準確抓出應徵者的職場性格與溝通能力，提前協助面試官篩除不適任的員工。&lt;br>
+&gt;文章報導&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;將微表情應用於面試上，也能準確抓出應徵者的職場性格與溝通能力，提前協助面試官篩除不適任的員工。&lt;br&gt;
 &lt;a class="link" href="https://www.ithome.com.tw/news/143000" target="_blank" rel="noopener"
->文章報導&lt;/a>&lt;/p>&lt;/blockquote>
-&lt;blockquote>
-&lt;p>監控升級：人臉識別系統能讀出情緒和威脅性&lt;br>
+&gt;文章報導&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;監控升級：人臉識別系統能讀出情緒和威脅性&lt;br&gt;
 &lt;a class="link" href="https://www.bbc.com/zhongwen/trad/world-44859007" target="_blank" rel="noopener"
->文章報導&lt;/a>&lt;/p>&lt;/blockquote>
-&lt;h2 id="參考內容">參考內容
-&lt;/h2>&lt;p>淺談為表情心理學：https://www.thenewslens.com/article/128732&lt;/p>
-&lt;blockquote>
-&lt;p>Photo by &lt;a class="link" href="https://unsplash.com/@pawel_czerwinski" target="_blank" rel="noopener"
->Pawel Czerwinski&lt;/a> on &lt;a class="link" href="https://unsplash.com/" target="_blank" rel="noopener"
->Unsplash&lt;/a>&lt;/p>&lt;/blockquote></description></item></channel></rss>
+&gt;文章報導&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
+&lt;h2 id="參考內容"&gt;參考內容
+&lt;/h2&gt;&lt;p&gt;淺談為表情心理學：https://www.thenewslens.com/article/128732&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Photo by &lt;a class="link" href="https://unsplash.com/@pawel_czerwinski" target="_blank" rel="noopener"
+&gt;Pawel Czerwinski&lt;/a&gt; on &lt;a class="link" href="https://unsplash.com/" target="_blank" rel="noopener"
+&gt;Unsplash&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;</description></item></channel></rss>

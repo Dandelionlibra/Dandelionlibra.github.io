@@ -1,124 +1,124 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>SSH-Remote on YuChen</title><link>https://Dandelionlibra.github.io/tags/ssh-remote/</link><description>Recent content in SSH-Remote on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Thu, 10 Jul 2025 16:03:00 +0000</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/tags/ssh-remote/index.xml" rel="self" type="application/rss+xml"/><item><title>如何使用 SSH 進行遠端連線教學</title><link>https://Dandelionlibra.github.io/post/ssh/how-to-use-ssh/</link><pubDate>Thu, 10 Jul 2025 16:03:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/ssh/how-to-use-ssh/</guid><description>&lt;h2 id="內容大綱">內容大綱
-&lt;/h2>&lt;ol>
-&lt;li>SSH 基本介紹&lt;/li>
-&lt;li>安裝 SSH 客戶端
-&lt;ul>
-&lt;li>Linux&lt;/li>
-&lt;li>Mac&lt;/li>
-&lt;li>Windows&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>產生 SSH 金鑰&lt;/li>
-&lt;li>設定 SSH 連線
-&lt;ul>
-&lt;li>將公鑰加入遠端主機&lt;/li>
-&lt;li>測試連線&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>常見應用情境
-&lt;ul>
-&lt;li>使用 VSCode 透過 SSH 遠端開發&lt;/li>
-&lt;li>使用 Git 透過 SSH 進行版本控制&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>參考資料&lt;/li>
-&lt;/ol>
-&lt;hr>
-&lt;h2 id="1-ssh-基本介紹">1. SSH 基本介紹
-&lt;/h2>&lt;p>SSH（Secure Shell）是一種加密的網路協定，用於在不安全的網路上安全地進行遠端登入與其他網路服務。常見用途包括遠端伺服器管理、檔案傳輸等。&lt;/p>
-&lt;hr>
-&lt;h2 id="2-安裝-ssh-客戶端">2. 安裝 SSH 客戶端
-&lt;/h2>&lt;h3 id="linux">Linux
-&lt;/h3>&lt;p>大多數 Linux 發行版預設已安裝 OpenSSH。若未安裝，可使用以下指令：&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo apt update
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo apt install openssh-client
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="mac">Mac
-&lt;/h3>&lt;p>macOS 預設已安裝 SSH 客戶端，可直接在終端機使用 &lt;code>ssh&lt;/code> 指令。&lt;/p>
-&lt;h3 id="windows">Windows
-&lt;/h3>&lt;p>建議安裝 &lt;a class="link" href="https://gitforwindows.org/" target="_blank" rel="noopener"
->Git for Windows&lt;/a> 或 &lt;a class="link" href="https://aka.ms/terminal" target="_blank" rel="noopener"
->Windows Terminal&lt;/a>。Windows 10 以上可啟用內建 OpenSSH：&lt;/p>
-&lt;ol>
-&lt;li>開啟「設定」&amp;gt;「應用程式」&amp;gt;「選擇性功能」。&lt;/li>
-&lt;li>找到並安裝「OpenSSH Client」。&lt;/li>
-&lt;/ol>
-&lt;hr>
-&lt;h2 id="3-產生-ssh-金鑰">3. 產生 SSH 金鑰
-&lt;/h2>&lt;p>在本地端產生 SSH 金鑰：&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>ssh-keygen -t rsa -b &lt;span style="color:#ae81ff">4096&lt;/span> -C &lt;span style="color:#e6db74">&amp;#34;your_email@example.com&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>依照提示設定檔案名稱與密碼。預設會產生於 &lt;code>~/.ssh/id_rsa&lt;/code>（私鑰）與 &lt;code>~/.ssh/id_rsa.pub&lt;/code>（公鑰）。&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>ssh-keygen&lt;/code>:
-&lt;ul>
-&lt;li>Private key: Stored locally, default path is &lt;code>~/.ssh/id_rsa&lt;/code>&lt;/li>
-&lt;li>Public key: Placed on the server to enable passwordless login, default path is &lt;code>~/.ssh/id_rsa.pub&lt;/code>&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>&lt;code>-t&lt;/code>: Assign the key type&lt;/li>
-&lt;li>&lt;code>-b&lt;/code>: Assign the key length&lt;/li>
-&lt;li>&lt;code>-C&lt;/code>: Adds a comment to the key for identifying the user and purpose&lt;/li>
-&lt;/ul>
-&lt;p>Press Enter save as default, if exist same name key, will prompt if you want to cover it or not, if not, need to use other key name.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>C:&lt;span style="color:#ae81ff">\W&lt;/span>INDOWS&lt;span style="color:#ae81ff">\s&lt;/span>ystem32&amp;gt;ssh-keygen -t rsa -b &lt;span style="color:#ae81ff">4096&lt;/span> -C &lt;span style="color:#e6db74">&amp;#34;test@gmail.com&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Generating public/private rsa key pair.
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Enter file in which to save the key &lt;span style="color:#f92672">(&lt;/span>C:&lt;span style="color:#ae81ff">\U&lt;/span>sers&lt;span style="color:#ae81ff">\u&lt;/span>sername/.ssh/id_rsa&lt;span style="color:#f92672">)&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># press enter login without password（安全性較低）&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 設定密碼的話，即使 private key 被盜，仍須密碼&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Enter passphrase &lt;span style="color:#f92672">(&lt;/span>empty &lt;span style="color:#66d9ef">for&lt;/span> no passphrase&lt;span style="color:#f92672">)&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Enter same passphrase again:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Your identification has been saved in C:&lt;span style="color:#ae81ff">\U&lt;/span>sers&lt;span style="color:#ae81ff">\u&lt;/span>sername/.ssh/id_rsa
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Your public key has been saved in C:&lt;span style="color:#ae81ff">\U&lt;/span>sers&lt;span style="color:#ae81ff">\u&lt;/span>sername/.ssh/id_rsa.pub
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>The key fingerprint is:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>SHA256:...省略... test@gmail.com
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>The key&lt;span style="color:#960050;background-color:#1e0010">&amp;#39;&lt;/span>s randomart image is:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>+---&lt;span style="color:#f92672">[&lt;/span>RSA 4096&lt;span style="color:#f92672">]&lt;/span>----+
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>...省略...
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;hr>
-&lt;h2 id="4-設定-ssh-連線">4. 設定 SSH 連線
-&lt;/h2>&lt;h3 id="將公鑰加入遠端主機">將公鑰加入遠端主機
-&lt;/h3>&lt;p>將本地的公鑰內容 (&lt;code>~/.ssh/id_rsa.pub&lt;/code>) 複製到遠端主機的 &lt;code>~/.ssh/authorized_keys&lt;/code> 檔案中，可使用指令：&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>ssh-copy-id user@remote_host
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>或手動複製本地內容到 server 中。&lt;/p>
-&lt;p>On Linux or Mac, you can use the following command in the terminal to display your public key:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>cat ~/.ssh/id_rsa.pub
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="測試連線">測試連線
-&lt;/h3>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>ssh user@remote_host
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>若成功登入並且不需輸入密碼即設定完成。&lt;/p>
-&lt;hr>
-&lt;h2 id="5-常見應用情境">5. 常見應用情境
-&lt;/h2>&lt;h3 id="使用-vscode-透過-ssh-遠端開發">使用 VSCode 透過 SSH 遠端開發
-&lt;/h3>&lt;ol>
-&lt;li>
-&lt;p>安裝 &lt;a class="link" href="https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh" target="_blank" rel="noopener"
->Remote - SSH 擴充套件&lt;/a>。&lt;br>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>SSH-Remote on YuChen</title><link>https://Dandelionlibra.github.io/tags/ssh-remote/</link><description>Recent content in SSH-Remote on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Thu, 10 Jul 2025 16:03:00 +0000</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/tags/ssh-remote/index.xml" rel="self" type="application/rss+xml"/><item><title>如何使用 SSH 進行遠端連線教學</title><link>https://Dandelionlibra.github.io/post/ssh/how-to-use-ssh/</link><pubDate>Thu, 10 Jul 2025 16:03:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/ssh/how-to-use-ssh/</guid><description>&lt;h2 id="內容大綱"&gt;內容大綱
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;SSH 基本介紹&lt;/li&gt;
+&lt;li&gt;安裝 SSH 客戶端
+&lt;ul&gt;
+&lt;li&gt;Linux&lt;/li&gt;
+&lt;li&gt;Mac&lt;/li&gt;
+&lt;li&gt;Windows&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;產生 SSH 金鑰&lt;/li&gt;
+&lt;li&gt;設定 SSH 連線
+&lt;ul&gt;
+&lt;li&gt;將公鑰加入遠端主機&lt;/li&gt;
+&lt;li&gt;測試連線&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;常見應用情境
+&lt;ul&gt;
+&lt;li&gt;使用 VSCode 透過 SSH 遠端開發&lt;/li&gt;
+&lt;li&gt;使用 Git 透過 SSH 進行版本控制&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;參考資料&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h2 id="1-ssh-基本介紹"&gt;1. SSH 基本介紹
+&lt;/h2&gt;&lt;p&gt;SSH（Secure Shell）是一種加密的網路協定，用於在不安全的網路上安全地進行遠端登入與其他網路服務。常見用途包括遠端伺服器管理、檔案傳輸等。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="2-安裝-ssh-客戶端"&gt;2. 安裝 SSH 客戶端
+&lt;/h2&gt;&lt;h3 id="linux"&gt;Linux
+&lt;/h3&gt;&lt;p&gt;大多數 Linux 發行版預設已安裝 OpenSSH。若未安裝，可使用以下指令：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt update
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt install openssh-client
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="mac"&gt;Mac
+&lt;/h3&gt;&lt;p&gt;macOS 預設已安裝 SSH 客戶端，可直接在終端機使用 &lt;code&gt;ssh&lt;/code&gt; 指令。&lt;/p&gt;
+&lt;h3 id="windows"&gt;Windows
+&lt;/h3&gt;&lt;p&gt;建議安裝 &lt;a class="link" href="https://gitforwindows.org/" target="_blank" rel="noopener"
+&gt;Git for Windows&lt;/a&gt; 或 &lt;a class="link" href="https://aka.ms/terminal" target="_blank" rel="noopener"
+&gt;Windows Terminal&lt;/a&gt;。Windows 10 以上可啟用內建 OpenSSH：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;開啟「設定」&amp;gt;「應用程式」&amp;gt;「選擇性功能」。&lt;/li&gt;
+&lt;li&gt;找到並安裝「OpenSSH Client」。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h2 id="3-產生-ssh-金鑰"&gt;3. 產生 SSH 金鑰
+&lt;/h2&gt;&lt;p&gt;在本地端產生 SSH 金鑰：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ssh-keygen -t rsa -b &lt;span style="color:#ae81ff"&gt;4096&lt;/span&gt; -C &lt;span style="color:#e6db74"&gt;&amp;#34;your_email@example.com&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;依照提示設定檔案名稱與密碼。預設會產生於 &lt;code&gt;~/.ssh/id_rsa&lt;/code&gt;（私鑰）與 &lt;code&gt;~/.ssh/id_rsa.pub&lt;/code&gt;（公鑰）。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;ssh-keygen&lt;/code&gt;:
+&lt;ul&gt;
+&lt;li&gt;Private key: Stored locally, default path is &lt;code&gt;~/.ssh/id_rsa&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Public key: Placed on the server to enable passwordless login, default path is &lt;code&gt;~/.ssh/id_rsa.pub&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-t&lt;/code&gt;: Assign the key type&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-b&lt;/code&gt;: Assign the key length&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-C&lt;/code&gt;: Adds a comment to the key for identifying the user and purpose&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Press Enter save as default, if exist same name key, will prompt if you want to cover it or not, if not, need to use other key name.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;C:&lt;span style="color:#ae81ff"&gt;\W&lt;/span&gt;INDOWS&lt;span style="color:#ae81ff"&gt;\s&lt;/span&gt;ystem32&amp;gt;ssh-keygen -t rsa -b &lt;span style="color:#ae81ff"&gt;4096&lt;/span&gt; -C &lt;span style="color:#e6db74"&gt;&amp;#34;test@gmail.com&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Generating public/private rsa key pair.
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Enter file in which to save the key &lt;span style="color:#f92672"&gt;(&lt;/span&gt;C:&lt;span style="color:#ae81ff"&gt;\U&lt;/span&gt;sers&lt;span style="color:#ae81ff"&gt;\u&lt;/span&gt;sername/.ssh/id_rsa&lt;span style="color:#f92672"&gt;)&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# press enter login without password（安全性較低）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 設定密碼的話，即使 private key 被盜，仍須密碼&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Enter passphrase &lt;span style="color:#f92672"&gt;(&lt;/span&gt;empty &lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; no passphrase&lt;span style="color:#f92672"&gt;)&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Enter same passphrase again:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Your identification has been saved in C:&lt;span style="color:#ae81ff"&gt;\U&lt;/span&gt;sers&lt;span style="color:#ae81ff"&gt;\u&lt;/span&gt;sername/.ssh/id_rsa
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Your public key has been saved in C:&lt;span style="color:#ae81ff"&gt;\U&lt;/span&gt;sers&lt;span style="color:#ae81ff"&gt;\u&lt;/span&gt;sername/.ssh/id_rsa.pub
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;The key fingerprint is:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;SHA256:...省略... test@gmail.com
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;The key&lt;span style="color:#960050;background-color:#1e0010"&gt;&amp;#39;&lt;/span&gt;s randomart image is:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;+---&lt;span style="color:#f92672"&gt;[&lt;/span&gt;RSA 4096&lt;span style="color:#f92672"&gt;]&lt;/span&gt;----+
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;...省略...
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="4-設定-ssh-連線"&gt;4. 設定 SSH 連線
+&lt;/h2&gt;&lt;h3 id="將公鑰加入遠端主機"&gt;將公鑰加入遠端主機
+&lt;/h3&gt;&lt;p&gt;將本地的公鑰內容 (&lt;code&gt;~/.ssh/id_rsa.pub&lt;/code&gt;) 複製到遠端主機的 &lt;code&gt;~/.ssh/authorized_keys&lt;/code&gt; 檔案中，可使用指令：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ssh-copy-id user@remote_host
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;或手動複製本地內容到 server 中。&lt;/p&gt;
+&lt;p&gt;On Linux or Mac, you can use the following command in the terminal to display your public key:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cat ~/.ssh/id_rsa.pub
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="測試連線"&gt;測試連線
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ssh user@remote_host
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;若成功登入並且不需輸入密碼即設定完成。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="5-常見應用情境"&gt;5. 常見應用情境
+&lt;/h2&gt;&lt;h3 id="使用-vscode-透過-ssh-遠端開發"&gt;使用 VSCode 透過 SSH 遠端開發
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;安裝 &lt;a class="link" href="https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh" target="_blank" rel="noopener"
+&gt;Remote - SSH 擴充套件&lt;/a&gt;。&lt;br&gt;
 在 VSCode 中可看到 Remote-SSH 圖示，點擊後可進行連線設定：
 &lt;img src="https://Dandelionlibra.github.io/image/Remote-SSH.png"
 loading="lazy"
 alt="Remote-SSH"
->&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>點擊 VScode 左下角的雙箭頭圖標，或者按下 &lt;code>F1&lt;/code>，輸入 &lt;code>Remote-SSH: Connect to Host...&lt;/code>，選擇或新增主機。&lt;/p>
-&lt;pre tabindex="0">&lt;code># remote_host 輸入伺服器 ip 位址
+&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;點擊 VScode 左下角的雙箭頭圖標，或者按下 &lt;code&gt;F1&lt;/code&gt;，輸入 &lt;code&gt;Remote-SSH: Connect to Host...&lt;/code&gt;，選擇或新增主機。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;# remote_host 輸入伺服器 ip 位址
 user@remote_host [-p port_number]
-&lt;/code>&lt;/pre>&lt;/li>
-&lt;li>
-&lt;p>連線後輸入用戶在 server 上的密碼即可在遠端主機上開發，或者已經設定過金鑰可不用再輸密碼。&lt;/p>
-&lt;/li>
-&lt;/ol>
-&lt;h3 id="使用-git-透過-ssh-進行版本控制">使用 Git 透過 SSH 進行版本控制
-&lt;/h3>&lt;ol>
-&lt;li>將公鑰加入 Git 服務（如 GitHub、GitLab）。&lt;/li>
-&lt;li>使用 SSH 方式 clone 或 push：&lt;/li>
-&lt;/ol>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>git clone git@github.com:username/repo.git
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;hr>
-&lt;h2 id="6-參考資料">6. 參考資料
-&lt;/h2>&lt;ul>
-&lt;li>&lt;a class="link" href="https://www.openssh.com/manual.html" target="_blank" rel="noopener"
->OpenSSH 官方文件&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh" target="_blank" rel="noopener"
->GitHub SSH 教學&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://code.visualstudio.com/docs/remote/ssh" target="_blank" rel="noopener"
->VSCode Remote SSH 官方說明&lt;/a>&lt;/li>
-&lt;/ul></description></item></channel></rss>
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;連線後輸入用戶在 server 上的密碼即可在遠端主機上開發，或者已經設定過金鑰可不用再輸密碼。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="使用-git-透過-ssh-進行版本控制"&gt;使用 Git 透過 SSH 進行版本控制
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;將公鑰加入 Git 服務（如 GitHub、GitLab）。&lt;/li&gt;
+&lt;li&gt;使用 SSH 方式 clone 或 push：&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git clone git@github.com:username/repo.git
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="6-參考資料"&gt;6. 參考資料
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="https://www.openssh.com/manual.html" target="_blank" rel="noopener"
+&gt;OpenSSH 官方文件&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh" target="_blank" rel="noopener"
+&gt;GitHub SSH 教學&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://code.visualstudio.com/docs/remote/ssh" target="_blank" rel="noopener"
+&gt;VSCode Remote SSH 官方說明&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item></channel></rss>
