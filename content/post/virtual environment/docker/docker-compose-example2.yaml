@@ -1,0 +1,29 @@
+name: lightrag-all-in-one
+
+services:
+  lightrag:
+    tty: true
+    container_name: test # http://lightrag:9621
+    image: ghcr.io/huggingface/text-embeddings-inference:1.8
+
+    ports:
+      - "9620:9621" # lighrag
+      - "8082:80" # rerank api
+      - "11436:11434" # ollama
+      - "8090:8090" # jupyterlab
+    volumes:
+      - ./data:/host_data
+      - ./data/inputs/:/app/data/inputs
+      - ./data/rag_storage/:/app/data/rag_storage
+      - ./data/ollama_model:/root/.ollama
+      - ./data/text_rerank:/text-embeddings-inference/data
+    restart: unless-stopped
+    command: ["--model-id", "BAAI/bge-reranker-large", "--port", "80"]
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    gpus: all

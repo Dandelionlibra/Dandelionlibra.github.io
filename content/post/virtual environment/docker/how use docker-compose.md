@@ -181,6 +181,11 @@ pip install jupyterlab
 jupyter lab --ip=0.0.0.0 --port=8888 --allow-root --no-browser
 ```
 
+``` bash
+apt update
+apt install curl -y
+```
+
 ## 6. 參考資料
 
 - [Docker Compose 官方文件](https://docs.docker.com/compose/)
