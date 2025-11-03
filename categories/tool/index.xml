@@ -25,15 +25,15 @@
 &lt;h3 id="3-visualize-視覺化"&gt;3. Visualize (視覺化)
 &lt;/h3&gt;&lt;p&gt;分析特徵與目標之間的關係。&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Box Plot (箱型圖):&lt;/strong&gt; 非常適合用來比較**「類別變數」&lt;strong&gt;與&lt;/strong&gt;「數值變數」**的關係。
+&lt;li&gt;&lt;strong&gt;Box Plot (箱型圖):&lt;/strong&gt; 非常適合用來比較 &lt;strong&gt;「類別變數」&lt;/strong&gt; 與 &lt;strong&gt;「數值變數」&lt;/strong&gt; 的關係。
 &lt;ul&gt;
 &lt;li&gt;&lt;em&gt;範例：&lt;/em&gt; 我們用 &lt;code&gt;CHAS&lt;/code&gt; (是否臨河) 作為分組 (Subgroups)，觀察 &lt;code&gt;MEDV&lt;/code&gt; (房價) 的分佈，清楚地看到臨河的房價中位數更高。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Scatter Plot (散點圖):&lt;/strong&gt; 用來觀察**「兩個數值變數」**之間的關係。
+&lt;li&gt;&lt;strong&gt;Scatter Plot (散點圖):&lt;/strong&gt; 用來觀察 &lt;strong&gt;「兩個數值變數」&lt;/strong&gt; 之間的關係。
 &lt;ul&gt;
 &lt;li&gt;&lt;em&gt;範例：&lt;/em&gt; 我們設定 X 軸為 &lt;code&gt;RM&lt;/code&gt; (房間數)、Y 軸為 &lt;code&gt;MEDV&lt;/code&gt; (房價)，看到了明顯的「正相關」。&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;進階：&lt;/em&gt; 還可以加入&lt;strong&gt;顏色 (Color)&lt;/strong&gt; (例如 &lt;code&gt;LSTAT&lt;/code&gt;) 或&lt;strong&gt;形狀 (Shape)&lt;/strong&gt; (例如 &lt;code&gt;CHAS&lt;/code&gt;) 來同時呈現 3~4 個維度的資訊。&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;進階：&lt;/em&gt; 還可以加入 &lt;strong&gt;顏色 (Color)&lt;/strong&gt; (例如 &lt;code&gt;LSTAT&lt;/code&gt;) 或 &lt;strong&gt;形狀 (Shape)&lt;/strong&gt; (例如 &lt;code&gt;CHAS&lt;/code&gt;) 來同時呈現 3~4 個維度的資訊。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;Rank (排名):&lt;/strong&gt; 用來回答「&lt;strong&gt;哪些特徵最重要？&lt;/strong&gt;」。它會計算所有特徵與目標變數的相關性分數，是回答 Q2 的關鍵。&lt;/li&gt;
