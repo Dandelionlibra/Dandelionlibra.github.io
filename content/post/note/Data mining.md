@@ -2,7 +2,7 @@
 title: Data mining
 description: 。
 slug: Data-mining
-date: 2025-07-21 09:16:00+0800
+date: 2025-11-03 11:20:00+0800
 categories:
     - note
 tags:
