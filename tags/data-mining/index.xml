@@ -303,4 +303,56 @@
 &lt;li&gt;離散性（Dispersion）：如變異數、標準差，反映資料的擴散程度。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Orange3</title><link>https://Dandelionlibra.github.io/post/data-analysis-tools/orange/data-mining/</link><pubDate>Mon, 21 Jul 2025 09:16:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/data-analysis-tools/orange/data-mining/</guid><description>&lt;h2 id="什麼是-orange3"&gt;什麼是 Orange3？
+&lt;/h2&gt;&lt;p&gt;Orange3 是一款開源 (Open Source) 的資料探勘與機器學習工具。它最大的特色是&lt;strong&gt;視覺化的流程介面&lt;/strong&gt; (Visual Programming)。&lt;/p&gt;
+&lt;p&gt;使用者不需要撰寫程式碼，只需要透過拖拉、連接不同的 &lt;strong&gt;「元件」 (Widgets)&lt;/strong&gt;，就可以建構出完整的資料分析、資料前處理、模型訓練與評估的流程。&lt;/p&gt;
+&lt;h2 id="核心優勢"&gt;核心優勢
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;視覺化工作流：&lt;/strong&gt; 整個分析流程一目了然，非常適合用來教學和展示。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;無需程式碼：&lt;/strong&gt; 大幅降低了機器學習的入門門檻。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;互動式探索：&lt;/strong&gt; 任何元件的參數一經調整（例如你調整 &lt;code&gt;Random Forest&lt;/code&gt; 的樹木數量），下游所有元件的結果（如 &lt;code&gt;Test &amp;amp; Score&lt;/code&gt;）都會&lt;strong&gt;即時更新&lt;/strong&gt;，便於快速實驗。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;功能完整：&lt;/strong&gt; 涵蓋了資料探勘的完整步驟，從資料讀取到複雜的模型評估都包含在內。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="核心元件-widgets-介紹"&gt;核心元件 (Widgets) 介紹
+&lt;/h2&gt;&lt;p&gt;Orange3 的所有功能都包裝在左側的「元件庫」中。以下是我們在房價預測專案中使用到的關鍵元件：&lt;/p&gt;
+&lt;h3 id="1-data-資料"&gt;1. Data (資料)
+&lt;/h3&gt;&lt;p&gt;這是分析的起點。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;File (檔案):&lt;/strong&gt; 用於載入你的資料集。支援 CSV, Excel, &lt;code&gt;.tab&lt;/code&gt; 檔案，也內建了許多經典資料集 (例如 &lt;code&gt;boston.tab&lt;/code&gt;)。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Select Columns (選擇欄位):&lt;/strong&gt; &lt;strong&gt;極度重要&lt;/strong&gt;的步驟。在這裡，我們要告訴 Orange 我們的「目標 (Target)」是什麼 (例如 &lt;code&gt;MEDV&lt;/code&gt; 房價)，以及哪些是「特徵 (Features)」(例如 &lt;code&gt;RM&lt;/code&gt;, &lt;code&gt;LSTAT&lt;/code&gt; 等)。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="2-transform-轉換--資料前處理"&gt;2. Transform (轉換 / 資料前處理)
+&lt;/h3&gt;&lt;p&gt;原始資料通常不能直接拿來建模，需要先「清洗」。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Impute (插補缺失值):&lt;/strong&gt; 處理資料中的空白格。雖然波士頓資料集很乾淨，但真實世界的資料常用到。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Preprocess (前處理):&lt;/strong&gt; 一個強大的打包元件，我們用它來做&lt;strong&gt;正規化 (Normalize Features)&lt;/strong&gt;。正規化 (例如 Z-score) 可以消除不同特徵間的尺度差異 (例如 &lt;code&gt;RM&lt;/code&gt; 房間數 3&lt;del&gt;9 vs. &lt;code&gt;TAX&lt;/code&gt; 稅率 200&lt;/del&gt;700)，讓模型訓練更穩定。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="3-visualize-視覺化"&gt;3. Visualize (視覺化)
+&lt;/h3&gt;&lt;p&gt;分析特徵與目標之間的關係。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Box Plot (箱型圖):&lt;/strong&gt; 非常適合用來比較**「類別變數」&lt;strong&gt;與&lt;/strong&gt;「數值變數」**的關係。
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;範例：&lt;/em&gt; 我們用 &lt;code&gt;CHAS&lt;/code&gt; (是否臨河) 作為分組 (Subgroups)，觀察 &lt;code&gt;MEDV&lt;/code&gt; (房價) 的分佈，清楚地看到臨河的房價中位數更高。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Scatter Plot (散點圖):&lt;/strong&gt; 用來觀察**「兩個數值變數」**之間的關係。
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;範例：&lt;/em&gt; 我們設定 X 軸為 &lt;code&gt;RM&lt;/code&gt; (房間數)、Y 軸為 &lt;code&gt;MEDV&lt;/code&gt; (房價)，看到了明顯的「正相關」。&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;進階：&lt;/em&gt; 還可以加入&lt;strong&gt;顏色 (Color)&lt;/strong&gt; (例如 &lt;code&gt;LSTAT&lt;/code&gt;) 或&lt;strong&gt;形狀 (Shape)&lt;/strong&gt; (例如 &lt;code&gt;CHAS&lt;/code&gt;) 來同時呈現 3~4 個維度的資訊。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Rank (排名):&lt;/strong&gt; 用來回答「&lt;strong&gt;哪些特徵最重要？&lt;/strong&gt;」。它會計算所有特徵與目標變數的相關性分數，是回答 Q2 的關鍵。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="4-model-模型"&gt;4. Model (模型)
+&lt;/h3&gt;&lt;p&gt;我們選擇用來預測的演算法。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Linear Regression (線性迴歸):&lt;/strong&gt; 迴歸任務的基準模型。它會找出一個最佳的線性公式 (例如 &lt;code&gt;房價 = a*RM - b*LSTAT + c&lt;/code&gt;)。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Random Forest (隨機森林):&lt;/strong&gt; 一種強大的整合模型。它會建立數百棵決策樹，並將它們的預測結果平均起來。通常準確率高，且不易發生過擬合。&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;(其他常用模型：&lt;code&gt;Tree&lt;/code&gt; (決策樹), &lt;code&gt;SVM&lt;/code&gt; (支援向量機), &lt;code&gt;Gradient Boosting&lt;/code&gt; (梯度提升))&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="5-evaluate-評估"&gt;5. Evaluate (評估)
+&lt;/h3&gt;&lt;p&gt;用來評斷模型「好壞」的元件。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Test &amp;amp; Score (測試與評分):&lt;/strong&gt; &lt;strong&gt;評估的核心&lt;/strong&gt;。我們把資料 (&lt;code&gt;Preprocess&lt;/code&gt;) 和模型 (&lt;code&gt;Linear Regression&lt;/code&gt;, &lt;code&gt;Random Forest&lt;/code&gt;) 都連到這裡。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Cross-validation (交叉驗證):&lt;/strong&gt; &lt;code&gt;Test &amp;amp; Score&lt;/code&gt; 內最重要的設定。它會自動將資料分成 N 份（例如 10 份），輪流將 9 份當作訓練集、1 份當作測試集，最後算出平均分數。這能有效&lt;strong&gt;避免過擬合&lt;/strong&gt;，得到一個可靠的效能指標。&lt;/li&gt;
 &lt;/ul&gt;</description></item></channel></rss>
