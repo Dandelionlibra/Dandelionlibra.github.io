@@ -1,6 +1,6 @@
 ---
 title: Data mining
-description: 。
+description: 由資料探勘課程中講義改寫並整理而成。
 slug: Data-mining
 date: 2025-11-03 11:20:00+0800
 categories:
@@ -10,9 +10,10 @@ tags:
 
 weight: 1
 ---
+> 這份簡報檔案是關於「進階資料探勘」(Advanced Data Mining) 課程的介紹，授課教師為莊秀敏 (Hsiu-Min Chuang) 教授，隸屬於中原大學資訊工程學系。
 
 # 為什麼需要資料探勘?
-* 動機： 資訊的爆炸性增長（從 TB 到 PB 等級） 。我們處於「資料充斥 (drowning in data)，但缺乏知識 (starving for knowledge)」的狀態 。
+* 動機： 資訊的爆炸性增長（從 TB 到 PB 等級）。我們處於「資料充斥 (drowning in data)，但缺乏知識 (starving for knowledge)」的狀態 。
 * 需求：資料探勘的出現是為了「自動化分析巨量資料集」。
 
 # 什麼是資料探勘?
