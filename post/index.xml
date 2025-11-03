@@ -1,6 +1,9 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on YuChen</title><link>https://Dandelionlibra.github.io/post/</link><description>Recent content in Posts on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Mon, 03 Nov 2025 11:20:00 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/post/index.xml" rel="self" type="application/rss+xml"/><item><title>Data mining</title><link>https://Dandelionlibra.github.io/post/note/data-mining/</link><pubDate>Mon, 03 Nov 2025 11:20:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/data-mining/</guid><description>&lt;h1 id="為什麼需要資料探勘"&gt;為什麼需要資料探勘?
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on YuChen</title><link>https://Dandelionlibra.github.io/post/</link><description>Recent content in Posts on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Mon, 03 Nov 2025 11:20:00 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/post/index.xml" rel="self" type="application/rss+xml"/><item><title>Data mining</title><link>https://Dandelionlibra.github.io/post/note/data-mining/</link><pubDate>Mon, 03 Nov 2025 11:20:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/data-mining/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;這份簡報檔案是關於「進階資料探勘」(Advanced Data Mining) 課程的介紹，授課教師為莊秀敏 (Hsiu-Min Chuang) 教授，隸屬於中原大學資訊工程學系。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h1 id="為什麼需要資料探勘"&gt;為什麼需要資料探勘?
 &lt;/h1&gt;&lt;ul&gt;
-&lt;li&gt;動機： 資訊的爆炸性增長（從 TB 到 PB 等級） 。我們處於「資料充斥 (drowning in data)，但缺乏知識 (starving for knowledge)」的狀態 。&lt;/li&gt;
+&lt;li&gt;動機： 資訊的爆炸性增長（從 TB 到 PB 等級）。我們處於「資料充斥 (drowning in data)，但缺乏知識 (starving for knowledge)」的狀態 。&lt;/li&gt;
 &lt;li&gt;需求：資料探勘的出現是為了「自動化分析巨量資料集」。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h1 id="什麼是資料探勘"&gt;什麼是資料探勘?
