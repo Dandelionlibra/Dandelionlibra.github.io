@@ -37,19 +37,23 @@
 &lt;/h3&gt;&lt;h4 id="問答一你看過經典故事小王子嗎"&gt;問答一：你看過經典故事小王子嗎？
 &lt;/h4&gt;&lt;p&gt;模型回答：&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;我看過《小王子》！這是個非常著名的小說，作者是安托瓦內·德·聖-埃克絮佩里。故事充滿哲理與寓意，讓人思考生命、愛情和友誼。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;我看過《小王子》！這是個非常著名的小說，作者是安托瓦內·德·聖-埃克絮佩里。故事充滿哲理與寓意，讓人思考生命、愛情和友誼。&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h4 id="問答二啟蒙了你什麼"&gt;問答二：啟蒙了你什麼？
 &lt;/h4&gt;&lt;p&gt;模型回答：&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;小王子和這個故事都啟蒙了我對生命、愛情和友誼的看法。它教會我要珍惜生命、關心他人和追求夢想。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;小王子和這個故事都啟蒙了我對生命、愛情和友誼的看法。它教會我要珍惜生命、關心他人和追求夢想。&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h4 id="問答三你覺得小王子是個怎樣的人"&gt;問答三：你覺得小王子是個怎樣的人？
 &lt;/h4&gt;&lt;p&gt;模型回答：&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;小王子是一個獨特、敏感和浪漫的年輕人。他能看到世界的美麗和價值，願意為之付出努力，但也有些缺乏勇氣承認自己的情感。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;小王子是一個獨特、敏感和浪漫的年輕人。他能看到世界的美麗和價值，願意為之付出努力，但也有些缺乏勇氣承認自己的情感。&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h4 id="問答四續寫第二部小王子"&gt;問答四：續寫第二部小王子
 &lt;/h4&gt;&lt;p&gt;模型回答：&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;根據小王子的故事，我們可以繼續他的冒險旅程。他想探索更大的世界，沿途遇到許多新奇的生物和景色，對每件事都充滿好奇和興趣。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;根據小王子的故事，我們可以繼續他的冒險旅程。他想探索更大的世界，沿途遇到許多新奇的生物和景色，對每件事都充滿好奇和興趣。&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h3 id="三記憶型問答-vs-一般檢索問答"&gt;三、記憶型問答 VS 一般檢索問答
 &lt;/h3&gt;&lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;記憶型問答&lt;/strong&gt;：能保留上下文，支持多輪互動，回答更貼合對話脈絡。&lt;/li&gt;

@@ -114,7 +114,8 @@ extra_hosts:
 &lt;code&gt;-H&lt;/code&gt;: 加入 HTTP 標頭&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;ex. &lt;code&gt;-H &amp;quot;Content-Type: application/json&amp;quot;&lt;/code&gt; 用於告知伺服器此次請求的資料格式是 JSON。&lt;br&gt;
-可多次使用 &lt;code&gt;-H&lt;/code&gt; 加標頭。&lt;/p&gt;&lt;/blockquote&gt;
+可多次使用 &lt;code&gt;-H&lt;/code&gt; 加標頭。&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;&lt;code&gt;-d&lt;/code&gt;: 傳送請求資料，常搭配 &lt;code&gt;POST&lt;/code&gt;,&lt;code&gt;PUT&lt;/code&gt; 使用，當指定 &lt;code&gt;Content-Type: application/json&lt;/code&gt; 時，會把內容當 JSON 傳送。&lt;br&gt;
 &lt;code&gt;-v&lt;/code&gt;: verbose 模式，顯示完整請求與回應過程，主要用於除錯。&lt;br&gt;
 &lt;code&gt;-o &amp;lt;file&amp;gt;&lt;/code&gt;: 輸出到檔案中。&lt;/p&gt;

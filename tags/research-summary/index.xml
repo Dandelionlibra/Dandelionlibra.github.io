@@ -2,7 +2,8 @@
 &lt;p&gt;本文整理自：&lt;a class="link" href="https://arxiv.org/abs/2410.05779" target="_blank" rel="noopener"
 &gt;LightRAG: Simple and Fast Retrieval-Augmented Generation&lt;/a&gt;&lt;br&gt;
 作者：Zirui Guo, Lianghao Xia, Yanhua Yu, Tu Ao, Chao Huang&lt;br&gt;
-發佈於 arXiv，2024年10月&lt;/p&gt;&lt;/blockquote&gt;
+發佈於 arXiv，2024年10月&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h1 id="摘要"&gt;摘要
 &lt;/h1&gt;&lt;p&gt;RAG 透過整合外部知識來源，提升 LLMs 回應的準確性與上下文相關性，但面臨&lt;strong&gt;過度依賴平面資料表示&lt;/strong&gt; (flat data representations)、&lt;strong&gt;上下文感知能力不足&lt;/strong&gt; (inadequate contextual awareness)、&lt;strong&gt;導致生成碎片化答案&lt;/strong&gt; (fragmented answers)，無法捕捉複雜的相互依賴關係 (inter-dependencies)。&lt;br&gt;
 LightRAG，提出透過將圖結構 (graph structures) 引入文本的索引 (text indexing) 和檢索 (retrieval) 過程來解決上述問題。&lt;/p&gt;
@@ -16,7 +17,8 @@ LightRAG，提出透過將圖結構 (graph structures) 引入文本的索引 (te
 &lt;li&gt;
 &lt;p&gt;&lt;strong&gt;缺乏上下文感知：&lt;/strong&gt; 這些系統通常缺乏維持不同實體及其相互關係之間連貫性所需的上下文感知能力，導致回應可能無法完全解決用戶查詢。&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;例：考慮用戶提問「電動車的興起如何影響城市空氣品質和大眾運輸基礎設施？」現有 RAG 方法可能檢索到關於電動車、空氣污染和公共交通挑戰的獨立文檔，但難以將這些信息綜合為一個連貫的回應。它們可能無法解釋電動車的普及如何改善空氣品質，進而可能影響公共交通規劃，用戶可能收到一個碎片化的答案，未能充分捕捉這些主題之間複雜的相互依賴關係。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;例：考慮用戶提問「電動車的興起如何影響城市空氣品質和大眾運輸基礎設施？」現有 RAG 方法可能檢索到關於電動車、空氣污染和公共交通挑戰的獨立文檔，但難以將這些信息綜合為一個連貫的回應。它們可能無法解釋電動車的普及如何改善空氣品質，進而可能影響公共交通規劃，用戶可能收到一個碎片化的答案，未能充分捕捉這些主題之間複雜的相互依賴關係。&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id="lightrag-模型概述"&gt;LightRAG 模型概述
@@ -233,7 +235,8 @@ ex. 人工智慧如何影響現代教育？&lt;/li&gt;
 &lt;p&gt;本文整理自：&lt;a class="link" href="https://arxiv.org/abs/2207.06300" target="_blank" rel="noopener"
 &gt;Re2G: Retrieve, Rerank, Generate&lt;/a&gt;&lt;br&gt;
 作者：Michael Glass, Gaetano Rossiello, Md Faisal Mahbub Chowdhury, Ankita Rajaram Naik, Pengshan Cai, Alfio Gliozzo&lt;br&gt;
-發佈於 arXiv，2022年7月&lt;/p&gt;&lt;/blockquote&gt;
+發佈於 arXiv，2022年7月&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h1 id="摘要"&gt;摘要
 &lt;/h1&gt;&lt;p&gt;大型 Transformer 模型在處理複雜任務時雖然表現強大，但在應對知識密集型任務時，仍會面臨顯著的計算成本與記憶體限制。此研究指出，非參數記憶和檢索技術能有效解決這些挑戰。&lt;br&gt;
 基於此，Re&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt;G 模型應運而生，它創新地整合了神經初始檢索與重新排序機制，並以 BART 框架為基礎進行序列到序列的生成。Re&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt;G 的核心創新之處在於其獨特的重新排序功能。這使得模型能夠智慧地整合來自不同檢索源的結果，即使這些源的分數不可比較，例如同時融合傳統的 BM25 算法與神經檢索（如密集段落檢索，DPR）。透過引入重排序 (Reranker) 組件，模型得以統一處理並最大化初始候選池的質量。此外，Re&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt;G 還引入了&lt;strong&gt;線上知識蒸餾方法&lt;/strong&gt;，實現了整個檢索與生成管道的端到端訓練。這種訓練方式將系統的所有組件串接成一個整體模型，直接以最終目標作為損失函數進行優化，從而無需分階段訓練，有效提升了系統的整體性能。&lt;/p&gt;
@@ -323,7 +326,8 @@ BM25 演算法會根據查詢中的關鍵字，在文檔庫中計算每個段落
 &lt;p&gt;例如：&lt;br&gt;
 DPR 可能檢索到段落 A, B, C, D, E。&lt;br&gt;
 BM25 可能檢索到段落 C, F, G, H, I。&lt;br&gt;
-合併後，初始候選集就可能包含 A, B, C, D, E, F, G, H, I。&lt;/p&gt;&lt;/blockquote&gt;
+合併後，初始候選集就可能包含 A, B, C, D, E, F, G, H, I。&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h3 id="重排序層互動模型的強大能力"&gt;重排序層：互動模型的強大能力
 &lt;/h3&gt;&lt;p&gt;重排序層的核心目的是精煉初始檢索結果的排名，並實現來自不同檢索方法結果的合併。&lt;/p&gt;
 &lt;ul&gt;
@@ -495,7 +499,8 @@ alt="Modular RAG 架構圖"
 &lt;p&gt;本文整理自：&lt;a class="link" href="https://arxiv.org/abs/2405.06211" target="_blank" rel="noopener"
 &gt;A Survey on RAG Meeting LLMs: Towards Retrieval-Augmented Large Language Models&lt;/a&gt;&lt;br&gt;
 作者：Wenqi Fan, Yujuan Ding, Liangbo Ning, Shijie Wang, Hengyun Li, Dawei Yin, Tat-Seng Chua, Qing Li&lt;br&gt;
-發佈於 arXiv，2024年5月&lt;/p&gt;&lt;/blockquote&gt;
+發佈於 arXiv，2024年5月&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h1 id="摘要"&gt;摘要
 &lt;/h1&gt;&lt;p&gt;大型語言模型（LLMs）雖展現強大生成能力，但受限於內部知識與幻覺問題。檢索增強生成（Retrieval-Augmented Generation;RAG）透過即時檢索外部資訊，提升回應的可靠性與時效性。本文整理 RA-LLMs 的架構、訓練策略與應用，並探討其面臨的挑戰與未來發展，展現檢索對提升 LLM 實用性的關鍵價值。&lt;/p&gt;
 &lt;h1 id="前言"&gt;前言

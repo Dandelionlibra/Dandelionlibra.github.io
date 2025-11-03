@@ -251,7 +251,8 @@ extra_hosts:
 &lt;code&gt;-H&lt;/code&gt;: 加入 HTTP 標頭&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;ex. &lt;code&gt;-H &amp;quot;Content-Type: application/json&amp;quot;&lt;/code&gt; 用於告知伺服器此次請求的資料格式是 JSON。&lt;br&gt;
-可多次使用 &lt;code&gt;-H&lt;/code&gt; 加標頭。&lt;/p&gt;&lt;/blockquote&gt;
+可多次使用 &lt;code&gt;-H&lt;/code&gt; 加標頭。&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;&lt;code&gt;-d&lt;/code&gt;: 傳送請求資料，常搭配 &lt;code&gt;POST&lt;/code&gt;,&lt;code&gt;PUT&lt;/code&gt; 使用，當指定 &lt;code&gt;Content-Type: application/json&lt;/code&gt; 時，會把內容當 JSON 傳送。&lt;br&gt;
 &lt;code&gt;-v&lt;/code&gt;: verbose 模式，顯示完整請求與回應過程，主要用於除錯。&lt;br&gt;
 &lt;code&gt;-o &amp;lt;file&amp;gt;&lt;/code&gt;: 輸出到檔案中。&lt;/p&gt;
@@ -531,7 +532,8 @@ RAG 在回答前會先基於提問與資料庫中內容的語意相似度篩選�
 &lt;li&gt;
 &lt;p&gt;&lt;strong&gt;缺乏上下文感知：&lt;/strong&gt; 這些系統通常缺乏維持不同實體及其相互關係之間連貫性所需的上下文感知能力，導致回應可能無法完全解決用戶查詢。&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;例：考慮用戶提問「電動車的興起如何影響城市空氣品質和大眾運輸基礎設施？」現有 RAG 方法可能檢索到關於電動車、空氣污染和公共交通挑戰的獨立文檔，但難以將這些信息綜合為一個連貫的回應。它們可能無法解釋電動車的普及如何改善空氣品質，進而可能影響公共交通規劃，用戶可能收到一個碎片化的答案，未能充分捕捉這些主題之間複雜的相互依賴關係。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;例：考慮用戶提問「電動車的興起如何影響城市空氣品質和大眾運輸基礎設施？」現有 RAG 方法可能檢索到關於電動車、空氣污染和公共交通挑戰的獨立文檔，但難以將這些信息綜合為一個連貫的回應。它們可能無法解釋電動車的普及如何改善空氣品質，進而可能影響公共交通規劃，用戶可能收到一個碎片化的答案，未能充分捕捉這些主題之間複雜的相互依賴關係。&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id="lightrag-模型概述"&gt;LightRAG 模型概述
@@ -892,7 +894,8 @@ alt="Graph RAG 關係圖"
 &lt;p&gt;本文整理自：&lt;a class="link" href="https://arxiv.org/abs/2410.05779" target="_blank" rel="noopener"
 &gt;LightRAG: Simple and Fast Retrieval-Augmented Generation&lt;/a&gt;&lt;br&gt;
 作者：Zirui Guo, Lianghao Xia, Yanhua Yu, Tu Ao, Chao Huang&lt;br&gt;
-發佈於 arXiv，2024年10月&lt;/p&gt;&lt;/blockquote&gt;
+發佈於 arXiv，2024年10月&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h1 id="摘要"&gt;摘要
 &lt;/h1&gt;&lt;p&gt;RAG 透過整合外部知識來源，提升 LLMs 回應的準確性與上下文相關性，但面臨&lt;strong&gt;過度依賴平面資料表示&lt;/strong&gt; (flat data representations)、&lt;strong&gt;上下文感知能力不足&lt;/strong&gt; (inadequate contextual awareness)、&lt;strong&gt;導致生成碎片化答案&lt;/strong&gt; (fragmented answers)，無法捕捉複雜的相互依賴關係 (inter-dependencies)。&lt;br&gt;
 LightRAG，提出透過將圖結構 (graph structures) 引入文本的索引 (text indexing) 和檢索 (retrieval) 過程來解決上述問題。&lt;/p&gt;
@@ -906,7 +909,8 @@ LightRAG，提出透過將圖結構 (graph structures) 引入文本的索引 (te
 &lt;li&gt;
 &lt;p&gt;&lt;strong&gt;缺乏上下文感知：&lt;/strong&gt; 這些系統通常缺乏維持不同實體及其相互關係之間連貫性所需的上下文感知能力，導致回應可能無法完全解決用戶查詢。&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;例：考慮用戶提問「電動車的興起如何影響城市空氣品質和大眾運輸基礎設施？」現有 RAG 方法可能檢索到關於電動車、空氣污染和公共交通挑戰的獨立文檔，但難以將這些信息綜合為一個連貫的回應。它們可能無法解釋電動車的普及如何改善空氣品質，進而可能影響公共交通規劃，用戶可能收到一個碎片化的答案，未能充分捕捉這些主題之間複雜的相互依賴關係。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;例：考慮用戶提問「電動車的興起如何影響城市空氣品質和大眾運輸基礎設施？」現有 RAG 方法可能檢索到關於電動車、空氣污染和公共交通挑戰的獨立文檔，但難以將這些信息綜合為一個連貫的回應。它們可能無法解釋電動車的普及如何改善空氣品質，進而可能影響公共交通規劃，用戶可能收到一個碎片化的答案，未能充分捕捉這些主題之間複雜的相互依賴關係。&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id="lightrag-模型概述"&gt;LightRAG 模型概述
@@ -1123,7 +1127,8 @@ ex. 人工智慧如何影響現代教育？&lt;/li&gt;
 &lt;p&gt;本文整理自：&lt;a class="link" href="https://arxiv.org/abs/2207.06300" target="_blank" rel="noopener"
 &gt;Re2G: Retrieve, Rerank, Generate&lt;/a&gt;&lt;br&gt;
 作者：Michael Glass, Gaetano Rossiello, Md Faisal Mahbub Chowdhury, Ankita Rajaram Naik, Pengshan Cai, Alfio Gliozzo&lt;br&gt;
-發佈於 arXiv，2022年7月&lt;/p&gt;&lt;/blockquote&gt;
+發佈於 arXiv，2022年7月&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h1 id="摘要"&gt;摘要
 &lt;/h1&gt;&lt;p&gt;大型 Transformer 模型在處理複雜任務時雖然表現強大，但在應對知識密集型任務時，仍會面臨顯著的計算成本與記憶體限制。此研究指出，非參數記憶和檢索技術能有效解決這些挑戰。&lt;br&gt;
 基於此，Re&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt;G 模型應運而生，它創新地整合了神經初始檢索與重新排序機制，並以 BART 框架為基礎進行序列到序列的生成。Re&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt;G 的核心創新之處在於其獨特的重新排序功能。這使得模型能夠智慧地整合來自不同檢索源的結果，即使這些源的分數不可比較，例如同時融合傳統的 BM25 算法與神經檢索（如密集段落檢索，DPR）。透過引入重排序 (Reranker) 組件，模型得以統一處理並最大化初始候選池的質量。此外，Re&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt;G 還引入了&lt;strong&gt;線上知識蒸餾方法&lt;/strong&gt;，實現了整個檢索與生成管道的端到端訓練。這種訓練方式將系統的所有組件串接成一個整體模型，直接以最終目標作為損失函數進行優化，從而無需分階段訓練，有效提升了系統的整體性能。&lt;/p&gt;
@@ -1213,7 +1218,8 @@ BM25 演算法會根據查詢中的關鍵字，在文檔庫中計算每個段落
 &lt;p&gt;例如：&lt;br&gt;
 DPR 可能檢索到段落 A, B, C, D, E。&lt;br&gt;
 BM25 可能檢索到段落 C, F, G, H, I。&lt;br&gt;
-合併後，初始候選集就可能包含 A, B, C, D, E, F, G, H, I。&lt;/p&gt;&lt;/blockquote&gt;
+合併後，初始候選集就可能包含 A, B, C, D, E, F, G, H, I。&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h3 id="重排序層互動模型的強大能力"&gt;重排序層：互動模型的強大能力
 &lt;/h3&gt;&lt;p&gt;重排序層的核心目的是精煉初始檢索結果的排名，並實現來自不同檢索方法結果的合併。&lt;/p&gt;
 &lt;ul&gt;
@@ -1271,6 +1277,308 @@ BM25 可能檢索到段落 C, F, G, H, I。&lt;br&gt;
 &lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="https://ar5iv.labs.arxiv.org/html/2207.06300" target="_blank" rel="noopener"
 &gt;Re2G: Retrieve, Rerank, Generate-ar5iv 可視化版本&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Data mining</title><link>https://Dandelionlibra.github.io/post/note/data-mining/</link><pubDate>Mon, 21 Jul 2025 09:16:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/data-mining/</guid><description>&lt;h1 id="為什麼需要資料探勘"&gt;為什麼需要資料探勘?
+&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;動機： 資訊的爆炸性增長（從 TB 到 PB 等級） 。我們處於「資料充斥 (drowning in data)，但缺乏知識 (starving for knowledge)」的狀態 。&lt;/li&gt;
+&lt;li&gt;需求：資料探勘的出現是為了「自動化分析巨量資料集」。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id="什麼是資料探勘"&gt;什麼是資料探勘?
+&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;定義：資料探勘是「從巨量資料中，萃取出有趣的 (非顯而易見、隱含的、先前未知且具有潛在用途的) 模式或知識」。&lt;/li&gt;
+&lt;li&gt;別名：它也被稱為 KDD (資料庫知識發現)、知識萃取、資料/模式分析等 。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="knowledge-discovery-kdd-process"&gt;Knowledge Discovery (KDD) Process
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;資料整合 (Data Integration)&lt;/li&gt;
+&lt;li&gt;資料清理 (Data Cleaning)&lt;/li&gt;
+&lt;li&gt;資料倉儲 (Data Warehouse)&lt;/li&gt;
+&lt;li&gt;選取任務相關資料 (Task-relevant Data / Selection)&lt;/li&gt;
+&lt;li&gt;資料探勘 (Data Mining)&lt;/li&gt;
+&lt;li&gt;模式評估 (Pattern Evaluation)&lt;/li&gt;
+&lt;li&gt;知識呈現 (Knowledge)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h2 id="資料探勘的功能-patternsfunctions"&gt;資料探勘的功能 (Patterns/Functions)
+&lt;/h2&gt;&lt;h3 id="概化-generalization"&gt;概化 (Generalization)
+&lt;/h3&gt;&lt;p&gt;將低層次、詳細的資料，轉換為高層次、更易於理解的摘要資訊，助於從宏觀的角度來理解資料的總體特徵。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;資訊整合與資料倉儲建構：&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;將來自不同來源的資料進行清理 (cleaning)、轉換 (transformation) 和整合 (integration)。&lt;/li&gt;
+&lt;li&gt;目標是建立一個多維度資料模型 (multidimensional data model)，這也是資料倉儲 (Data Warehouse) 的基礎。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start="2"&gt;
+&lt;li&gt;資料方塊技術：&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;使用可擴展的方法 (Scalable methods) 來預先計算 (computing / materializing) 各種維度組合下的彙總值 (aggregates)。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start="3"&gt;
+&lt;li&gt;多維度概念描述：&lt;br&gt;
+這是概化的具體應用，主要分為兩種：&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;特徵化 (Characterization)： 描述某一特定資料群組的總體特徵。例如：總結「高額度信用卡客戶」的共同特徵（如年齡、收入、職業分佈）。&lt;/li&gt;
+&lt;li&gt;區辨 (Discrimination)： 比較兩個或多個不同資料群組之間的特徵差異 。例如，投影片中的例子：比較「乾燥地區 (dry region)」與「潮濕地區 (wet region)」在特性上的差異 。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h3 id="關聯性分析association-analysis"&gt;關聯性分析(Association Analysis)
+&lt;/h3&gt;&lt;p&gt;找出資料中經常一起出現的項目，例如「買了尿布的顧客，也很常一起買啤酒」。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;頻繁樣式 (Frequent patterns)： 指經常一起出現的項目組合 (itemsets)。例如，在超市中，「尿布」和「啤酒」是否經常被一起購買？&lt;/li&gt;
+&lt;li&gt;關聯規則 (Association rule)： 用來表示項目間關聯性的規則。&lt;/li&gt;
+&lt;li&gt;「關聯 (Association)」或「相關 (Correlation)」不等於「因果關係 (Causality)」。(買尿布並不會導買啤酒)。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h3 id="分類-classification"&gt;分類 (Classification)
+&lt;/h3&gt;&lt;p&gt;為一項「監督式學習」任務，根據已知的訓練資料建立模型，用以預測未知資料的類別標籤。例如判斷信用卡交易是否為盜刷。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;流程：
+&lt;ol&gt;
+&lt;li&gt;建立模型：依據一組已知的「訓練範例 (training examples)」來建立一個模型或函數。&lt;/li&gt;
+&lt;li&gt;預測未來：使用這個模型來描述和區分不同的類別，並預測「未知類別標籤」的資料。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;範例：
+&lt;ul&gt;
+&lt;li&gt;根據「氣候 (climate)」來分類國家。&lt;/li&gt;
+&lt;li&gt;根據「油耗 (gas mileage)」來分類汽車。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;典型方法：決策樹 (Decision trees)、貝氏分類 (naïve Bayesian)、支持向量機 (SVM)、神經網路 (neural networks)、迴歸 (logistic regression) 等。&lt;/li&gt;
+&lt;li&gt;典型應用：信用卡詐欺偵測、精準行銷、疾病分類、網頁分類等。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h3 id="分群-cluster-analysis"&gt;分群 (Cluster Analysis)
+&lt;/h3&gt;&lt;p&gt;為一項「非監督式學習」任務，在沒有類別標籤的情況下(非監督式，將資料依照「群內相似度高、群間相似度低」的原則，自動分成數個群組)。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;基本原則：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;最大化「群內」相似度 (Maximizing intra-class similarity)：同一群集內的資料點彼此盡可能相像。&lt;/li&gt;
+&lt;li&gt;最小化「群間」相似度 (Minimizing interclass similarity)：不同群集之間的資料點彼此盡可能不同。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;範例： 對房屋資料進行分群，以找出其分佈模式。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h3 id="離群值分析-outlier-analysis"&gt;離群值分析 (Outlier Analysis)
+&lt;/h3&gt;&lt;p&gt;偵測出「不符合資料一般行為」的資料，可用於詐欺偵測或稀有事件分析。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;離群值 (Outlier)：是一個資料物件，其行為不符合資料的「一般行為 (general behavior)」。&lt;/li&gt;
+&lt;li&gt;重要概念：離群值是「雜訊 (Noise)」還是「特例 (Exception)」？「一個人的垃圾可能是另一個人的寶藏 (One person&amp;rsquo;s garbage could be another person&amp;rsquo;s treasure)」。這意味著離群值雖然異常，但可能蘊含著非常重要的資訊。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h3 id="時間和順序-time-and-ordering-相關的資料探勘功能"&gt;時間和順序 (Time and Ordering) 相關的資料探勘功能
+&lt;/h3&gt;&lt;p&gt;分析有時間順序的模式 (如先買A、再買B) ，或是結構性資料 (如社群網路、圖形)。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;序列、趨勢與演化分析 (Sequence, trend and evolution analysis)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;趨勢、時間序列與偏差分析 (Trend, time-series, and deviation analysis)： 這類分析著重於資料隨時間的變化趨勢，例如使用「迴歸 (regression)」來進行「數值預測 (value prediction)」。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;序列模式探勘 (Sequential pattern mining)： 找出經常「依序發生」的事件模式。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;例如：顧客「先 買了數位相機，然後 才去買大容量 SD 記憶卡」。這和關聯規則 (同時購買) 不同，這裡強調的是「先後順序」。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;週期性分析 (Periodicity analysis)： 找出資料中重複出現的循環或週期 (例如：季節性銷售高峰)。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;基序與生物序列分析 (Motifs and biological sequence analysis)： 找出在序列資料中 (例如 DNA 或蛋白質序列) 反覆出現的子序列或「基序 (motifs)」，包含「近似 (approximate)」或「連續 (consecutive)」的模式。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;相似性分析 (Similarity-based analysis)： 比較不同時間序列或序列模式之間的相似度。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start="2"&gt;
+&lt;li&gt;探勘資料串流 (Mining data streams)&lt;br&gt;
+資料串流的特性是：有順序性 (Ordered)、隨時間變化 (time-varying)，且可能是無限的 (potentially infinite)。例如：感測器資料、網站點擊流 (clickstreams) 或金融交易資料，這些資料必須即時且連續地進行分析。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h1 id="認識你的資料"&gt;認識你的資料
+&lt;/h1&gt;&lt;h2 id="資料集的組成"&gt;資料集的組成
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;一個資料集（Data Set）是由多個資料物件（Data Objects）所構成。&lt;/li&gt;
+&lt;li&gt;每個資料物件代表一個實體（Entity），也就是現實世界中可被觀察或分析的對象。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="屬性描述資料物件"&gt;屬性描述資料物件
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;每個資料物件是由一組屬性（Attributes）來描述的。&lt;/li&gt;
+&lt;li&gt;在資料庫中，每一列（row）代表一個資料物件，每一欄（column）則代表一個屬性。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="資料集的類型"&gt;資料集的類型
+&lt;/h2&gt;&lt;h3 id="記錄型資料"&gt;記錄型資料
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;關聯式記錄（Relational Records）：如資料庫中的表格，每列為一筆資料，每欄為一個屬性。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;資料矩陣（Data Matrix）：例如數值矩陣或交叉表（crosstabs），常見於統計分析。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;文件資料（Document Data）：文字文件可轉換為「詞頻向量（Term-Frequency Vector）」&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;th&gt;team&lt;/th&gt;
+&lt;th&gt;coach&lt;/th&gt;
+&lt;th&gt;ball&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Document1&lt;/td&gt;
+&lt;td&gt;3&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;5&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Document2&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;7&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Document3&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;交易資料（Transaction Data）：每筆交易包含一組項目，例如購物籃中的商品。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;TID&lt;/th&gt;
+&lt;th&gt;Items&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;Bread, Coke, Milk&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;td&gt;Beer, Bread&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;3&lt;/td&gt;
+&lt;td&gt;Beer, Coke, Diaper, Milk&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="圖形與網路資料"&gt;圖形與網路資料
+&lt;/h3&gt;&lt;p&gt;這類資料具有節點與連結的結構。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;全球資訊網（World Wide Web）：網頁之間的超連結形成網路結構。&lt;/li&gt;
+&lt;li&gt;社群或資訊網路（Social/Information Networks）：如 Facebook、LinkedIn 的人際關係圖。&lt;/li&gt;
+&lt;li&gt;分子結構（Molecular Structures）：化學分子可表示為原子節點與鍵結邊。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="有序資料"&gt;有序資料
+&lt;/h3&gt;&lt;p&gt;這類資料具有時間或順序性。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;影像資料（Video Data）：由一連串影像構成。&lt;/li&gt;
+&lt;li&gt;時間序列資料（Temporal Data）：如股價、氣溫等隨時間變化的資料。&lt;/li&gt;
+&lt;li&gt;序列資料（Sequential Data）：如顧客購物行為序列、網頁瀏覽路徑。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="空間影像與多媒體資料"&gt;空間、影像與多媒體資料
+&lt;/h3&gt;&lt;p&gt;這類資料通常具有位置或視覺特性。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;空間資料（Spatial Data）：如地圖、地理資訊系統（GIS）。&lt;/li&gt;
+&lt;li&gt;影像與影片資料（Image &amp;amp; Video Data）：如照片、監視器錄影、醫學影像。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="屬性attributes概念與分類"&gt;屬性（Attributes）概念與分類
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;屬性（也稱為維度、特徵、變數）是資料物件的特徵欄位。&lt;/li&gt;
+&lt;li&gt;每個屬性代表一種特性，例如：顧客的 ID、姓名、地址。&lt;/li&gt;
+&lt;li&gt;在資料表中，每一欄（column）就是一個屬性。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="屬性類型"&gt;屬性類型
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;名目型屬性（Nominal）&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;表示分類或名稱，無順序性。&lt;/li&gt;
+&lt;li&gt;適合用於分類分析。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;二元屬性（Binary）&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;只有兩種狀態，通常以 0 和 1 表示。&lt;/li&gt;
+&lt;li&gt;對稱二元（Symmetric Binary）：兩種狀態同等重要，例如性別。&lt;/li&gt;
+&lt;li&gt;非對稱二元（Asymmetric Binary）：其中一種狀態較重要，例如醫療檢測結果（陽性 vs 陰性），通常將重要狀態設為 1。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;序位型屬性（Ordinal）&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;屬性值有明確的順序，但無法量化差距。&lt;/li&gt;
+&lt;li&gt;範例：尺寸 = {小、中、大}&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;數值型屬性（Numeric）&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;區間尺度（Interval-Scaled）
+&lt;ul&gt;
+&lt;li&gt;有順序，且單位間距相等，無絕對零點。&lt;/li&gt;
+&lt;li&gt;例，日期。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;比例尺度（Ratio-Scaled）
+&lt;ul&gt;
+&lt;li&gt;有順序，且單位間距相等，有絕對零點。&lt;/li&gt;
+&lt;li&gt;例，長度、金額、計數。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;離散與連續屬性&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;離散屬性（Discrete）：只有有限或可數無限個值。&lt;/li&gt;
+&lt;li&gt;連續屬性（Continuous）：屬性值為實數，通常以浮點數表示，實際上受限於儀器精度。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="結構化資料的重要特性"&gt;結構化資料的重要特性
+&lt;/h2&gt;&lt;h3 id="維度性dimensionality"&gt;維度性（Dimensionality）
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;指資料中屬性的數量，也就是每筆資料的欄位數。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="稀疏性sparsity"&gt;稀疏性（Sparsity）
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;指資料中大多數欄位值為零或缺值，只有少數欄位有意義的值。&lt;/li&gt;
+&lt;li&gt;在這種情況下，「有出現」比「沒出現」更重要。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="解析度resolution"&gt;解析度（Resolution）
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;指資料的尺度或精細程度。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="分布性distribution"&gt;分布性（Distribution）
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;指資料值的分布情形，包括集中趨勢與離散程度。
+&lt;ul&gt;
+&lt;li&gt;集中性（Centrality）：如平均值、中位數，反映資料的中心位置。&lt;/li&gt;
+&lt;li&gt;離散性（Dispersion）：如變異數、標準差，反映資料的擴散程度。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
 &lt;/ul&gt;</description></item><item><title>三種 RAG 架構比較與應用解析 — Naive、Advanced、Modular RAG 差異整理</title><link>https://Dandelionlibra.github.io/post/note/rag-type-compare-note/</link><pubDate>Mon, 21 Jul 2025 09:16:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/rag-type-compare-note/</guid><description>&lt;h1 id="三種-rag-技術架構比較naive-ragadvanced-rag-與-modular-rag"&gt;三種 RAG 技術架構比較：Naive RAG、Advanced RAG 與 Modular RAG
 &lt;/h1&gt;&lt;p&gt;本文比較《Retrieval-Augmented Generation for Large Language Models: A Survey》中提出的三種檢索增強生成（RAG）技術架構：Naive RAG、Advanced RAG 和 Modular RAG。RAG 旨在結合大型語言模型（LLM）的內部知識與外部資料檢索，以提升事實正確性與時效性。這三種架構代表了 RAG 技術的演進路徑，各自引入不同模組與策略來克服先前架構的侷限。本文將從架構組成、實作方式、技術細節、應用場景與優劣比較等面向，深入剖析三類架構的差異與適用性。&lt;/p&gt;
 &lt;hr&gt;
@@ -1385,7 +1693,8 @@ alt="Modular RAG 架構圖"
 &lt;p&gt;本文整理自：&lt;a class="link" href="https://arxiv.org/abs/2405.06211" target="_blank" rel="noopener"
 &gt;A Survey on RAG Meeting LLMs: Towards Retrieval-Augmented Large Language Models&lt;/a&gt;&lt;br&gt;
 作者：Wenqi Fan, Yujuan Ding, Liangbo Ning, Shijie Wang, Hengyun Li, Dawei Yin, Tat-Seng Chua, Qing Li&lt;br&gt;
-發佈於 arXiv，2024年5月&lt;/p&gt;&lt;/blockquote&gt;
+發佈於 arXiv，2024年5月&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h1 id="摘要"&gt;摘要
 &lt;/h1&gt;&lt;p&gt;大型語言模型（LLMs）雖展現強大生成能力，但受限於內部知識與幻覺問題。檢索增強生成（Retrieval-Augmented Generation;RAG）透過即時檢索外部資訊，提升回應的可靠性與時效性。本文整理 RA-LLMs 的架構、訓練策略與應用，並探討其面臨的挑戰與未來發展，展現檢索對提升 LLM 實用性的關鍵價值。&lt;/p&gt;
 &lt;h1 id="前言"&gt;前言
@@ -1696,19 +2005,23 @@ alt="RA-LLMs 訓練策略總覽"
 &lt;/h3&gt;&lt;h4 id="問答一你看過經典故事小王子嗎"&gt;問答一：你看過經典故事小王子嗎？
 &lt;/h4&gt;&lt;p&gt;模型回答：&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;我看過《小王子》！這是個非常著名的小說，作者是安托瓦內·德·聖-埃克絮佩里。故事充滿哲理與寓意，讓人思考生命、愛情和友誼。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;我看過《小王子》！這是個非常著名的小說，作者是安托瓦內·德·聖-埃克絮佩里。故事充滿哲理與寓意，讓人思考生命、愛情和友誼。&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h4 id="問答二啟蒙了你什麼"&gt;問答二：啟蒙了你什麼？
 &lt;/h4&gt;&lt;p&gt;模型回答：&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;小王子和這個故事都啟蒙了我對生命、愛情和友誼的看法。它教會我要珍惜生命、關心他人和追求夢想。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;小王子和這個故事都啟蒙了我對生命、愛情和友誼的看法。它教會我要珍惜生命、關心他人和追求夢想。&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h4 id="問答三你覺得小王子是個怎樣的人"&gt;問答三：你覺得小王子是個怎樣的人？
 &lt;/h4&gt;&lt;p&gt;模型回答：&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;小王子是一個獨特、敏感和浪漫的年輕人。他能看到世界的美麗和價值，願意為之付出努力，但也有些缺乏勇氣承認自己的情感。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;小王子是一個獨特、敏感和浪漫的年輕人。他能看到世界的美麗和價值，願意為之付出努力，但也有些缺乏勇氣承認自己的情感。&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h4 id="問答四續寫第二部小王子"&gt;問答四：續寫第二部小王子
 &lt;/h4&gt;&lt;p&gt;模型回答：&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;根據小王子的故事，我們可以繼續他的冒險旅程。他想探索更大的世界，沿途遇到許多新奇的生物和景色，對每件事都充滿好奇和興趣。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;根據小王子的故事，我們可以繼續他的冒險旅程。他想探索更大的世界，沿途遇到許多新奇的生物和景色，對每件事都充滿好奇和興趣。&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h3 id="三記憶型問答-vs-一般檢索問答"&gt;三、記憶型問答 VS 一般檢索問答
 &lt;/h3&gt;&lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;記憶型問答&lt;/strong&gt;：能保留上下文，支持多輪互動，回答更貼合對話脈絡。&lt;/li&gt;
@@ -1794,7 +2107,8 @@ alt="RA-LLMs 訓練策略總覽"
 &lt;pre tabindex="0"&gt;&lt;code&gt;{&amp;#39;query&amp;#39;: &amp;#39;你覺得小王子是個怎樣的人？&amp;#39;, &amp;#39;result&amp;#39;: &amp;#39;根據文中描述，小王子的性格可以看出來。他似乎是一個敏感、浪漫、獨立的年輕人。他對他所遇到的陌生人的評價很細致，能夠看穿別人的真實面目。他也顯示出對自由和自主的渴望。&amp;#39;}
 &lt;/code&gt;&lt;/pre&gt;&lt;hr&gt;
 &lt;blockquote&gt;
-&lt;p&gt;更多問題可依據文本內容自由發揮，探索不同答案。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;更多問題可依據文本內容自由發揮，探索不同答案。&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h3 id="筆記重點"&gt;筆記重點
 &lt;/h3&gt;&lt;ul&gt;
 &lt;li&gt;透過 &lt;code&gt;PyPDFLoader&lt;/code&gt; 讀取 PDF，並用 &lt;code&gt;RecursiveCharacterTextSplitter&lt;/code&gt; 分割文本，利於後續檢索。&lt;/li&gt;
@@ -1899,7 +2213,8 @@ alt="RA-LLMs 訓練策略總覽"
 &lt;/ol&gt;
 &lt;blockquote&gt;
 &lt;p&gt;注意：部分映像檔可能需額外安裝 CUDA、cuDNN 或深度學習框架，請參考 &lt;a class="link" href="https://jupyter-docker-stacks.readthedocs.io/en/latest/using/recipes.html#using-gpus" target="_blank" rel="noopener"
-&gt;Jupyter Docker Stacks 官方說明&lt;/a&gt;。&lt;/p&gt;&lt;/blockquote&gt;
+&gt;Jupyter Docker Stacks 官方說明&lt;/a&gt;。&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;hr&gt;
 &lt;h2 id="6-參考資料"&gt;6. 參考資料
 &lt;/h2&gt;&lt;ul&gt;
@@ -2149,7 +2464,8 @@ alt="partial_prompt_template"
 &amp;ldquo;你好嗎?&amp;rdquo; - &amp;ldquo;主人，我很好。&amp;rdquo;&lt;br&gt;
 &amp;ldquo;今天禮拜幾?&amp;rdquo; - &amp;ldquo;主人，今天禮拜日。&amp;rdquo;&lt;br&gt;
 &amp;ldquo;天氣真好呀。&amp;rdquo; - &amp;ldquo;主人，是的，今天天氣非常好。&amp;rdquo;&lt;/p&gt;
-&lt;p&gt;希望模型學會&amp;quot;主人&amp;quot;的前綴。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;希望模型學會&amp;quot;主人&amp;quot;的前綴。&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h3 id="fewshot-prompt-template"&gt;FewShot Prompt Template
 &lt;/h3&gt;&lt;p&gt;利用提示模板，將樣本數據加載成完整的提示詞，接著將樣本連同提示詞一併送給樣本提示模板，最終得到完整的提示詞。&lt;/p&gt;
 &lt;p&gt;&lt;img src="https://Dandelionlibra.github.io/image/prompt_template_3.JPG"
@@ -2891,15 +3207,18 @@ Given an array of integers nums, find the next permutation of nums.&lt;/p&gt;
 &lt;h3 id="example-1"&gt;Example 1:
 &lt;/h3&gt;&lt;blockquote&gt;
 &lt;p&gt;Input: nums = [1,2,3]&lt;br&gt;
-Output: [1,3,2]&lt;/p&gt;&lt;/blockquote&gt;
+Output: [1,3,2]&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h3 id="example-2"&gt;Example 2:
 &lt;/h3&gt;&lt;blockquote&gt;
 &lt;p&gt;Input: nums = [3,2,1]&lt;br&gt;
-Output: [1,2,3]&lt;/p&gt;&lt;/blockquote&gt;
+Output: [1,2,3]&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h3 id="example-2-1"&gt;Example 2:
 &lt;/h3&gt;&lt;blockquote&gt;
 &lt;p&gt;Input: nums = [1,1,5]&lt;br&gt;
-Output: [1,5,1]&lt;/p&gt;&lt;/blockquote&gt;
+Output: [1,5,1]&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h2 id="解題方法"&gt;解題方法
 &lt;/h2&gt;&lt;ol&gt;
 &lt;li&gt;
@@ -2941,7 +3260,8 @@ Output: [1,5,1]&lt;/p&gt;&lt;/blockquote&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
 &lt;p&gt;Photo by &lt;a class="link" href="https://unsplash.com/@pawel_czerwinski" target="_blank" rel="noopener"
 &gt;Pawel Czerwinski&lt;/a&gt; on &lt;a class="link" href="https://unsplash.com/" target="_blank" rel="noopener"
-&gt;Unsplash&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;</description></item><item><title>29. Divide Two Integers</title><link>https://Dandelionlibra.github.io/post/leetcode/29/leetcode/</link><pubDate>Sat, 01 Feb 2025 00:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/leetcode/29/leetcode/</guid><description>&lt;h2 id="題目"&gt;題目
+&gt;Unsplash&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;</description></item><item><title>29. Divide Two Integers</title><link>https://Dandelionlibra.github.io/post/leetcode/29/leetcode/</link><pubDate>Sat, 01 Feb 2025 00:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/leetcode/29/leetcode/</guid><description>&lt;h2 id="題目"&gt;題目
 &lt;/h2&gt;&lt;p&gt;Given two integers dividend and divisor, divide two integers without using multiplication, division, and mod operator.&lt;/p&gt;
 &lt;p&gt;The integer division should truncate toward zero, which means losing its fractional part. For example, 8.345 would be truncated to 8, and -2.7335 would be truncated to -2.&lt;/p&gt;
 &lt;p&gt;Return the quotient after dividing dividend by divisor.&lt;/p&gt;
@@ -2955,12 +3275,14 @@ Output: [1,5,1]&lt;/p&gt;&lt;/blockquote&gt;
 &lt;/h3&gt;&lt;blockquote&gt;
 &lt;p&gt;Input: dividend = 10, divisor = 3&lt;br&gt;
 Output: 3&lt;br&gt;
-Explanation: 10/3 = 3.33333.. which is truncated to 3.&lt;/p&gt;&lt;/blockquote&gt;
+Explanation: 10/3 = 3.33333.. which is truncated to 3.&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h3 id="example-2"&gt;Example 2:
 &lt;/h3&gt;&lt;blockquote&gt;
 &lt;p&gt;Input: dividend = 7, divisor = -3&lt;br&gt;
 Output: -2&lt;br&gt;
-Explanation: 7/-3 = -2.33333.. which is truncated to -2.&lt;/p&gt;&lt;/blockquote&gt;
+Explanation: 7/-3 = -2.33333.. which is truncated to -2.&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h2 id="解題方法"&gt;解題方法
 &lt;/h2&gt;&lt;h2 id="程式"&gt;程式
 &lt;/h2&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-C" data-lang="C"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#include&lt;/span&gt; &lt;span style="color:#75715e"&gt;&amp;lt;bits/stdc++.h&amp;gt;&lt;/span&gt;&lt;span style="color:#75715e"&gt;
@@ -3014,7 +3336,8 @@ Explanation: 7/-3 = -2.33333.. which is truncated to -2.&lt;/p&gt;&lt;/blockquot
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
 &lt;p&gt;Photo by &lt;a class="link" href="https://unsplash.com/@pawel_czerwinski" target="_blank" rel="noopener"
 &gt;Pawel Czerwinski&lt;/a&gt; on &lt;a class="link" href="https://unsplash.com/" target="_blank" rel="noopener"
-&gt;Unsplash&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;</description></item><item><title>微表情(Micro Facial Expression)</title><link>https://Dandelionlibra.github.io/post/note/micro_facial_expression/</link><pubDate>Sun, 20 Oct 2024 00:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/note/micro_facial_expression/</guid><description>&lt;img src="https://Dandelionlibra.github.io/unsplash.jpg" alt="Featured image of post 微表情(Micro Facial Expression)" /&gt;&lt;h2 id="臉部表情種類"&gt;臉部表情種類
+&gt;Unsplash&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;</description></item><item><title>微表情(Micro Facial Expression)</title><link>https://Dandelionlibra.github.io/post/note/micro_facial_expression/</link><pubDate>Sun, 20 Oct 2024 00:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/note/micro_facial_expression/</guid><description>&lt;img src="https://Dandelionlibra.github.io/unsplash.jpg" alt="Featured image of post 微表情(Micro Facial Expression)" /&gt;&lt;h2 id="臉部表情種類"&gt;臉部表情種類
 &lt;/h2&gt;&lt;p&gt;&lt;a class="link" href="https://zh.wikipedia.org/zh-tw/%E4%BF%9D%E7%BD%97%C2%B7%E8%89%BE%E5%85%8B%E6%9B%BC" target="_blank" rel="noopener"
 &gt;保羅·艾克曼&lt;/a&gt;（Paul Ekman）從1970年代以來的研究，把臉部微表情分成：&lt;/p&gt;
 &lt;ul&gt;
@@ -3031,25 +3354,30 @@ Explanation: 7/-3 = -2.33333.. which is truncated to -2.&lt;/p&gt;&lt;/blockquot
 &lt;/h2&gt;&lt;blockquote&gt;
 &lt;p&gt;臺師大邱美虹：「我希望用新興科技找到學生在學習科學知識時的難點，改善科學學習時的困境。而其中的一步，就是用辨識微表情的AI系統，找出學生面對非預期的科學現象和多重表徵的解釋所出現的某些特定微表情時所代表的意義，以瞭解學生面對這些情況時的反應與效益，以便設計有意義的學習和教學策略。」&lt;br&gt;
 &lt;a class="link" href="https://humanityisland.nccu.edu.tw/qiumeihong_a/" target="_blank" rel="noopener"
-&gt;文章報導&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
+&gt;文章報導&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;blockquote&gt;
 &lt;p&gt;迪士尼研究中心(FVAE – 深度學習觀眾表情，安排劇情走向)，在黑暗的影廳內觀察觀眾的臉部表情，並學習分辨微笑、大笑等不同程度的情緒。這樣的神經網絡學習，不只要調查你有多喜歡當下的劇情，更要預測你是否可能喜歡接下來的走向，它能根據過去學習的結果，在開演的前十分鐘就預測觀眾之後的情緒！&lt;br&gt;
 &lt;a class="link" href="https://mile.cloud/zh/resources/blog/facial-detection-technology-is-popular-quantifying-micro-expressions-into-big-data_39" target="_blank" rel="noopener"
-&gt;文章報導&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
+&gt;文章報導&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;blockquote&gt;
 &lt;p&gt;將微表情應用於面試上，也能準確抓出應徵者的職場性格與溝通能力，提前協助面試官篩除不適任的員工。&lt;br&gt;
 &lt;a class="link" href="https://www.ithome.com.tw/news/143000" target="_blank" rel="noopener"
-&gt;文章報導&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
+&gt;文章報導&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;blockquote&gt;
 &lt;p&gt;監控升級：人臉識別系統能讀出情緒和威脅性&lt;br&gt;
 &lt;a class="link" href="https://www.bbc.com/zhongwen/trad/world-44859007" target="_blank" rel="noopener"
-&gt;文章報導&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
+&gt;文章報導&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h2 id="參考內容"&gt;參考內容
 &lt;/h2&gt;&lt;p&gt;淺談為表情心理學：https://www.thenewslens.com/article/128732&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;Photo by &lt;a class="link" href="https://unsplash.com/@pawel_czerwinski" target="_blank" rel="noopener"
 &gt;Pawel Czerwinski&lt;/a&gt; on &lt;a class="link" href="https://unsplash.com/" target="_blank" rel="noopener"
-&gt;Unsplash&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;</description></item><item><title>Example content</title><link>https://Dandelionlibra.github.io/post/hello-world/</link><pubDate>Sun, 06 Mar 2022 00:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/hello-world/</guid><description>&lt;img src="https://Dandelionlibra.github.io/post/hello-world/unsplash.jpg" alt="Featured image of post Example content" /&gt;&lt;p&gt;Welcome to Hugo theme Stack. This is your first post. Edit or delete it, then start writing!&lt;/p&gt;
+&gt;Unsplash&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;</description></item><item><title>Example content</title><link>https://Dandelionlibra.github.io/post/hello-world/</link><pubDate>Sun, 06 Mar 2022 00:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/hello-world/</guid><description>&lt;img src="https://Dandelionlibra.github.io/post/hello-world/unsplash.jpg" alt="Featured image of post Example content" /&gt;&lt;p&gt;Welcome to Hugo theme Stack. This is your first post. Edit or delete it, then start writing!&lt;/p&gt;
 &lt;p&gt;For more information about this theme, check the documentation: &lt;a class="link" href="https://stack.jimmycai.com/" target="_blank" rel="noopener"
 &gt;https://stack.jimmycai.com/&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Want a site like this? Check out &lt;a class="link" href="https://github.com/CaiJimmy/hugo-theme-stack-starter" target="_blank" rel="noopener"
@@ -3057,7 +3385,8 @@ Explanation: 7/-3 = -2.33333.. which is truncated to -2.&lt;/p&gt;&lt;/blockquot
 &lt;blockquote&gt;
 &lt;p&gt;Photo by &lt;a class="link" href="https://unsplash.com/@pawel_czerwinski" target="_blank" rel="noopener"
 &gt;Pawel Czerwinski&lt;/a&gt; on &lt;a class="link" href="https://unsplash.com/" target="_blank" rel="noopener"
-&gt;Unsplash&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;</description></item><item><title>Profile</title><link>https://Dandelionlibra.github.io/about/</link><pubDate>Sun, 06 Mar 2022 00:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/about/</guid><description>&lt;p&gt;你好:)&lt;/p&gt;</description></item><item><title>使用 Docker-compose 快速建立多個關聯的 container</title><link>https://Dandelionlibra.github.io/post/virtual-environment/docker/docker-compose/</link><pubDate>Thu, 17 Jul 2025 10:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/virtual-environment/docker/docker-compose/</guid><description>&lt;h2 id="內容大綱"&gt;內容大綱
+&gt;Unsplash&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;</description></item><item><title>Profile</title><link>https://Dandelionlibra.github.io/about/</link><pubDate>Sun, 06 Mar 2022 00:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/about/</guid><description>&lt;p&gt;你好:)&lt;/p&gt;</description></item><item><title>使用 Docker-compose 快速建立多個關聯的 container</title><link>https://Dandelionlibra.github.io/post/virtual-environment/docker/docker-compose/</link><pubDate>Thu, 17 Jul 2025 10:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/virtual-environment/docker/docker-compose/</guid><description>&lt;h2 id="內容大綱"&gt;內容大綱
 &lt;/h2&gt;&lt;ol&gt;
 &lt;li&gt;為什麼要用 Docker-compose?&lt;/li&gt;
 &lt;li&gt;Docker-compose 基本語法與結構&lt;/li&gt;

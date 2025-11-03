@@ -271,7 +271,8 @@
 &lt;p&gt;本文整理自：&lt;a class="link" href="https://arxiv.org/abs/2405.06211" target="_blank" rel="noopener"
 &gt;A Survey on RAG Meeting LLMs: Towards Retrieval-Augmented Large Language Models&lt;/a&gt;&lt;br&gt;
 作者：Wenqi Fan, Yujuan Ding, Liangbo Ning, Shijie Wang, Hengyun Li, Dawei Yin, Tat-Seng Chua, Qing Li&lt;br&gt;
-發佈於 arXiv，2024年5月&lt;/p&gt;&lt;/blockquote&gt;
+發佈於 arXiv，2024年5月&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h1 id="摘要"&gt;摘要
 &lt;/h1&gt;&lt;p&gt;大型語言模型（LLMs）雖展現強大生成能力，但受限於內部知識與幻覺問題。檢索增強生成（Retrieval-Augmented Generation;RAG）透過即時檢索外部資訊，提升回應的可靠性與時效性。本文整理 RA-LLMs 的架構、訓練策略與應用，並探討其面臨的挑戰與未來發展，展現檢索對提升 LLM 實用性的關鍵價值。&lt;/p&gt;
 &lt;h1 id="前言"&gt;前言
@@ -582,19 +583,23 @@ alt="RA-LLMs 訓練策略總覽"
 &lt;/h3&gt;&lt;h4 id="問答一你看過經典故事小王子嗎"&gt;問答一：你看過經典故事小王子嗎？
 &lt;/h4&gt;&lt;p&gt;模型回答：&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;我看過《小王子》！這是個非常著名的小說，作者是安托瓦內·德·聖-埃克絮佩里。故事充滿哲理與寓意，讓人思考生命、愛情和友誼。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;我看過《小王子》！這是個非常著名的小說，作者是安托瓦內·德·聖-埃克絮佩里。故事充滿哲理與寓意，讓人思考生命、愛情和友誼。&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h4 id="問答二啟蒙了你什麼"&gt;問答二：啟蒙了你什麼？
 &lt;/h4&gt;&lt;p&gt;模型回答：&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;小王子和這個故事都啟蒙了我對生命、愛情和友誼的看法。它教會我要珍惜生命、關心他人和追求夢想。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;小王子和這個故事都啟蒙了我對生命、愛情和友誼的看法。它教會我要珍惜生命、關心他人和追求夢想。&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h4 id="問答三你覺得小王子是個怎樣的人"&gt;問答三：你覺得小王子是個怎樣的人？
 &lt;/h4&gt;&lt;p&gt;模型回答：&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;小王子是一個獨特、敏感和浪漫的年輕人。他能看到世界的美麗和價值，願意為之付出努力，但也有些缺乏勇氣承認自己的情感。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;小王子是一個獨特、敏感和浪漫的年輕人。他能看到世界的美麗和價值，願意為之付出努力，但也有些缺乏勇氣承認自己的情感。&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h4 id="問答四續寫第二部小王子"&gt;問答四：續寫第二部小王子
 &lt;/h4&gt;&lt;p&gt;模型回答：&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;根據小王子的故事，我們可以繼續他的冒險旅程。他想探索更大的世界，沿途遇到許多新奇的生物和景色，對每件事都充滿好奇和興趣。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;根據小王子的故事，我們可以繼續他的冒險旅程。他想探索更大的世界，沿途遇到許多新奇的生物和景色，對每件事都充滿好奇和興趣。&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h3 id="三記憶型問答-vs-一般檢索問答"&gt;三、記憶型問答 VS 一般檢索問答
 &lt;/h3&gt;&lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;記憶型問答&lt;/strong&gt;：能保留上下文，支持多輪互動，回答更貼合對話脈絡。&lt;/li&gt;
@@ -680,7 +685,8 @@ alt="RA-LLMs 訓練策略總覽"
 &lt;pre tabindex="0"&gt;&lt;code&gt;{&amp;#39;query&amp;#39;: &amp;#39;你覺得小王子是個怎樣的人？&amp;#39;, &amp;#39;result&amp;#39;: &amp;#39;根據文中描述，小王子的性格可以看出來。他似乎是一個敏感、浪漫、獨立的年輕人。他對他所遇到的陌生人的評價很細致，能夠看穿別人的真實面目。他也顯示出對自由和自主的渴望。&amp;#39;}
 &lt;/code&gt;&lt;/pre&gt;&lt;hr&gt;
 &lt;blockquote&gt;
-&lt;p&gt;更多問題可依據文本內容自由發揮，探索不同答案。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;更多問題可依據文本內容自由發揮，探索不同答案。&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h3 id="筆記重點"&gt;筆記重點
 &lt;/h3&gt;&lt;ul&gt;
 &lt;li&gt;透過 &lt;code&gt;PyPDFLoader&lt;/code&gt; 讀取 PDF，並用 &lt;code&gt;RecursiveCharacterTextSplitter&lt;/code&gt; 分割文本，利於後續檢索。&lt;/li&gt;
@@ -927,7 +933,8 @@ alt="partial_prompt_template"
 &amp;ldquo;你好嗎?&amp;rdquo; - &amp;ldquo;主人，我很好。&amp;rdquo;&lt;br&gt;
 &amp;ldquo;今天禮拜幾?&amp;rdquo; - &amp;ldquo;主人，今天禮拜日。&amp;rdquo;&lt;br&gt;
 &amp;ldquo;天氣真好呀。&amp;rdquo; - &amp;ldquo;主人，是的，今天天氣非常好。&amp;rdquo;&lt;/p&gt;
-&lt;p&gt;希望模型學會&amp;quot;主人&amp;quot;的前綴。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;希望模型學會&amp;quot;主人&amp;quot;的前綴。&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h3 id="fewshot-prompt-template"&gt;FewShot Prompt Template
 &lt;/h3&gt;&lt;p&gt;利用提示模板，將樣本數據加載成完整的提示詞，接著將樣本連同提示詞一併送給樣本提示模板，最終得到完整的提示詞。&lt;/p&gt;
 &lt;p&gt;&lt;img src="https://Dandelionlibra.github.io/image/prompt_template_3.JPG"

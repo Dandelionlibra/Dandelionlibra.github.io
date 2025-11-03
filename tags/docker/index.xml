@@ -96,7 +96,8 @@
 &lt;/ol&gt;
 &lt;blockquote&gt;
 &lt;p&gt;注意：部分映像檔可能需額外安裝 CUDA、cuDNN 或深度學習框架，請參考 &lt;a class="link" href="https://jupyter-docker-stacks.readthedocs.io/en/latest/using/recipes.html#using-gpus" target="_blank" rel="noopener"
-&gt;Jupyter Docker Stacks 官方說明&lt;/a&gt;。&lt;/p&gt;&lt;/blockquote&gt;
+&gt;Jupyter Docker Stacks 官方說明&lt;/a&gt;。&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;hr&gt;
 &lt;h2 id="6-參考資料"&gt;6. 參考資料
 &lt;/h2&gt;&lt;ul&gt;
