@@ -4,7 +4,7 @@ title = 'YuChen'
 theme = 'stack'
 
 [permalinks]
-posts = "/posts/:year/:contentbasename/"
+post = "/:year/:month/:slug/"
 
 [menu]
 [[menu.main]]
@@ -42,3 +42,8 @@ identifier = "about"
 [menu.main.params]
 icon = "user"
 newTab = false
+
+[markup]
+[markup.goldmark]
+[markup.goldmark.renderer]
+unsafe = true
