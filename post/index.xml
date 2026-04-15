@@ -449,11 +449,11 @@
 &lt;/h3&gt;&lt;ul&gt;
 &lt;li&gt;install from PyPl&lt;/li&gt;
 &lt;/ul&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pip install &lt;span style="color:#e6db74"&gt;&amp;#34;lightrag-hku[api]&amp;#34;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pip install &lt;span style="color:#e6db74"&gt;&amp;#34;lightrag-hku[api]&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
 &lt;li&gt;Installation from Source&lt;/li&gt;
 &lt;/ul&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 1. Clone the repository&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 1. Clone the repository&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git clone https://github.com/HKUDS/LightRAG.git
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cd LightRAG
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
@@ -526,13 +526,13 @@ restart: unless-stopped
 extra_hosts:
 - &amp;#34;host.docker.internal:host-gateway&amp;#34;
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;啟動 LightRAG 伺服器：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker compose up
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker compose up
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# If you want the program to run in the background after startup, add the -d parameter at the end of the command.&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
 &lt;h2 id="2-啟動-api-server"&gt;2. 啟動 API Server
 &lt;/h2&gt;&lt;p&gt;LightRAG 使用一個 YAML 檔案來設定 API Server，包含端口、API 路徑以及要載入的模型。專案內已提供一個範例設定檔 &lt;code&gt;lightrag_webui/config.yaml&lt;/code&gt;。&lt;/p&gt;
 &lt;p&gt;進入容器後使用以下指令啟動伺服器：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;lightrag-server
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;lightrag-server
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Server 成功啟動後，您會看到類似以下的輸出，代表伺服器正在 &lt;code&gt;localhost:9621&lt;/code&gt; 上運行：&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt; ╔══════════════════════════════════════════════════════════════╗
 ║ LightRAG Server v1.4.4/0189 ║
@@ -577,7 +577,7 @@ extra_hosts:
 value: &lt;code&gt;scanning_started&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;message&lt;/code&gt;: Additional details about the scanning operation.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -X POST &lt;span style="color:#e6db74"&gt;&amp;#34;http://localhost:9621/documents/scan&amp;#34;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -X POST &lt;span style="color:#e6db74"&gt;&amp;#34;http://localhost:9621/documents/scan&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
 &lt;h4 id="312-upload-to-input-dir"&gt;3.1.2. Upload To Input Dir
 &lt;/h4&gt;&lt;p&gt;&lt;code&gt;POST&lt;/code&gt;: &lt;code&gt;/documents/upload&lt;/code&gt;&lt;br&gt;
@@ -594,8 +594,8 @@ Enum: &lt;code&gt;success&lt;/code&gt;、&lt;code&gt;duplicated&lt;/code&gt;、&
 &lt;li&gt;&lt;code&gt;message&lt;/code&gt;(required): Message describing the operation result.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;※&lt;code&gt;-F &amp;quot;file=@檔案路徑&amp;quot;&lt;/code&gt; 用於傳 multipart/form-data。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -X POST &lt;span style="color:#e6db74"&gt;&amp;#34;http://localhost:9621/documents/upload&amp;#34;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;&lt;/span&gt; -F &lt;span style="color:#e6db74"&gt;&amp;#34;file=@./../prince_docs/little_prince_1.txt&amp;#34;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -X POST &lt;span style="color:#e6db74"&gt;&amp;#34;http://localhost:9621/documents/upload&amp;#34;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -F &lt;span style="color:#e6db74"&gt;&amp;#34;file=@./../prince_docs/little_prince_1.txt&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
 &lt;hr&gt;
 &lt;h3 id="32-query"&gt;3.2. Query
@@ -618,10 +618,10 @@ Enum: &lt;code&gt;success&lt;/code&gt;、&lt;code&gt;duplicated&lt;/code&gt;、&
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;功能&lt;/strong&gt;: 列出在設定檔中定義的所有模型名稱。&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;範例&lt;/strong&gt;:
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -X GET http://localhost:8008/api/v1/models
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -X GET http://localhost:8008/api/v1/models
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;回應&lt;/strong&gt;:
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;object&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;list&amp;#34;&lt;/span&gt;,
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;data&amp;#34;&lt;/span&gt;: [
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
@@ -639,9 +639,9 @@ Enum: &lt;code&gt;success&lt;/code&gt;、&lt;code&gt;duplicated&lt;/code&gt;、&
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;功能&lt;/strong&gt;: 執行一個完整的 RAG 查詢。&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;範例&lt;/strong&gt;:
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -X POST http://localhost:8008/api/v1/chat/completions &lt;span style="color:#ae81ff"&gt;\
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;&lt;/span&gt;-H &lt;span style="color:#e6db74"&gt;&amp;#34;Content-Type: application/json&amp;#34;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;&lt;/span&gt;-d &lt;span style="color:#e6db74"&gt;&amp;#39;{
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -X POST http://localhost:8008/api/v1/chat/completions &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;-H &lt;span style="color:#e6db74"&gt;&amp;#34;Content-Type: application/json&amp;#34;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;-d &lt;span style="color:#e6db74"&gt;&amp;#39;{
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; &amp;#34;model&amp;#34;: &amp;#34;LightRAG&amp;#34;,
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; &amp;#34;messages&amp;#34;: [
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; {
@@ -939,7 +939,7 @@ alt="Graph RAG 關係圖"
 &lt;li&gt;方法: 使用 &lt;code&gt;FlagReranker&lt;/code&gt; 類別。&lt;/li&gt;
 &lt;li&gt;特點: 最直接、優化的方法，簡化模型載入和計算。&lt;/li&gt;
 &lt;li&gt;程式碼範例:
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; FlagEmbedding &lt;span style="color:#f92672"&gt;import&lt;/span&gt; FlagReranker
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; FlagEmbedding &lt;span style="color:#f92672"&gt;import&lt;/span&gt; FlagReranker
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Setting use_fp16 to True speeds up computation with a slight performance degradation&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;reranker &lt;span style="color:#f92672"&gt;=&lt;/span&gt; FlagReranker(&lt;span style="color:#e6db74"&gt;&amp;#39;BAAI/bge-reranker-v2-m3&amp;#39;&lt;/span&gt;, use_fp16&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
@@ -965,7 +965,7 @@ alt="Graph RAG 關係圖"
 &lt;li&gt;方法: 利用 &lt;code&gt;FlagLLMReranker&lt;/code&gt; 類別。&lt;/li&gt;
 &lt;li&gt;特點: 將大型語言模型（如 Llama）作為 Reranker，利用其語言理解能力進行細緻排序。需要大量 VRAM (&amp;gt;40G)。&lt;/li&gt;
 &lt;li&gt;程式碼範例:
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; FlagEmbedding &lt;span style="color:#f92672"&gt;import&lt;/span&gt; FlagLLMReranker
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; FlagEmbedding &lt;span style="color:#f92672"&gt;import&lt;/span&gt; FlagLLMReranker
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Setting use_fp16 to True speeds up computation with a slight performance degradation&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;reranker &lt;span style="color:#f92672"&gt;=&lt;/span&gt; FlagLLMReranker(&lt;span style="color:#e6db74"&gt;&amp;#39;BAAI/bge-reranker-v2-gemma&amp;#39;&lt;/span&gt;, use_fp16&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
@@ -983,7 +983,7 @@ alt="Graph RAG 關係圖"
 &lt;li&gt;方法: 透過 FlagLLMReranker 的 compute_score_layerwise 方法。&lt;/li&gt;
 &lt;li&gt;特點: 可從 LLM 的不同層獲取分數，提供對模型決策過程的深入洞察。&lt;/li&gt;
 &lt;li&gt;程式碼範例:
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; FlagEmbedding &lt;span style="color:#f92672"&gt;import&lt;/span&gt; LayerWiseFlagLLMReranker
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; FlagEmbedding &lt;span style="color:#f92672"&gt;import&lt;/span&gt; LayerWiseFlagLLMReranker
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Setting use_fp16 to True speeds up computation with a slight performance degradation&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;reranker &lt;span style="color:#f92672"&gt;=&lt;/span&gt; LayerWiseFlagLLMReranker(&lt;span style="color:#e6db74"&gt;&amp;#39;BAAI/bge-reranker-v2-minicpm-layerwise&amp;#39;&lt;/span&gt;, use_fp16&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
@@ -1005,7 +1005,7 @@ alt="Graph RAG 關係圖"
 &lt;li&gt;方法: 載入 AutoTokenizer 和 AutoModelForSequenceClassification。&lt;/li&gt;
 &lt;li&gt;特點: 標準流程，提供更多自訂空間。&lt;/li&gt;
 &lt;li&gt;程式碼範例:
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; torch
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; torch
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; transformers &lt;span style="color:#f92672"&gt;import&lt;/span&gt; AutoModelForSequenceClassification, AutoTokenizer
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tokenizer &lt;span style="color:#f92672"&gt;=&lt;/span&gt; AutoTokenizer&lt;span style="color:#f92672"&gt;.&lt;/span&gt;from_pretrained(&lt;span style="color:#e6db74"&gt;&amp;#39;BAAI/bge-reranker-v2-m3&amp;#39;&lt;/span&gt;)
@@ -1026,7 +1026,7 @@ alt="Graph RAG 關係圖"
 &lt;li&gt;方法: 載入 AutoTokenizer 和 AutoModelForCausalLM。&lt;/li&gt;
 &lt;li&gt;特點: 需要手動處理模型輸出以獲得分數，提供最大的靈活性和控制力。&lt;/li&gt;
 &lt;li&gt;程式碼範例:
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; torch
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; torch
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; transformers &lt;span style="color:#f92672"&gt;import&lt;/span&gt; AutoModelForCausalLM, AutoTokenizer
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;get_inputs&lt;/span&gt;(pairs, tokenizer, prompt&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;, max_length&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;1024&lt;/span&gt;):
@@ -1091,7 +1091,7 @@ alt="Graph RAG 關係圖"
 &lt;li&gt;方法: 透過手動存取 AutoModelForCausalLM 的隱藏層輸出或注意力權重，並自行計算分數。&lt;/li&gt;
 &lt;li&gt;特點: 提供對 LLM 內部決策過程最細緻的控制和分析，但實作複雜度高，需要深入理解模型架構。&lt;/li&gt;
 &lt;li&gt;程式碼範例:
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; torch
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; torch
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; transformers &lt;span style="color:#f92672"&gt;import&lt;/span&gt; AutoModelForCausalLM, AutoTokenizer
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;get_inputs&lt;/span&gt;(pairs, tokenizer, prompt&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;, max_length&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;1024&lt;/span&gt;):
@@ -1624,11 +1624,112 @@ BM25 可能檢索到段落 C, F, G, H, I。&lt;br&gt;
 &lt;/ul&gt;
 &lt;h3 id="4-model-模型"&gt;4. Model (模型)
 &lt;/h3&gt;&lt;p&gt;我們選擇用來預測的演算法。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Linear Regression (線性迴歸):&lt;/strong&gt; 迴歸任務的基準模型。它會找出一個最佳的線性公式 (例如 &lt;code&gt;房價 = a*RM - b*LSTAT + c&lt;/code&gt;)。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Random Forest (隨機森林):&lt;/strong&gt; 一種強大的整合模型。它會建立數百棵決策樹，並將它們的預測結果平均起來。通常準確率高，且不易發生過擬合。&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;(其他常用模型：&lt;code&gt;Tree&lt;/code&gt; (決策樹), &lt;code&gt;SVM&lt;/code&gt; (支援向量機), &lt;code&gt;Gradient Boosting&lt;/code&gt; (梯度提升))&lt;/em&gt;&lt;/li&gt;
-&lt;/ul&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style="text-align: left"&gt;元件 (Widget)&lt;/th&gt;
+&lt;th style="text-align: left"&gt;任務類型&lt;/th&gt;
+&lt;th style="text-align: left"&gt;功能說明&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;&lt;strong&gt;Linear Regression (線性迴歸)&lt;/strong&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;迴歸&lt;/td&gt;
+&lt;td style="text-align: left"&gt;找出 y=mx+b 的最佳直線。最基本、最快、最能解釋的迴歸模型。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;&lt;strong&gt;Random Forest (隨機森林)&lt;/strong&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;兩者皆可&lt;/td&gt;
+&lt;td style="text-align: left"&gt;建立一個「森林」，裡面有數百棵決策樹，並對結果進行投票/平均。功能強大且不易過擬合。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;Tree (決策樹)&lt;/td&gt;
+&lt;td style="text-align: left"&gt;兩者皆可&lt;/td&gt;
+&lt;td style="text-align: left"&gt;建立一個樹狀的 IF-THEN 規則。容易理解，但單一棵樹非常容易過擬合。Random Forest 是它的進化版。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;Gradient Boosting (梯度提升)&lt;/td&gt;
+&lt;td style="text-align: left"&gt;兩者皆可&lt;/td&gt;
+&lt;td style="text-align: left"&gt;建立一系列的樹，後一棵樹會專注於「修正」前一棵樹的錯誤。通常是準確率最高的模型之一。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;SVM (支援向量機)&lt;/td&gt;
+&lt;td style="text-align: left"&gt;兩者皆可&lt;/td&gt;
+&lt;td style="text-align: left"&gt;試圖在資料點之間找到一個「最寬的邊界」。在特徵複雜時表現良好。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;KNN (k-鄰近演算法)&lt;/td&gt;
+&lt;td style="text-align: left"&gt;兩者皆可&lt;/td&gt;
+&lt;td style="text-align: left"&gt;預測新資料時，看它「最接近的 k 個鄰居」是什麼，然後進行投票 (分類) 或平均 (迴歸)。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;Neural Network (類神經網路)&lt;/td&gt;
+&lt;td style="text-align: left"&gt;兩者皆可&lt;/td&gt;
+&lt;td style="text-align: left"&gt;模擬人腦神經元，可建立複雜的非線性關係。是「深度學習」的基礎。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;Constant (常數模型)&lt;/td&gt;
+&lt;td style="text-align: left"&gt;兩者皆可&lt;/td&gt;
+&lt;td style="text-align: left"&gt;最笨的基準模型。它總是預測「平均值」(迴歸) 或「最常見的類別」(分類)。用來當作效能的「地板」。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;Logistic Regression (羅吉斯迴歸)&lt;/td&gt;
+&lt;td style="text-align: left"&gt;分類&lt;/td&gt;
+&lt;td style="text-align: left"&gt;(名稱有 Regression 但用於分類) 預測一個事件發生的「機率」(例如 0% ~ 100%)。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;Naive Bayes (單純貝氏)&lt;/td&gt;
+&lt;td style="text-align: left"&gt;分類&lt;/td&gt;
+&lt;td style="text-align: left"&gt;基於貝氏定理，假設特徵之間彼此獨立。在「文字分類」(例如垃圾郵件) 上表現極佳。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;CN2 Rule Induction (CN2 規則歸納)&lt;/td&gt;
+&lt;td style="text-align: left"&gt;分類&lt;/td&gt;
+&lt;td style="text-align: left"&gt;從資料中學習出一套 IF-THEN 的「分類規則」。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;AdaBoost (自適應提升)&lt;/td&gt;
+&lt;td style="text-align: left"&gt;兩者皆可&lt;/td&gt;
+&lt;td style="text-align: left"&gt;類似 Gradient Boosting，也是一種提升法，它會給「預測錯誤」的資料點更高的權重。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;Stochastic Gradient Descent (SGD)&lt;/td&gt;
+&lt;td style="text-align: left"&gt;兩者皆可&lt;/td&gt;
+&lt;td style="text-align: left"&gt;(進階) 一種「最佳化演算法」，當資料量非常非常大 (數百萬筆) 時，用來加速 Linear Regression 或 Neural Network 等模型的訓練。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;Calibrated Learner&lt;/td&gt;
+&lt;td style="text-align: left"&gt;分類&lt;/td&gt;
+&lt;td style="text-align: left"&gt;(進階) 用來「校準」一個分類模型的機率輸出，讓它的機率更接近真實的機率。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;PLS (偏最小平方法)&lt;/td&gt;
+&lt;td style="text-align: left"&gt;迴歸&lt;/td&gt;
+&lt;td style="text-align: left"&gt;(進階) 類似線性迴歸，但當你的「特徵非常多」且「特徵之間高度相關」時特別有用。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;Curve Fit (曲線擬合)&lt;/td&gt;
+&lt;td style="text-align: left"&gt;迴歸&lt;/td&gt;
+&lt;td style="text-align: left"&gt;(進階) 讓你手動選擇一個數學函數 (如 log(x), x^2) 去擬合資料。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;Scoring Sheet&lt;/td&gt;
+&lt;td style="text-align: left"&gt;兩者皆可&lt;/td&gt;
+&lt;td style="text-align: left"&gt;(非模型) 讓你手動輸入規則或公式來評分。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;Stacking (堆疊)&lt;/td&gt;
+&lt;td style="text-align: left"&gt;兩者皆可&lt;/td&gt;
+&lt;td style="text-align: left"&gt;(進階) 模型的「組合技」。訓練多個不同的模型 (例如 A, B, C)，然後再訓練一個「最終模型」去學習如何組合 A, B, C 的預測結果。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;Save Model / Load Model&lt;/td&gt;
+&lt;td style="text-align: left"&gt;(工具)&lt;/td&gt;
+&lt;td style="text-align: left"&gt;將你訓練好的模型 (例如你那 100 棵樹的 Random Forest) 存成一個檔案，以便下次直接載入使用。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
 &lt;h3 id="5-evaluate-評估"&gt;5. Evaluate (評估)
 &lt;/h3&gt;&lt;p&gt;用來評斷模型「好壞」的元件。&lt;/p&gt;
 &lt;ul&gt;
@@ -2035,7 +2136,7 @@ alt="RA-LLMs 訓練策略總覽"
 &lt;h4 id="主要程式片段"&gt;主要程式片段
 &lt;/h4&gt;&lt;p&gt;完整程式碼請參考：&lt;a class="link" href="https://github.com/Dandelionlibra/Dandelionlibra.github.io/blob/main/content/post/langchain/example/LangChain_memory_ask_via_pdf.ipynb" target="_blank" rel="noopener"
 &gt;GitHub 範例程式&lt;/a&gt;&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 建立記憶管理器&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 建立記憶管理器&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;InMemoryHistory&lt;/span&gt;(BaseChatMessageHistory, BaseModel):
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; messages: list[BaseMessage] &lt;span style="color:#f92672"&gt;=&lt;/span&gt; Field(default_factory&lt;span style="color:#f92672"&gt;=&lt;/span&gt;list)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;add_messages&lt;/span&gt;(self, messages: list[BaseMessage]) &lt;span style="color:#f92672"&gt;-&amp;gt;&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;:
@@ -2083,7 +2184,7 @@ alt="RA-LLMs 訓練策略總覽"
 &lt;li&gt;&lt;strong&gt;一般檢索問答&lt;/strong&gt;：每次提問獨立，無法記住前文，回答較為片段。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h4 id="一般檢索問答範例"&gt;一般檢索問答範例
-&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;qa_chain &lt;span style="color:#f92672"&gt;=&lt;/span&gt; RetrievalQA&lt;span style="color:#f92672"&gt;.&lt;/span&gt;from_chain_type(
+&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;qa_chain &lt;span style="color:#f92672"&gt;=&lt;/span&gt; RetrievalQA&lt;span style="color:#f92672"&gt;.&lt;/span&gt;from_chain_type(
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; llm&lt;span style="color:#f92672"&gt;=&lt;/span&gt;ollama_llm,
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; retriever&lt;span style="color:#f92672"&gt;=&lt;/span&gt;vector_db&lt;span style="color:#f92672"&gt;.&lt;/span&gt;as_retriever(),
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;)
@@ -2102,7 +2203,7 @@ alt="RA-LLMs 訓練策略總覽"
 詳細程式參考：&lt;a class="link" href="https://github.com/Dandelionlibra/Dandelionlibra.github.io/blob/main/content/post/langchain/example/LangChain_ask_via_pdf.ipynb" target="_blank" rel="noopener"
 &gt;GitHub 範例程式&lt;/a&gt;&lt;/p&gt;
 &lt;h3 id="1-載入必要套件與初始化-embedding-模型"&gt;1. 載入必要套件與初始化 Embedding 模型
-&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; langchain_community.document_loaders &lt;span style="color:#f92672"&gt;import&lt;/span&gt; PyPDFLoader
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; langchain_community.document_loaders &lt;span style="color:#f92672"&gt;import&lt;/span&gt; PyPDFLoader
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; langchain_text_splitters &lt;span style="color:#f92672"&gt;import&lt;/span&gt; RecursiveCharacterTextSplitter
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; langchain_ollama &lt;span style="color:#f92672"&gt;import&lt;/span&gt; OllamaEmbeddings
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; langchain_chroma &lt;span style="color:#f92672"&gt;import&lt;/span&gt; Chroma
@@ -2113,7 +2214,7 @@ alt="RA-LLMs 訓練策略總覽"
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; model&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;bge-m3:567m&amp;#34;&lt;/span&gt;,
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="2-載入-pdf-文件並分割文本"&gt;2. 載入 PDF 文件並分割文本
-&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 載入 PDF&lt;/span&gt;
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 載入 PDF&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;loader &lt;span style="color:#f92672"&gt;=&lt;/span&gt; PyPDFLoader(&lt;span style="color:#e6db74"&gt;&amp;#39;./data/PDF_file.pdf&amp;#39;&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docs &lt;span style="color:#f92672"&gt;=&lt;/span&gt; loader&lt;span style="color:#f92672"&gt;.&lt;/span&gt;load_and_split()
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
@@ -2124,13 +2225,13 @@ alt="RA-LLMs 訓練策略總覽"
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;text_splitter &lt;span style="color:#f92672"&gt;=&lt;/span&gt; RecursiveCharacterTextSplitter(chunk_size&lt;span style="color:#f92672"&gt;=&lt;/span&gt;chunk_size, chunk_overlap&lt;span style="color:#f92672"&gt;=&lt;/span&gt;chunk_overlap)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;documents &lt;span style="color:#f92672"&gt;=&lt;/span&gt; text_splitter&lt;span style="color:#f92672"&gt;.&lt;/span&gt;split_documents(docs)
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="3-建立-chroma-向量資料庫"&gt;3. 建立 Chroma 向量資料庫
-&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;db &lt;span style="color:#f92672"&gt;=&lt;/span&gt; Chroma&lt;span style="color:#f92672"&gt;.&lt;/span&gt;from_documents(
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;db &lt;span style="color:#f92672"&gt;=&lt;/span&gt; Chroma&lt;span style="color:#f92672"&gt;.&lt;/span&gt;from_documents(
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; documents,
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; embedding&lt;span style="color:#f92672"&gt;=&lt;/span&gt;embeddings_model,
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; persist_directory&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;./story-db&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="4-啟動檢索式問答鏈-retrievalqa-chain"&gt;4. 啟動檢索式問答鏈 (RetrievalQA Chain)
-&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; langchain_ollama &lt;span style="color:#f92672"&gt;import&lt;/span&gt; OllamaLLM
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; langchain_ollama &lt;span style="color:#f92672"&gt;import&lt;/span&gt; OllamaLLM
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; langchain.chains &lt;span style="color:#f92672"&gt;import&lt;/span&gt; RetrievalQA
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ollama_llm &lt;span style="color:#f92672"&gt;=&lt;/span&gt; OllamaLLM(
@@ -2147,17 +2248,17 @@ alt="RA-LLMs 訓練策略總覽"
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="5-問答範例及模型回答"&gt;5. 問答範例及模型回答
 &lt;/h3&gt;&lt;p&gt;以下僅列出部分問答範例，其餘可自行嘗試：&lt;/p&gt;
 &lt;hr&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;query &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;玫瑰是誰？&amp;#34;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;query &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;玫瑰是誰？&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;result &lt;span style="color:#f92672"&gt;=&lt;/span&gt; qa_chain&lt;span style="color:#f92672"&gt;.&lt;/span&gt;invoke(query)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(result)
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;模型回答：&lt;/strong&gt;&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;{&amp;#39;query&amp;#39;: &amp;#39;玫瑰是誰？&amp;#39;, &amp;#39;result&amp;#39;: &amp;#39;玫瑰是小王子的玫瑰花，還有園中其他五千朵玫瑰花（但小王子的玫瑰花是獨一無二的）。&amp;#39;}
 &lt;/code&gt;&lt;/pre&gt;&lt;hr&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;qa_chain&lt;span style="color:#f92672"&gt;.&lt;/span&gt;invoke(&lt;span style="color:#e6db74"&gt;&amp;#39;小王子的來歷是什？&amp;#39;&lt;/span&gt;)
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;qa_chain&lt;span style="color:#f92672"&gt;.&lt;/span&gt;invoke(&lt;span style="color:#e6db74"&gt;&amp;#39;小王子的來歷是什？&amp;#39;&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;模型回答：&lt;/strong&gt;&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;{&amp;#39;query&amp;#39;: &amp;#39;小王子的來歷是什？&amp;#39;, &amp;#39;result&amp;#39;: &amp;#39;小王子所來自的那個星球是小行星B612。&amp;#39;}
 &lt;/code&gt;&lt;/pre&gt;&lt;hr&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;qa_chain&lt;span style="color:#f92672"&gt;.&lt;/span&gt;invoke(&lt;span style="color:#e6db74"&gt;&amp;#39;你覺得小王子是個怎樣的人？&amp;#39;&lt;/span&gt;)
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;qa_chain&lt;span style="color:#f92672"&gt;.&lt;/span&gt;invoke(&lt;span style="color:#e6db74"&gt;&amp;#39;你覺得小王子是個怎樣的人？&amp;#39;&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;模型回答：&lt;/strong&gt;&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;{&amp;#39;query&amp;#39;: &amp;#39;你覺得小王子是個怎樣的人？&amp;#39;, &amp;#39;result&amp;#39;: &amp;#39;根據文中描述，小王子的性格可以看出來。他似乎是一個敏感、浪漫、獨立的年輕人。他對他所遇到的陌生人的評價很細致，能夠看穿別人的真實面目。他也顯示出對自由和自主的渴望。&amp;#39;}
 &lt;/code&gt;&lt;/pre&gt;&lt;hr&gt;
@@ -2192,7 +2293,7 @@ alt="RA-LLMs 訓練策略總覽"
 &lt;h2 id="2-安裝-docker"&gt;2. 安裝 Docker
 &lt;/h2&gt;&lt;h3 id="linux"&gt;Linux
 &lt;/h3&gt;&lt;p&gt;大多數 Linux 發行版可透過套件管理器安裝 Docker：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 更新套件清單&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 更新套件清單&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt update
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 安裝 Docker&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt install docker.io
@@ -2214,13 +2315,13 @@ alt="RA-LLMs 訓練策略總覽"
 &lt;ol&gt;
 &lt;li&gt;
 &lt;p&gt;拉取映像檔&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker pull jupyter/base-notebook
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker pull jupyter/base-notebook
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;建立容器&lt;br&gt;
 &lt;code&gt;docker run [OPTIONS] IMAGE [COMMAND] [ARG...]&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;啟動容器並開啟本機 8888 端口：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker run -p 8888:8888 jupyter/base-notebook
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker run -p 8888:8888 jupyter/base-notebook
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;啟動後，終端機會顯示一組 token，複製網址（如 &lt;code&gt;http://127.0.0.1:8888/?token=...&lt;/code&gt;）在瀏覽器開啟即可進入 Jupyter Notebook。&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
@@ -2229,7 +2330,7 @@ alt="RA-LLMs 訓練策略總覽"
 &lt;hr&gt;
 &lt;h2 id="4-設定-notebook-存取與資料掛載"&gt;4. 設定 Notebook 存取與資料掛載
 &lt;/h2&gt;&lt;p&gt;若要將本機資料夾掛載到容器，方便存取與保存 notebook 檔案：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker run -p 8888:8888 -v /your/local/path:/home/jovyan/work --name my-jupyter jupyter/base-notebook
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker run -p 8888:8888 -v /your/local/path:/home/jovyan/work --name my-jupyter jupyter/base-notebook
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
 &lt;li&gt;&lt;code&gt;-p&lt;/code&gt;: Assigns the internal port to the external port&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;-v&lt;/code&gt;: Assigns a local directory to a container directory (mounts a volume)&lt;/li&gt;
@@ -2251,18 +2352,18 @@ alt="RA-LLMs 訓練策略總覽"
 &lt;li&gt;
 &lt;p&gt;&lt;strong&gt;安裝 NVIDIA Container Toolkit&lt;/strong&gt;&lt;br&gt;
 依照官方文件安裝 &lt;code&gt;nvidia-docker&lt;/code&gt;：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt-get install -y nvidia-docker2
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt-get install -y nvidia-docker2
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo systemctl restart docker
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;&lt;strong&gt;啟動支援 GPU 的 Jupyter Notebook 容器&lt;/strong&gt;&lt;br&gt;
 使用 &lt;code&gt;--gpus all&lt;/code&gt; 參數啟動容器：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker run --gpus all -p 8888:8888 --name gpu_note -v ~/name:/tf/name tensorflow/tensorflow:latest-gpu-jupyter
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker run --gpus all -p 8888:8888 --name gpu_note -v ~/name:/tf/name tensorflow/tensorflow:latest-gpu-jupyter
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;&lt;strong&gt;驗證 GPU 是否可用&lt;/strong&gt;&lt;br&gt;
 在 Notebook 中執行下列程式碼，確認 GPU 是否被偵測到：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; tensorflow &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; tf
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; tensorflow &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; tf
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(tf&lt;span style="color:#f92672"&gt;.&lt;/span&gt;config&lt;span style="color:#f92672"&gt;.&lt;/span&gt;list_physical_devices(&lt;span style="color:#e6db74"&gt;&amp;#39;GPU&amp;#39;&lt;/span&gt;))
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
 &lt;/ol&gt;
@@ -2410,7 +2511,7 @@ alt="Document_loaders.JPG"
 &lt;ul&gt;
 &lt;li&gt;
 &lt;p&gt;結構化文件: 加載 CSV 文件&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; langchain.document_loaders.csv_loader &lt;span style="color:#f92672"&gt;import&lt;/span&gt; CSVLoader
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; langchain.document_loaders.csv_loader &lt;span style="color:#f92672"&gt;import&lt;/span&gt; CSVLoader
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;loader &lt;span style="color:#f92672"&gt;=&lt;/span&gt; CSVLoader(file_path&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;./data/file.csv&amp;#39;&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;data &lt;span style="color:#f92672"&gt;=&lt;/span&gt; loader&lt;span style="color:#f92672"&gt;.&lt;/span&gt;load()
@@ -2459,7 +2560,7 @@ alt="Document_transformers.JPG.JPG"
 &lt;li&gt;提供簡單的事例給語言模型使模型接近理想結果&lt;/li&gt;
 &lt;li&gt;提給語言模型的問題&lt;/li&gt;
 &lt;/ul&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; langchain &lt;span style="color:#f92672"&gt;import&lt;/span&gt; PromptTemplate
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; langchain &lt;span style="color:#f92672"&gt;import&lt;/span&gt; PromptTemplate
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 使用 PromptTemplate 來定義對話的提示模板&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;no_input_prompt_template &lt;span style="color:#f92672"&gt;=&lt;/span&gt; PromptTemplate(
@@ -2496,7 +2597,7 @@ alt="partial_prompt_template"
 &gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; langchain &lt;span style="color:#f92672"&gt;import&lt;/span&gt; PromptTemplate
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; langchain &lt;span style="color:#f92672"&gt;import&lt;/span&gt; PromptTemplate
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; datetime &lt;span style="color:#f92672"&gt;import&lt;/span&gt; datetime
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;get_date&lt;/span&gt;():
@@ -2527,7 +2628,7 @@ alt="partial_prompt_template"
 loading="lazy"
 alt="partial_prompt_template"
 &gt;&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; langchain.prompts.few_shot &lt;span style="color:#f92672"&gt;import&lt;/span&gt; FewShotPromptTemplate
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; langchain.prompts.few_shot &lt;span style="color:#f92672"&gt;import&lt;/span&gt; FewShotPromptTemplate
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; langchain.prompts.prompt &lt;span style="color:#f92672"&gt;import&lt;/span&gt; PromptTemplate
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# FewShot examples&lt;/span&gt;
@@ -2566,7 +2667,7 @@ Answer: 主人，今天禮拜日。
 Question: 天氣真好呀。
 Answer: 主人，是的，今天天氣非常好。
 Question: 你今天過得怎麼樣?
-&lt;/code&gt;&lt;/pre&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; langchain_ollama &lt;span style="color:#f92672"&gt;import&lt;/span&gt; OllamaLLM
+&lt;/code&gt;&lt;/pre&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; langchain_ollama &lt;span style="color:#f92672"&gt;import&lt;/span&gt; OllamaLLM
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;llm &lt;span style="color:#f92672"&gt;=&lt;/span&gt; OllamaLLM(model&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;llama3.1:8b&amp;#34;&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;response &lt;span style="color:#f92672"&gt;=&lt;/span&gt; llm&lt;span style="color:#f92672"&gt;.&lt;/span&gt;invoke(few_shot_prompt&lt;span style="color:#f92672"&gt;.&lt;/span&gt;format(input&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;你今天過得怎麼樣?&amp;#34;&lt;/span&gt;))
@@ -2597,7 +2698,7 @@ alt="partial_prompt_template"
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; langchain_ollama &lt;span style="color:#f92672"&gt;import&lt;/span&gt; OllamaLLM
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; langchain_ollama &lt;span style="color:#f92672"&gt;import&lt;/span&gt; OllamaLLM
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;llm &lt;span style="color:#f92672"&gt;=&lt;/span&gt; OllamaLLM(model&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;llama3.1:8b&amp;#34;&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(llm(&lt;span style="color:#e6db74"&gt;&amp;#34;跟我說一個笑話，盡量簡短。&amp;#34;&lt;/span&gt;))
@@ -2613,12 +2714,12 @@ alt="partial_prompt_template"
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;generate_res &lt;span style="color:#f92672"&gt;=&lt;/span&gt; llm&lt;span style="color:#f92672"&gt;.&lt;/span&gt;generate([&lt;span style="color:#e6db74"&gt;&amp;#34;跟我說一個笑話，盡量簡短。&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;跟我說一個悲傷的故事，盡量簡短。&amp;#34;&lt;/span&gt;])
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;generate_res &lt;span style="color:#f92672"&gt;=&lt;/span&gt; llm&lt;span style="color:#f92672"&gt;.&lt;/span&gt;generate([&lt;span style="color:#e6db74"&gt;&amp;#34;跟我說一個笑話，盡量簡短。&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;跟我說一個悲傷的故事，盡量簡短。&amp;#34;&lt;/span&gt;])
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(generate_res)
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;輸出：&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;generations=[[GenerationChunk(text=&amp;#39;為什麼人類會走路?\n\n因為鳥不喜歡吃路上的東西!&amp;#39;, generation_info={&amp;#39;model&amp;#39;: &amp;#39;llama3.1:8b&amp;#39;, &amp;#39;created_at&amp;#39;: &amp;#39;2025-07-13T14:22:01.5478452Z&amp;#39;, &amp;#39;done&amp;#39;: True, &amp;#39;done_reason&amp;#39;: &amp;#39;stop&amp;#39;, &amp;#39;total_duration&amp;#39;: 2588937700, &amp;#39;load_duration&amp;#39;: 39039000, &amp;#39;prompt_eval_count&amp;#39;: 23, &amp;#39;prompt_eval_duration&amp;#39;: 335147300, &amp;#39;eval_count&amp;#39;: 22, &amp;#39;eval_duration&amp;#39;: 2214149200, &amp;#39;response&amp;#39;: &amp;#39;&amp;#39;, &amp;#39;thinking&amp;#39;: None, &amp;#39;context&amp;#39;: [128006, 882, 128007, 271, 104142, 37046, 106336, 114634, 49838, 87177, 3922, 16555, 94, 33857, 112825, 106649, 1811, 128009, 128006, 78191, 128007, 271, 101399, 101567, 114064, 17792, 104770, 101835, 102149, 47095, 1980, 63212, 101399, 116750, 16937, 104940, 125741, 105271, 47095, 106583, 101778, 61786, 0]})], [GenerationChunk(text=&amp;#39;有一個年輕女孩，她與自己的父親非常相愛。可是因為工作太忙，爸爸長期外出，並且忽略了女兒。直到一天，一場重大事故讓爸爸去世。在悲痛中，女孩發現了之前父親給她的信，裡面有對她的溫暖告白和深情懷念。這個消息使她心痛欲裂，從此女孩再也沒有恢復過。&amp;#39;, generation_info={&amp;#39;model&amp;#39;: &amp;#39;llama3.1:8b&amp;#39;, &amp;#39;created_at&amp;#39;: &amp;#39;2025-07-13T14:22:16.1064263Z&amp;#39;, &amp;#39;done&amp;#39;: True, &amp;#39;done_reason&amp;#39;: &amp;#39;stop&amp;#39;, &amp;#39;total_duration&amp;#39;: 14556868200, &amp;#39;load_duration&amp;#39;: 39856500, &amp;#39;prompt_eval_count&amp;#39;: 25, &amp;#39;prompt_eval_duration&amp;#39;: 516644200, &amp;#39;eval_count&amp;#39;: 104, &amp;#39;eval_duration&amp;#39;: 13999594200, &amp;#39;response&amp;#39;: &amp;#39;&amp;#39;, &amp;#39;thinking&amp;#39;: None, &amp;#39;context&amp;#39;: [128006, 882, 128007, 271, 104142, 37046, 106336, 114634, 116292, 114218, 9554, 117625, 3922, 16555, 94, 33857, 112825, 106649, 1811, 128009, 128006, 78191, 128007, 271, 108830, 102159, 8107, 125063, 58850, 105989, 105902, 102789, 107924, 104503, 106759, 108008, 50021, 103926, 1811, 113426, 63212, 101399, 102301, 101402, 112008, 3922, 117283, 117283, 101544, 23538, 48915, 20834, 113415, 103786, 120994, 105838, 35287, 58850, 114763, 1811, 74245, 28037, 15120, 36827, 104295, 75267, 125478, 123429, 114816, 117283, 117283, 86436, 101083, 107644, 116292, 108631, 16325, 3922, 58850, 105989, 103106, 102321, 35287, 112065, 104503, 106759, 110698, 109506, 22023, 3922, 115556, 28190, 19361, 104314, 109506, 117986, 118937, 58655, 101828, 34208, 102987, 40474, 103435, 115, 104611, 1811, 103864, 102159, 65305, 33655, 100911, 64209, 108631, 111654, 117068, 3922, 110039, 33091, 58850, 105989, 88356, 75863, 116721, 123843, 109095, 103188, 1811]})]] llm_output=None run=[RunInfo(run_id=UUID(&amp;#39;bc24e5b6-0c3f-4d2c-afb4-95f477e81adf&amp;#39;)), RunInfo(run_id=UUID(&amp;#39;f8f5fe28-4c1d-4b6f-8a74-fdcc6f397f7a&amp;#39;))] type=&amp;#39;LLMResult&amp;#39;
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;可用陣列獲取特定輸出。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(generate_res&lt;span style="color:#f92672"&gt;.&lt;/span&gt;generations[&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;][&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;]&lt;span style="color:#f92672"&gt;.&lt;/span&gt;text)
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(generate_res&lt;span style="color:#f92672"&gt;.&lt;/span&gt;generations[&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;][&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;]&lt;span style="color:#f92672"&gt;.&lt;/span&gt;text)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(generate_res&lt;span style="color:#f92672"&gt;.&lt;/span&gt;generations[&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;][&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;]&lt;span style="color:#f92672"&gt;.&lt;/span&gt;text)
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;pre tabindex="0"&gt;&lt;code&gt;為什麼人類會走路?
 因為鳥不喜歡吃路上的東西!
@@ -2667,7 +2768,7 @@ alt="partial_prompt_template"
 &lt;h2 id="2-安裝-ssh-客戶端"&gt;2. 安裝 SSH 客戶端
 &lt;/h2&gt;&lt;h3 id="linux"&gt;Linux
 &lt;/h3&gt;&lt;p&gt;大多數 Linux 發行版預設已安裝 OpenSSH。若未安裝，可使用以下指令：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt update
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt update
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt install openssh-client
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="mac"&gt;Mac
 &lt;/h3&gt;&lt;p&gt;macOS 預設已安裝 SSH 客戶端，可直接在終端機使用 &lt;code&gt;ssh&lt;/code&gt; 指令。&lt;/p&gt;
@@ -2682,7 +2783,7 @@ alt="partial_prompt_template"
 &lt;hr&gt;
 &lt;h2 id="3-產生-ssh-金鑰"&gt;3. 產生 SSH 金鑰
 &lt;/h2&gt;&lt;p&gt;在本地端產生 SSH 金鑰：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ssh-keygen -t rsa -b &lt;span style="color:#ae81ff"&gt;4096&lt;/span&gt; -C &lt;span style="color:#e6db74"&gt;&amp;#34;your_email@example.com&amp;#34;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ssh-keygen -t rsa -b &lt;span style="color:#ae81ff"&gt;4096&lt;/span&gt; -C &lt;span style="color:#e6db74"&gt;&amp;#34;your_email@example.com&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;依照提示設定檔案名稱與密碼。預設會產生於 &lt;code&gt;~/.ssh/id_rsa&lt;/code&gt;（私鑰）與 &lt;code&gt;~/.ssh/id_rsa.pub&lt;/code&gt;（公鑰）。&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;ssh-keygen&lt;/code&gt;:
@@ -2696,7 +2797,7 @@ alt="partial_prompt_template"
 &lt;li&gt;&lt;code&gt;-C&lt;/code&gt;: Adds a comment to the key for identifying the user and purpose&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Press Enter save as default, if exist same name key, will prompt if you want to cover it or not, if not, need to use other key name.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;C:&lt;span style="color:#ae81ff"&gt;\W&lt;/span&gt;INDOWS&lt;span style="color:#ae81ff"&gt;\s&lt;/span&gt;ystem32&amp;gt;ssh-keygen -t rsa -b &lt;span style="color:#ae81ff"&gt;4096&lt;/span&gt; -C &lt;span style="color:#e6db74"&gt;&amp;#34;test@gmail.com&amp;#34;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;C:&lt;span style="color:#ae81ff"&gt;\W&lt;/span&gt;INDOWS&lt;span style="color:#ae81ff"&gt;\s&lt;/span&gt;ystem32&amp;gt;ssh-keygen -t rsa -b &lt;span style="color:#ae81ff"&gt;4096&lt;/span&gt; -C &lt;span style="color:#e6db74"&gt;&amp;#34;test@gmail.com&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Generating public/private rsa key pair.
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Enter file in which to save the key &lt;span style="color:#f92672"&gt;(&lt;/span&gt;C:&lt;span style="color:#ae81ff"&gt;\U&lt;/span&gt;sers&lt;span style="color:#ae81ff"&gt;\u&lt;/span&gt;sername/.ssh/id_rsa&lt;span style="color:#f92672"&gt;)&lt;/span&gt;:
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# press enter login without password（安全性較低）&lt;/span&gt;
@@ -2714,12 +2815,12 @@ alt="partial_prompt_template"
 &lt;h2 id="4-設定-ssh-連線"&gt;4. 設定 SSH 連線
 &lt;/h2&gt;&lt;h3 id="將公鑰加入遠端主機"&gt;將公鑰加入遠端主機
 &lt;/h3&gt;&lt;p&gt;將本地的公鑰內容 (&lt;code&gt;~/.ssh/id_rsa.pub&lt;/code&gt;) 複製到遠端主機的 &lt;code&gt;~/.ssh/authorized_keys&lt;/code&gt; 檔案中，可使用指令：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ssh-copy-id user@remote_host
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ssh-copy-id user@remote_host
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;或手動複製本地內容到 server 中。&lt;/p&gt;
 &lt;p&gt;On Linux or Mac, you can use the following command in the terminal to display your public key:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cat ~/.ssh/id_rsa.pub
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cat ~/.ssh/id_rsa.pub
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="測試連線"&gt;測試連線
-&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ssh user@remote_host
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ssh user@remote_host
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;若成功登入並且不需輸入密碼即設定完成。&lt;/p&gt;
 &lt;hr&gt;
 &lt;h2 id="5-常見應用情境"&gt;5. 常見應用情境
@@ -2748,7 +2849,7 @@ user@remote_host [-p port_number]
 &lt;li&gt;將公鑰加入 Git 服務（如 GitHub、GitLab）。&lt;/li&gt;
 &lt;li&gt;使用 SSH 方式 clone 或 push：&lt;/li&gt;
 &lt;/ol&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git clone git@github.com:username/repo.git
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git clone git@github.com:username/repo.git
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
 &lt;h2 id="6-參考資料"&gt;6. 參考資料
 &lt;/h2&gt;&lt;ul&gt;
@@ -2895,14 +2996,14 @@ alt="LLMChain"
 &gt;&lt;/p&gt;
 &lt;h3 id="如何避免重複定義相似的-llm-模組"&gt;如何避免重複定義相似的 LLM 模組?
 &lt;/h3&gt;&lt;p&gt;使用提示模板(prompt template)去避免重複定義功能相似的組件。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; langchain_ollama &lt;span style="color:#f92672"&gt;import&lt;/span&gt; OllamaLLM
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; langchain_ollama &lt;span style="color:#f92672"&gt;import&lt;/span&gt; OllamaLLM
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; langchain.prompts &lt;span style="color:#f92672"&gt;import&lt;/span&gt; PromptTemplate
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;llm_model &lt;span style="color:#f92672"&gt;=&lt;/span&gt; OllamaLLM(model&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;llama3.1:8b&amp;#34;&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;user_prompt &lt;span style="color:#f92672"&gt;=&lt;/span&gt; PromptTemplate&lt;span style="color:#f92672"&gt;.&lt;/span&gt;from_template(&lt;span style="color:#e6db74"&gt;&amp;#34;幫我取一個&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{形容詞}{對象}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;名, 並對應一個小名。&amp;#34;&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(user_prompt&lt;span style="color:#f92672"&gt;.&lt;/span&gt;format(對象 &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;寵物&amp;#39;&lt;/span&gt;, 形容詞 &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;可愛的&amp;#39;&lt;/span&gt;))
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(user_prompt&lt;span style="color:#f92672"&gt;.&lt;/span&gt;format(對象 &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;男孩&amp;#39;&lt;/span&gt;, 形容詞 &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;文雅的&amp;#39;&lt;/span&gt;))
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; langchain.chains &lt;span style="color:#f92672"&gt;import&lt;/span&gt; LLMChain
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; langchain.chains &lt;span style="color:#f92672"&gt;import&lt;/span&gt; LLMChain
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chain &lt;span style="color:#f92672"&gt;=&lt;/span&gt; LLMChain(llm&lt;span style="color:#f92672"&gt;=&lt;/span&gt;llm_model, prompt&lt;span style="color:#f92672"&gt;=&lt;/span&gt;user_prompt)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(chain&lt;span style="color:#f92672"&gt;.&lt;/span&gt;run(對象 &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;小狗&amp;#39;&lt;/span&gt;, 形容詞 &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;有趣的&amp;#39;&lt;/span&gt;))
@@ -2920,18 +3021,18 @@ alt="LLMChain"
 &lt;h3 id="範例"&gt;範例
 &lt;/h3&gt;&lt;p&gt;使代理人能完成數學運算任務。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;step1: 定義底層 LLM 模組&lt;/strong&gt;&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; langchain_ollama &lt;span style="color:#f92672"&gt;import&lt;/span&gt; OllamaLLM
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; langchain_ollama &lt;span style="color:#f92672"&gt;import&lt;/span&gt; OllamaLLM
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;llm_model &lt;span style="color:#f92672"&gt;=&lt;/span&gt; OllamaLLM(model&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;llama3.1:8b&amp;#34;&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;step2: 定義允許代理人使用的工具&lt;/strong&gt;&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; langchain.agents &lt;span style="color:#f92672"&gt;import&lt;/span&gt; initialize_agent, load_tools
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; langchain.agents &lt;span style="color:#f92672"&gt;import&lt;/span&gt; initialize_agent, load_tools
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tools &lt;span style="color:#f92672"&gt;=&lt;/span&gt; load_tools([&lt;span style="color:#e6db74"&gt;&amp;#34;llm-math&amp;#34;&lt;/span&gt;], llm&lt;span style="color:#f92672"&gt;=&lt;/span&gt;llm_model)
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;step3: 初始化代理人&lt;/strong&gt;&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;agent &lt;span style="color:#f92672"&gt;=&lt;/span&gt; initialize_agent(tools, llm_model, agent&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;zero-shot-react-description&amp;#34;&lt;/span&gt;, verbose&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;)
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;agent &lt;span style="color:#f92672"&gt;=&lt;/span&gt; initialize_agent(tools, llm_model, agent&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;zero-shot-react-description&amp;#34;&lt;/span&gt;, verbose&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;step4: 運行代理人&lt;/strong&gt;&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;agent&lt;span style="color:#f92672"&gt;.&lt;/span&gt;invoke(&lt;span style="color:#e6db74"&gt;&amp;#34;如果我有 100 元，買了 3 個蘋果，每個蘋果 10 元，剩下多少錢？&amp;#34;&lt;/span&gt;)
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;agent&lt;span style="color:#f92672"&gt;.&lt;/span&gt;invoke(&lt;span style="color:#e6db74"&gt;&amp;#34;如果我有 100 元，買了 3 個蘋果，每個蘋果 10 元，剩下多少錢？&amp;#34;&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="聊天紀錄"&gt;聊天紀錄
-&lt;/h2&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; langchain_ollama &lt;span style="color:#f92672"&gt;import&lt;/span&gt; OllamaLLM
+&lt;/h2&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; langchain_ollama &lt;span style="color:#f92672"&gt;import&lt;/span&gt; OllamaLLM
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;llm_model &lt;span style="color:#f92672"&gt;=&lt;/span&gt; OllamaLLM(model&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;llama3.1:8b&amp;#34;&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; langchain.chains &lt;span style="color:#f92672"&gt;import&lt;/span&gt; ConversationChain
@@ -2947,7 +3048,7 @@ Human: 我想養一隻聽話又好照顧的動物，你有甚麼推薦嗎?
 AI:
 &amp;gt; Finished chain.
 &lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex="0"&gt;&lt;code&gt;&amp;#39;啊哈！你想要一個聰明又可愛的伴侶嗎？我有一些超好的建議！基於你的描述，我推測你可能是新手狗主人，所以我要首先介紹一下最適合初學者的犬種。有了這些犬種，你就能輕鬆地培養起一個聽話又善良的伴侶。\n\n其中，拉布拉多犬和金氏體型小獵犬（Cavalier King Charles Spaniel）都很受人喜愛，.......你對於犬種的偏好是什麼？你想要一隻大犬還是一隻小犬呢？&amp;#39;
-&lt;/code&gt;&lt;/pre&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;conversation&lt;span style="color:#f92672"&gt;.&lt;/span&gt;run(&lt;span style="color:#e6db74"&gt;&amp;#34;那貓呢?&amp;#34;&lt;/span&gt;)
+&lt;/code&gt;&lt;/pre&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;conversation&lt;span style="color:#f92672"&gt;.&lt;/span&gt;run(&lt;span style="color:#e6db74"&gt;&amp;#34;那貓呢?&amp;#34;&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;輸出&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;&amp;gt; Entering new ConversationChain chain...
 Prompt after formatting:
@@ -3119,7 +3220,7 @@ llama3.1:8b 46e0c10c039e 4.9 GB 8 hours ago
 &lt;/table&gt;
 &lt;h2 id="使用-python-與程式串接"&gt;使用 Python 與程式串接
 &lt;/h2&gt;&lt;h3 id="使用-requests-呼叫"&gt;使用 requests 呼叫
-&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; requests
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; requests
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; json
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# API URL&lt;/span&gt;
@@ -3186,7 +3287,7 @@ ps.若沒有 pip 我未來再寫一篇安裝與使用 pip 的文章 ;)&lt;/p&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;若已安裝過且版本小於 1.0.0，更新 openai 套件&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;pip install --upgrade openai
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id="使用語言模型"&gt;使用語言模型
-&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; openai &lt;span style="color:#f92672"&gt;import&lt;/span&gt; OpenAI
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; openai &lt;span style="color:#f92672"&gt;import&lt;/span&gt; OpenAI
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;client &lt;span style="color:#f92672"&gt;=&lt;/span&gt; OpenAI(
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# base_url = &amp;#34;http://localhost:11434/v1&amp;#34;,&lt;/span&gt;
@@ -3210,7 +3311,7 @@ ps.若沒有 pip 我未來再寫一篇安裝與使用 pip 的文章 ;)&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(response&lt;span style="color:#f92672"&gt;.&lt;/span&gt;choices[&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;]&lt;span style="color:#f92672"&gt;.&lt;/span&gt;message&lt;span style="color:#f92672"&gt;.&lt;/span&gt;content)
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="使用-vision-model"&gt;使用 Vision model
-&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; base64
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; base64
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; openai &lt;span style="color:#f92672"&gt;import&lt;/span&gt; OpenAI
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;image_path &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;r&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;C:\圖片路徑.png&amp;#34;&lt;/span&gt;
@@ -3294,8 +3395,8 @@ Output: [1,5,1]&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
 &lt;h2 id="程式"&gt;程式
-&lt;/h2&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-C" data-lang="C"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#include&lt;/span&gt; &lt;span style="color:#75715e"&gt;&amp;lt;bits/stdc++.h&amp;gt;&lt;/span&gt;&lt;span style="color:#75715e"&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&lt;/span&gt;using namespace std;
+&lt;/h2&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-C" data-lang="C"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#include&lt;/span&gt; &lt;span style="color:#75715e"&gt;&amp;lt;bits/stdc++.h&amp;gt;&lt;/span&gt;&lt;span style="color:#75715e"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;using namespace std;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;class Solution {
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;public:
@@ -3340,45 +3441,45 @@ Explanation: 7/-3 = -2.33333.. which is truncated to -2.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h2 id="解題方法"&gt;解題方法
 &lt;/h2&gt;&lt;h2 id="程式"&gt;程式
-&lt;/h2&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-C" data-lang="C"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#include&lt;/span&gt; &lt;span style="color:#75715e"&gt;&amp;lt;bits/stdc++.h&amp;gt;&lt;/span&gt;&lt;span style="color:#75715e"&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&lt;/span&gt;using namespace std;
+&lt;/h2&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-C" data-lang="C"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#include&lt;/span&gt; &lt;span style="color:#75715e"&gt;&amp;lt;bits/stdc++.h&amp;gt;&lt;/span&gt;&lt;span style="color:#75715e"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;using namespace std;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;class Solution {
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;public:
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;int&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;divide&lt;/span&gt;(&lt;span style="color:#66d9ef"&gt;int&lt;/span&gt; dividend, &lt;span style="color:#66d9ef"&gt;int&lt;/span&gt; divisor) {
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// 特殊情況處理，避免溢出
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; (dividend &lt;span style="color:#f92672"&gt;==&lt;/span&gt; INT_MIN &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; divisor &lt;span style="color:#f92672"&gt;==&lt;/span&gt; &lt;span style="color:#f92672"&gt;-&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;) &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; INT_MAX;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; (dividend &lt;span style="color:#f92672"&gt;==&lt;/span&gt; INT_MIN &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; divisor &lt;span style="color:#f92672"&gt;==&lt;/span&gt; &lt;span style="color:#f92672"&gt;-&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;) &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; INT_MAX;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; (dividend &lt;span style="color:#f92672"&gt;==&lt;/span&gt; INT_MIN &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; divisor &lt;span style="color:#f92672"&gt;==&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;) &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; INT_MIN;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// 計算商的正負
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;bool&lt;/span&gt; positive &lt;span style="color:#f92672"&gt;=&lt;/span&gt; (dividend &lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;) &lt;span style="color:#f92672"&gt;==&lt;/span&gt; (divisor &lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;bool&lt;/span&gt; positive &lt;span style="color:#f92672"&gt;=&lt;/span&gt; (dividend &lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;) &lt;span style="color:#f92672"&gt;==&lt;/span&gt; (divisor &lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;);
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// 使用 long long 來避免 INT_MIN 的溢出
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;long&lt;/span&gt; divd &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;labs&lt;/span&gt;(dividend);
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;long&lt;/span&gt; divd &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;labs&lt;/span&gt;(dividend);
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;long&lt;/span&gt; div &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;labs&lt;/span&gt;(divisor);
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;long&lt;/span&gt; result &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// 當被除數大於除數時，進行除法
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;while&lt;/span&gt; (divd &lt;span style="color:#f92672"&gt;&amp;gt;=&lt;/span&gt; div) {
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;while&lt;/span&gt; (divd &lt;span style="color:#f92672"&gt;&amp;gt;=&lt;/span&gt; div) {
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;long&lt;/span&gt; temp &lt;span style="color:#f92672"&gt;=&lt;/span&gt; div, multiple &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// 進行倍增操作，找到最大的倍數
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;while&lt;/span&gt; (divd &lt;span style="color:#f92672"&gt;&amp;gt;=&lt;/span&gt; (temp &lt;span style="color:#f92672"&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;)) {
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;while&lt;/span&gt; (divd &lt;span style="color:#f92672"&gt;&amp;gt;=&lt;/span&gt; (temp &lt;span style="color:#f92672"&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;)) {
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; temp &lt;span style="color:#f92672"&gt;&amp;lt;&amp;lt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; multiple &lt;span style="color:#f92672"&gt;&amp;lt;&amp;lt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// 減去倍數對應的部分，並將商加到結果中
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&lt;/span&gt; divd &lt;span style="color:#f92672"&gt;-=&lt;/span&gt; temp;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; divd &lt;span style="color:#f92672"&gt;-=&lt;/span&gt; temp;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; result &lt;span style="color:#f92672"&gt;+=&lt;/span&gt; multiple;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// 根據正負符號調整結果
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&lt;/span&gt; result &lt;span style="color:#f92672"&gt;=&lt;/span&gt; positive &lt;span style="color:#f92672"&gt;?&lt;/span&gt; result : &lt;span style="color:#f92672"&gt;-&lt;/span&gt;result;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; result &lt;span style="color:#f92672"&gt;=&lt;/span&gt; positive &lt;span style="color:#f92672"&gt;?&lt;/span&gt; result : &lt;span style="color:#f92672"&gt;-&lt;/span&gt;result;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// 最後檢查是否溢出
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; result &lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt; INT_MAX &lt;span style="color:#f92672"&gt;?&lt;/span&gt; INT_MAX : (result &lt;span style="color:#f92672"&gt;&amp;lt;&lt;/span&gt; INT_MIN &lt;span style="color:#f92672"&gt;?&lt;/span&gt; INT_MIN : result);
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; result &lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt; INT_MAX &lt;span style="color:#f92672"&gt;?&lt;/span&gt; INT_MAX : (result &lt;span style="color:#f92672"&gt;&amp;lt;&lt;/span&gt; INT_MIN &lt;span style="color:#f92672"&gt;?&lt;/span&gt; INT_MIN : result);
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;};
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
@@ -3456,7 +3557,7 @@ Explanation: 7/-3 = -2.33333.. which is truncated to -2.&lt;/p&gt;
 &lt;/h2&gt;&lt;p&gt;Docker-compose 透過 &lt;code&gt;docker-compose.yml&lt;/code&gt; 檔案描述多個服務、網路、資料卷，並可設定健康檢查與指定 GPU。基本結構如下：&lt;/p&gt;
 &lt;p&gt;詳細說明可參考官方文件：&lt;a class="link" href="https://docs.docker.com/reference/compose-file/services/" target="_blank" rel="noopener"
 &gt;Docker Compose&lt;/a&gt;&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;version&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;3.8&amp;#39;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;version&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;3.8&amp;#39;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;services&lt;/span&gt;:
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;服務名稱&lt;/span&gt;:
@@ -3497,7 +3598,7 @@ Explanation: 7/-3 = -2.33333.. which is truncated to -2.&lt;/p&gt;
 &lt;hr&gt;
 &lt;h2 id="3-建立多個關聯容器的範例"&gt;3. 建立多個關聯容器的範例
 &lt;/h2&gt;&lt;p&gt;以下範例說明如何用 Docker-compose 同時啟動 Jupyter（支援 GPU）與 Ollama 兩個服務，並讓它們透過自訂網路 &lt;code&gt;ollama_net&lt;/code&gt; 互相溝通：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;dandelion&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;dandelion&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;networks&lt;/span&gt;:
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;ollama_net&lt;/span&gt;:
@@ -3557,9 +3658,9 @@ Explanation: 7/-3 = -2.33333.. which is truncated to -2.&lt;/p&gt;
 &lt;p&gt;這樣設定後，只需一行指令即可同時啟動、管理多個容器，並確保它們能互相連線與資料共享。&lt;/p&gt;
 &lt;p&gt;啟動所有服務：&lt;br&gt;
 &lt;code&gt;-d&lt;/code&gt; 參數代表「detached mode」，也就是讓 Docker-Compose 在背景執行所有服務，而不佔用目前的終端視窗，不會顯示即時日誌。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker compose up -d
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker compose up -d
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;停止並移除所有服務：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker compose down
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker compose down
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
 &lt;h2 id="4-常用指令與管理方式"&gt;4. 常用指令與管理方式
 &lt;/h2&gt;&lt;ul&gt;
@@ -3574,9 +3675,9 @@ Explanation: 7/-3 = -2.33333.. which is truncated to -2.&lt;/p&gt;
 &lt;hr&gt;
 &lt;h2 id="5-補充-使用-pytorch-版的-jupyter"&gt;5. 補充-使用 pytorch 版的 jupyter
 &lt;/h2&gt;&lt;p&gt;進入容器後，下載並開啟 jupyter。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pip install jupyterlab
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pip install jupyterlab
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;jupyter lab --ip&lt;span style="color:#f92672"&gt;=&lt;/span&gt;0.0.0.0 --port&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;8888&lt;/span&gt; --allow-root --no-browser
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;apt update
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;apt update
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;apt install curl -y
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="6-參考資料"&gt;6. 參考資料
 &lt;/h2&gt;&lt;ul&gt;
@@ -3599,7 +3700,7 @@ Explanation: 7/-3 = -2.33333.. which is truncated to -2.&lt;/p&gt;
 &lt;h2 id="2-docker-常用指令與參數說明"&gt;2. Docker 常用指令與參數說明
 &lt;/h2&gt;&lt;p&gt;以下介紹幾個 Docker 常用指令及其重要參數：&lt;/p&gt;
 &lt;h3 id="啟動容器"&gt;啟動容器
-&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker run &lt;span style="color:#f92672"&gt;[&lt;/span&gt;OPTIONS&lt;span style="color:#f92672"&gt;]&lt;/span&gt; IMAGE &lt;span style="color:#f92672"&gt;[&lt;/span&gt;COMMAND&lt;span style="color:#f92672"&gt;]&lt;/span&gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt;ARG...&lt;span style="color:#f92672"&gt;]&lt;/span&gt;
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker run &lt;span style="color:#f92672"&gt;[&lt;/span&gt;OPTIONS&lt;span style="color:#f92672"&gt;]&lt;/span&gt; IMAGE &lt;span style="color:#f92672"&gt;[&lt;/span&gt;COMMAND&lt;span style="color:#f92672"&gt;]&lt;/span&gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt;ARG...&lt;span style="color:#f92672"&gt;]&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="常用參數"&gt;常用參數
 &lt;/h3&gt;&lt;ul&gt;
 &lt;li&gt;&lt;code&gt;-d, --detach&lt;/code&gt;：在背景執行容器。&lt;/li&gt;
@@ -3615,28 +3716,28 @@ Explanation: 7/-3 = -2.33333.. which is truncated to -2.&lt;/p&gt;
 &lt;hr&gt;
 &lt;h2 id="3-docker-實用操作範例"&gt;3. Docker 實用操作範例
 &lt;/h2&gt;&lt;h3 id="以互動模式啟動-ubuntu-容器"&gt;以互動模式啟動 Ubuntu 容器
-&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker run -it ubuntu:latest /bin/bash
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker run -it ubuntu:latest /bin/bash
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
 &lt;li&gt;&lt;code&gt;-i&lt;/code&gt; 保持標準輸入開啟，&lt;code&gt;-t&lt;/code&gt; 分配終端機，方便互動操作。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h3 id="在背景執行-nginx-容器"&gt;在背景執行 Nginx 容器
-&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker run -d -p 8080:80 nginx:latest
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker run -d -p 8080:80 nginx:latest
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
 &lt;li&gt;&lt;code&gt;-d&lt;/code&gt; 讓容器在背景執行，&lt;code&gt;-p&lt;/code&gt; 對應主機與容器的埠口。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h3 id="設定環境變數並指定工作目錄"&gt;設定環境變數並指定工作目錄
-&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker run -e ENV_VAR&lt;span style="color:#f92672"&gt;=&lt;/span&gt;value -w /app -it python:3.10 bash
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker run -e ENV_VAR&lt;span style="color:#f92672"&gt;=&lt;/span&gt;value -w /app -it python:3.10 bash
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
 &lt;li&gt;&lt;code&gt;-e&lt;/code&gt; 設定環境變數，&lt;code&gt;-w&lt;/code&gt; 指定工作目錄。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h3 id="以指定使用者執行"&gt;以指定使用者執行
-&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker run -u 1000:1000 -it ubuntu bash
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker run -u 1000:1000 -it ubuntu bash
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
 &lt;li&gt;&lt;code&gt;-u&lt;/code&gt; 指定使用者與群組 ID。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h3 id="從檔案讀取環境變數"&gt;從檔案讀取環境變數
 &lt;/h3&gt;&lt;p&gt;假設有 &lt;code&gt;.env&lt;/code&gt; 檔案：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker run --env-file .env ubuntu env
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker run --env-file .env ubuntu env
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
 &lt;h2 id="4-參考資料"&gt;4. 參考資料
 &lt;/h2&gt;&lt;ul&gt;

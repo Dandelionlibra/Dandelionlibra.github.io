@@ -11,7 +11,7 @@
 &lt;li&gt;方法: 使用 &lt;code&gt;FlagReranker&lt;/code&gt; 類別。&lt;/li&gt;
 &lt;li&gt;特點: 最直接、優化的方法，簡化模型載入和計算。&lt;/li&gt;
 &lt;li&gt;程式碼範例:
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; FlagEmbedding &lt;span style="color:#f92672"&gt;import&lt;/span&gt; FlagReranker
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; FlagEmbedding &lt;span style="color:#f92672"&gt;import&lt;/span&gt; FlagReranker
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Setting use_fp16 to True speeds up computation with a slight performance degradation&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;reranker &lt;span style="color:#f92672"&gt;=&lt;/span&gt; FlagReranker(&lt;span style="color:#e6db74"&gt;&amp;#39;BAAI/bge-reranker-v2-m3&amp;#39;&lt;/span&gt;, use_fp16&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
@@ -37,7 +37,7 @@
 &lt;li&gt;方法: 利用 &lt;code&gt;FlagLLMReranker&lt;/code&gt; 類別。&lt;/li&gt;
 &lt;li&gt;特點: 將大型語言模型（如 Llama）作為 Reranker，利用其語言理解能力進行細緻排序。需要大量 VRAM (&amp;gt;40G)。&lt;/li&gt;
 &lt;li&gt;程式碼範例:
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; FlagEmbedding &lt;span style="color:#f92672"&gt;import&lt;/span&gt; FlagLLMReranker
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; FlagEmbedding &lt;span style="color:#f92672"&gt;import&lt;/span&gt; FlagLLMReranker
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Setting use_fp16 to True speeds up computation with a slight performance degradation&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;reranker &lt;span style="color:#f92672"&gt;=&lt;/span&gt; FlagLLMReranker(&lt;span style="color:#e6db74"&gt;&amp;#39;BAAI/bge-reranker-v2-gemma&amp;#39;&lt;/span&gt;, use_fp16&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
@@ -55,7 +55,7 @@
 &lt;li&gt;方法: 透過 FlagLLMReranker 的 compute_score_layerwise 方法。&lt;/li&gt;
 &lt;li&gt;特點: 可從 LLM 的不同層獲取分數，提供對模型決策過程的深入洞察。&lt;/li&gt;
 &lt;li&gt;程式碼範例:
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; FlagEmbedding &lt;span style="color:#f92672"&gt;import&lt;/span&gt; LayerWiseFlagLLMReranker
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; FlagEmbedding &lt;span style="color:#f92672"&gt;import&lt;/span&gt; LayerWiseFlagLLMReranker
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Setting use_fp16 to True speeds up computation with a slight performance degradation&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;reranker &lt;span style="color:#f92672"&gt;=&lt;/span&gt; LayerWiseFlagLLMReranker(&lt;span style="color:#e6db74"&gt;&amp;#39;BAAI/bge-reranker-v2-minicpm-layerwise&amp;#39;&lt;/span&gt;, use_fp16&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
@@ -77,7 +77,7 @@
 &lt;li&gt;方法: 載入 AutoTokenizer 和 AutoModelForSequenceClassification。&lt;/li&gt;
 &lt;li&gt;特點: 標準流程，提供更多自訂空間。&lt;/li&gt;
 &lt;li&gt;程式碼範例:
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; torch
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; torch
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; transformers &lt;span style="color:#f92672"&gt;import&lt;/span&gt; AutoModelForSequenceClassification, AutoTokenizer
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tokenizer &lt;span style="color:#f92672"&gt;=&lt;/span&gt; AutoTokenizer&lt;span style="color:#f92672"&gt;.&lt;/span&gt;from_pretrained(&lt;span style="color:#e6db74"&gt;&amp;#39;BAAI/bge-reranker-v2-m3&amp;#39;&lt;/span&gt;)
@@ -98,7 +98,7 @@
 &lt;li&gt;方法: 載入 AutoTokenizer 和 AutoModelForCausalLM。&lt;/li&gt;
 &lt;li&gt;特點: 需要手動處理模型輸出以獲得分數，提供最大的靈活性和控制力。&lt;/li&gt;
 &lt;li&gt;程式碼範例:
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; torch
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; torch
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; transformers &lt;span style="color:#f92672"&gt;import&lt;/span&gt; AutoModelForCausalLM, AutoTokenizer
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;get_inputs&lt;/span&gt;(pairs, tokenizer, prompt&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;, max_length&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;1024&lt;/span&gt;):
@@ -163,7 +163,7 @@
 &lt;li&gt;方法: 透過手動存取 AutoModelForCausalLM 的隱藏層輸出或注意力權重，並自行計算分數。&lt;/li&gt;
 &lt;li&gt;特點: 提供對 LLM 內部決策過程最細緻的控制和分析，但實作複雜度高，需要深入理解模型架構。&lt;/li&gt;
 &lt;li&gt;程式碼範例:
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; torch
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; torch
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; transformers &lt;span style="color:#f92672"&gt;import&lt;/span&gt; AutoModelForCausalLM, AutoTokenizer
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;get_inputs&lt;/span&gt;(pairs, tokenizer, prompt&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;, max_length&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;1024&lt;/span&gt;):

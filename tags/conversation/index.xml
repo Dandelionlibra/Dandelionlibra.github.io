@@ -12,7 +12,7 @@
 &lt;h4 id="主要程式片段"&gt;主要程式片段
 &lt;/h4&gt;&lt;p&gt;完整程式碼請參考：&lt;a class="link" href="https://github.com/Dandelionlibra/Dandelionlibra.github.io/blob/main/content/post/langchain/example/LangChain_memory_ask_via_pdf.ipynb" target="_blank" rel="noopener"
 &gt;GitHub 範例程式&lt;/a&gt;&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 建立記憶管理器&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 建立記憶管理器&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;InMemoryHistory&lt;/span&gt;(BaseChatMessageHistory, BaseModel):
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; messages: list[BaseMessage] &lt;span style="color:#f92672"&gt;=&lt;/span&gt; Field(default_factory&lt;span style="color:#f92672"&gt;=&lt;/span&gt;list)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;add_messages&lt;/span&gt;(self, messages: list[BaseMessage]) &lt;span style="color:#f92672"&gt;-&amp;gt;&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;:
@@ -60,7 +60,7 @@
 &lt;li&gt;&lt;strong&gt;一般檢索問答&lt;/strong&gt;：每次提問獨立，無法記住前文，回答較為片段。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h4 id="一般檢索問答範例"&gt;一般檢索問答範例
-&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;qa_chain &lt;span style="color:#f92672"&gt;=&lt;/span&gt; RetrievalQA&lt;span style="color:#f92672"&gt;.&lt;/span&gt;from_chain_type(
+&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;qa_chain &lt;span style="color:#f92672"&gt;=&lt;/span&gt; RetrievalQA&lt;span style="color:#f92672"&gt;.&lt;/span&gt;from_chain_type(
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; llm&lt;span style="color:#f92672"&gt;=&lt;/span&gt;ollama_llm,
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; retriever&lt;span style="color:#f92672"&gt;=&lt;/span&gt;vector_db&lt;span style="color:#f92672"&gt;.&lt;/span&gt;as_retriever(),
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;)

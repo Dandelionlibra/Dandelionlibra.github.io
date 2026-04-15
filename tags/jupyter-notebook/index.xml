@@ -20,7 +20,7 @@
 &lt;h2 id="2-安裝-docker"&gt;2. 安裝 Docker
 &lt;/h2&gt;&lt;h3 id="linux"&gt;Linux
 &lt;/h3&gt;&lt;p&gt;大多數 Linux 發行版可透過套件管理器安裝 Docker：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 更新套件清單&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 更新套件清單&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt update
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 安裝 Docker&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt install docker.io
@@ -42,13 +42,13 @@
 &lt;ol&gt;
 &lt;li&gt;
 &lt;p&gt;拉取映像檔&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker pull jupyter/base-notebook
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker pull jupyter/base-notebook
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;建立容器&lt;br&gt;
 &lt;code&gt;docker run [OPTIONS] IMAGE [COMMAND] [ARG...]&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;啟動容器並開啟本機 8888 端口：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker run -p 8888:8888 jupyter/base-notebook
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker run -p 8888:8888 jupyter/base-notebook
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;啟動後，終端機會顯示一組 token，複製網址（如 &lt;code&gt;http://127.0.0.1:8888/?token=...&lt;/code&gt;）在瀏覽器開啟即可進入 Jupyter Notebook。&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
@@ -57,7 +57,7 @@
 &lt;hr&gt;
 &lt;h2 id="4-設定-notebook-存取與資料掛載"&gt;4. 設定 Notebook 存取與資料掛載
 &lt;/h2&gt;&lt;p&gt;若要將本機資料夾掛載到容器，方便存取與保存 notebook 檔案：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker run -p 8888:8888 -v /your/local/path:/home/jovyan/work --name my-jupyter jupyter/base-notebook
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker run -p 8888:8888 -v /your/local/path:/home/jovyan/work --name my-jupyter jupyter/base-notebook
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
 &lt;li&gt;&lt;code&gt;-p&lt;/code&gt;: Assigns the internal port to the external port&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;-v&lt;/code&gt;: Assigns a local directory to a container directory (mounts a volume)&lt;/li&gt;
@@ -79,18 +79,18 @@
 &lt;li&gt;
 &lt;p&gt;&lt;strong&gt;安裝 NVIDIA Container Toolkit&lt;/strong&gt;&lt;br&gt;
 依照官方文件安裝 &lt;code&gt;nvidia-docker&lt;/code&gt;：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt-get install -y nvidia-docker2
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt-get install -y nvidia-docker2
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo systemctl restart docker
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;&lt;strong&gt;啟動支援 GPU 的 Jupyter Notebook 容器&lt;/strong&gt;&lt;br&gt;
 使用 &lt;code&gt;--gpus all&lt;/code&gt; 參數啟動容器：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker run --gpus all -p 8888:8888 --name gpu_note -v ~/name:/tf/name tensorflow/tensorflow:latest-gpu-jupyter
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker run --gpus all -p 8888:8888 --name gpu_note -v ~/name:/tf/name tensorflow/tensorflow:latest-gpu-jupyter
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;&lt;strong&gt;驗證 GPU 是否可用&lt;/strong&gt;&lt;br&gt;
 在 Notebook 中執行下列程式碼，確認 GPU 是否被偵測到：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; tensorflow &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; tf
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; tensorflow &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; tf
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(tf&lt;span style="color:#f92672"&gt;.&lt;/span&gt;config&lt;span style="color:#f92672"&gt;.&lt;/span&gt;list_physical_devices(&lt;span style="color:#e6db74"&gt;&amp;#39;GPU&amp;#39;&lt;/span&gt;))
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
 &lt;/ol&gt;

@@ -30,7 +30,7 @@
 &lt;h2 id="2-安裝-ssh-客戶端"&gt;2. 安裝 SSH 客戶端
 &lt;/h2&gt;&lt;h3 id="linux"&gt;Linux
 &lt;/h3&gt;&lt;p&gt;大多數 Linux 發行版預設已安裝 OpenSSH。若未安裝，可使用以下指令：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt update
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt update
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt install openssh-client
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="mac"&gt;Mac
 &lt;/h3&gt;&lt;p&gt;macOS 預設已安裝 SSH 客戶端，可直接在終端機使用 &lt;code&gt;ssh&lt;/code&gt; 指令。&lt;/p&gt;
@@ -45,7 +45,7 @@
 &lt;hr&gt;
 &lt;h2 id="3-產生-ssh-金鑰"&gt;3. 產生 SSH 金鑰
 &lt;/h2&gt;&lt;p&gt;在本地端產生 SSH 金鑰：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ssh-keygen -t rsa -b &lt;span style="color:#ae81ff"&gt;4096&lt;/span&gt; -C &lt;span style="color:#e6db74"&gt;&amp;#34;your_email@example.com&amp;#34;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ssh-keygen -t rsa -b &lt;span style="color:#ae81ff"&gt;4096&lt;/span&gt; -C &lt;span style="color:#e6db74"&gt;&amp;#34;your_email@example.com&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;依照提示設定檔案名稱與密碼。預設會產生於 &lt;code&gt;~/.ssh/id_rsa&lt;/code&gt;（私鑰）與 &lt;code&gt;~/.ssh/id_rsa.pub&lt;/code&gt;（公鑰）。&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;ssh-keygen&lt;/code&gt;:
@@ -59,7 +59,7 @@
 &lt;li&gt;&lt;code&gt;-C&lt;/code&gt;: Adds a comment to the key for identifying the user and purpose&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Press Enter save as default, if exist same name key, will prompt if you want to cover it or not, if not, need to use other key name.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;C:&lt;span style="color:#ae81ff"&gt;\W&lt;/span&gt;INDOWS&lt;span style="color:#ae81ff"&gt;\s&lt;/span&gt;ystem32&amp;gt;ssh-keygen -t rsa -b &lt;span style="color:#ae81ff"&gt;4096&lt;/span&gt; -C &lt;span style="color:#e6db74"&gt;&amp;#34;test@gmail.com&amp;#34;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;C:&lt;span style="color:#ae81ff"&gt;\W&lt;/span&gt;INDOWS&lt;span style="color:#ae81ff"&gt;\s&lt;/span&gt;ystem32&amp;gt;ssh-keygen -t rsa -b &lt;span style="color:#ae81ff"&gt;4096&lt;/span&gt; -C &lt;span style="color:#e6db74"&gt;&amp;#34;test@gmail.com&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Generating public/private rsa key pair.
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Enter file in which to save the key &lt;span style="color:#f92672"&gt;(&lt;/span&gt;C:&lt;span style="color:#ae81ff"&gt;\U&lt;/span&gt;sers&lt;span style="color:#ae81ff"&gt;\u&lt;/span&gt;sername/.ssh/id_rsa&lt;span style="color:#f92672"&gt;)&lt;/span&gt;:
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# press enter login without password（安全性較低）&lt;/span&gt;
@@ -77,12 +77,12 @@
 &lt;h2 id="4-設定-ssh-連線"&gt;4. 設定 SSH 連線
 &lt;/h2&gt;&lt;h3 id="將公鑰加入遠端主機"&gt;將公鑰加入遠端主機
 &lt;/h3&gt;&lt;p&gt;將本地的公鑰內容 (&lt;code&gt;~/.ssh/id_rsa.pub&lt;/code&gt;) 複製到遠端主機的 &lt;code&gt;~/.ssh/authorized_keys&lt;/code&gt; 檔案中，可使用指令：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ssh-copy-id user@remote_host
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ssh-copy-id user@remote_host
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;或手動複製本地內容到 server 中。&lt;/p&gt;
 &lt;p&gt;On Linux or Mac, you can use the following command in the terminal to display your public key:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cat ~/.ssh/id_rsa.pub
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cat ~/.ssh/id_rsa.pub
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="測試連線"&gt;測試連線
-&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ssh user@remote_host
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ssh user@remote_host
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;若成功登入並且不需輸入密碼即設定完成。&lt;/p&gt;
 &lt;hr&gt;
 &lt;h2 id="5-常見應用情境"&gt;5. 常見應用情境
@@ -111,7 +111,7 @@ user@remote_host [-p port_number]
 &lt;li&gt;將公鑰加入 Git 服務（如 GitHub、GitLab）。&lt;/li&gt;
 &lt;li&gt;使用 SSH 方式 clone 或 push：&lt;/li&gt;
 &lt;/ol&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git clone git@github.com:username/repo.git
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git clone git@github.com:username/repo.git
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
 &lt;h2 id="6-參考資料"&gt;6. 參考資料
 &lt;/h2&gt;&lt;ul&gt;
