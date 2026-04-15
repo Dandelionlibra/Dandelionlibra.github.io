@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Note on YuChen</title><link>https://Dandelionlibra.github.io/categories/note/</link><description>Recent content in Note on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Mon, 03 Nov 2025 11:20:00 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/categories/note/index.xml" rel="self" type="application/rss+xml"/><item><title>Data mining</title><link>https://Dandelionlibra.github.io/post/note/data-mining/</link><pubDate>Mon, 03 Nov 2025 11:20:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/data-mining/</guid><description>&lt;blockquote&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Note on YuChen</title><link>https://Dandelionlibra.github.io/categories/note/</link><description>Recent content in Note on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Mon, 03 Nov 2025 11:20:00 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/categories/note/index.xml" rel="self" type="application/rss+xml"/><item><title>Data mining</title><link>https://Dandelionlibra.github.io/2025/11/data-mining/</link><pubDate>Mon, 03 Nov 2025 11:20:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/2025/11/data-mining/</guid><description>&lt;blockquote&gt;
 &lt;p&gt;這份簡報檔案是關於「進階資料探勘」(Advanced Data Mining) 課程的介紹，授課教師為莊秀敏 (Hsiu-Min Chuang) 教授，隸屬於中原大學資訊工程學系。&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h1 id="為什麼需要資料探勘"&gt;為什麼需要資料探勘?
@@ -303,7 +303,61 @@
 &lt;li&gt;離散性（Dispersion）：如變異數、標準差，反映資料的擴散程度。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>LightRAG Server 檔案儲存基本介紹</title><link>https://Dandelionlibra.github.io/post/note/lightrag-json-db/</link><pubDate>Wed, 06 Aug 2025 09:03:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/lightrag-json-db/</guid><description>&lt;h1 id="lightrag-api-server-教學快速上手指南"&gt;LightRAG API Server 教學：快速上手指南
+&lt;/ul&gt;
+&lt;!--
+最早期且基礎的 RAG 架構，僅包含索引（Indexing）、檢索（Retrieval）與生成（Generation）三個串連模組。流程為：資料向量化 → 檢索前 $K$ 個相關片段 → 查詢與檢索結果一併餵給 LLM 產生回答。此架構流程簡單、模組單一，缺乏查詢優化或反饋機制，適合快速原型開發。
+![Naive RAG 架構圖](https://www.ibm.com/content/dam/connectedassets-adobe-cms/worldwide-content/creative-assets/s-migr/ul/g/e0/d6/naive-rag.png)
+### Advanced RAG
+在 Naive 基礎上增加前處理與後處理模組，如查詢優化、重排序、內容過濾/壓縮等。流程仍為索引→檢索→生成，但在檢索前後插入優化步驟，提升檢索品質與生成相關性。組件包含查詢改寫、混合檢索、重排序等，能針對性強化檢索與生成階段。
+![Advanced RAG 架構圖](https://www.ibm.com/content/dam/connectedassets-adobe-cms/worldwide-content/creative-assets/s-migr/ul/g/8f/cb/advances-rag.png)
+### Modular RAG
+最新階段，強調積木式模組化設計。除繼承前述流程外，允許多輪檢索-生成、平行資訊融合、自適應流程等。可靈活增減如網路搜尋、長程記憶、路由決策等模組，流程可重組、迭代或分支，適應複雜多變的任務需求。
+![Modular RAG 架構圖](https://www.ibm.com/content/dam/connectedassets-adobe-cms/worldwide-content/creative-assets/s-migr/ul/g/a7/e6/modular-rag.component.crop-16by9-m.ts=1740501066286.png/content/adobe-cms/us/en/think/topics/rag-techniques/jcr:content/root/table_of_contents/body-article-8/image_1228195012)
+---
+## 實作方式與系統特性
+- **Naive RAG**：實作最直接，僅需嵌入模型、向量資料庫與 LLM。模組線性串接，無需微調，部署維護成本低，適合簡單應用。
+- **Advanced RAG**：需引入查詢優化、重排序等模組，常用 LlamaIndex、LangChain 等框架。系統複雜度提升，需調校多個子系統，適合中等複雜度任務。
+- **Modular RAG**：高度模組化，常用流水線編排框架。每個功能獨立封裝，系統可為有向圖結構，便於擴充與維護，但開發協調成本高。
+---
+## 核心技術細節
+### 資料預處理與嵌入
+- **Naive RAG**：文本清洗、切分、嵌入，建立向量索引，重點在語義表示。
+- **Advanced RAG**：細粒度切分、滑動視窗、metadata 標註、混合嵌入（密集+稀疏），提升檢索覆蓋率與精確性。
+- **Modular RAG**：動態資料處理，可即時抓取新資料、多模態資料、記憶模組自我增強，嵌入策略多元且可演化。
+### 檢索策略與查詢優化
+- **Naive RAG**：單輪語義相似度檢索，無查詢優化或多輪交互。
+- **Advanced RAG**：查詢重寫/擴展、多次/混合檢索、重排序與過濾，提升檢索準確率與覆蓋率。
+- **Modular RAG**：自適應多階段檢索、路由決策、平行多查詢、遞歸式檢索，根據任務動態調度檢索策略。
+### 上下文融合與資訊增強
+- **Naive RAG**：直接拼接查詢與檢索內容，無額外處理，易受雜訊干擾。
+- **Advanced RAG**：重排序、壓縮、過濾、明確引導模型引用檢索內容，提升訊息品質。
+- **Modular RAG**：多步融合、示範-搜索-預測、動態記憶、事後校驗，深度整合外部知識與模型推理。
+### 回答生成與控制
+- **Naive RAG**：LLM 直接生成，控制力弱，易出現幻覺或拼貼。
+- **Advanced RAG**：提示工程、微調、反饋迴路、生成後過濾，強化可靠性與安全性。
+- **Modular RAG**：示範模組、迭代生成、後處理校驗、用戶反饋迴路，實現嚴謹的生成管控。
+---
+## 適用場景與限制
+- **Naive RAG**：適合原型、FAQ、內部知識庫等低複雜度場景，開發快但不適合高精度或多步推理任務。
+- **Advanced RAG**：適用於醫療、法律、教育等知識密集型問答，能處理較大規模知識庫，但資源需求與維護成本較高。
+- **Modular RAG**：適合大型企業、跨領域系統、需多階段推理或多源資訊整合的場景，擴展性與維護性最佳，但開發複雜度與初始成本高。
+---
+## 優劣比較
+| 架構 | 實用性 | 可擴展性 | 維護成本 |
+| ------------ | -------------- | -------------- | ------------ |
+| Naive RAG | 高（易用） | 低～中 | 低 |
+| Advanced RAG | 中（需專業） | 中～高 | 中 |
+| Modular RAG | 低（複雜） | 極高 | 高（初始），低（局部維護） |
+- **Naive RAG**：簡單易用、成本低，但遇到複雜任務易達天花板。
+- **Advanced RAG**：性能與複雜度平衡，適合多數專業應用，維護需專業投入。
+- **Modular RAG**：彈性與擴展性最強，適合高端需求，但開發與協調成本高。
+---
+## 結論
+三種 RAG 架構各有適用場景與優劣。Naive RAG 適合快速原型與簡單應用，Advanced RAG 適合專業領域與中大型知識庫，Modular RAG 則為高複雜度、需長期演化的系統提供最佳解決方案。選擇何種架構，應根據實際需求、資源與長期維護考量權衡取捨。 --&gt;
+&lt;!-- ## Reference
+- [Retrieval-Augmented Generation for Large Language Models: A Survey](https://arxiv.org/abs/2312.10997)
+- [Three Paradigms of Retrieval-Augmented Generation (RAG) for LLMs](https://www.thecloudgirl.dev/blog/three-paradigms-of-retrieval-augmented-generation-rag-for-llms#:~:text=,on%20embeddings%20from%20language%20models)
+- [RAG Techniques | IBM Think](https://www.ibm.com/think/topics/rag-techniques#:~:) --&gt;</description></item><item><title>LightRAG Server 檔案儲存基本介紹</title><link>https://Dandelionlibra.github.io/2025/08/lightrag-json-db/</link><pubDate>Wed, 06 Aug 2025 09:03:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/2025/08/lightrag-json-db/</guid><description>&lt;h1 id="lightrag-api-server-教學快速上手指南"&gt;LightRAG API Server 教學：快速上手指南
 &lt;/h1&gt;&lt;p&gt;&lt;a class="link" href="https://github.com/HKUDS/LightRAG" target="_blank" rel="noopener"
 &gt;LightRAG&lt;/a&gt; 是一個輕量級、模組化的 RAG（檢索增強生成）框架，旨在簡化 RAG 應用的開發與部署。其內建的 API Server 遵循 OpenAI API 標準，並提供一套完整的 Web UI API 來管理文件與知識圖譜，讓開發者能輕易地將自訂的 RAG 流程封裝成服務，並與現有生態系無縫接軌。本文將引導初學者完成從環境設定到 API 呼叫的完整流程。&lt;/p&gt;
 &lt;hr&gt;
@@ -406,7 +460,7 @@
 &lt;/ul&gt;
 &lt;p&gt;&lt;strong&gt;特色&lt;/strong&gt;&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;一個實體可能來自多個文本片段，用 &lt;!-- raw HTML omitted --&gt; 分隔。&lt;/li&gt;
+&lt;li&gt;一個實體可能來自多個文本片段，用 &lt;SEP&gt; 分隔。&lt;/li&gt;
 &lt;li&gt;可支援多語言或多版本（如 知一书屋 vs 知一書屋）。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;&lt;strong&gt;用途&lt;/strong&gt;&lt;/p&gt;
@@ -440,7 +494,7 @@
 &lt;li&gt;vdb* 系列 → 偏向語義層面的知識圖譜與向量檢索。&lt;/li&gt;
 &lt;li&gt;entities 與 relationships → 構成知識圖譜 (Knowledge Graph)。&lt;/li&gt;
 &lt;li&gt;chunks 與 embeddings → 構成語意檢索的基礎。&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>LightRAG API Server 教學：快速上手指南</title><link>https://Dandelionlibra.github.io/post/note/lightrag-api-server-tutorial/</link><pubDate>Fri, 01 Aug 2025 06:00:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/lightrag-api-server-tutorial/</guid><description>&lt;h1 id="lightrag-api-server-教學快速上手指南"&gt;LightRAG API Server 教學：快速上手指南
+&lt;/ul&gt;</description></item><item><title>LightRAG API Server 教學：快速上手指南</title><link>https://Dandelionlibra.github.io/2025/08/lightrag-api-server-tutorial/</link><pubDate>Fri, 01 Aug 2025 06:00:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/2025/08/lightrag-api-server-tutorial/</guid><description>&lt;h1 id="lightrag-api-server-教學快速上手指南"&gt;LightRAG API Server 教學：快速上手指南
 &lt;/h1&gt;&lt;p&gt;&lt;a class="link" href="https://github.com/HKUDS/LightRAG" target="_blank" rel="noopener"
 &gt;LightRAG&lt;/a&gt; 是一個輕量級、模組化的 RAG（檢索增強生成）框架，旨在簡化 RAG 應用的開發與部署。其內建的 API Server 遵循 OpenAI API 標準，並提供一套完整的 Web UI API 來管理文件與知識圖譜，讓開發者能輕易地將自訂的 RAG 流程封裝成服務，並與現有生態系無縫接軌。本文將引導初學者完成從環境設定到 API 呼叫的完整流程。&lt;/p&gt;
 &lt;hr&gt;
@@ -820,7 +874,7 @@ Enum: &lt;code&gt;success&lt;/code&gt;、&lt;code&gt;duplicated&lt;/code&gt;、&
 &lt;/table&gt;
 &lt;hr&gt;
 &lt;h2 id="4-總結"&gt;4. 總結
-&lt;/h2&gt;&lt;p&gt;LightRAG 的 API Server 提供了一個標準化且功能豐富的介面，讓開發者能將複雜的 RAG 流程部署為一個獨立服務。透過遵循 OpenAI 的 API 格式並提供完整的文件管理 API，它極大地降低了整合門檻，無論是進行快速原型設計，還是將其整合到現有的應用程式中，都變得非常方便。希望本篇教學能幫助您順利踏出使用 LightRAG 的第一步。&lt;/p&gt;</description></item><item><title>GraphRAG vs LightRAG</title><link>https://Dandelionlibra.github.io/post/note/graphrag-lightrag-compare/</link><pubDate>Thu, 31 Jul 2025 03:24:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/graphrag-lightrag-compare/</guid><description>&lt;h1 id="rag-種類"&gt;RAG 種類
+&lt;/h2&gt;&lt;p&gt;LightRAG 的 API Server 提供了一個標準化且功能豐富的介面，讓開發者能將複雜的 RAG 流程部署為一個獨立服務。透過遵循 OpenAI 的 API 格式並提供完整的文件管理 API，它極大地降低了整合門檻，無論是進行快速原型設計，還是將其整合到現有的應用程式中，都變得非常方便。希望本篇教學能幫助您順利踏出使用 LightRAG 的第一步。&lt;/p&gt;</description></item><item><title>GraphRAG vs LightRAG</title><link>https://Dandelionlibra.github.io/2025/07/graphrag-lightrag-compare/</link><pubDate>Thu, 31 Jul 2025 03:24:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/2025/07/graphrag-lightrag-compare/</guid><description>&lt;h1 id="rag-種類"&gt;RAG 種類
 &lt;/h1&gt;&lt;h2 id="native-rag"&gt;Native RAG
 &lt;/h2&gt;&lt;p&gt;嘗試解決內部資訊缺失的問題。&lt;br&gt;
 RAG 在回答前會先基於提問與資料庫中內容的語意相似度篩選出最具關連的段落 (chunk) 再將這些資訊傳給 LLM 進行回答，但受限於檢索到的 chunk 內容，因此若是詢問的問題比較全面，例如主題大綱等等，因為需要全面的資料內容，但檢索後卻使會提供給 LLM 部分內容而已，因此可預測回答準確率大概不高，但是若是法規等問題回答結果會更精確。&lt;/p&gt;
@@ -862,7 +916,7 @@ alt="LightRAG 框架總覽"
 &gt;LightRAG与GraphRAG对比评测，从索引构建、本地检索、全局检索、混合检索等维度对请求大模型次数、Token消耗、金额消耗、检索质量等方面进行全面对比&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://github.com/NanGePlus/LightRAGTest" target="_blank" rel="noopener"
 &gt;GitHub: [LightRAGTest]&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>GraphRAG 概論</title><link>https://Dandelionlibra.github.io/post/note/graphrag-overview/</link><pubDate>Thu, 31 Jul 2025 03:24:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/graphrag-overview/</guid><description>&lt;h1 id="graph-rag-基本介紹"&gt;Graph RAG 基本介紹
+&lt;/ul&gt;</description></item><item><title>GraphRAG 概論</title><link>https://Dandelionlibra.github.io/2025/07/graphrag-overview/</link><pubDate>Thu, 31 Jul 2025 03:24:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/2025/07/graphrag-overview/</guid><description>&lt;h1 id="graph-rag-基本介紹"&gt;Graph RAG 基本介紹
 &lt;/h1&gt;&lt;h2 id="graph-rag"&gt;Graph RAG
 &lt;/h2&gt;&lt;p&gt;Native RAG 嘗試解決內部資訊缺失的問題，但受限於檢索到的 chunk 內容，因此若是詢問的問題比較全面，例如主題大綱等等，因為需要全面的資料內容，但檢索後卻只會提供給 LLM 部分內容而已。而為了解決全域資訊缺失的問題因而誕生了 Graph RAG。&lt;/p&gt;
 &lt;p&gt;Graph RAG 透過將非結構化文本轉換為知識圖譜來解決 Native RAG 的問題。它不僅僅是檢索文本片段，而是理解實體之間的關係，從而能夠回答更複雜、需要綜合多方面資訊的問題。&lt;/p&gt;
@@ -926,7 +980,7 @@ alt="Graph RAG 關係圖"
 &gt;GraphRAG发布重大更新！增量更新索引终于来并新增DRIFT图推理搜索查询，带你手把手全流程实操新功能，源码分析，同时支持GPT、国产大模型、本地大模型等&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://github.com/NanGePlus/GraphRAGTestV040" target="_blank" rel="noopener"
 &gt;GitHub: [GraphRAGTestV040]&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>BAAI/bge-reranker-v2-m3 — Hugging Face 官方整理</title><link>https://Dandelionlibra.github.io/post/note/bge-reranker-hf-flagembedding-note/</link><pubDate>Wed, 23 Jul 2025 03:51:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/bge-reranker-hf-flagembedding-note/</guid><description>&lt;h2 id="reranker-模型與函式庫使用差異筆記"&gt;Reranker 模型與函式庫使用差異筆記
+&lt;/ul&gt;</description></item><item><title>BAAI/bge-reranker-v2-m3 — Hugging Face 官方整理</title><link>https://Dandelionlibra.github.io/2025/07/bge-reranker-hf-flagembedding-note/</link><pubDate>Wed, 23 Jul 2025 03:51:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/2025/07/bge-reranker-hf-flagembedding-note/</guid><description>&lt;h2 id="reranker-模型與函式庫使用差異筆記"&gt;Reranker 模型與函式庫使用差異筆記
 &lt;/h2&gt;&lt;p&gt;這份筆記整理了 FlagEmbedding 和 Hugging Face Transformers 在實作不同 Reranker 模型（標準型、LLM 型、分層式 LLM 型）時的關鍵差異。&lt;/p&gt;
 &lt;hr&gt;
 &lt;h3 id="核心實作比較"&gt;核心實作比較
@@ -1195,7 +1249,7 @@ alt="Graph RAG 關係圖"
 &lt;td&gt;需要深度自訂模型行為或進行學術研究&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
-&lt;/table&gt;</description></item><item><title>Orange3</title><link>https://Dandelionlibra.github.io/post/data-analysis-tools/orange/data-mining/</link><pubDate>Mon, 21 Jul 2025 09:16:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/data-analysis-tools/orange/data-mining/</guid><description>&lt;h2 id="什麼是-orange3"&gt;什麼是 Orange3？
+&lt;/table&gt;</description></item><item><title>Orange3</title><link>https://Dandelionlibra.github.io/2025/07/data-mining/</link><pubDate>Mon, 21 Jul 2025 09:16:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/2025/07/data-mining/</guid><description>&lt;h2 id="什麼是-orange3"&gt;什麼是 Orange3？
 &lt;/h2&gt;&lt;p&gt;Orange3 是一款開源 (Open Source) 的資料探勘與機器學習工具。它最大的特色是&lt;strong&gt;視覺化的流程介面&lt;/strong&gt; (Visual Programming)。&lt;/p&gt;
 &lt;p&gt;使用者不需要撰寫程式碼，只需要透過拖拉、連接不同的 &lt;strong&gt;「元件」 (Widgets)&lt;/strong&gt;，就可以建構出完整的資料分析、資料前處理、模型訓練與評估的流程。&lt;/p&gt;
 &lt;h2 id="核心優勢"&gt;核心優勢
@@ -1348,7 +1402,11 @@ alt="Graph RAG 關係圖"
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;Test &amp;amp; Score (測試與評分):&lt;/strong&gt; &lt;strong&gt;評估的核心&lt;/strong&gt;。我們把資料 (&lt;code&gt;Preprocess&lt;/code&gt;) 和模型 (&lt;code&gt;Linear Regression&lt;/code&gt;, &lt;code&gt;Random Forest&lt;/code&gt;) 都連到這裡。&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;Cross-validation (交叉驗證):&lt;/strong&gt; &lt;code&gt;Test &amp;amp; Score&lt;/code&gt; 內最重要的設定。它會自動將資料分成 N 份（例如 10 份），輪流將 9 份當作訓練集、1 份當作測試集，最後算出平均分數。這能有效&lt;strong&gt;避免過擬合&lt;/strong&gt;，得到一個可靠的效能指標。&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>三種 RAG 架構比較與應用解析 — Naive、Advanced、Modular RAG 差異整理</title><link>https://Dandelionlibra.github.io/post/note/rag-type-compare-note/</link><pubDate>Mon, 21 Jul 2025 09:16:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/rag-type-compare-note/</guid><description>&lt;h1 id="三種-rag-技術架構比較naive-ragadvanced-rag-與-modular-rag"&gt;三種 RAG 技術架構比較：Naive RAG、Advanced RAG 與 Modular RAG
+&lt;/ul&gt;
+&lt;!-- ## Reference
+- [Retrieval-Augmented Generation for Large Language Models: A Survey](https://arxiv.org/abs/2312.10997)
+- [Three Paradigms of Retrieval-Augmented Generation (RAG) for LLMs](https://www.thecloudgirl.dev/blog/three-paradigms-of-retrieval-augmented-generation-rag-for-llms#:~:text=,on%20embeddings%20from%20language%20models)
+- [RAG Techniques | IBM Think](https://www.ibm.com/think/topics/rag-techniques#:~:) --&gt;</description></item><item><title>三種 RAG 架構比較與應用解析 — Naive、Advanced、Modular RAG 差異整理</title><link>https://Dandelionlibra.github.io/2025/07/rag-type-compare-note/</link><pubDate>Mon, 21 Jul 2025 09:16:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/2025/07/rag-type-compare-note/</guid><description>&lt;h1 id="三種-rag-技術架構比較naive-ragadvanced-rag-與-modular-rag"&gt;三種 RAG 技術架構比較：Naive RAG、Advanced RAG 與 Modular RAG
 &lt;/h1&gt;&lt;p&gt;本文比較《Retrieval-Augmented Generation for Large Language Models: A Survey》中提出的三種檢索增強生成（RAG）技術架構：Naive RAG、Advanced RAG 和 Modular RAG。RAG 旨在結合大型語言模型（LLM）的內部知識與外部資料檢索，以提升事實正確性與時效性。這三種架構代表了 RAG 技術的演進路徑，各自引入不同模組與策略來克服先前架構的侷限。本文將從架構組成、實作方式、技術細節、應用場景與優劣比較等面向，深入剖析三類架構的差異與適用性。&lt;/p&gt;
 &lt;hr&gt;
 &lt;h2 id="架構組成與流程差異"&gt;架構組成與流程差異
@@ -1458,7 +1516,7 @@ alt="Modular RAG 架構圖"
 &gt;Three Paradigms of Retrieval-Augmented Generation (RAG) for LLMs&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://www.ibm.com/think/topics/rag-techniques#:~:" target="_blank" rel="noopener"
 &gt;RAG Techniques | IBM Think&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>微表情(Micro Facial Expression)</title><link>https://Dandelionlibra.github.io/post/note/micro_facial_expression/</link><pubDate>Sun, 20 Oct 2024 00:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/note/micro_facial_expression/</guid><description>&lt;img src="https://Dandelionlibra.github.io/unsplash.jpg" alt="Featured image of post 微表情(Micro Facial Expression)" /&gt;&lt;h2 id="臉部表情種類"&gt;臉部表情種類
+&lt;/ul&gt;</description></item><item><title>微表情(Micro Facial Expression)</title><link>https://Dandelionlibra.github.io/2024/10/micro_facial_expression/</link><pubDate>Sun, 20 Oct 2024 00:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/2024/10/micro_facial_expression/</guid><description>&lt;img src="https://Dandelionlibra.github.io/unsplash.jpg" alt="Featured image of post 微表情(Micro Facial Expression)" /&gt;&lt;h2 id="臉部表情種類"&gt;臉部表情種類
 &lt;/h2&gt;&lt;p&gt;&lt;a class="link" href="https://zh.wikipedia.org/zh-tw/%E4%BF%9D%E7%BD%97%C2%B7%E8%89%BE%E5%85%8B%E6%9B%BC" target="_blank" rel="noopener"
 &gt;保羅·艾克曼&lt;/a&gt;（Paul Ekman）從1970年代以來的研究，把臉部微表情分成：&lt;/p&gt;
 &lt;ul&gt;

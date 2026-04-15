@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Conversation on YuChen</title><link>https://Dandelionlibra.github.io/tags/conversation/</link><description>Recent content in Conversation on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Fri, 18 Jul 2025 08:39:00 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/tags/conversation/index.xml" rel="self" type="application/rss+xml"/><item><title>LangChain 記憶型檢索問答：《小王子》文本互動實踐</title><link>https://Dandelionlibra.github.io/post/langchain/retrieverqa-2/</link><pubDate>Fri, 18 Jul 2025 08:39:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/langchain/retrieverqa-2/</guid><description>&lt;h2 id="以-langchain-記憶型檢索問答實現小王子文本互動"&gt;以 LangChain 記憶型檢索問答實現《小王子》文本互動
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Conversation on YuChen</title><link>https://Dandelionlibra.github.io/tags/conversation/</link><description>Recent content in Conversation on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Fri, 18 Jul 2025 08:39:00 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/tags/conversation/index.xml" rel="self" type="application/rss+xml"/><item><title>LangChain 記憶型檢索問答：《小王子》文本互動實踐</title><link>https://Dandelionlibra.github.io/2025/07/retrieverqa-2/</link><pubDate>Fri, 18 Jul 2025 08:39:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/2025/07/retrieverqa-2/</guid><description>&lt;h2 id="以-langchain-記憶型檢索問答實現小王子文本互動"&gt;以 LangChain 記憶型檢索問答實現《小王子》文本互動
 &lt;/h2&gt;&lt;p&gt;本文介紹如何利用 LangChain 框架，結合 Ollama Embeddings、ChromaDB 與記憶型問答鏈（RunnableWithMessageHistory），實現能記住上下文的互動式檢索問答。以《小王子》文本為例，展示記憶型問答與一般檢索問答的差異。&lt;/p&gt;
 &lt;h3 id="一記憶型問答鏈設計"&gt;一、記憶型問答鏈設計
 &lt;/h3&gt;&lt;p&gt;LangChain 提供 &lt;code&gt;RunnableWithMessageHistory&lt;/code&gt;，可根據 session_id 保存對話歷程，讓模型具備「記憶」功能。核心流程如下：&lt;/p&gt;
@@ -9,6 +9,15 @@
 &lt;li&gt;&lt;strong&gt;設計 Prompt 與 Chain&lt;/strong&gt;：結合歷史訊息與提問，串接 LLM。&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;啟動記憶型問答鏈&lt;/strong&gt;：每次提問都能保留上下文，實現多輪互動。&lt;/li&gt;
 &lt;/ol&gt;
+&lt;!-- ### 所需依賴套件
+請確保安裝以下 Python 套件：
+```bash
+pip install langchain langchain_chroma pypdf ollama
+```
+- `langchain`：核心框架，實現記憶型問答鏈與檢索功能。
+- `langchain_chroma`：向量資料庫，用於儲存文本向量。
+- `pypdf`：PDF 解析工具，載入文本內容。
+- `ollama`：本地 LLM 與 Embeddings 支援。 --&gt;
 &lt;h4 id="主要程式片段"&gt;主要程式片段
 &lt;/h4&gt;&lt;p&gt;完整程式碼請參考：&lt;a class="link" href="https://github.com/Dandelionlibra/Dandelionlibra.github.io/blob/main/content/post/langchain/example/LangChain_memory_ask_via_pdf.ipynb" target="_blank" rel="noopener"
 &gt;GitHub 範例程式&lt;/a&gt;&lt;/p&gt;

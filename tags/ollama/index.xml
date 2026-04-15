@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Ollama on YuChen</title><link>https://Dandelionlibra.github.io/tags/ollama/</link><description>Recent content in Ollama on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Fri, 18 Jul 2025 08:39:00 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/tags/ollama/index.xml" rel="self" type="application/rss+xml"/><item><title>LangChain 記憶型檢索問答：《小王子》文本互動實踐</title><link>https://Dandelionlibra.github.io/post/langchain/retrieverqa-2/</link><pubDate>Fri, 18 Jul 2025 08:39:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/langchain/retrieverqa-2/</guid><description>&lt;h2 id="以-langchain-記憶型檢索問答實現小王子文本互動"&gt;以 LangChain 記憶型檢索問答實現《小王子》文本互動
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Ollama on YuChen</title><link>https://Dandelionlibra.github.io/tags/ollama/</link><description>Recent content in Ollama on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Fri, 18 Jul 2025 08:39:00 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/tags/ollama/index.xml" rel="self" type="application/rss+xml"/><item><title>LangChain 記憶型檢索問答：《小王子》文本互動實踐</title><link>https://Dandelionlibra.github.io/2025/07/retrieverqa-2/</link><pubDate>Fri, 18 Jul 2025 08:39:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/2025/07/retrieverqa-2/</guid><description>&lt;h2 id="以-langchain-記憶型檢索問答實現小王子文本互動"&gt;以 LangChain 記憶型檢索問答實現《小王子》文本互動
 &lt;/h2&gt;&lt;p&gt;本文介紹如何利用 LangChain 框架，結合 Ollama Embeddings、ChromaDB 與記憶型問答鏈（RunnableWithMessageHistory），實現能記住上下文的互動式檢索問答。以《小王子》文本為例，展示記憶型問答與一般檢索問答的差異。&lt;/p&gt;
 &lt;h3 id="一記憶型問答鏈設計"&gt;一、記憶型問答鏈設計
 &lt;/h3&gt;&lt;p&gt;LangChain 提供 &lt;code&gt;RunnableWithMessageHistory&lt;/code&gt;，可根據 session_id 保存對話歷程，讓模型具備「記憶」功能。核心流程如下：&lt;/p&gt;
@@ -9,6 +9,15 @@
 &lt;li&gt;&lt;strong&gt;設計 Prompt 與 Chain&lt;/strong&gt;：結合歷史訊息與提問，串接 LLM。&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;啟動記憶型問答鏈&lt;/strong&gt;：每次提問都能保留上下文，實現多輪互動。&lt;/li&gt;
 &lt;/ol&gt;
+&lt;!-- ### 所需依賴套件
+請確保安裝以下 Python 套件：
+```bash
+pip install langchain langchain_chroma pypdf ollama
+```
+- `langchain`：核心框架，實現記憶型問答鏈與檢索功能。
+- `langchain_chroma`：向量資料庫，用於儲存文本向量。
+- `pypdf`：PDF 解析工具，載入文本內容。
+- `ollama`：本地 LLM 與 Embeddings 支援。 --&gt;
 &lt;h4 id="主要程式片段"&gt;主要程式片段
 &lt;/h4&gt;&lt;p&gt;完整程式碼請參考：&lt;a class="link" href="https://github.com/Dandelionlibra/Dandelionlibra.github.io/blob/main/content/post/langchain/example/LangChain_memory_ask_via_pdf.ipynb" target="_blank" rel="noopener"
 &gt;GitHub 範例程式&lt;/a&gt;&lt;/p&gt;
@@ -74,7 +83,7 @@
 &gt;LangChain RunnableWithMessageHistory 官方文件&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://dandelionlibra.github.io/post/langchain/retrieverqa-1/" target="_blank" rel="noopener"
 &gt;LangChain 檢索問答基礎篇&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>使用 Langchain 框架進行檢索提問</title><link>https://Dandelionlibra.github.io/post/langchain/retrieverqa-1/</link><pubDate>Fri, 18 Jul 2025 02:59:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/langchain/retrieverqa-1/</guid><description>&lt;h2 id="程式運行詳細步驟"&gt;程式運行詳細步驟
+&lt;/ul&gt;</description></item><item><title>使用 Langchain 框架進行檢索提問</title><link>https://Dandelionlibra.github.io/2025/07/retrieverqa-1/</link><pubDate>Fri, 18 Jul 2025 02:59:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/2025/07/retrieverqa-1/</guid><description>&lt;h2 id="程式運行詳細步驟"&gt;程式運行詳細步驟
 &lt;/h2&gt;&lt;p&gt;以下以 Jupyter Notebook 格式，記錄如何使用 LangChain 框架結合 Ollama Embeddings 與 ChromaDB，實現 PDF 文件的檢索式問答。&lt;br&gt;
 詳細程式參考：&lt;a class="link" href="https://github.com/Dandelionlibra/Dandelionlibra.github.io/blob/main/content/post/langchain/example/LangChain_ask_via_pdf.ipynb" target="_blank" rel="noopener"
 &gt;GitHub 範例程式&lt;/a&gt;&lt;/p&gt;
@@ -147,7 +156,7 @@
 &lt;li&gt;使用 Ollama Embeddings 將文本轉為向量，存入 ChromaDB。&lt;/li&gt;
 &lt;li&gt;結合 Ollama LLM 與 RetrievalQA Chain，實現自然語言問答。&lt;/li&gt;
 &lt;li&gt;可針對文本內容進行多樣化提問，快速獲得答案。&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>How to install and use Ollama?</title><link>https://Dandelionlibra.github.io/post/ollama/ollama/</link><pubDate>Sat, 05 Jul 2025 00:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/ollama/ollama/</guid><description>&lt;h1 id="介紹-ollama"&gt;介紹 Ollama
+&lt;/ul&gt;</description></item><item><title>How to install and use Ollama?</title><link>https://Dandelionlibra.github.io/2025/07/ollama/</link><pubDate>Sat, 05 Jul 2025 00:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/2025/07/ollama/</guid><description>&lt;h1 id="介紹-ollama"&gt;介紹 Ollama
 &lt;/h1&gt;&lt;p&gt;Ollama 是一個能在 本地（Windows/Mac/Linux）執行大型語言模型（LLM）和 Vision Language Model（VLM） 的框架。&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;開源工具&lt;/li&gt;
@@ -375,4 +384,17 @@ ps.若沒有 pip 我未來再寫一篇安裝與使用 pip 的文章 ;)&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(response&lt;span style="color:#f92672"&gt;.&lt;/span&gt;choices[&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;]&lt;span style="color:#f92672"&gt;.&lt;/span&gt;message&lt;span style="color:#f92672"&gt;.&lt;/span&gt;content)
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description></item></channel></rss>
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;!-- &gt;
+若發生套件衝突，不管當前有沒有裝 openai，也不管目前版本是否是最新版，都會重新下載最新版本並完整重新安裝覆蓋掉原本的 openai 套件。
+```
+pip install --upgrade --force-reinstall openai
+```
+--&gt;
+&lt;!-- &gt;
+&gt; [文章報導](&lt;https://humanityisland.nccu.edu.tw/qiumeihong_a/&gt;)
+## 參考內容
+淺談為表情心理學：https://www.thenewslens.com/article/128732
+--&gt;
+&lt;!-- &gt;
+&gt; Photo by [Pawel Czerwinski](https://unsplash.com/@pawel_czerwinski) on [Unsplash](https://unsplash.com/)
+--&gt;</description></item></channel></rss>

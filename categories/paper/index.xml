@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Paper on YuChen</title><link>https://Dandelionlibra.github.io/categories/paper/</link><description>Recent content in Paper on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Tue, 22 Jul 2025 05:27:00 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/categories/paper/index.xml" rel="self" type="application/rss+xml"/><item><title>LightRAG 論文導讀 — Simple and Fast Retrieval-Augmented Generation 筆記</title><link>https://Dandelionlibra.github.io/post/paper/lightrag-paper-review/</link><pubDate>Tue, 22 Jul 2025 05:27:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/paper/lightrag-paper-review/</guid><description>&lt;blockquote&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Paper on YuChen</title><link>https://Dandelionlibra.github.io/categories/paper/</link><description>Recent content in Paper on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Tue, 22 Jul 2025 05:27:00 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/categories/paper/index.xml" rel="self" type="application/rss+xml"/><item><title>LightRAG 論文導讀 — Simple and Fast Retrieval-Augmented Generation 筆記</title><link>https://Dandelionlibra.github.io/2025/07/lightrag-paper-review/</link><pubDate>Tue, 22 Jul 2025 05:27:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/2025/07/lightrag-paper-review/</guid><description>&lt;blockquote&gt;
 &lt;p&gt;本文整理自：&lt;a class="link" href="https://arxiv.org/abs/2410.05779" target="_blank" rel="noopener"
 &gt;LightRAG: Simple and Fast Retrieval-Augmented Generation&lt;/a&gt;&lt;br&gt;
 作者：Zirui Guo, Lianghao Xia, Yanhua Yu, Tu Ao, Chao Huang&lt;br&gt;
@@ -37,7 +37,11 @@ LightRAG，提出透過將圖結構 (graph structures) 引入文本的索引 (te
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id="本研究在-rag-系統中的關注點"&gt;本研究在 RAG 系統中的關注點
-&lt;/h2&gt;&lt;!-- raw HTML omitted --&gt;
+&lt;/h2&gt;&lt;p align="center"&gt;
+ℳ=(𝒢,ℛ=(φ,ψ)) &lt;br&gt;
+ℳ​(q;𝒟)=𝒢​(q,ψ​(q;𝒟^)) &lt;br&gt;
+𝒟^=φ​(𝒟)
+&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;
 &lt;p&gt;&lt;strong&gt;全面信息檢索&lt;/strong&gt; (Comprehensive Information Retrieval)： 索引功能 ϕ(⋅) 必須善於提取全局信息，這對於增強模型有效回答查詢的能力至關重要。&lt;/p&gt;
@@ -66,7 +70,10 @@ alt="LightRAG 框架總覽"
 &lt;h2 id="基於圖形的文本索引"&gt;基於圖形的文本索引
 &lt;/h2&gt;&lt;p&gt;LightRAG 透過將文件分割成更小、更易於管理的片段來增強檢索系統。這種策略允許快速識別和存取相關資訊，而無需分析整個文件 。隨後，系統利用大型語言模型（LLMs）來識別和提取各種實體（例如，名稱、日期、位置和事件）以及它們之間的關係 。透過這個過程收集到的資訊將用於創建一個全面的知識圖譜，突顯整個文件集合中的連結和見解。&lt;/p&gt;
 &lt;p&gt;圖形生成模組正式表示為：&lt;/p&gt;
-&lt;!-- raw HTML omitted --&gt;
+&lt;p align="center"&gt;
+𝒟^=(𝒱^,ℰ^)=Dedupe∘Prof(𝒱,ℰ)​ &lt;br&gt;
+𝒱,ℰ=∪𝒟i∈𝒟 Recog​(𝒟i)
+&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;實體與關係提取 (R(⋅))&lt;/strong&gt;：
 &lt;ul&gt;
@@ -75,12 +82,15 @@ alt="LightRAG 框架總覽"
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
+&lt;!-- 提示 LLM 識別文本資料中的實體 (節點) 及其關係 (邊)。例如，它可以從文本中提取「心臟病專家」和「心臟病」等實體，以及「心臟病專家診斷心臟病」等關係。為了提高效率，原始文本 D 被分割成多個塊 Di。 --&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;LLM 剖析以生成鍵值對 (P(⋅))&lt;/strong&gt;：為每個實體與關係生成索引鍵（key）與對應摘要文本（value），形成文本鍵值對（K, V）。實體通常採用名稱作為鍵；關係也由關聯實體摘要或主題語形成鍵。&lt;/li&gt;
 &lt;/ul&gt;
+&lt;!-- 系統採用 LLM 賦能的剖析功能 P(⋅)，為 V 中的每個實體節點和 E 中的每個關係邊生成一個文本鍵值對（K, V）。每個索引鍵是一個單詞或短語，用於高效檢索，而對應的值是一個文本段落，總結了來自外部資料的相關片段，以幫助文本生成。實體使用其名稱作為唯一的索引鍵，而關係可能具有多個索引鍵，這些索引鍵源自 LLM 增強，包括來自連接實體的全局主題。   --&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;去重以優化圖操作 (D(⋅))&lt;/strong&gt;：合併相同的實體與關係，以減少圖的複雜度，優化後續運算效率。&lt;/li&gt;
 &lt;/ul&gt;
+&lt;!-- 系統實施去重功能 D(⋅)，識別並合併來自原始文本 Di不同片段的相同實體和關係。這個過程透過最小化圖的大小，有效減少了與 D^ 上圖操作相關的開銷，從而實現更高效的資料處理。   --&gt;
 &lt;ul&gt;
 &lt;li&gt;
 &lt;p&gt;&lt;strong&gt;優勢&lt;/strong&gt;：&lt;/p&gt;
@@ -231,7 +241,7 @@ ex. 人工智慧如何影響現代教育？&lt;/li&gt;
 &lt;/h1&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="https://ar5iv.labs.arxiv.org/html/2410.05779" target="_blank" rel="noopener"
 &gt;LightRAG: Simple and Fast Retrieval-Augmented Generation-ar5iv 可視化版本&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>Re2G 論文導讀 — Retrieve, Rerank, Generate 框架解析與應用</title><link>https://Dandelionlibra.github.io/post/paper/re2g-paper-review/</link><pubDate>Tue, 22 Jul 2025 01:31:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/paper/re2g-paper-review/</guid><description>&lt;blockquote&gt;
+&lt;/ul&gt;</description></item><item><title>Re2G 論文導讀 — Retrieve, Rerank, Generate 框架解析與應用</title><link>https://Dandelionlibra.github.io/2025/07/re2g-paper-review/</link><pubDate>Tue, 22 Jul 2025 01:31:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/2025/07/re2g-paper-review/</guid><description>&lt;blockquote&gt;
 &lt;p&gt;本文整理自：&lt;a class="link" href="https://arxiv.org/abs/2207.06300" target="_blank" rel="noopener"
 &gt;Re2G: Retrieve, Rerank, Generate&lt;/a&gt;&lt;br&gt;
 作者：Michael Glass, Gaetano Rossiello, Md Faisal Mahbub Chowdhury, Ankita Rajaram Naik, Pengshan Cai, Alfio Gliozzo&lt;br&gt;
@@ -239,11 +249,12 @@ ex. 人工智慧如何影響現代教育？&lt;/li&gt;
 &lt;/blockquote&gt;
 &lt;h1 id="摘要"&gt;摘要
 &lt;/h1&gt;&lt;p&gt;大型 Transformer 模型在處理複雜任務時雖然表現強大，但在應對知識密集型任務時，仍會面臨顯著的計算成本與記憶體限制。此研究指出，非參數記憶和檢索技術能有效解決這些挑戰。&lt;br&gt;
-基於此，Re&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt;G 模型應運而生，它創新地整合了神經初始檢索與重新排序機制，並以 BART 框架為基礎進行序列到序列的生成。Re&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt;G 的核心創新之處在於其獨特的重新排序功能。這使得模型能夠智慧地整合來自不同檢索源的結果，即使這些源的分數不可比較，例如同時融合傳統的 BM25 算法與神經檢索（如密集段落檢索，DPR）。透過引入重排序 (Reranker) 組件，模型得以統一處理並最大化初始候選池的質量。此外，Re&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt;G 還引入了&lt;strong&gt;線上知識蒸餾方法&lt;/strong&gt;，實現了整個檢索與生成管道的端到端訓練。這種訓練方式將系統的所有組件串接成一個整體模型，直接以最終目標作為損失函數進行優化，從而無需分階段訓練，有效提升了系統的整體性能。&lt;/p&gt;
+基於此，Re&lt;sup&gt;2&lt;/sup&gt;G 模型應運而生，它創新地整合了神經初始檢索與重新排序機制，並以 BART 框架為基礎進行序列到序列的生成。Re&lt;sup&gt;2&lt;/sup&gt;G 的核心創新之處在於其獨特的重新排序功能。這使得模型能夠智慧地整合來自不同檢索源的結果，即使這些源的分數不可比較，例如同時融合傳統的 BM25 算法與神經檢索（如密集段落檢索，DPR）。透過引入重排序 (Reranker) 組件，模型得以統一處理並最大化初始候選池的質量。此外，Re&lt;sup&gt;2&lt;/sup&gt;G 還引入了&lt;strong&gt;線上知識蒸餾方法&lt;/strong&gt;，實現了整個檢索與生成管道的端到端訓練。這種訓練方式將系統的所有組件串接成一個整體模型，直接以最終目標作為損失函數進行優化，從而無需分階段訓練，有效提升了系統的整體性能。&lt;/p&gt;
 &lt;p&gt;※ 在機器學習領域，「端到端訓練」（End-to-End Training）指的是將整個系統的所有組件（如檢索、重排序、生成）串接為一個整體模型，直接以最終目標（如生成正確答案）作為損失函數，反向傳播優化所有參數。這種方式不需分階段分別訓練各模組，而是讓模型自動協調各部分，最大化整體性能。&lt;/p&gt;
+&lt;!-- 在訓練上，Re2G 採用獨特的知識蒸餾方法，僅利用目標序列的真實輸出數據，即可端到端訓練整個檢索、重新排序與生成系統。實驗證明，Re2G 在零樣本槽位填充、問答、事實核查和對話等四項任務中均取得顯著進步，相較於現有技術，在 KILT 排行榜上實現 9% 至 34% 的性能提升。 --&gt;
 &lt;hr&gt;
 &lt;h1 id="基本架構介紹"&gt;基本架構介紹
-&lt;/h1&gt;&lt;p&gt;RAG（Retrieval-Augmented Generation）與 Re&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt;G（Retrieve, Rerank, Generate）架構模組如下圖所示：&lt;br&gt;
+&lt;/h1&gt;&lt;p&gt;RAG（Retrieval-Augmented Generation）與 Re&lt;sup&gt;2&lt;/sup&gt;G（Retrieve, Rerank, Generate）架構模組如下圖所示：&lt;br&gt;
 &lt;img src="https://ar5iv.labs.arxiv.org/html/2207.06300/assets/x1.png"
 loading="lazy"
 alt="RAG 基本架構圖"
@@ -253,22 +264,22 @@ alt="RAG 基本架構圖"
 loading="lazy"
 alt="RAG 重排序架構圖"
 &gt;&lt;br&gt;
-圖 2. Re&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt;G (Retrieve, Rerank, Generate) 架構圖：進階版本在檢索後加入重排序（Rerank）模組，對候選片段進行排序優化，提升檢索結果品質與生成相關性。&lt;/p&gt;
+圖 2. Re&lt;sup&gt;2&lt;/sup&gt;G (Retrieve, Rerank, Generate) 架構圖：進階版本在檢索後加入重排序（Rerank）模組，對候選片段進行排序優化，提升檢索結果品質與生成相關性。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;RAG 架構&lt;/strong&gt;&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;檢索器（Retriever）：從語料庫中檢索相關段落&lt;/li&gt;
 &lt;li&gt;生成器（Generator）：基於檢索結果生成回答&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;&lt;strong&gt;Re&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt;G 架構&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Re&lt;sup&gt;2&lt;/sup&gt;G 架構&lt;/strong&gt;&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;初始檢索層（Initial Retrieval Layer）：神經檢索 + 關鍵字檢索&lt;/li&gt;
 &lt;li&gt;重排序層（Reranker Layer）：融合多種檢索結果並重排序&lt;/li&gt;
 &lt;li&gt;生成層（Generation Layer）：基於重排序結果生成最終輸出&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;這種分層設計使 Re&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt;G 能靈活結合多種檢索技術，並透過重排序提升候選質量，最終增強生成效果。&lt;/p&gt;
-&lt;h1 id="re2g-核心概念與創新突破"&gt;Re&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt;G 核心概念與創新突破
-&lt;/h1&gt;&lt;p&gt;Re&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt;G 的兩大創新突破，分別體現在多源檢索結果的融合能力與創新的端到端訓練策略。
-首先，Re&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt;G 的重排序方法打破了傳統檢索分數不可比的限制，能夠有效融合來自不同檢索機制的候選結果。其次，作者提出一種改良的知識蒸餾策略，使得整個系統能僅依賴目標序列輸出進行訓練，實現從初始檢索、重排序到序列生成端到端改善。這項設計解決了當重排序器主導運算後，查詢編碼器將無法從生成損失中獲得有效梯度的問題。透過在線知識蒸餾，Re&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt;G 讓重排序器成為查詢編碼器的指導，重新建立了梯度流通路，深化多模組系統間的互動訓練。&lt;/p&gt;
+&lt;p&gt;這種分層設計使 Re&lt;sup&gt;2&lt;/sup&gt;G 能靈活結合多種檢索技術，並透過重排序提升候選質量，最終增強生成效果。&lt;/p&gt;
+&lt;h1 id="re2g-核心概念與創新突破"&gt;Re&lt;sup&gt;2&lt;/sup&gt;G 核心概念與創新突破
+&lt;/h1&gt;&lt;p&gt;Re&lt;sup&gt;2&lt;/sup&gt;G 的兩大創新突破，分別體現在多源檢索結果的融合能力與創新的端到端訓練策略。
+首先，Re&lt;sup&gt;2&lt;/sup&gt;G 的重排序方法打破了傳統檢索分數不可比的限制，能夠有效融合來自不同檢索機制的候選結果。其次，作者提出一種改良的知識蒸餾策略，使得整個系統能僅依賴目標序列輸出進行訓練，實現從初始檢索、重排序到序列生成端到端改善。這項設計解決了當重排序器主導運算後，查詢編碼器將無法從生成損失中獲得有效梯度的問題。透過在線知識蒸餾，Re&lt;sup&gt;2&lt;/sup&gt;G 讓重排序器成為查詢編碼器的指導，重新建立了梯度流通路，深化多模組系統間的互動訓練。&lt;/p&gt;
 &lt;p&gt;主要流程是從大型語料庫中&lt;strong&gt;檢索相關段落&lt;/strong&gt;，隨後對這些初步檢索到的段落&lt;strong&gt;進行精確的重排序&lt;/strong&gt;，最後基於重排序後的結果&lt;strong&gt;生成最終的輸出序列&lt;/strong&gt;。&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;
@@ -278,7 +289,7 @@ alt="RAG 重排序架構圖"
 loading="lazy"
 alt="雙編碼器表示模型 — 初始檢索器（DPR）"
 &gt;&lt;br&gt;
-&lt;em&gt;圖 3：表示模型（Bi-Encoder）運作方式：查詢（Query）與段落（Passage）分別透過獨立的 BERT 編碼器轉換為向量表示（r&lt;!-- raw HTML omitted --&gt;q&lt;!-- raw HTML omitted --&gt; 與 r&lt;!-- raw HTML omitted --&gt;p&lt;!-- raw HTML omitted --&gt;），之後透過 向量內積（Inner Product） 計算相似度，作為檢索排序的依據。&lt;/em&gt;&lt;/p&gt;
+&lt;em&gt;圖 3：表示模型（Bi-Encoder）運作方式：查詢（Query）與段落（Passage）分別透過獨立的 BERT 編碼器轉換為向量表示（r&lt;sub&gt;q&lt;/sub&gt; 與 r&lt;sub&gt;p&lt;/sub&gt;），之後透過 向量內積（Inner Product） 計算相似度，作為檢索排序的依據。&lt;/em&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;&lt;strong&gt;精確的重排序&lt;/strong&gt;&lt;br&gt;
@@ -289,7 +300,7 @@ alt="雙編碼器表示模型 — 初始檢索器（DPR）"
 &lt;li&gt;&lt;strong&gt;DPR&lt;/strong&gt;：基於語意向量的神經檢索，分數來自內積相似度&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;然而，這些檢索分數性質不同，直接比對會產生偏誤。&lt;br&gt;
-為此，Re&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt;G 引入 &lt;strong&gt;獨立的 Reranker 模組&lt;/strong&gt;，將不同檢索來源的候選進行&lt;strong&gt;統一評分&lt;/strong&gt;，重排序後產出可比較的結果。&lt;br&gt;
+為此，Re&lt;sup&gt;2&lt;/sup&gt;G 引入 &lt;strong&gt;獨立的 Reranker 模組&lt;/strong&gt;，將不同檢索來源的候選進行&lt;strong&gt;統一評分&lt;/strong&gt;，重排序後產出可比較的結果。&lt;br&gt;
 &lt;img src="https://ar5iv.labs.arxiv.org/html/2207.06300/assets/x3.png"
 loading="lazy"
 alt="互動模型 — 重排序器（Reranker）"
@@ -302,7 +313,7 @@ alt="互動模型 — 重排序器（Reranker）"
 &lt;/li&gt;
 &lt;/ol&gt;
 &lt;hr&gt;
-&lt;h2 id="re2g-模型架構詳解"&gt;Re&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt;G 模型架構詳解
+&lt;h2 id="re2g-模型架構詳解"&gt;Re&lt;sup&gt;2&lt;/sup&gt;G 模型架構詳解
 &lt;/h2&gt;&lt;h3 id="初始檢索層dpr與bm25的協同作用"&gt;初始檢索層：DPR與BM25的協同作用
 &lt;/h3&gt;&lt;p&gt;目的是建立一個包含潛在相關段落的候選池，在此階段結合了兩種互補的檢索方法：&lt;/p&gt;
 &lt;ul&gt;
@@ -313,7 +324,7 @@ alt="互動模型 — 重排序器（Reranker）"
 &lt;p&gt;BM25：作為一種傳統的基於關鍵字的檢索方法，BM25 擅長捕捉精確的詞彙匹配。在推斷時，查詢也會傳遞給 BM25 搜索（具體使用 Anserini 庫），並收集 Top-12 的 BM25 結果。&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;Re&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt;G 在此層結合使用了 DPR (一種神經「表示模型」) 和 BM25 (一種詞彙匹配方法)。這兩種方法互補，共同產生一個初步的候選段落池，這兩種方法檢索到的段落隨後會被合併，為後續的重排序階段提供一個更全面且多樣化的候選集。&lt;/p&gt;
+&lt;p&gt;Re&lt;sup&gt;2&lt;/sup&gt;G 在此層結合使用了 DPR (一種神經「表示模型」) 和 BM25 (一種詞彙匹配方法)。這兩種方法互補，共同產生一個初步的候選段落池，這兩種方法檢索到的段落隨後會被合併，為後續的重排序階段提供一個更全面且多樣化的候選集。&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;舉例：&lt;br&gt;
 &lt;strong&gt;DPR 的檢索結果：&lt;/strong&gt;
@@ -331,18 +342,25 @@ BM25 可能檢索到段落 C, F, G, H, I。&lt;br&gt;
 &lt;h3 id="重排序層互動模型的強大能力"&gt;重排序層：互動模型的強大能力
 &lt;/h3&gt;&lt;p&gt;重排序層的核心目的是精煉初始檢索結果的排名，並實現來自不同檢索方法結果的合併。&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;模型類型&lt;/strong&gt;：Re&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt;G 使用基於 Nogueira 和 Cho 序列對分類方法的「互動模型」進行重排序。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;模型類型&lt;/strong&gt;：Re&lt;sup&gt;2&lt;/sup&gt;G 使用基於 Nogueira 和 Cho 序列&lt;!-- 取自 3.1 節 --&gt;對分類方法的「互動模型」進行重排序。&lt;/li&gt;
 &lt;/ul&gt;
-&lt;!-- raw HTML omitted --&gt;
+&lt;!-- DPR 使用的是獨立生成向量的「表示模型」--&gt;
 &lt;hr&gt;
-&lt;!-- raw HTML omitted --&gt;
+&lt;details&gt;
+&lt;summary&gt;互動模型 vs 表示模型&lt;/summary&gt;
+&lt;p&gt;重排序層使用的「互動模型」與 DPR 使用的獨立生成向量的「表示模型」形成對比。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;互動模型 (Interaction Model)：&lt;/strong&gt;如 Nogueira 和 Cho 的序列對分類方法，查詢與段落會作為一個整體輸入模型，透過交叉注意力機制進行深度語義交互，適合用於精細的重排序階段。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;表示模型 (Representation Model)：&lt;/strong&gt;如 DPR，查詢與段落分別獨立編碼為向量，利用向量相似度計算相關性，適合用於大規模初始檢索。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/details&gt;
 &lt;hr&gt;
 &lt;ul&gt;
 &lt;li&gt;
 &lt;p&gt;&lt;strong&gt;機制&lt;/strong&gt;： 在互動模型中，查詢和段落會作為一個整體輸入到 BERT 變換器中，模型會在兩個序列的所有詞元上共同應用交叉注意力機制，從而捕捉查詢和段落之間更深層次的交互關係。  &lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;&lt;strong&gt;優勢&lt;/strong&gt;：透過使用互動模型對來自表示模型的 Top-N 段落進行重排序，Re&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt;G 能夠同時獲得兩種模型類型的優勢：互動模型帶來的更高準確性（因其能進行更細緻的交叉注意力計算），以及表示模型帶來的可擴展性（因其允許高效的初始檢索）。這種設計模式在許多大規模資訊檢索系統中非常有效，平衡了對大型語料庫的快速初始檢索與對較小候選集的精細排名。  &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;優勢&lt;/strong&gt;：透過使用互動模型對來自表示模型的 Top-N 段落進行重排序，Re&lt;sup&gt;2&lt;/sup&gt;G 能夠同時獲得兩種模型類型的優勢：互動模型帶來的更高準確性（因其能進行更細緻的交叉注意力計算），以及表示模型帶來的可擴展性（因其允許高效的初始檢索）。這種設計模式在許多大規模資訊檢索系統中非常有效，平衡了對大型語料庫的快速初始檢索與對較小候選集的精細排名。  &lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;&lt;strong&gt;初始化與推斷&lt;/strong&gt;： 重排序器從 NBoost 在 MS MARCO 數據集上訓練的 BERT 模型初始化。在推斷時，從初始檢索層合併後的段落集會傳遞給重排序器進行評分，並選出 Top-5 的段落供生成器使用。  &lt;/p&gt;
@@ -352,7 +370,7 @@ BM25 可能檢索到段落 C, F, G, H, I。&lt;br&gt;
 &lt;/h3&gt;&lt;p&gt;生成層負責根據重排序後的段落和查詢生成最終的目標輸出序列。  &lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;
-&lt;p&gt;&lt;strong&gt;基礎模型&lt;/strong&gt;：Re&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt;G 使用基於 BART 的序列到序列生成模型，具體是 $BART_{LARGE}$。BART 結合了雙向編碼器（如 BERT）和自回歸解碼器（如 GPT）的優勢，使其非常適合序列到序列任務，並能有效地整合檢索到的資訊。這種選擇利用了現有的穩健生成模型，並透過外部知識增強了它們的能力。  &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;基礎模型&lt;/strong&gt;：Re&lt;sup&gt;2&lt;/sup&gt;G 使用基於 BART 的序列到序列生成模型，具體是 $BART_{LARGE}$。BART 結合了雙向編碼器（如 BERT）和自回歸解碼器（如 GPT）的優勢，使其非常適合序列到序列任務，並能有效地整合檢索到的資訊。這種選擇利用了現有的穩健生成模型，並透過外部知識增強了它們的能力。  &lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;&lt;strong&gt;生成器輸入與輸出&lt;/strong&gt;：來自重排序器的 Top-5 段落會與原始查詢結合，作為 $BART_{LARGE}$ 的輸入以生成輸出。BART 生成的五個輸出序列隨後會根據重排序器分數的 softmax 進行加權，以產生最終的輸出。這個過程在 RAG 中稱為邊緣化 (marginalization)，它確保了檢索到的相關性信息能夠有效指導最終的生成。&lt;/p&gt;
@@ -361,20 +379,20 @@ BM25 可能檢索到段落 C, F, G, H, I。&lt;br&gt;
 &lt;hr&gt;
 &lt;h2 id="四階段訓練方法與線上知識蒸餾"&gt;四階段訓練方法與線上知識蒸餾
 &lt;/h2&gt;&lt;h3 id="第一階段dpr-訓練"&gt;第一階段：DPR 訓練
-&lt;/h3&gt;&lt;p&gt;訓練數據由查詢、正向段落（來自真實標籤的來源資訊）以及「硬負向」段落（從 BM25 檢索但非真實標籤的段落）的三元組組成，這些實例會被批次處理，並且批次中其他實例的正向和硬負向段落會被用作當前實例的「批次負向」，DPR 雙編碼器模型隨後會為每個查詢提供其對正向、硬負向和批次負向段落的概率分佈。此階段的損失函數是正向段落的負對數似然，完成此階段訓練後，語料庫中的所有段落都會使用分層可導航小世界圖 (HNSW) 結合 FAISS 庫進行索引，以便後續高效檢索。&lt;/p&gt;
+&lt;/h3&gt;&lt;p&gt;訓練數據由查詢、正向段落（來自真實標籤的來源資訊）以及「硬負向」段落（從 BM25 檢索但非真實標籤的段落）的三元組組成，這些實例會被批次處理，並且批次中其他實例的正向和硬負向段落會被用作當前實例的「批次負向」，DPR 雙編碼器模型隨後會為每個查詢提供其對正向、硬負向和批次負向段落的概率分佈。此階段的損失函數是正向段落的負對數似然，完成此階段訓練後，語料庫中的所有段落都會使用分層可導航小世界圖 (HNSW)&lt;!-- 擷取自 3.2 節 --&gt; 結合 FAISS 庫進行索引，以便後續高效檢索。&lt;/p&gt;
 &lt;h3 id="第二階段生成訓練"&gt;第二階段：生成訓練
-&lt;/h3&gt;&lt;p&gt;此階段的訓練目標是擴展查詢編碼器的訓練，並訓練 BART&lt;!-- raw HTML omitted --&gt;LARGE&lt;!-- raw HTML omitted --&gt; 序列到序列模型以生成最終的目標序列輸出。這個訓練過程與 Lewis 等人描述的 RAG 模型生成訓練方法一致。&lt;/p&gt;
+&lt;/h3&gt;&lt;p&gt;此階段的訓練目標是擴展查詢編碼器的訓練，並訓練 BART&lt;sub&gt;LARGE&lt;/sub&gt; 序列到序列模型以生成最終的目標序列輸出。這個訓練過程與 Lewis 等人描述的 RAG 模型生成訓練方法一致。&lt;/p&gt;
 &lt;h3 id="第三階段重排序訓練"&gt;第三階段：重排序訓練
 &lt;/h3&gt;&lt;p&gt;重排序器的獨立訓練始於收集訓練集上來自 DPR 和 BM25 的初始檢索結果，這些結果隨後會被合併，並作為重排序器的訓練數據。由於某些數據集可能存在多個正向段落，因此此階段採用的損失函數是這些正向段落負對數似然之和。&lt;/p&gt;
 &lt;h3 id="第四階段端到端訓練"&gt;第四階段：端到端訓練
-&lt;/h3&gt;&lt;p&gt;端到端訓練帶來了一個特殊挑戰：在 Re&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt;G 中，重排序器的分數而非初始檢索分數用於加權每個序列在生成中的影響。這意味著重排序器可以直接透過目標輸出的真實標籤進行訓練，但查詢編碼器的梯度將為零，因為邊緣化過程不再直接依賴於查詢和段落表示向量的內積。  &lt;/p&gt;
-&lt;p&gt;為了解決這個問題，Re&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt;G 引入了一種新穎的線上知識蒸餾應用。在這種方法中，重排序器作為「教師模型」，為 DPR「學生模型」提供軟標籤。這種知識蒸餾是「線上」發生的，即在重排序器訓練的同時進行，實現了知識從一種架構（互動模型）到另一種架構（表示模型）的轉移。初始檢索（DPR）的損失函數是其在檢索到的段落上給出的概率分佈與重排序器在相同段落上給出的概率分佈之間的 KL 散度。為了平滑這些分佈、防止過度損失並穩定訓練，模型使用了溫度超參數 (T)。這種方法不僅提供了正向和負向實例的信號，還提供了「負向程度」的信號，並且能夠利用更多段落進行訓練（DPR 檢索 12 個段落，而生成只使用 Top-5），從而提供了比二元標籤更豐富的訓練信號。&lt;/p&gt;
+&lt;/h3&gt;&lt;p&gt;端到端訓練帶來了一個特殊挑戰：在 Re&lt;sup&gt;2&lt;/sup&gt;G 中，重排序器的分數而非初始檢索分數用於加權每個序列在生成中的影響。這意味著重排序器可以直接透過目標輸出的真實標籤進行訓練，但查詢編碼器的梯度將為零，因為邊緣化過程不再直接依賴於查詢和段落表示向量的內積。  &lt;/p&gt;
+&lt;p&gt;為了解決這個問題，Re&lt;sup&gt;2&lt;/sup&gt;G 引入了一種新穎的線上知識蒸餾應用。在這種方法中，重排序器作為「教師模型」，為 DPR「學生模型」提供軟標籤。這種知識蒸餾是「線上」發生的，即在重排序器訓練的同時進行，實現了知識從一種架構（互動模型）到另一種架構（表示模型）的轉移。初始檢索（DPR）的損失函數是其在檢索到的段落上給出的概率分佈與重排序器在相同段落上給出的概率分佈之間的 KL 散度。為了平滑這些分佈、防止過度損失並穩定訓練，模型使用了溫度超參數 (T)。這種方法不僅提供了正向和負向實例的信號，還提供了「負向程度」的信號，並且能夠利用更多段落進行訓練（DPR 檢索 12 個段落，而生成只使用 Top-5），從而提供了比二元標籤更豐富的訓練信號。&lt;/p&gt;
 &lt;hr&gt;
 &lt;h2 id="實驗結果與性能分析"&gt;實驗結果與性能分析
 &lt;/h2&gt;&lt;p&gt;此部分尚未撰寫。&lt;/p&gt;
 &lt;hr&gt;
 &lt;h2 id="結論"&gt;結論
-&lt;/h2&gt;&lt;p&gt;Re&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt;G 在槽填充、問答、事實核查和對話等任務中，無論是檢索還是端到端性能都得到了實質性提升。&lt;/p&gt;
+&lt;/h2&gt;&lt;p&gt;Re&lt;sup&gt;2&lt;/sup&gt;G 在槽填充、問答、事實核查和對話等任務中，無論是檢索還是端到端性能都得到了實質性提升。&lt;/p&gt;
 &lt;p&gt;本研究的關鍵成果包括：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;重排序器的有效性。  &lt;/li&gt;
@@ -385,7 +403,7 @@ BM25 可能檢索到段落 C, F, G, H, I。&lt;br&gt;
 &lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="https://ar5iv.labs.arxiv.org/html/2207.06300" target="_blank" rel="noopener"
 &gt;Re2G: Retrieve, Rerank, Generate-ar5iv 可視化版本&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>檢索增強大型語言模型綜述 — RA-LLMs 系統性回顧與應用解析</title><link>https://Dandelionlibra.github.io/post/paper/rag-llms-survey-note/</link><pubDate>Sun, 20 Jul 2025 08:50:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/paper/rag-llms-survey-note/</guid><description>&lt;blockquote&gt;
+&lt;/ul&gt;</description></item><item><title>檢索增強大型語言模型綜述 — RA-LLMs 系統性回顧與應用解析</title><link>https://Dandelionlibra.github.io/2025/07/rag-llms-survey-note/</link><pubDate>Sun, 20 Jul 2025 08:50:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/2025/07/rag-llms-survey-note/</guid><description>&lt;blockquote&gt;
 &lt;p&gt;本文整理自：&lt;a class="link" href="https://arxiv.org/abs/2405.06211" target="_blank" rel="noopener"
 &gt;A Survey on RAG Meeting LLMs: Towards Retrieval-Augmented Large Language Models&lt;/a&gt;&lt;br&gt;
 作者：Wenqi Fan, Yujuan Ding, Liangbo Ning, Shijie Wang, Hengyun Li, Dawei Yin, Tat-Seng Chua, Qing Li&lt;br&gt;

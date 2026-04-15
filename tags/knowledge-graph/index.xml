@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Knowledge Graph on YuChen</title><link>https://Dandelionlibra.github.io/tags/knowledge-graph/</link><description>Recent content in Knowledge Graph on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Tue, 22 Jul 2025 05:27:00 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/tags/knowledge-graph/index.xml" rel="self" type="application/rss+xml"/><item><title>LightRAG 論文導讀 — Simple and Fast Retrieval-Augmented Generation 筆記</title><link>https://Dandelionlibra.github.io/post/paper/lightrag-paper-review/</link><pubDate>Tue, 22 Jul 2025 05:27:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/paper/lightrag-paper-review/</guid><description>&lt;blockquote&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Knowledge Graph on YuChen</title><link>https://Dandelionlibra.github.io/tags/knowledge-graph/</link><description>Recent content in Knowledge Graph on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Tue, 22 Jul 2025 05:27:00 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/tags/knowledge-graph/index.xml" rel="self" type="application/rss+xml"/><item><title>LightRAG 論文導讀 — Simple and Fast Retrieval-Augmented Generation 筆記</title><link>https://Dandelionlibra.github.io/2025/07/lightrag-paper-review/</link><pubDate>Tue, 22 Jul 2025 05:27:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/2025/07/lightrag-paper-review/</guid><description>&lt;blockquote&gt;
 &lt;p&gt;本文整理自：&lt;a class="link" href="https://arxiv.org/abs/2410.05779" target="_blank" rel="noopener"
 &gt;LightRAG: Simple and Fast Retrieval-Augmented Generation&lt;/a&gt;&lt;br&gt;
 作者：Zirui Guo, Lianghao Xia, Yanhua Yu, Tu Ao, Chao Huang&lt;br&gt;
@@ -37,7 +37,11 @@ LightRAG，提出透過將圖結構 (graph structures) 引入文本的索引 (te
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id="本研究在-rag-系統中的關注點"&gt;本研究在 RAG 系統中的關注點
-&lt;/h2&gt;&lt;!-- raw HTML omitted --&gt;
+&lt;/h2&gt;&lt;p align="center"&gt;
+ℳ=(𝒢,ℛ=(φ,ψ)) &lt;br&gt;
+ℳ​(q;𝒟)=𝒢​(q,ψ​(q;𝒟^)) &lt;br&gt;
+𝒟^=φ​(𝒟)
+&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;
 &lt;p&gt;&lt;strong&gt;全面信息檢索&lt;/strong&gt; (Comprehensive Information Retrieval)： 索引功能 ϕ(⋅) 必須善於提取全局信息，這對於增強模型有效回答查詢的能力至關重要。&lt;/p&gt;
@@ -66,7 +70,10 @@ alt="LightRAG 框架總覽"
 &lt;h2 id="基於圖形的文本索引"&gt;基於圖形的文本索引
 &lt;/h2&gt;&lt;p&gt;LightRAG 透過將文件分割成更小、更易於管理的片段來增強檢索系統。這種策略允許快速識別和存取相關資訊，而無需分析整個文件 。隨後，系統利用大型語言模型（LLMs）來識別和提取各種實體（例如，名稱、日期、位置和事件）以及它們之間的關係 。透過這個過程收集到的資訊將用於創建一個全面的知識圖譜，突顯整個文件集合中的連結和見解。&lt;/p&gt;
 &lt;p&gt;圖形生成模組正式表示為：&lt;/p&gt;
-&lt;!-- raw HTML omitted --&gt;
+&lt;p align="center"&gt;
+𝒟^=(𝒱^,ℰ^)=Dedupe∘Prof(𝒱,ℰ)​ &lt;br&gt;
+𝒱,ℰ=∪𝒟i∈𝒟 Recog​(𝒟i)
+&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;實體與關係提取 (R(⋅))&lt;/strong&gt;：
 &lt;ul&gt;
@@ -75,12 +82,15 @@ alt="LightRAG 框架總覽"
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
+&lt;!-- 提示 LLM 識別文本資料中的實體 (節點) 及其關係 (邊)。例如，它可以從文本中提取「心臟病專家」和「心臟病」等實體，以及「心臟病專家診斷心臟病」等關係。為了提高效率，原始文本 D 被分割成多個塊 Di。 --&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;LLM 剖析以生成鍵值對 (P(⋅))&lt;/strong&gt;：為每個實體與關係生成索引鍵（key）與對應摘要文本（value），形成文本鍵值對（K, V）。實體通常採用名稱作為鍵；關係也由關聯實體摘要或主題語形成鍵。&lt;/li&gt;
 &lt;/ul&gt;
+&lt;!-- 系統採用 LLM 賦能的剖析功能 P(⋅)，為 V 中的每個實體節點和 E 中的每個關係邊生成一個文本鍵值對（K, V）。每個索引鍵是一個單詞或短語，用於高效檢索，而對應的值是一個文本段落，總結了來自外部資料的相關片段，以幫助文本生成。實體使用其名稱作為唯一的索引鍵，而關係可能具有多個索引鍵，這些索引鍵源自 LLM 增強，包括來自連接實體的全局主題。   --&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;去重以優化圖操作 (D(⋅))&lt;/strong&gt;：合併相同的實體與關係，以減少圖的複雜度，優化後續運算效率。&lt;/li&gt;
 &lt;/ul&gt;
+&lt;!-- 系統實施去重功能 D(⋅)，識別並合併來自原始文本 Di不同片段的相同實體和關係。這個過程透過最小化圖的大小，有效減少了與 D^ 上圖操作相關的開銷，從而實現更高效的資料處理。   --&gt;
 &lt;ul&gt;
 &lt;li&gt;
 &lt;p&gt;&lt;strong&gt;優勢&lt;/strong&gt;：&lt;/p&gt;

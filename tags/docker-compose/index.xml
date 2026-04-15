@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Docker-Compose on YuChen</title><link>https://Dandelionlibra.github.io/tags/docker-compose/</link><description>Recent content in Docker-Compose on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Thu, 17 Jul 2025 10:00:00 +0000</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/tags/docker-compose/index.xml" rel="self" type="application/rss+xml"/><item><title>使用 Docker-compose 快速建立多個關聯的 container</title><link>https://Dandelionlibra.github.io/post/virtual-environment/docker/docker-compose/</link><pubDate>Thu, 17 Jul 2025 10:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/virtual-environment/docker/docker-compose/</guid><description>&lt;h2 id="內容大綱"&gt;內容大綱
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Docker-Compose on YuChen</title><link>https://Dandelionlibra.github.io/tags/docker-compose/</link><description>Recent content in Docker-Compose on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Thu, 17 Jul 2025 10:00:00 +0000</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/tags/docker-compose/index.xml" rel="self" type="application/rss+xml"/><item><title>使用 Docker-compose 快速建立多個關聯的 container</title><link>https://Dandelionlibra.github.io/2025/07/docker-compose/</link><pubDate>Thu, 17 Jul 2025 10:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/2025/07/docker-compose/</guid><description>&lt;h2 id="內容大綱"&gt;內容大綱
 &lt;/h2&gt;&lt;ol&gt;
 &lt;li&gt;為什麼要用 Docker-compose?&lt;/li&gt;
 &lt;li&gt;Docker-compose 基本語法與結構&lt;/li&gt;
@@ -51,6 +51,17 @@
 &lt;li&gt;&lt;code&gt;deploy.resources.reservations.devices&lt;/code&gt;: 指定 GPU 資源。&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;healthcheck&lt;/code&gt;: 健康檢查設定，確保服務正常運作。&lt;/li&gt;
 &lt;/ul&gt;
+&lt;!--
+healthcheck 區塊用於設定 Docker 容器的健康檢查機制。
+- `test`: 指定健康檢查的指令（可替換為實際檢查服務狀態的命令）。
+- `interval`: 兩次健康檢查之間的間隔時間（此例為 30 秒）。
+- `timeout`: 單次健康檢查的超時時間（此例為 10 秒）。
+- `retries`: 連續失敗次數達到此值時，容器會被標記為不健康。
+- `start_period`: 容器啟動後，健康檢查開始前的緩衝期（此例為 60 秒）。
+註：
+1. 健康檢查有助於 Docker Compose 自動監控服務狀態，並在服務異常時採取相應措施。
+2. 詳細說明可參考官方文件：[Docker Compose healthcheck](https://docs.docker.com/compose/compose-file/compose-file-v3/#healthcheck)
+--&gt;
 &lt;hr&gt;
 &lt;h2 id="3-建立多個關聯容器的範例"&gt;3. 建立多個關聯容器的範例
 &lt;/h2&gt;&lt;p&gt;以下範例說明如何用 Docker-compose 同時啟動 Jupyter（支援 GPU）與 Ollama 兩個服務，並讓它們透過自訂網路 &lt;code&gt;ollama_net&lt;/code&gt; 互相溝通：&lt;/p&gt;

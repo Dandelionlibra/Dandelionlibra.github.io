@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Large Language Model on YuChen</title><link>https://Dandelionlibra.github.io/tags/large-language-model/</link><description>Recent content in Large Language Model on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Wed, 23 Jul 2025 03:51:00 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/tags/large-language-model/index.xml" rel="self" type="application/rss+xml"/><item><title>BAAI/bge-reranker-v2-m3 — Hugging Face 官方整理</title><link>https://Dandelionlibra.github.io/post/note/bge-reranker-hf-flagembedding-note/</link><pubDate>Wed, 23 Jul 2025 03:51:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/note/bge-reranker-hf-flagembedding-note/</guid><description>&lt;h2 id="reranker-模型與函式庫使用差異筆記"&gt;Reranker 模型與函式庫使用差異筆記
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Large Language Model on YuChen</title><link>https://Dandelionlibra.github.io/tags/large-language-model/</link><description>Recent content in Large Language Model on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Wed, 23 Jul 2025 03:51:00 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/tags/large-language-model/index.xml" rel="self" type="application/rss+xml"/><item><title>BAAI/bge-reranker-v2-m3 — Hugging Face 官方整理</title><link>https://Dandelionlibra.github.io/2025/07/bge-reranker-hf-flagembedding-note/</link><pubDate>Wed, 23 Jul 2025 03:51:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/2025/07/bge-reranker-hf-flagembedding-note/</guid><description>&lt;h2 id="reranker-模型與函式庫使用差異筆記"&gt;Reranker 模型與函式庫使用差異筆記
 &lt;/h2&gt;&lt;p&gt;這份筆記整理了 FlagEmbedding 和 Hugging Face Transformers 在實作不同 Reranker 模型（標準型、LLM 型、分層式 LLM 型）時的關鍵差異。&lt;/p&gt;
 &lt;hr&gt;
 &lt;h3 id="核心實作比較"&gt;核心實作比較
@@ -267,7 +267,7 @@
 &lt;td&gt;需要深度自訂模型行為或進行學術研究&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
-&lt;/table&gt;</description></item><item><title>檢索增強大型語言模型綜述 — RA-LLMs 系統性回顧與應用解析</title><link>https://Dandelionlibra.github.io/post/paper/rag-llms-survey-note/</link><pubDate>Sun, 20 Jul 2025 08:50:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/paper/rag-llms-survey-note/</guid><description>&lt;blockquote&gt;
+&lt;/table&gt;</description></item><item><title>檢索增強大型語言模型綜述 — RA-LLMs 系統性回顧與應用解析</title><link>https://Dandelionlibra.github.io/2025/07/rag-llms-survey-note/</link><pubDate>Sun, 20 Jul 2025 08:50:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/2025/07/rag-llms-survey-note/</guid><description>&lt;blockquote&gt;
 &lt;p&gt;本文整理自：&lt;a class="link" href="https://arxiv.org/abs/2405.06211" target="_blank" rel="noopener"
 &gt;A Survey on RAG Meeting LLMs: Towards Retrieval-Augmented Large Language Models&lt;/a&gt;&lt;br&gt;
 作者：Wenqi Fan, Yujuan Ding, Liangbo Ning, Shijie Wang, Hengyun Li, Dawei Yin, Tat-Seng Chua, Qing Li&lt;br&gt;
@@ -544,7 +544,7 @@ alt="RA-LLMs 訓練策略總覽"
 &lt;p&gt;Joint Training&lt;br&gt;
 聯合訓練方法則是同時訓練檢索器和生成器，這種方式是為了讓兩個模組在訓練過程中相互協調、共同進步。&lt;/p&gt;
 &lt;/li&gt;
-&lt;/ol&gt;</description></item><item><title>LangChain 記憶型檢索問答：《小王子》文本互動實踐</title><link>https://Dandelionlibra.github.io/post/langchain/retrieverqa-2/</link><pubDate>Fri, 18 Jul 2025 08:39:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/langchain/retrieverqa-2/</guid><description>&lt;h2 id="以-langchain-記憶型檢索問答實現小王子文本互動"&gt;以 LangChain 記憶型檢索問答實現《小王子》文本互動
+&lt;/ol&gt;</description></item><item><title>LangChain 記憶型檢索問答：《小王子》文本互動實踐</title><link>https://Dandelionlibra.github.io/2025/07/retrieverqa-2/</link><pubDate>Fri, 18 Jul 2025 08:39:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/2025/07/retrieverqa-2/</guid><description>&lt;h2 id="以-langchain-記憶型檢索問答實現小王子文本互動"&gt;以 LangChain 記憶型檢索問答實現《小王子》文本互動
 &lt;/h2&gt;&lt;p&gt;本文介紹如何利用 LangChain 框架，結合 Ollama Embeddings、ChromaDB 與記憶型問答鏈（RunnableWithMessageHistory），實現能記住上下文的互動式檢索問答。以《小王子》文本為例，展示記憶型問答與一般檢索問答的差異。&lt;/p&gt;
 &lt;h3 id="一記憶型問答鏈設計"&gt;一、記憶型問答鏈設計
 &lt;/h3&gt;&lt;p&gt;LangChain 提供 &lt;code&gt;RunnableWithMessageHistory&lt;/code&gt;，可根據 session_id 保存對話歷程，讓模型具備「記憶」功能。核心流程如下：&lt;/p&gt;
@@ -555,6 +555,15 @@ alt="RA-LLMs 訓練策略總覽"
 &lt;li&gt;&lt;strong&gt;設計 Prompt 與 Chain&lt;/strong&gt;：結合歷史訊息與提問，串接 LLM。&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;啟動記憶型問答鏈&lt;/strong&gt;：每次提問都能保留上下文，實現多輪互動。&lt;/li&gt;
 &lt;/ol&gt;
+&lt;!-- ### 所需依賴套件
+請確保安裝以下 Python 套件：
+```bash
+pip install langchain langchain_chroma pypdf ollama
+```
+- `langchain`：核心框架，實現記憶型問答鏈與檢索功能。
+- `langchain_chroma`：向量資料庫，用於儲存文本向量。
+- `pypdf`：PDF 解析工具，載入文本內容。
+- `ollama`：本地 LLM 與 Embeddings 支援。 --&gt;
 &lt;h4 id="主要程式片段"&gt;主要程式片段
 &lt;/h4&gt;&lt;p&gt;完整程式碼請參考：&lt;a class="link" href="https://github.com/Dandelionlibra/Dandelionlibra.github.io/blob/main/content/post/langchain/example/LangChain_memory_ask_via_pdf.ipynb" target="_blank" rel="noopener"
 &gt;GitHub 範例程式&lt;/a&gt;&lt;/p&gt;
@@ -620,7 +629,7 @@ alt="RA-LLMs 訓練策略總覽"
 &gt;LangChain RunnableWithMessageHistory 官方文件&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://dandelionlibra.github.io/post/langchain/retrieverqa-1/" target="_blank" rel="noopener"
 &gt;LangChain 檢索問答基礎篇&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>使用 Langchain 框架進行檢索提問</title><link>https://Dandelionlibra.github.io/post/langchain/retrieverqa-1/</link><pubDate>Fri, 18 Jul 2025 02:59:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/langchain/retrieverqa-1/</guid><description>&lt;h2 id="程式運行詳細步驟"&gt;程式運行詳細步驟
+&lt;/ul&gt;</description></item><item><title>使用 Langchain 框架進行檢索提問</title><link>https://Dandelionlibra.github.io/2025/07/retrieverqa-1/</link><pubDate>Fri, 18 Jul 2025 02:59:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/2025/07/retrieverqa-1/</guid><description>&lt;h2 id="程式運行詳細步驟"&gt;程式運行詳細步驟
 &lt;/h2&gt;&lt;p&gt;以下以 Jupyter Notebook 格式，記錄如何使用 LangChain 框架結合 Ollama Embeddings 與 ChromaDB，實現 PDF 文件的檢索式問答。&lt;br&gt;
 詳細程式參考：&lt;a class="link" href="https://github.com/Dandelionlibra/Dandelionlibra.github.io/blob/main/content/post/langchain/example/LangChain_ask_via_pdf.ipynb" target="_blank" rel="noopener"
 &gt;GitHub 範例程式&lt;/a&gt;&lt;/p&gt;
@@ -693,7 +702,7 @@ alt="RA-LLMs 訓練策略總覽"
 &lt;li&gt;使用 Ollama Embeddings 將文本轉為向量，存入 ChromaDB。&lt;/li&gt;
 &lt;li&gt;結合 Ollama LLM 與 RetrievalQA Chain，實現自然語言問答。&lt;/li&gt;
 &lt;li&gt;可針對文本內容進行多樣化提問，快速獲得答案。&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>LangChain 基本使用-4</title><link>https://Dandelionlibra.github.io/post/langchain/uselangchain-4/</link><pubDate>Tue, 15 Jul 2025 21:12:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/langchain/uselangchain-4/</guid><description>&lt;h1 id="甚麼是-langchain-的鏈結構"&gt;甚麼是 Langchain 的鏈結構?
+&lt;/ul&gt;</description></item><item><title>LangChain 基本使用-4</title><link>https://Dandelionlibra.github.io/2025/07/uselangchain-4/</link><pubDate>Tue, 15 Jul 2025 21:12:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/2025/07/uselangchain-4/</guid><description>&lt;h1 id="甚麼是-langchain-的鏈結構"&gt;甚麼是 Langchain 的鏈結構?
 &lt;/h1&gt;&lt;h2 id="定義"&gt;定義
 &lt;/h2&gt;&lt;p&gt;將小的模組串起來，而形成的串列結構。&lt;br&gt;
 舉例: 定義提示詞 -&amp;gt; 選擇 LLM -&amp;gt; 運行 inferencing(呼叫 function) -&amp;gt; 得到結果。&lt;/p&gt;
@@ -790,7 +799,7 @@ alt="Data_Connection"
 &lt;/h1&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="https://www.youtube.com/playlist?list=PLAr9oL1AT4OElxInUijCzCgU3CpgHTjTI" target="_blank" rel="noopener"
 &gt;https://www.youtube.com/playlist?list=PLAr9oL1AT4OElxInUijCzCgU3CpgHTjTI&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>LangChain 基本使用-3</title><link>https://Dandelionlibra.github.io/post/langchain/uselangchain-3/</link><pubDate>Mon, 14 Jul 2025 10:56:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/langchain/uselangchain-3/</guid><description>&lt;h1 id="data-connection"&gt;Data Connection
+&lt;/ul&gt;</description></item><item><title>LangChain 基本使用-3</title><link>https://Dandelionlibra.github.io/2025/07/uselangchain-3/</link><pubDate>Mon, 14 Jul 2025 10:56:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/2025/07/uselangchain-3/</guid><description>&lt;h1 id="data-connection"&gt;Data Connection
 &lt;/h1&gt;&lt;h2 id="定義"&gt;定義
 &lt;/h2&gt;&lt;p&gt;許多基於大型語言模型而執行的應用常會用到模型數據集中沒有的數據。而針對這類需求，Langchain 提供了許多工具使用戶可以從各類數據源中加載新的數據、轉換數據、儲存數據、訪問數據。&lt;/p&gt;
 &lt;p&gt;※大型語言模型不可能在訓練階段就涵蓋所有數據，且每時每刻都有新的數據產生。&lt;/p&gt;
@@ -867,7 +876,7 @@ alt="Document_transformers.JPG.JPG"
 &lt;/h1&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="https://www.youtube.com/playlist?list=PLAr9oL1AT4OElxInUijCzCgU3CpgHTjTI" target="_blank" rel="noopener"
 &gt;https://www.youtube.com/playlist?list=PLAr9oL1AT4OElxInUijCzCgU3CpgHTjTI&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>LangChain 基本使用-2</title><link>https://Dandelionlibra.github.io/post/langchain/uselangchain-2/</link><pubDate>Sun, 13 Jul 2025 08:06:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/langchain/uselangchain-2/</guid><description>&lt;h1 id="提示模板"&gt;提示模板
+&lt;/ul&gt;</description></item><item><title>LangChain 基本使用-2</title><link>https://Dandelionlibra.github.io/2025/07/uselangchain-2/</link><pubDate>Sun, 13 Jul 2025 08:06:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/2025/07/uselangchain-2/</guid><description>&lt;h1 id="提示模板"&gt;提示模板
 &lt;/h1&gt;&lt;ul&gt;
 &lt;li&gt;對語言模型的指令&lt;/li&gt;
 &lt;li&gt;提供簡單的事例給語言模型使模型接近理想結果&lt;/li&gt;
@@ -1049,7 +1058,7 @@ alt="partial_prompt_template"
 &lt;/h1&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="https://www.youtube.com/playlist?list=PLAr9oL1AT4OElxInUijCzCgU3CpgHTjTI" target="_blank" rel="noopener"
 &gt;https://www.youtube.com/playlist?list=PLAr9oL1AT4OElxInUijCzCgU3CpgHTjTI&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>LangChain 安裝與基本使用-1</title><link>https://Dandelionlibra.github.io/post/langchain/uselangchain-1/</link><pubDate>Sun, 06 Jul 2025 15:33:11 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/langchain/uselangchain-1/</guid><description>&lt;h1 id="安裝-langchain"&gt;安裝 LangChain
+&lt;/ul&gt;</description></item><item><title>LangChain 安裝與基本使用-1</title><link>https://Dandelionlibra.github.io/2025/07/uselangchain-1/</link><pubDate>Sun, 06 Jul 2025 15:33:11 +0000</pubDate><guid>https://Dandelionlibra.github.io/2025/07/uselangchain-1/</guid><description>&lt;h1 id="安裝-langchain"&gt;安裝 LangChain
 &lt;/h1&gt;&lt;p&gt;使用 pip 指令安裝 LangChain 核心套件，其中提供各組件與基本框架。&lt;br&gt;
 LangChain 相關套件的詳細資訊可以參考&lt;a class="link" href="https://python.langchain.com/api_reference/" target="_blank" rel="noopener"
 &gt;langchain 官方文件&lt;/a&gt;。&lt;/p&gt;
@@ -1256,7 +1265,7 @@ AI:
 &lt;/h1&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="https://www.youtube.com/playlist?list=PLAr9oL1AT4OElxInUijCzCgU3CpgHTjTI" target="_blank" rel="noopener"
 &gt;https://www.youtube.com/playlist?list=PLAr9oL1AT4OElxInUijCzCgU3CpgHTjTI&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>Introduction langchain</title><link>https://Dandelionlibra.github.io/post/langchain/introlangchain/</link><pubDate>Sun, 06 Jul 2025 00:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/langchain/introlangchain/</guid><description>&lt;h1 id="介紹-langchain"&gt;介紹 LangChain
+&lt;/ul&gt;</description></item><item><title>Introduction langchain</title><link>https://Dandelionlibra.github.io/2025/07/introlangchain/</link><pubDate>Sun, 06 Jul 2025 00:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/2025/07/introlangchain/</guid><description>&lt;h1 id="介紹-langchain"&gt;介紹 LangChain
 &lt;/h1&gt;&lt;p&gt;LangChain 為 2022 年發布的開源框架，主要用於開發由語言模型驅動的應用程式，可連接多種語言模型與外部工具。&lt;br&gt;
 &lt;a class="link" href="https://www.langchain.com" target="_blank" rel="noopener"
 &gt;LangChain 官方網站&lt;/a&gt;
@@ -1291,6 +1300,7 @@ alt="LLMChain"
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;LangChain 藉由這些組件連結各種模型與工具，以達成檢索與分析數據，並可進行個性化的訂製。&lt;/p&gt;
+&lt;!-- 從網頁中作文本提取，並自動生成總結文稿 --&gt;
 &lt;h2 id="主要解決問題"&gt;主要解決問題
 &lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;如何格式化輸出?&lt;/li&gt;
@@ -1308,7 +1318,7 @@ alt="LLMChain"
 &gt;https://www.youtube.com/watch?v=feFp5TbrVMo&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://www.youtube.com/playlist?list=PLAr9oL1AT4OElxInUijCzCgU3CpgHTjTI" target="_blank" rel="noopener"
 &gt;https://www.youtube.com/playlist?list=PLAr9oL1AT4OElxInUijCzCgU3CpgHTjTI&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>How to install and use Ollama?</title><link>https://Dandelionlibra.github.io/post/ollama/ollama/</link><pubDate>Sat, 05 Jul 2025 00:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/ollama/ollama/</guid><description>&lt;h1 id="介紹-ollama"&gt;介紹 Ollama
+&lt;/ul&gt;</description></item><item><title>How to install and use Ollama?</title><link>https://Dandelionlibra.github.io/2025/07/ollama/</link><pubDate>Sat, 05 Jul 2025 00:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/2025/07/ollama/</guid><description>&lt;h1 id="介紹-ollama"&gt;介紹 Ollama
 &lt;/h1&gt;&lt;p&gt;Ollama 是一個能在 本地（Windows/Mac/Linux）執行大型語言模型（LLM）和 Vision Language Model（VLM） 的框架。&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;開源工具&lt;/li&gt;
@@ -1536,4 +1546,17 @@ ps.若沒有 pip 我未來再寫一篇安裝與使用 pip 的文章 ;)&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(response&lt;span style="color:#f92672"&gt;.&lt;/span&gt;choices[&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;]&lt;span style="color:#f92672"&gt;.&lt;/span&gt;message&lt;span style="color:#f92672"&gt;.&lt;/span&gt;content)
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description></item></channel></rss>
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;!-- &gt;
+若發生套件衝突，不管當前有沒有裝 openai，也不管目前版本是否是最新版，都會重新下載最新版本並完整重新安裝覆蓋掉原本的 openai 套件。
+```
+pip install --upgrade --force-reinstall openai
+```
+--&gt;
+&lt;!-- &gt;
+&gt; [文章報導](&lt;https://humanityisland.nccu.edu.tw/qiumeihong_a/&gt;)
+## 參考內容
+淺談為表情心理學：https://www.thenewslens.com/article/128732
+--&gt;
+&lt;!-- &gt;
+&gt; Photo by [Pawel Czerwinski](https://unsplash.com/@pawel_czerwinski) on [Unsplash](https://unsplash.com/)
+--&gt;</description></item></channel></rss>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Tutorial on YuChen</title><link>https://Dandelionlibra.github.io/categories/tutorial/</link><description>Recent content in Tutorial on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Thu, 17 Jul 2025 10:00:00 +0000</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/categories/tutorial/index.xml" rel="self" type="application/rss+xml"/><item><title>使用 Docker 快速建立 Jupyter Notebook 環境教學</title><link>https://Dandelionlibra.github.io/post/virtual-environment/docker/setup-jupyter-notebook-with-docker/</link><pubDate>Thu, 17 Jul 2025 10:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/virtual-environment/docker/setup-jupyter-notebook-with-docker/</guid><description>&lt;h2 id="內容大綱"&gt;內容大綱
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Tutorial on YuChen</title><link>https://Dandelionlibra.github.io/categories/tutorial/</link><description>Recent content in Tutorial on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Thu, 17 Jul 2025 10:00:00 +0000</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/categories/tutorial/index.xml" rel="self" type="application/rss+xml"/><item><title>使用 Docker 快速建立 Jupyter Notebook 環境教學</title><link>https://Dandelionlibra.github.io/2025/07/setup-jupyter-notebook-with-docker/</link><pubDate>Thu, 17 Jul 2025 10:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/2025/07/setup-jupyter-notebook-with-docker/</guid><description>&lt;h2 id="內容大綱"&gt;內容大綱
 &lt;/h2&gt;&lt;ol&gt;
 &lt;li&gt;為什麼用 Docker 建立 Jupyter Notebook？&lt;/li&gt;
 &lt;li&gt;安裝 Docker
@@ -13,6 +13,9 @@
 &lt;li&gt;使用 GPU&lt;/li&gt;
 &lt;li&gt;參考資料&lt;/li&gt;
 &lt;/ol&gt;
+&lt;!-- 6. 常見應用情境
+- 資料分析與機器學習開發
+- 多人協作與環境複製 --&gt;
 &lt;hr&gt;
 &lt;h2 id="1-為什麼用-docker-建立-jupyter-notebook"&gt;1. 為什麼用 Docker 建立 Jupyter Notebook？
 &lt;/h2&gt;&lt;p&gt;Docker 可讓你快速建立隔離的開發環境，避免本機安裝衝突。Jupyter Notebook 是資料科學常用的互動式開發工具，透過 Docker 可輕鬆部署、移植與分享。&lt;/p&gt;
@@ -98,6 +101,14 @@
 &lt;p&gt;注意：部分映像檔可能需額外安裝 CUDA、cuDNN 或深度學習框架，請參考 &lt;a class="link" href="https://jupyter-docker-stacks.readthedocs.io/en/latest/using/recipes.html#using-gpus" target="_blank" rel="noopener"
 &gt;Jupyter Docker Stacks 官方說明&lt;/a&gt;。&lt;/p&gt;
 &lt;/blockquote&gt;
+&lt;!-- ---
+## 6. 常見應用情境
+### 資料分析與機器學習開發
+- 快速建立 Python、R 等資料科學環境
+- 安裝額外套件可用 `docker exec -it &lt;container_id&gt; bash` 進入容器後安裝
+### 多人協作與環境複製
+- 透過 Dockerfile 或 docker-compose.yml 定義一致的開發環境
+- 團隊成員可直接拉取映像檔，確保環境一致 --&gt;
 &lt;hr&gt;
 &lt;h2 id="6-參考資料"&gt;6. 參考資料
 &lt;/h2&gt;&lt;ul&gt;
@@ -107,7 +118,7 @@
 &gt;Docker 官方網站&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://jupyter.org/" target="_blank" rel="noopener"
 &gt;Jupyter Notebook 官方網站&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>LangChain 基本使用-4</title><link>https://Dandelionlibra.github.io/post/langchain/uselangchain-4/</link><pubDate>Tue, 15 Jul 2025 21:12:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/langchain/uselangchain-4/</guid><description>&lt;h1 id="甚麼是-langchain-的鏈結構"&gt;甚麼是 Langchain 的鏈結構?
+&lt;/ul&gt;</description></item><item><title>LangChain 基本使用-4</title><link>https://Dandelionlibra.github.io/2025/07/uselangchain-4/</link><pubDate>Tue, 15 Jul 2025 21:12:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/2025/07/uselangchain-4/</guid><description>&lt;h1 id="甚麼是-langchain-的鏈結構"&gt;甚麼是 Langchain 的鏈結構?
 &lt;/h1&gt;&lt;h2 id="定義"&gt;定義
 &lt;/h2&gt;&lt;p&gt;將小的模組串起來，而形成的串列結構。&lt;br&gt;
 舉例: 定義提示詞 -&amp;gt; 選擇 LLM -&amp;gt; 運行 inferencing(呼叫 function) -&amp;gt; 得到結果。&lt;/p&gt;
@@ -204,7 +215,7 @@ alt="Data_Connection"
 &lt;/h1&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="https://www.youtube.com/playlist?list=PLAr9oL1AT4OElxInUijCzCgU3CpgHTjTI" target="_blank" rel="noopener"
 &gt;https://www.youtube.com/playlist?list=PLAr9oL1AT4OElxInUijCzCgU3CpgHTjTI&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>LangChain 基本使用-3</title><link>https://Dandelionlibra.github.io/post/langchain/uselangchain-3/</link><pubDate>Mon, 14 Jul 2025 10:56:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/langchain/uselangchain-3/</guid><description>&lt;h1 id="data-connection"&gt;Data Connection
+&lt;/ul&gt;</description></item><item><title>LangChain 基本使用-3</title><link>https://Dandelionlibra.github.io/2025/07/uselangchain-3/</link><pubDate>Mon, 14 Jul 2025 10:56:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/2025/07/uselangchain-3/</guid><description>&lt;h1 id="data-connection"&gt;Data Connection
 &lt;/h1&gt;&lt;h2 id="定義"&gt;定義
 &lt;/h2&gt;&lt;p&gt;許多基於大型語言模型而執行的應用常會用到模型數據集中沒有的數據。而針對這類需求，Langchain 提供了許多工具使用戶可以從各類數據源中加載新的數據、轉換數據、儲存數據、訪問數據。&lt;/p&gt;
 &lt;p&gt;※大型語言模型不可能在訓練階段就涵蓋所有數據，且每時每刻都有新的數據產生。&lt;/p&gt;
@@ -281,7 +292,7 @@ alt="Document_transformers.JPG.JPG"
 &lt;/h1&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="https://www.youtube.com/playlist?list=PLAr9oL1AT4OElxInUijCzCgU3CpgHTjTI" target="_blank" rel="noopener"
 &gt;https://www.youtube.com/playlist?list=PLAr9oL1AT4OElxInUijCzCgU3CpgHTjTI&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>LangChain 基本使用-2</title><link>https://Dandelionlibra.github.io/post/langchain/uselangchain-2/</link><pubDate>Sun, 13 Jul 2025 08:06:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/langchain/uselangchain-2/</guid><description>&lt;h1 id="提示模板"&gt;提示模板
+&lt;/ul&gt;</description></item><item><title>LangChain 基本使用-2</title><link>https://Dandelionlibra.github.io/2025/07/uselangchain-2/</link><pubDate>Sun, 13 Jul 2025 08:06:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/2025/07/uselangchain-2/</guid><description>&lt;h1 id="提示模板"&gt;提示模板
 &lt;/h1&gt;&lt;ul&gt;
 &lt;li&gt;對語言模型的指令&lt;/li&gt;
 &lt;li&gt;提供簡單的事例給語言模型使模型接近理想結果&lt;/li&gt;
@@ -463,7 +474,7 @@ alt="partial_prompt_template"
 &lt;/h1&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="https://www.youtube.com/playlist?list=PLAr9oL1AT4OElxInUijCzCgU3CpgHTjTI" target="_blank" rel="noopener"
 &gt;https://www.youtube.com/playlist?list=PLAr9oL1AT4OElxInUijCzCgU3CpgHTjTI&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>如何使用 SSH 進行遠端連線教學</title><link>https://Dandelionlibra.github.io/post/ssh/how-to-use-ssh/</link><pubDate>Thu, 10 Jul 2025 16:03:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/ssh/how-to-use-ssh/</guid><description>&lt;h2 id="內容大綱"&gt;內容大綱
+&lt;/ul&gt;</description></item><item><title>如何使用 SSH 進行遠端連線教學</title><link>https://Dandelionlibra.github.io/2025/07/how-to-use-ssh/</link><pubDate>Thu, 10 Jul 2025 16:03:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/2025/07/how-to-use-ssh/</guid><description>&lt;h2 id="內容大綱"&gt;內容大綱
 &lt;/h2&gt;&lt;ol&gt;
 &lt;li&gt;SSH 基本介紹&lt;/li&gt;
 &lt;li&gt;安裝 SSH 客戶端
@@ -586,7 +597,7 @@ user@remote_host [-p port_number]
 &gt;GitHub SSH 教學&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://code.visualstudio.com/docs/remote/ssh" target="_blank" rel="noopener"
 &gt;VSCode Remote SSH 官方說明&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>LangChain 安裝與基本使用-1</title><link>https://Dandelionlibra.github.io/post/langchain/uselangchain-1/</link><pubDate>Sun, 06 Jul 2025 15:33:11 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/langchain/uselangchain-1/</guid><description>&lt;h1 id="安裝-langchain"&gt;安裝 LangChain
+&lt;/ul&gt;</description></item><item><title>LangChain 安裝與基本使用-1</title><link>https://Dandelionlibra.github.io/2025/07/uselangchain-1/</link><pubDate>Sun, 06 Jul 2025 15:33:11 +0000</pubDate><guid>https://Dandelionlibra.github.io/2025/07/uselangchain-1/</guid><description>&lt;h1 id="安裝-langchain"&gt;安裝 LangChain
 &lt;/h1&gt;&lt;p&gt;使用 pip 指令安裝 LangChain 核心套件，其中提供各組件與基本框架。&lt;br&gt;
 LangChain 相關套件的詳細資訊可以參考&lt;a class="link" href="https://python.langchain.com/api_reference/" target="_blank" rel="noopener"
 &gt;langchain 官方文件&lt;/a&gt;。&lt;/p&gt;
@@ -793,7 +804,7 @@ AI:
 &lt;/h1&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="https://www.youtube.com/playlist?list=PLAr9oL1AT4OElxInUijCzCgU3CpgHTjTI" target="_blank" rel="noopener"
 &gt;https://www.youtube.com/playlist?list=PLAr9oL1AT4OElxInUijCzCgU3CpgHTjTI&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>Introduction langchain</title><link>https://Dandelionlibra.github.io/post/langchain/introlangchain/</link><pubDate>Sun, 06 Jul 2025 00:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/langchain/introlangchain/</guid><description>&lt;h1 id="介紹-langchain"&gt;介紹 LangChain
+&lt;/ul&gt;</description></item><item><title>Introduction langchain</title><link>https://Dandelionlibra.github.io/2025/07/introlangchain/</link><pubDate>Sun, 06 Jul 2025 00:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/2025/07/introlangchain/</guid><description>&lt;h1 id="介紹-langchain"&gt;介紹 LangChain
 &lt;/h1&gt;&lt;p&gt;LangChain 為 2022 年發布的開源框架，主要用於開發由語言模型驅動的應用程式，可連接多種語言模型與外部工具。&lt;br&gt;
 &lt;a class="link" href="https://www.langchain.com" target="_blank" rel="noopener"
 &gt;LangChain 官方網站&lt;/a&gt;
@@ -828,6 +839,7 @@ alt="LLMChain"
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;LangChain 藉由這些組件連結各種模型與工具，以達成檢索與分析數據，並可進行個性化的訂製。&lt;/p&gt;
+&lt;!-- 從網頁中作文本提取，並自動生成總結文稿 --&gt;
 &lt;h2 id="主要解決問題"&gt;主要解決問題
 &lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;如何格式化輸出?&lt;/li&gt;
@@ -845,7 +857,7 @@ alt="LLMChain"
 &gt;https://www.youtube.com/watch?v=feFp5TbrVMo&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://www.youtube.com/playlist?list=PLAr9oL1AT4OElxInUijCzCgU3CpgHTjTI" target="_blank" rel="noopener"
 &gt;https://www.youtube.com/playlist?list=PLAr9oL1AT4OElxInUijCzCgU3CpgHTjTI&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>How to install and use Ollama?</title><link>https://Dandelionlibra.github.io/post/ollama/ollama/</link><pubDate>Sat, 05 Jul 2025 00:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/ollama/ollama/</guid><description>&lt;h1 id="介紹-ollama"&gt;介紹 Ollama
+&lt;/ul&gt;</description></item><item><title>How to install and use Ollama?</title><link>https://Dandelionlibra.github.io/2025/07/ollama/</link><pubDate>Sat, 05 Jul 2025 00:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/2025/07/ollama/</guid><description>&lt;h1 id="介紹-ollama"&gt;介紹 Ollama
 &lt;/h1&gt;&lt;p&gt;Ollama 是一個能在 本地（Windows/Mac/Linux）執行大型語言模型（LLM）和 Vision Language Model（VLM） 的框架。&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;開源工具&lt;/li&gt;
@@ -1073,7 +1085,20 @@ ps.若沒有 pip 我未來再寫一篇安裝與使用 pip 的文章 ;)&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(response&lt;span style="color:#f92672"&gt;.&lt;/span&gt;choices[&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;]&lt;span style="color:#f92672"&gt;.&lt;/span&gt;message&lt;span style="color:#f92672"&gt;.&lt;/span&gt;content)
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description></item><item><title>使用 Docker-compose 快速建立多個關聯的 container</title><link>https://Dandelionlibra.github.io/post/virtual-environment/docker/docker-compose/</link><pubDate>Thu, 17 Jul 2025 10:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/virtual-environment/docker/docker-compose/</guid><description>&lt;h2 id="內容大綱"&gt;內容大綱
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;!-- &gt;
+若發生套件衝突，不管當前有沒有裝 openai，也不管目前版本是否是最新版，都會重新下載最新版本並完整重新安裝覆蓋掉原本的 openai 套件。
+```
+pip install --upgrade --force-reinstall openai
+```
+--&gt;
+&lt;!-- &gt;
+&gt; [文章報導](&lt;https://humanityisland.nccu.edu.tw/qiumeihong_a/&gt;)
+## 參考內容
+淺談為表情心理學：https://www.thenewslens.com/article/128732
+--&gt;
+&lt;!-- &gt;
+&gt; Photo by [Pawel Czerwinski](https://unsplash.com/@pawel_czerwinski) on [Unsplash](https://unsplash.com/)
+--&gt;</description></item><item><title>使用 Docker-compose 快速建立多個關聯的 container</title><link>https://Dandelionlibra.github.io/2025/07/docker-compose/</link><pubDate>Thu, 17 Jul 2025 10:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/2025/07/docker-compose/</guid><description>&lt;h2 id="內容大綱"&gt;內容大綱
 &lt;/h2&gt;&lt;ol&gt;
 &lt;li&gt;為什麼要用 Docker-compose?&lt;/li&gt;
 &lt;li&gt;Docker-compose 基本語法與結構&lt;/li&gt;
@@ -1126,6 +1151,17 @@ ps.若沒有 pip 我未來再寫一篇安裝與使用 pip 的文章 ;)&lt;/p&gt;
 &lt;li&gt;&lt;code&gt;deploy.resources.reservations.devices&lt;/code&gt;: 指定 GPU 資源。&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;healthcheck&lt;/code&gt;: 健康檢查設定，確保服務正常運作。&lt;/li&gt;
 &lt;/ul&gt;
+&lt;!--
+healthcheck 區塊用於設定 Docker 容器的健康檢查機制。
+- `test`: 指定健康檢查的指令（可替換為實際檢查服務狀態的命令）。
+- `interval`: 兩次健康檢查之間的間隔時間（此例為 30 秒）。
+- `timeout`: 單次健康檢查的超時時間（此例為 10 秒）。
+- `retries`: 連續失敗次數達到此值時，容器會被標記為不健康。
+- `start_period`: 容器啟動後，健康檢查開始前的緩衝期（此例為 60 秒）。
+註：
+1. 健康檢查有助於 Docker Compose 自動監控服務狀態，並在服務異常時採取相應措施。
+2. 詳細說明可參考官方文件：[Docker Compose healthcheck](https://docs.docker.com/compose/compose-file/compose-file-v3/#healthcheck)
+--&gt;
 &lt;hr&gt;
 &lt;h2 id="3-建立多個關聯容器的範例"&gt;3. 建立多個關聯容器的範例
 &lt;/h2&gt;&lt;p&gt;以下範例說明如何用 Docker-compose 同時啟動 Jupyter（支援 GPU）與 Ollama 兩個服務，並讓它們透過自訂網路 &lt;code&gt;ollama_net&lt;/code&gt; 互相溝通：&lt;/p&gt;
@@ -1218,7 +1254,7 @@ ps.若沒有 pip 我未來再寫一篇安裝與使用 pip 的文章 ;)&lt;/p&gt;
 &gt;Docker 官方網站&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://dandelionlibra.github.io/post/virtual-environment/docker/setup-jupyter-notebook-with-docker/" target="_blank" rel="noopener"
 &gt;如何安裝 Docker（延伸閱讀）&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>Docker 基本使用指令</title><link>https://Dandelionlibra.github.io/post/virtual-environment/docker/docker/</link><pubDate>Thu, 10 Jul 2025 10:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/post/virtual-environment/docker/docker/</guid><description>&lt;h2 id="內容大綱"&gt;內容大綱
+&lt;/ul&gt;</description></item><item><title>Docker 基本使用指令</title><link>https://Dandelionlibra.github.io/2025/07/docker/</link><pubDate>Thu, 10 Jul 2025 10:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/2025/07/docker/</guid><description>&lt;h2 id="內容大綱"&gt;內容大綱
 &lt;/h2&gt;&lt;ol&gt;
 &lt;li&gt;Docker 是什麼？&lt;/li&gt;
 &lt;li&gt;Docker 常用指令與參數說明&lt;/li&gt;

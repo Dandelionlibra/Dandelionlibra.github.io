@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Orange3 on YuChen</title><link>https://Dandelionlibra.github.io/tags/orange3/</link><description>Recent content in Orange3 on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Mon, 21 Jul 2025 09:16:00 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/tags/orange3/index.xml" rel="self" type="application/rss+xml"/><item><title>Orange3</title><link>https://Dandelionlibra.github.io/post/data-analysis-tools/orange/data-mining/</link><pubDate>Mon, 21 Jul 2025 09:16:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/post/data-analysis-tools/orange/data-mining/</guid><description>&lt;h2 id="什麼是-orange3"&gt;什麼是 Orange3？
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Orange3 on YuChen</title><link>https://Dandelionlibra.github.io/tags/orange3/</link><description>Recent content in Orange3 on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Mon, 21 Jul 2025 09:16:00 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/tags/orange3/index.xml" rel="self" type="application/rss+xml"/><item><title>Orange3</title><link>https://Dandelionlibra.github.io/2025/07/data-mining/</link><pubDate>Mon, 21 Jul 2025 09:16:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/2025/07/data-mining/</guid><description>&lt;h2 id="什麼是-orange3"&gt;什麼是 Orange3？
 &lt;/h2&gt;&lt;p&gt;Orange3 是一款開源 (Open Source) 的資料探勘與機器學習工具。它最大的特色是&lt;strong&gt;視覺化的流程介面&lt;/strong&gt; (Visual Programming)。&lt;/p&gt;
 &lt;p&gt;使用者不需要撰寫程式碼，只需要透過拖拉、連接不同的 &lt;strong&gt;「元件」 (Widgets)&lt;/strong&gt;，就可以建構出完整的資料分析、資料前處理、模型訓練與評估的流程。&lt;/p&gt;
 &lt;h2 id="核心優勢"&gt;核心優勢
@@ -151,4 +151,8 @@
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;Test &amp;amp; Score (測試與評分):&lt;/strong&gt; &lt;strong&gt;評估的核心&lt;/strong&gt;。我們把資料 (&lt;code&gt;Preprocess&lt;/code&gt;) 和模型 (&lt;code&gt;Linear Regression&lt;/code&gt;, &lt;code&gt;Random Forest&lt;/code&gt;) 都連到這裡。&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;Cross-validation (交叉驗證):&lt;/strong&gt; &lt;code&gt;Test &amp;amp; Score&lt;/code&gt; 內最重要的設定。它會自動將資料分成 N 份（例如 10 份），輪流將 9 份當作訓練集、1 份當作測試集，最後算出平均分數。這能有效&lt;strong&gt;避免過擬合&lt;/strong&gt;，得到一個可靠的效能指標。&lt;/li&gt;
-&lt;/ul&gt;</description></item></channel></rss>
+&lt;/ul&gt;
+&lt;!-- ## Reference
+- [Retrieval-Augmented Generation for Large Language Models: A Survey](https://arxiv.org/abs/2312.10997)
+- [Three Paradigms of Retrieval-Augmented Generation (RAG) for LLMs](https://www.thecloudgirl.dev/blog/three-paradigms-of-retrieval-augmented-generation-rag-for-llms#:~:text=,on%20embeddings%20from%20language%20models)
+- [RAG Techniques | IBM Think](https://www.ibm.com/think/topics/rag-techniques#:~:) --&gt;</description></item></channel></rss>
