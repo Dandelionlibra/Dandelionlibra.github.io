@@ -4,7 +4,7 @@ title = 'YuChen'
 theme = 'stack'
 
 [permalinks]
-posts = "/posts/:year/:filename/"
+posts = "/posts/:year/:contentbasename/"
 
 [menu]
 [[menu.main]]
