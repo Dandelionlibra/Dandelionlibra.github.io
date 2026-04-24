@@ -63,3 +63,7 @@ reports/
 
 # GitHub LFS (optional, if you use it)
 *.lfs
+
+# Hugo generated directories
+/public/
+/resources/_gen/
