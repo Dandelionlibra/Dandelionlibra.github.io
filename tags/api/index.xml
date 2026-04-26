@@ -1,4 +1,84 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>API on YuChen</title><link>https://Dandelionlibra.github.io/tags/api/</link><description>Recent content in API on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Fri, 01 Aug 2025 06:00:00 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/tags/api/index.xml" rel="self" type="application/rss+xml"/><item><title>LightRAG API Server 教學：快速上手指南</title><link>https://Dandelionlibra.github.io/2025/08/lightrag-api-server-tutorial/</link><pubDate>Fri, 01 Aug 2025 06:00:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/2025/08/lightrag-api-server-tutorial/</guid><description>&lt;h1 id="lightrag-api-server-教學快速上手指南"&gt;LightRAG API Server 教學：快速上手指南
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>API on YuChen</title><link>https://Dandelionlibra.github.io/tags/api/</link><description>Recent content in API on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Sun, 26 Apr 2026 22:15:56 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/tags/api/index.xml" rel="self" type="application/rss+xml"/><item><title>如何使用 FastAPI</title><link>https://Dandelionlibra.github.io/2026/04/how-to-use-fastapi/</link><pubDate>Sun, 26 Apr 2026 22:15:56 +0800</pubDate><guid>https://Dandelionlibra.github.io/2026/04/how-to-use-fastapi/</guid><description>&lt;h2 id="內容大綱"&gt;內容大綱
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;FastAPI 基本介紹&lt;/li&gt;
+&lt;li&gt;安裝 FastAPI 與 Uvicorn&lt;/li&gt;
+&lt;li&gt;建立第一個 FastAPI 應用程式&lt;/li&gt;
+&lt;li&gt;啟動伺服器與測試&lt;/li&gt;
+&lt;li&gt;自動產生 API 文件&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h3 id="1-fastapi-基本介紹"&gt;1. FastAPI 基本介紹
+&lt;/h3&gt;&lt;p&gt;FastAPI 是一個現代、快速（高效能）的 Web 框架，用於建構 API，基於標準 Python 類型提示。它的主要特色包括：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;高效能&lt;/strong&gt;：可與 NodeJS 和 Go 相提並論的極高網頁效能。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;易於使用&lt;/strong&gt;：自動產生互動式的 API 文件 (Swagger UI)。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;減少錯誤&lt;/strong&gt;：透過資料驗證機制，減少人為錯誤。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="2-安裝-fastapi-與-uvicorn"&gt;2. 安裝 FastAPI 與 Uvicorn
+&lt;/h3&gt;&lt;p&gt;在開始之前，請確保環境中已安裝 Python。我們需要安裝 FastAPI 框架本身，以及一個 ASGI 伺服器 (如 Uvicorn) 來運行它。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;💡 補充說明：什麼是 Uvicorn？&lt;/strong&gt;&lt;br&gt;
+FastAPI 是一個「網頁框架」，負責處理程式邏輯與路由；但它本身並沒有內建處理網路連線的伺服器功能。
+因此，我們需要搭配 &lt;strong&gt;Uvicorn&lt;/strong&gt; 這個超高效能的 ASGI 伺服器。它就像是一座橋樑，負責在網路上接收使用者的 HTTP 請求，轉交給 FastAPI 處理後，再把結果傳回給瀏覽器。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;請在終端機輸入以下指令：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pip install fastapi
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pip install &lt;span style="color:#e6db74"&gt;&amp;#34;uvicorn[standard]&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="3-建立第一個-fastapi-應用程式"&gt;3. 建立第一個 FastAPI 應用程式
+&lt;/h3&gt;&lt;p&gt;建立一個名為 &lt;code&gt;main.py&lt;/code&gt; 的檔案，並輸入以下程式碼：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; fastapi &lt;span style="color:#f92672"&gt;import&lt;/span&gt; FastAPI
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;app &lt;span style="color:#f92672"&gt;=&lt;/span&gt; FastAPI()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@app.get&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;read_root&lt;/span&gt;():
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; {&lt;span style="color:#e6db74"&gt;&amp;#34;Hello&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;World&amp;#34;&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@app.get&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/items/&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{item_id}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;read_item&lt;/span&gt;(item_id: int, q: str &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; {&lt;span style="color:#e6db74"&gt;&amp;#34;item_id&amp;#34;&lt;/span&gt;: item_id, &lt;span style="color:#e6db74"&gt;&amp;#34;q&amp;#34;&lt;/span&gt;: q}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;這段程式碼定義了兩個端點 (Endpoints)：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;根目錄 &lt;code&gt;/&lt;/code&gt;：回傳一個簡單的 JSON &lt;code&gt;{ &amp;quot;Hello&amp;quot;: &amp;quot;World&amp;quot; }&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;/items/{item_id}&lt;/code&gt;：展示了如何接收路徑參數 (&lt;code&gt;item_id&lt;/code&gt;) 以及查詢參數 (&lt;code&gt;q&lt;/code&gt;)。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="4-啟動伺服器與測試"&gt;4. 啟動伺服器與測試
+&lt;/h3&gt;&lt;p&gt;在終端機中，確保處於 &lt;code&gt;main.py&lt;/code&gt; 所在的目錄，執行以下指令來啟動伺服器：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;uvicorn main:app --reload
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;main&lt;/code&gt;：指的是 &lt;code&gt;main.py&lt;/code&gt; 檔案。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;app&lt;/code&gt;：是 &lt;code&gt;main.py&lt;/code&gt; 中 &lt;code&gt;app = FastAPI()&lt;/code&gt; 建立的實例。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--reload&lt;/code&gt;：當程式碼變動時會自動重新載入，非常適合在開發過程中使用。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;啟動後，可以在瀏覽器中造訪：&lt;a class="link" href="http://127.0.0.1:8000" target="_blank" rel="noopener"
+&gt;http://127.0.0.1:8000&lt;/a&gt;
+將會看到：&lt;code&gt;{&amp;quot;Hello&amp;quot;: &amp;quot;World&amp;quot;}&lt;/code&gt;&lt;/p&gt;
+&lt;h3 id="5-自動產生-api-文件"&gt;5. 自動產生 API 文件
+&lt;/h3&gt;&lt;p&gt;FastAPI 最大的亮點之一就是會自動產生文件。
+在伺服器運行時，可以造訪：&lt;/p&gt;
+&lt;h4 id="1-swagger-ui-互動式文件"&gt;1. Swagger UI (互動式文件)
+&lt;/h4&gt;&lt;p&gt;造訪：&lt;a class="link" href="http://127.0.0.1:8000/docs" target="_blank" rel="noopener"
+&gt;http://127.0.0.1:8000/docs&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;如何閱讀與使用 Swagger UI？&lt;/strong&gt;&lt;br&gt;
+打開網頁後，會看到剛剛寫好的 &lt;code&gt;/&lt;/code&gt; 與 &lt;code&gt;/items/{item_id}&lt;/code&gt; 兩個端點 (Endpoints)：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;展開端點&lt;/strong&gt;：點擊想測試的端點（例如 &lt;code&gt;/items/{item_id}&lt;/code&gt;），它會往下展開顯示詳細資訊。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;開始測試&lt;/strong&gt;：點擊右上角的 &lt;strong&gt;「Try it out」&lt;/strong&gt; 按鈕。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;輸入參數&lt;/strong&gt;：這時參數欄位會變成可輸入狀態。可以在 &lt;code&gt;item_id&lt;/code&gt; 填入數字（例如 &lt;code&gt;5&lt;/code&gt;），在 &lt;code&gt;q&lt;/code&gt; 填入字串（例如 &lt;code&gt;somequery&lt;/code&gt;）。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;執行請求&lt;/strong&gt;：點擊下方的 &lt;strong&gt;「Execute」&lt;/strong&gt; 藍色按鈕。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;查看結果&lt;/strong&gt;：往下捲動到 &lt;strong&gt;「Responses」&lt;/strong&gt; 區塊，就可以看到伺服器回傳的真實 JSON 資料與 HTTP 狀態碼（例如 &lt;code&gt;200&lt;/code&gt; 表示成功）。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id="2-redoc-靜態文件"&gt;2. ReDoc (靜態文件)
+&lt;/h4&gt;&lt;p&gt;造訪：&lt;a class="link" href="http://127.0.0.1:8000/redoc" target="_blank" rel="noopener"
+&gt;http://127.0.0.1:8000/redoc&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;這是另一種風格的 API 文件。它的排版更適合當作純閱讀的參考手冊，不包含互動測試的功能。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;這樣就成功建立並運行了一個 FastAPI 應用程式！&lt;/p&gt;
+&lt;h2 id="參考資料"&gt;參考資料
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="https://fastapi.tiangolo.com/zh-hant/tutorial/" target="_blank" rel="noopener"
+&gt;FastAPI 官方教學 - 使用者指南&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>LightRAG API Server 教學：快速上手指南</title><link>https://Dandelionlibra.github.io/2025/08/lightrag-api-server-tutorial/</link><pubDate>Fri, 01 Aug 2025 06:00:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/2025/08/lightrag-api-server-tutorial/</guid><description>&lt;h1 id="lightrag-api-server-教學快速上手指南"&gt;LightRAG API Server 教學：快速上手指南
 &lt;/h1&gt;&lt;p&gt;&lt;a class="link" href="https://github.com/HKUDS/LightRAG" target="_blank" rel="noopener"
 &gt;LightRAG&lt;/a&gt; 是一個輕量級、模組化的 RAG（檢索增強生成）框架，旨在簡化 RAG 應用的開發與部署。其內建的 API Server 遵循 OpenAI API 標準，並提供一套完整的 Web UI API 來管理文件與知識圖譜，讓開發者能輕易地將自訂的 RAG 流程封裝成服務，並與現有生態系無縫接軌。本文將引導初學者完成從環境設定到 API 呼叫的完整流程。&lt;/p&gt;
 &lt;hr&gt;
