@@ -14,7 +14,7 @@
 &lt;li&gt;&lt;strong&gt;版本衝突&lt;/strong&gt;：專案 A 需要 &lt;code&gt;Django 3.0&lt;/code&gt;，但專案 B 卻依賴 &lt;code&gt;Django 4.0&lt;/code&gt;，兩者無法共存於同一個環境。&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;環境污染&lt;/strong&gt;：全域環境累積過多不需要的套件，難以管理。&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;&lt;code&gt;**venv**&lt;/code&gt; 是 Python 3.3 之後內建的虛擬環境管理工具，它能為每個專案建立一個獨立的資料夾。在這個資料夾中，擁有獨立的 Python 執行檔與獨立的套件庫，從而完美隔離各個專案。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;venv&lt;/code&gt; 是 Python 3.3 之後內建的虛擬環境管理工具，它能為每個專案建立一個獨立的資料夾。在這個資料夾中，擁有獨立的 Python 執行檔與獨立的套件庫，從而完美隔離各個專案。&lt;/p&gt;
 &lt;h3 id="2-建立虛擬環境"&gt;2. 建立虛擬環境
 &lt;/h3&gt;&lt;p&gt;建立虛擬環境主要有兩種指定路徑的方式。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;方式一：在目前目錄下建立（相對路徑）&lt;/strong&gt;
