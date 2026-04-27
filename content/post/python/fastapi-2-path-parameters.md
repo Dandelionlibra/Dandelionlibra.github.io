@@ -230,7 +230,7 @@ def read_file(file_path: str):
 只要加上 `:path`，FastAPI 就不會因為遇到 `/` 就把字串切斷，而是會把它一字不漏地全部抓下來。
 
 **測試範例：**
-如果你在瀏覽器輸入 `http://127.0.0.1:8000/files/home/myfile.txt`，你將會收到完整的路徑字串：
+如果在瀏覽器輸入 `http://127.0.0.1:8000/files/home/myfile.txt`，將會收到完整的路徑字串：
 
 ```json
 {"file_path": "home/myfile.txt"}
