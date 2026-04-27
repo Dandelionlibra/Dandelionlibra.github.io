@@ -108,7 +108,7 @@ FastAPI 最大的亮點之一就是會自動產生文件。
 ## 練習題
 
 <details>
-<summary>📝 練習題 1：新增一個路由（點擊展開）</summary>
+<summary>📝 練習題 1：新增一個路由</summary>
 
 **題目**：在 `main.py` 中新增一個 `GET /hello/{name}` 的端點，讓它回傳 `{"message": "Hello, {name}!"}`。
 
@@ -133,7 +133,7 @@ FastAPI 最大的亮點之一就是會自動產生文件。
 </details>
 
 <details>
-<summary>📝 練習題 2：Swagger UI 操作（點擊展開）</summary>
+<summary>📝 練習題 2：Swagger UI 操作</summary>
 
 **題目**：啟動伺服器後，請用 Swagger UI 測試以下兩個端點，並記錄回傳的結果：
 
@@ -154,7 +154,7 @@ FastAPI 最大的亮點之一就是會自動產生文件。
 </details>
 
 <details>
-<summary>📝 練習題 3：傳入錯誤型別會怎樣？（點擊展開）</summary>
+<summary>📝 練習題 3：傳入錯誤型別會怎樣？</summary>
 
 **題目**：在 Swagger UI 中呼叫 `GET /items/{item_id}`，但把 `item_id` 填入字串 `"abc"` 而不是整數，觀察 FastAPI 回傳什麼？
 

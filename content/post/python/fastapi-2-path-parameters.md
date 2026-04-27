@@ -241,29 +241,31 @@ def read_file(file_path: str):
 ## 練習題
 
 <details>
-<summary>📝 練習題 1：撰寫產品分類 API（點擊展開）</summary>
+<summary>📝 練習題 1：撰寫產品分類 API</summary>
 
 **題目**：撰寫一個 API 端點 `GET /categories/{category_name}`。
 這個端點應該接收字串型別的 `category_name`，並回傳 JSON 格式的分類名稱。
 
 ---
 
-**答案**：
+  <details>
+  <summary>答案：</summary>
 
-```python
-from fastapi import FastAPI
+  ```python
+  from fastapi import FastAPI
 
-app = FastAPI()
+  app = FastAPI()
 
-@app.get("/categories/{category_name}")
-def get_category(category_name: str):
-    return {"category": category_name}
-```
+  @app.get("/categories/{category_name}")
+  def get_category(category_name: str):
+      return {"category": category_name}
+  ```
 
+  </details>
 </details>
 
 <details>
-<summary>📝 練習題 2：修復順序錯誤（點擊展開）</summary>
+<summary>📝 練習題 2：修復順序錯誤</summary>
 
 **題目**：以下的程式碼有個問題。如果造訪 `/posts/latest` 會發生什麼事？請將程式碼修改成正確的順序。
 
@@ -283,54 +285,58 @@ def get_latest_post():
 
 ---
 
-**答案**：
+  <details>
+  <summary>答案：</summary>
 
-如果照著原本的寫法，造訪 `/posts/latest` 時，FastAPI 會以為 `"latest"` 是 `post_id`。由於 `post_id` 規定要是整數（`int`），所以會丟出 **422 Validation Error** 錯誤。
+  如果照著原本的寫法，造訪 `/posts/latest` 時，FastAPI 會以為 `"latest"` 是 `post_id`。由於 `post_id` 規定要是整數（`int`），所以會丟出 **422 Validation Error** 錯誤。
 
-**正確寫法**（把固定路徑移到上面）：
+  **正確寫法**（把固定路徑移到上面）：
 
-```python
-from fastapi import FastAPI
+  ```python
+  from fastapi import FastAPI
 
-app = FastAPI()
+  app = FastAPI()
 
-@app.get("/posts/latest")
-def get_latest_post():
-    return {"post": "This is the latest post!"}
+  @app.get("/posts/latest")
+  def get_latest_post():
+      return {"post": "This is the latest post!"}
 
-@app.get("/posts/{post_id}")
-def get_post(post_id: int):
-    return {"post_id": post_id}
-```
+  @app.get("/posts/{post_id}")
+  def get_post(post_id: int):
+      return {"post_id": post_id}
+  ```
 
+  </details>
 </details>
 
 <details>
-<summary>📝 練習題 3：使用 Enum 限制顏色（點擊展開）</summary>
+<summary>📝 練習題 3：使用 Enum 限制顏色</summary>
 
-**題目**：撰寫一個 API 端點 `GET /colors/{color}`。
-請使用 `Enum` 來限制 `color` 只能是 `red`、`green` 或 `blue`。如果成功，回傳 `{"color": color}`。
+**題目**：建立一個 `GET /items/color/{color_name}` 的端點。
+請使用 `Enum` 限制 `color_name` 只能是 `red`、`green` 或 `blue` 其中一種。如果輸入合法，回傳對應的顏色名稱。
 
 ---
 
-**答案**：
+  <details>
+  <summary>答案：</summary>
 
-```python
-from enum import Enum
-from fastapi import FastAPI
+  ```python
+  from enum import Enum
+  from fastapi import FastAPI
 
-class Color(str, Enum):
-    red = "red"
-    green = "green"
-    blue = "blue"
+  app = FastAPI()
 
-app = FastAPI()
+  class ColorName(str, Enum):
+      red = "red"
+      green = "green"
+      blue = "blue"
 
-@app.get("/colors/{color}")
-def get_color(color: Color):
-    return {"color": color}
-```
+  @app.get("/items/color/{color_name}")
+  def get_color(color_name: ColorName):
+      return {"selected_color": color_name}
+  ```
 
+  </details>
 </details>
 
 ## 參考資料
