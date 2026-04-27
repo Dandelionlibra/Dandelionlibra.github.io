@@ -105,6 +105,84 @@ FastAPI 最大的亮點之一就是會自動產生文件。
 
 這樣就成功建立並運行了一個 FastAPI 應用程式！
 
+## 練習題
+
+<details>
+<summary>📝 練習題 1：新增一個路由（點擊展開）</summary>
+
+**題目**：在 `main.py` 中新增一個 `GET /hello/{name}` 的端點，讓它回傳 `{"message": "Hello, {name}!"}`。
+
+例如：呼叫 `GET /hello/Alice` 應該回傳 `{"message": "Hello, Alice!"}`
+
+---
+
+  <details>
+  <summary>答案：</summary>
+
+  ```python
+  from fastapi import FastAPI
+
+  app = FastAPI()
+
+  @app.get("/hello/{name}")
+  def say_hello(name: str):
+    return {"message": f"Hello, {name}!"}
+  ```
+
+  </details>
+</details>
+
+<details>
+<summary>📝 練習題 2：Swagger UI 操作（點擊展開）</summary>
+
+**題目**：啟動伺服器後，請用 Swagger UI 測試以下兩個端點，並記錄回傳的結果：
+
+1. `GET /` — 預期回傳什麼？
+2. `GET /items/42?q=fastapi` — 預期回傳什麼？
+
+---
+
+  <details>
+  <summary>答案：</summary>
+
+  1. `GET /` 回傳：`{"Hello": "World"}`
+  2. `GET /items/42?q=fastapi` 回傳：`{"item_id": 42, "q": "fastapi"}`
+
+  操作步驟：開啟 [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs) → 點擊端點 → Try it out → 輸入參數 → Execute → 查看 Responses
+
+  </details>
+</details>
+
+<details>
+<summary>📝 練習題 3：傳入錯誤型別會怎樣？（點擊展開）</summary>
+
+**題目**：在 Swagger UI 中呼叫 `GET /items/{item_id}`，但把 `item_id` 填入字串 `"abc"` 而不是整數，觀察 FastAPI 回傳什麼？
+
+---
+
+  <details>
+  <summary>答案：</summary>
+
+  FastAPI 會自動回傳 `422 Unprocessable Entity`，並在 body 中說明哪個欄位驗證失敗：
+
+  ```json
+  {
+    "detail": [
+      {
+        "type": "int_parsing",
+        "loc": ["path", "item_id"],
+        "msg": "Input should be a valid integer, unable to parse string as an integer",
+        "input": "abc"
+      }
+    ]
+  }
+  ```
+
+  這就是 FastAPI 自動驗證型別的威力——完全不需要自己寫驗證邏輯！
+
+  </details>
+</details>
+
 ## 參考資料
 
 - [FastAPI 官方教學 - 使用者指南](https://fastapi.tiangolo.com/zh-hant/tutorial/)
