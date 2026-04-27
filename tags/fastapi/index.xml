@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>FastAPI on YuChen</title><link>https://Dandelionlibra.github.io/tags/fastapi/</link><description>Recent content in FastAPI on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Mon, 27 Apr 2026 10:32:00 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/tags/fastapi/index.xml" rel="self" type="application/rss+xml"/><item><title>學 FastAPI 前你需要知道的事：HTTP 與 API 基礎</title><link>https://Dandelionlibra.github.io/2026/04/fastapi-http-and-api/</link><pubDate>Mon, 27 Apr 2026 10:32:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/2026/04/fastapi-http-and-api/</guid><description>&lt;h2 id="內容大綱"&gt;內容大綱
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>FastAPI on YuChen</title><link>https://Dandelionlibra.github.io/tags/fastapi/</link><description>Recent content in FastAPI on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Mon, 27 Apr 2026 14:00:00 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/tags/fastapi/index.xml" rel="self" type="application/rss+xml"/><item><title>學 FastAPI 前你需要知道的事：HTTP 與 API 基礎</title><link>https://Dandelionlibra.github.io/2026/04/fastapi-http-and-api/</link><pubDate>Mon, 27 Apr 2026 10:32:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/2026/04/fastapi-http-and-api/</guid><description>&lt;h2 id="內容大綱"&gt;內容大綱
 &lt;/h2&gt;&lt;ol&gt;
 &lt;li&gt;&lt;a class="link" href="#1-%e4%bb%80%e9%ba%bc%e6%98%af-api" &gt;什麼是 API？&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="#2-http-%e5%8d%94%e5%ae%9a%e8%ab%8b%e6%b1%82%e8%88%87%e5%9b%9e%e6%87%89" &gt;HTTP 協定：請求與回應&lt;/a&gt;&lt;/li&gt;
@@ -548,4 +548,232 @@ FastAPI 是一個「網頁框架」，負責處理程式邏輯與路由；但它
 &lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="https://fastapi.tiangolo.com/zh-hant/tutorial/" target="_blank" rel="noopener"
 &gt;FastAPI 官方教學 - 使用者指南&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>FastAPI 路徑參數</title><link>https://Dandelionlibra.github.io/2026/04/fastapi-path-parameters/</link><pubDate>Mon, 27 Apr 2026 14:00:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/2026/04/fastapi-path-parameters/</guid><description>&lt;p&gt;在&lt;a class="link" href="https://Dandelionlibra.github.io/post/python/how-to-use-fastapi/" &gt;第一篇教學&lt;/a&gt;中，我們建立了一個簡單的 &lt;code&gt;/&lt;/code&gt; 根目錄端點。但真實世界的 API 通常需要根據不同的請求回傳不同的資料，例如：取得「特定 ID」的使用者資料。&lt;/p&gt;
+&lt;p&gt;這時候，我們就需要用到&lt;strong&gt;路徑參數（Path Parameters）&lt;/strong&gt;。&lt;/p&gt;
+&lt;h2 id="內容大綱"&gt;內容大綱
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;&lt;a class="link" href="#1-%e5%89%8d%e7%bd%ae%e7%9f%a5%e8%ad%98%e4%bb%80%e9%ba%bc%e6%98%af%e5%8b%95%e6%85%8b-url" &gt;前置知識：什麼是「動態 URL」？&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#2-%e4%bb%80%e9%ba%bc%e6%98%af%e8%b7%af%e5%be%91%e5%8f%83%e6%95%b8" &gt;什麼是路徑參數？&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#3-%e5%ae%a3%e5%91%8a%e8%b7%af%e5%be%91%e5%8f%83%e6%95%b8" &gt;宣告路徑參數&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#4-%e5%8a%a0%e4%b8%8a%e5%9e%8b%e5%88%a5%e6%8f%90%e7%a4%ba%e8%87%aa%e5%8b%95%e5%9e%8b%e5%88%a5%e8%bd%89%e6%8f%9b" &gt;加上型別提示：自動型別轉換&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#5-%e8%87%aa%e5%8b%95%e8%b3%87%e6%96%99%e9%a9%97%e8%ad%89422-%e9%8c%af%e8%aa%a4" &gt;自動資料驗證（422 錯誤）&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#6-%e8%b7%af%e5%be%91%e9%a0%86%e5%ba%8f%e7%9a%84%e9%87%8d%e8%a6%81%e6%80%a7" &gt;路徑順序的重要性&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#7-%e4%bd%bf%e7%94%a8-enum-%e9%99%90%e5%88%b6%e5%90%88%e6%b3%95%e9%81%b8%e9%a0%85" &gt;使用 &lt;code&gt;Enum&lt;/code&gt; 限制合法選項&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#8-%e5%8c%85%e5%90%ab%e8%b7%af%e5%be%91%e5%88%86%e9%9a%94%e7%ac%a6%e7%9a%84%e8%b7%af%e5%be%91%e5%8f%83%e6%95%b8" &gt;包含路徑分隔符的路徑參數&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h3 id="1-前置知識什麼是動態-url"&gt;1. 前置知識：什麼是「動態 URL」？
+&lt;/h3&gt;&lt;p&gt;靜態 URL 是固定的網址，例如 &lt;code&gt;/users/list&lt;/code&gt;，每次造訪都會看到一樣的東西。&lt;/p&gt;
+&lt;p&gt;而&lt;strong&gt;動態 URL&lt;/strong&gt; 則允許網址的某個部分變成「變數」。例如購物網站的商品網址可能是 &lt;code&gt;/products/1&lt;/code&gt;、&lt;code&gt;/products/2&lt;/code&gt;，其中 &lt;code&gt;1&lt;/code&gt; 和 &lt;code&gt;2&lt;/code&gt; 就是動態改變的部分。後端程式會讀取這個數字，然後從資料庫撈出對應的商品資料。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id="2-什麼是路徑參數"&gt;2. 什麼是路徑參數？
+&lt;/h3&gt;&lt;p&gt;在 URL 中，那個會動態改變的部分，我們就稱為&lt;strong&gt;路徑參數&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;在 FastAPI 裡，我們可以使用類似 Python &lt;code&gt;f-string&lt;/code&gt; 的語法，用大括號 &lt;code&gt;{}&lt;/code&gt; 將 URL 中的某個部分包起來，宣告它是一個變數。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id="3-宣告路徑參數"&gt;3. 宣告路徑參數
+&lt;/h3&gt;&lt;p&gt;讓我們在 &lt;code&gt;main.py&lt;/code&gt; 中新增一個端點，用來取得特定使用者的資料：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; fastapi &lt;span style="color:#f92672"&gt;import&lt;/span&gt; FastAPI
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;app &lt;span style="color:#f92672"&gt;=&lt;/span&gt; FastAPI()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@app.get&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/users/&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{user_id}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;read_user&lt;/span&gt;(user_id):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; {&lt;span style="color:#e6db74"&gt;&amp;#34;user_id&amp;#34;&lt;/span&gt;: user_id}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;在這個例子中：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;/users/{user_id}&lt;/code&gt; 告訴 FastAPI：「&lt;code&gt;/users/&lt;/code&gt; 後面的那一截字串，請當作變數 &lt;code&gt;user_id&lt;/code&gt;」。&lt;/li&gt;
+&lt;li&gt;路由函式 &lt;code&gt;def read_user(user_id):&lt;/code&gt; 必須接收同名的參數 &lt;code&gt;user_id&lt;/code&gt;。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;如果你在瀏覽器輸入 &lt;code&gt;http://127.0.0.1:8000/users/alice&lt;/code&gt;，就會看到回傳：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{&lt;span style="color:#f92672"&gt;&amp;#34;user_id&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;alice&amp;#34;&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;⚠️ 注意：不要宣告重複的路徑&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;如果你寫了兩個一模一樣的路由，例如：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@app.get&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/test&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;test_1&lt;/span&gt;():
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; {&lt;span style="color:#e6db74"&gt;&amp;#34;Test&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;1!&amp;#34;&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@app.get&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/test&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;test_2&lt;/span&gt;():
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; {&lt;span style="color:#e6db74"&gt;&amp;#34;Test&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;2!&amp;#34;&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;FastAPI 的比對規則是 &lt;strong&gt;「從上往下掃描，先搶先贏」&lt;/strong&gt;。當有人造訪 &lt;code&gt;/test&lt;/code&gt; 時，任務會立刻交給第一個 &lt;code&gt;test_1&lt;/code&gt; 處理並結束。
+下面的 &lt;code&gt;test_2&lt;/code&gt; 函式會變成永遠等不到客人的「幽靈程式碼」。此外，這還會導致自動產生的 API 文件（Swagger UI）發生覆蓋錯亂。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h3 id="4-加上型別提示自動型別轉換"&gt;4. 加上型別提示：自動型別轉換
+&lt;/h3&gt;&lt;p&gt;在上面的例子中，&lt;code&gt;user_id&lt;/code&gt; 預設會被當作&lt;strong&gt;字串（string）&lt;/strong&gt;。但如果使用者的 ID 在資料庫中是整數（Integer）怎麼辦？&lt;/p&gt;
+&lt;p&gt;在 FastAPI 中，只需要使用 Python 標準的&lt;strong&gt;型別提示（Type Hints）&lt;/strong&gt;，FastAPI 就會自動幫忙做轉換。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@app.get&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/items/&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{item_id}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;read_item&lt;/span&gt;(item_id: int):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; {&lt;span style="color:#e6db74"&gt;&amp;#34;item_id&amp;#34;&lt;/span&gt;: item_id, &lt;span style="color:#e6db74"&gt;&amp;#34;type&amp;#34;&lt;/span&gt;: type(item_id)&lt;span style="color:#f92672"&gt;.&lt;/span&gt;__name__}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;當你造訪 &lt;code&gt;http://127.0.0.1:8000/items/5&lt;/code&gt;，FastAPI 發現你宣告了 &lt;code&gt;item_id: int&lt;/code&gt;，就會自動把網址中的字串 &lt;code&gt;&amp;quot;5&amp;quot;&lt;/code&gt; 轉換成整數 &lt;code&gt;5&lt;/code&gt; 傳進函式中。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id="5-自動資料驗證422-錯誤"&gt;5. 自動資料驗證（422 錯誤）
+&lt;/h3&gt;&lt;p&gt;延續上面的例子，如果有人亂輸入網址，造訪了 &lt;code&gt;http://127.0.0.1:8000/items/foo&lt;/code&gt;，會發生什麼？字串 &lt;code&gt;&amp;quot;foo&amp;quot;&lt;/code&gt; 沒辦法變成整數啊。&lt;/p&gt;
+&lt;p&gt;程式不會崩潰，FastAPI 會直接攔截這個錯誤，並回傳清楚的 HTTP 錯誤狀態碼 &lt;strong&gt;422 Unprocessable Entity&lt;/strong&gt;（無法處理的實體），並附帶錯誤說明：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;detail&amp;#34;&lt;/span&gt;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;type&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;int_parsing&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;loc&amp;#34;&lt;/span&gt;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;path&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;item_id&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;msg&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;Input should be a valid integer, unable to parse string as an integer&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;input&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;foo&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;錯誤訊息明確指出：在路徑（path）中的 &lt;code&gt;item_id&lt;/code&gt; 發生了轉換整數失敗的錯誤。這省去了我們自己寫 &lt;code&gt;if not item_id.isdigit(): ...&lt;/code&gt; 等檢查邏輯。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id="6-路徑順序的重要性"&gt;6. 路徑順序的重要性
+&lt;/h3&gt;&lt;p&gt;在設計 API 時，有時候會同時有「固定路徑」和「動態路徑」。&lt;/p&gt;
+&lt;p&gt;例如，我們有一個取得所有使用者的端點 &lt;code&gt;/users/all&lt;/code&gt;，也有一個取得特定使用者的端點 &lt;code&gt;/users/{user_id}&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;在 FastAPI 中，&lt;strong&gt;路由的宣告順序非常重要&lt;/strong&gt;。程式碼是從上往下執行的，FastAPI 會比對第一個符合條件的路徑。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;錯誤的寫法：&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@app.get&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/users/&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{user_id}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;read_user&lt;/span&gt;(user_id: str):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; {&lt;span style="color:#e6db74"&gt;&amp;#34;user_id&amp;#34;&lt;/span&gt;: user_id}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@app.get&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/users/all&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;read_all_users&lt;/span&gt;():
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; [&lt;span style="color:#e6db74"&gt;&amp;#34;Alice&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;Bob&amp;#34;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;如果這樣寫，當你造訪 &lt;code&gt;/users/all&lt;/code&gt; 時，FastAPI 會先看到 &lt;code&gt;@app.get(&amp;quot;/users/{user_id}&amp;quot;)&lt;/code&gt;，然後把 &lt;code&gt;&amp;quot;all&amp;quot;&lt;/code&gt; 當作是變數 &lt;code&gt;user_id&lt;/code&gt; 的值傳進去，這是錯誤的。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;正確的寫法（固定路徑在前）：&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@app.get&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/users/all&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;read_all_users&lt;/span&gt;():
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; [&lt;span style="color:#e6db74"&gt;&amp;#34;Alice&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;Bob&amp;#34;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@app.get&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/users/&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{user_id}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;read_user&lt;/span&gt;(user_id: str):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; {&lt;span style="color:#e6db74"&gt;&amp;#34;user_id&amp;#34;&lt;/span&gt;: user_id}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;把固定的路由寫在前面，就能確保它會被正確攔截。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id="7-使用-enum-限制合法選項"&gt;7. 使用 &lt;code&gt;Enum&lt;/code&gt; 限制合法選項
+&lt;/h3&gt;&lt;p&gt;有時候，路徑參數不能隨便亂填，只能是幾個特定的選項。這時候可以使用 Python 內建的 &lt;code&gt;Enum&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;假設我們有一個機器學習模型 API，只接受 &lt;code&gt;alexnet&lt;/code&gt;、&lt;code&gt;resnet&lt;/code&gt;、&lt;code&gt;lenet&lt;/code&gt; 三種模型名稱：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; enum &lt;span style="color:#f92672"&gt;import&lt;/span&gt; Enum
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; fastapi &lt;span style="color:#f92672"&gt;import&lt;/span&gt; FastAPI
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;ModelName&lt;/span&gt;(str, Enum):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; alexnet &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;alexnet&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; resnet &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;resnet&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; lenet &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;lenet&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;app &lt;span style="color:#f92672"&gt;=&lt;/span&gt; FastAPI()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@app.get&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/models/&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{model_name}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;get_model&lt;/span&gt;(model_name: ModelName):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; model_name &lt;span style="color:#f92672"&gt;==&lt;/span&gt; ModelName&lt;span style="color:#f92672"&gt;.&lt;/span&gt;alexnet:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; {&lt;span style="color:#e6db74"&gt;&amp;#34;model_name&amp;#34;&lt;/span&gt;: model_name, &lt;span style="color:#e6db74"&gt;&amp;#34;message&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;Deep Learning FTW!&amp;#34;&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; model_name&lt;span style="color:#f92672"&gt;.&lt;/span&gt;value &lt;span style="color:#f92672"&gt;==&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;lenet&amp;#34;&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; {&lt;span style="color:#e6db74"&gt;&amp;#34;model_name&amp;#34;&lt;/span&gt;: model_name, &lt;span style="color:#e6db74"&gt;&amp;#34;message&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;LeCNN all the masses&amp;#34;&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; {&lt;span style="color:#e6db74"&gt;&amp;#34;model_name&amp;#34;&lt;/span&gt;: model_name, &lt;span style="color:#e6db74"&gt;&amp;#34;message&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;Have some residuals&amp;#34;&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;這個寫法有三個好處：&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;編輯器支援&lt;/strong&gt;：打字時會有自動補全（Auto-completion）。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;自動驗證&lt;/strong&gt;：如果使用者輸入 &lt;code&gt;http://127.0.0.1:8000/models/yolov4&lt;/code&gt;，FastAPI 會直接回傳 422 錯誤，並告訴使用者有哪些合法的選項。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;detail&amp;#34;&lt;/span&gt;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;type&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;enum&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;loc&amp;#34;&lt;/span&gt;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;path&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;model_name&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;msg&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;Input should be &amp;#39;alexnet&amp;#39;, &amp;#39;resnet&amp;#39; or &amp;#39;lenet&amp;#39;&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;input&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;yolov4&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;ctx&amp;#34;&lt;/span&gt;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;expected&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#39;alexnet&amp;#39;, &amp;#39;resnet&amp;#39; or &amp;#39;lenet&amp;#39;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start="3"&gt;
+&lt;li&gt;&lt;strong&gt;API 文件&lt;/strong&gt;：Swagger UI 會自動把這個欄位變成一個&lt;strong&gt;下拉式選單&lt;/strong&gt;，讓測試更方便！&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h3 id="8-包含路徑分隔符的路徑參數"&gt;8. 包含路徑分隔符的路徑參數
+&lt;/h3&gt;&lt;p&gt;最後一個比較特殊的情境是：如果路徑參數本身就是一個檔案路徑（包含 &lt;code&gt;/&lt;/code&gt;）怎麼辦？&lt;/p&gt;
+&lt;p&gt;例如 URL 長這樣：&lt;code&gt;/files/home/johndoe/myfile.txt&lt;/code&gt;。
+我們希望 &lt;code&gt;/files/&lt;/code&gt; 後面的所有東西 &lt;code&gt;home/johndoe/myfile.txt&lt;/code&gt; 都被當成一個變數。&lt;/p&gt;
+&lt;p&gt;FastAPI 支援 Starlette 的特殊路徑語法：&lt;code&gt;:path&lt;/code&gt;。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@app.get&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/files/{file_path:path}&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;read_file&lt;/span&gt;(file_path: str):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; {&lt;span style="color:#e6db74"&gt;&amp;#34;file_path&amp;#34;&lt;/span&gt;: file_path}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;只要加上 &lt;code&gt;:path&lt;/code&gt;，FastAPI 就不會因為遇到 &lt;code&gt;/&lt;/code&gt; 就把字串切斷，而是會把它一字不漏地全部抓下來。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;測試範例：&lt;/strong&gt;
+如果你在瀏覽器輸入 &lt;code&gt;http://127.0.0.1:8000/files/home/myfile.txt&lt;/code&gt;，你將會收到完整的路徑字串：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{&lt;span style="color:#f92672"&gt;&amp;#34;file_path&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;home/myfile.txt&amp;#34;&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="練習題"&gt;練習題
+&lt;/h2&gt;&lt;details&gt;
+&lt;summary&gt;📝 練習題 1：撰寫產品分類 API（點擊展開）&lt;/summary&gt;
+&lt;p&gt;&lt;strong&gt;題目&lt;/strong&gt;：撰寫一個 API 端點 &lt;code&gt;GET /categories/{category_name}&lt;/code&gt;。
+這個端點應該接收字串型別的 &lt;code&gt;category_name&lt;/code&gt;，並回傳 JSON 格式的分類名稱。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;答案&lt;/strong&gt;：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; fastapi &lt;span style="color:#f92672"&gt;import&lt;/span&gt; FastAPI
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;app &lt;span style="color:#f92672"&gt;=&lt;/span&gt; FastAPI()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@app.get&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/categories/&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{category_name}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;get_category&lt;/span&gt;(category_name: str):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; {&lt;span style="color:#e6db74"&gt;&amp;#34;category&amp;#34;&lt;/span&gt;: category_name}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/details&gt;
+&lt;details&gt;
+&lt;summary&gt;📝 練習題 2：修復順序錯誤（點擊展開）&lt;/summary&gt;
+&lt;p&gt;&lt;strong&gt;題目&lt;/strong&gt;：以下的程式碼有個問題。如果造訪 &lt;code&gt;/posts/latest&lt;/code&gt; 會發生什麼事？請將程式碼修改成正確的順序。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; fastapi &lt;span style="color:#f92672"&gt;import&lt;/span&gt; FastAPI
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;app &lt;span style="color:#f92672"&gt;=&lt;/span&gt; FastAPI()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@app.get&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/posts/&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{post_id}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;get_post&lt;/span&gt;(post_id: int):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; {&lt;span style="color:#e6db74"&gt;&amp;#34;post_id&amp;#34;&lt;/span&gt;: post_id}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@app.get&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/posts/latest&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;get_latest_post&lt;/span&gt;():
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; {&lt;span style="color:#e6db74"&gt;&amp;#34;post&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;This is the latest post!&amp;#34;&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;答案&lt;/strong&gt;：&lt;/p&gt;
+&lt;p&gt;如果照著原本的寫法，造訪 &lt;code&gt;/posts/latest&lt;/code&gt; 時，FastAPI 會以為 &lt;code&gt;&amp;quot;latest&amp;quot;&lt;/code&gt; 是 &lt;code&gt;post_id&lt;/code&gt;。由於 &lt;code&gt;post_id&lt;/code&gt; 規定要是整數（&lt;code&gt;int&lt;/code&gt;），所以會丟出 &lt;strong&gt;422 Validation Error&lt;/strong&gt; 錯誤。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;正確寫法&lt;/strong&gt;（把固定路徑移到上面）：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; fastapi &lt;span style="color:#f92672"&gt;import&lt;/span&gt; FastAPI
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;app &lt;span style="color:#f92672"&gt;=&lt;/span&gt; FastAPI()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@app.get&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/posts/latest&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;get_latest_post&lt;/span&gt;():
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; {&lt;span style="color:#e6db74"&gt;&amp;#34;post&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;This is the latest post!&amp;#34;&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@app.get&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/posts/&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{post_id}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;get_post&lt;/span&gt;(post_id: int):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; {&lt;span style="color:#e6db74"&gt;&amp;#34;post_id&amp;#34;&lt;/span&gt;: post_id}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/details&gt;
+&lt;details&gt;
+&lt;summary&gt;📝 練習題 3：使用 Enum 限制顏色（點擊展開）&lt;/summary&gt;
+&lt;p&gt;&lt;strong&gt;題目&lt;/strong&gt;：撰寫一個 API 端點 &lt;code&gt;GET /colors/{color}&lt;/code&gt;。
+請使用 &lt;code&gt;Enum&lt;/code&gt; 來限制 &lt;code&gt;color&lt;/code&gt; 只能是 &lt;code&gt;red&lt;/code&gt;、&lt;code&gt;green&lt;/code&gt; 或 &lt;code&gt;blue&lt;/code&gt;。如果成功，回傳 &lt;code&gt;{&amp;quot;color&amp;quot;: color}&lt;/code&gt;。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;答案&lt;/strong&gt;：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; enum &lt;span style="color:#f92672"&gt;import&lt;/span&gt; Enum
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; fastapi &lt;span style="color:#f92672"&gt;import&lt;/span&gt; FastAPI
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;Color&lt;/span&gt;(str, Enum):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; red &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;red&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; green &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;green&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; blue &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;blue&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;app &lt;span style="color:#f92672"&gt;=&lt;/span&gt; FastAPI()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@app.get&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/colors/&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{color}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;get_color&lt;/span&gt;(color: Color):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; {&lt;span style="color:#e6db74"&gt;&amp;#34;color&amp;#34;&lt;/span&gt;: color}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/details&gt;
+&lt;h2 id="參考資料"&gt;參考資料
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="https://fastapi.tiangolo.com/zh-hant/tutorial/path-params/" target="_blank" rel="noopener"
+&gt;FastAPI 官方教學 - 路徑參數&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;</description></item></channel></rss>
