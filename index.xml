@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>YuChen</title><link>https://Dandelionlibra.github.io/</link><description>Recent content on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Mon, 27 Apr 2026 14:00:00 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>學 FastAPI 前你需要知道的事：HTTP 與 API 基礎</title><link>https://Dandelionlibra.github.io/2026/04/fastapi-http-and-api/</link><pubDate>Mon, 27 Apr 2026 10:32:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/2026/04/fastapi-http-and-api/</guid><description>&lt;h2 id="內容大綱"&gt;內容大綱
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>YuChen</title><link>https://Dandelionlibra.github.io/</link><description>Recent content on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Mon, 27 Apr 2026 18:55:00 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>學 FastAPI 前你需要知道的事：HTTP 與 API 基礎</title><link>https://Dandelionlibra.github.io/2026/04/fastapi-http-and-api/</link><pubDate>Mon, 27 Apr 2026 10:32:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/2026/04/fastapi-http-and-api/</guid><description>&lt;h2 id="內容大綱"&gt;內容大綱
 &lt;/h2&gt;&lt;ol&gt;
 &lt;li&gt;&lt;a class="link" href="#1-%e4%bb%80%e9%ba%bc%e6%98%af-api" &gt;什麼是 API？&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="#2-http-%e5%8d%94%e5%ae%9a%e8%ab%8b%e6%b1%82%e8%88%87%e5%9b%9e%e6%87%89" &gt;HTTP 協定：請求與回應&lt;/a&gt;&lt;/li&gt;
@@ -4666,6 +4666,215 @@ Explanation: 7/-3 = -2.33333.. which is truncated to -2.&lt;/p&gt;
 &lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="https://fastapi.tiangolo.com/zh-hant/tutorial/path-params/" target="_blank" rel="noopener"
 &gt;FastAPI 官方教學 - 路徑參數&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>FastAPI 查詢參數</title><link>https://Dandelionlibra.github.io/2026/04/fastapi-query-parameters/</link><pubDate>Mon, 27 Apr 2026 18:55:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/2026/04/fastapi-query-parameters/</guid><description>&lt;p&gt;在上一篇，我們學習了如何使用「路徑參數」來建立動態的 URL，例如透過 &lt;code&gt;/users/alice&lt;/code&gt; 來取得特定使用者的資料。
+然而，如果我們想要在一個網頁中加入**「搜尋關鍵字」&lt;strong&gt;、&lt;/strong&gt;「分頁（第幾頁）」&lt;strong&gt;或是&lt;/strong&gt;「篩選條件（價格由高到低）」**，把這些條件全部塞進斜線 &lt;code&gt;/&lt;/code&gt; 裡面會變得非常難以管理。&lt;/p&gt;
+&lt;p&gt;這時候，需要用到另一種常見的傳值方式：&lt;strong&gt;查詢參數（Query Parameters）&lt;/strong&gt;。&lt;/p&gt;
+&lt;h2 id="內容大綱"&gt;內容大綱
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;&lt;a class="link" href="#1-%e4%bb%80%e9%ba%bc%e6%98%af%e6%9f%a5%e8%a9%a2%e5%8f%83%e6%95%b8" &gt;什麼是查詢參數？&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#2-%e5%ae%a3%e5%91%8a%e6%9f%a5%e8%a9%a2%e5%8f%83%e6%95%b8" &gt;宣告查詢參數&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#3-%e8%a8%ad%e5%ae%9a%e9%a0%90%e8%a8%ad%e5%80%bc%e9%81%b8%e5%a1%ab%e5%8f%83%e6%95%b8" &gt;設定預設值（選填參數）&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#4-%e5%bf%85%e5%a1%ab%e7%9a%84%e6%9f%a5%e8%a9%a2%e5%8f%83%e6%95%b8" &gt;必填的查詢參數&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#5-%e4%bd%bf%e7%94%a8-optional-%e8%a1%a8%e7%a4%ba%e5%8f%af%e9%81%b8%e6%ac%84%e4%bd%8d" &gt;使用 Optional 表示可選欄位&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#6-%e5%b8%83%e6%9e%97%e5%80%bc-bool-%e7%9a%84%e8%87%aa%e5%8b%95%e8%bd%89%e6%8f%9b" &gt;布林值 (bool) 的自動轉換&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#7-%e5%90%8c%e6%99%82%e4%bd%bf%e7%94%a8%e8%b7%af%e5%be%91%e5%8f%83%e6%95%b8%e8%88%87%e6%9f%a5%e8%a9%a2%e5%8f%83%e6%95%b8" &gt;同時使用路徑參數與查詢參數&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h3 id="1-什麼是查詢參數"&gt;1. 什麼是查詢參數？
+&lt;/h3&gt;&lt;p&gt;大家一定有用過 Google 搜尋。當你在 Google 搜尋「FastAPI」時，你會發現網址列變成這樣：
+&lt;code&gt;https://www.google.com/search?q=FastAPI&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;在這裡，&lt;code&gt;?&lt;/code&gt; 後面的字串就是&lt;strong&gt;查詢參數&lt;/strong&gt;。它的語法規則非常簡單：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;以問號 &lt;code&gt;?&lt;/code&gt; 作為開頭。&lt;/li&gt;
+&lt;li&gt;格式是 &lt;code&gt;鍵=值&lt;/code&gt;（Key=Value），例如 &lt;code&gt;q=FastAPI&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;如果有多個參數，就用 &lt;code&gt;&amp;amp;&lt;/code&gt; 符號串接起來，例如 &lt;code&gt;?q=FastAPI&amp;amp;page=2&lt;/code&gt;。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h3 id="2-宣告查詢參數"&gt;2. 宣告查詢參數
+&lt;/h3&gt;&lt;p&gt;在 FastAPI 中，要宣告查詢參數非常簡單。&lt;strong&gt;只要在路由函式中加入的參數名稱，沒有出現在路徑 &lt;code&gt;@app.get(...)&lt;/code&gt; 的 &lt;code&gt;{}&lt;/code&gt; 裡面，FastAPI 就會自動把它當作查詢參數！&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;以下是簡單的分頁 API 範例：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; fastapi &lt;span style="color:#f92672"&gt;import&lt;/span&gt; FastAPI
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;app &lt;span style="color:#f92672"&gt;=&lt;/span&gt; FastAPI()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@app.get&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/items/&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;read_items&lt;/span&gt;(skip: int &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;, limit: int &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;10&lt;/span&gt;):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; {&lt;span style="color:#e6db74"&gt;&amp;#34;skip&amp;#34;&lt;/span&gt;: skip, &lt;span style="color:#e6db74"&gt;&amp;#34;limit&amp;#34;&lt;/span&gt;: limit}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;在這個例子中：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;路徑是 &lt;code&gt;/items/&lt;/code&gt;，裡面&lt;strong&gt;沒有&lt;/strong&gt;任何 &lt;code&gt;{}&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;函式 &lt;code&gt;read_items&lt;/code&gt; 卻接收了 &lt;code&gt;skip&lt;/code&gt; 和 &lt;code&gt;limit&lt;/code&gt; 兩個參數。&lt;/li&gt;
+&lt;li&gt;因此，FastAPI 會自動認定 &lt;code&gt;skip&lt;/code&gt; 和 &lt;code&gt;limit&lt;/code&gt; 是從網址 &lt;code&gt;?&lt;/code&gt; 後面傳進來的查詢參數。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h3 id="3-設定預設值選填參數"&gt;3. 設定預設值（選填參數）
+&lt;/h3&gt;&lt;p&gt;上面的範例中，我們給了參數預設值：&lt;code&gt;skip: int = 0&lt;/code&gt; 和 &lt;code&gt;limit: int = 10&lt;/code&gt;。
+這代表這兩個參數是&lt;strong&gt;選填的（Optional）&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;測試看看：&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;如果你直接造訪 &lt;code&gt;http://127.0.0.1:8000/items/&lt;/code&gt;：
+由於你沒有在網址提供參數，FastAPI 會使用你設定的預設值，回傳：
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{&lt;span style="color:#f92672"&gt;&amp;#34;skip&amp;#34;&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;, &lt;span style="color:#f92672"&gt;&amp;#34;limit&amp;#34;&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;10&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;如果你造訪 &lt;code&gt;http://127.0.0.1:8000/items/?skip=20&lt;/code&gt;：
+FastAPI 會讀取網址的 &lt;code&gt;skip&lt;/code&gt;，而 &lt;code&gt;limit&lt;/code&gt; 依然使用預設值：
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{&lt;span style="color:#f92672"&gt;&amp;#34;skip&amp;#34;&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;20&lt;/span&gt;, &lt;span style="color:#f92672"&gt;&amp;#34;limit&amp;#34;&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;10&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;如果你造訪 &lt;code&gt;http://127.0.0.1:8000/items/?skip=20&amp;amp;limit=5&lt;/code&gt;：
+FastAPI 會同時讀取網址的 &lt;code&gt;skip&lt;/code&gt; 和 &lt;code&gt;limit&lt;/code&gt;：
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{&lt;span style="color:#f92672"&gt;&amp;#34;skip&amp;#34;&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;20&lt;/span&gt;, &lt;span style="color:#f92672"&gt;&amp;#34;limit&amp;#34;&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;5&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h3 id="4-必填的查詢參數"&gt;4. 必填的查詢參數
+&lt;/h3&gt;&lt;p&gt;如果我們希望某個查詢參數是**必填（Required）**的，該怎麼做？
+很簡單，&lt;strong&gt;不要給它預設值就好了！&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;假設我們正在寫一個搜尋 API，使用者一定要提供搜尋的關鍵字 &lt;code&gt;q&lt;/code&gt;：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@app.get&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/search&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;search_items&lt;/span&gt;(q: str):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; {&lt;span style="color:#e6db74"&gt;&amp;#34;search_keyword&amp;#34;&lt;/span&gt;: q}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;因為 &lt;code&gt;q&lt;/code&gt; 沒有等號 &lt;code&gt;=&lt;/code&gt; 賦予預設值，它就變成了必填參數。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;測試看看：&lt;/strong&gt;
+如果你沒有提供 &lt;code&gt;q&lt;/code&gt;，直接造訪 &lt;code&gt;http://127.0.0.1:8000/search&lt;/code&gt;，FastAPI 會非常貼心地自動擋下來，並回傳 422 錯誤，告訴客戶端少傳了資料：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;detail&amp;#34;&lt;/span&gt;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;type&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;missing&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;loc&amp;#34;&lt;/span&gt;: [&lt;span style="color:#e6db74"&gt;&amp;#34;query&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;q&amp;#34;&lt;/span&gt;],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;msg&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;Field required&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;input&amp;#34;&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;null&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;必須輸入 &lt;code&gt;http://127.0.0.1:8000/search?q=apple&lt;/code&gt; 才能成功取得結果。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id="5-使用-optional-表示可選欄位"&gt;5. 使用 Optional 表示可選欄位
+&lt;/h3&gt;&lt;p&gt;有時候，我們希望一個參數是選填的，但在使用者沒有提供時，我們希望它的值是 &lt;code&gt;None&lt;/code&gt;（空值），而不是某個具體的數字或字串。&lt;/p&gt;
+&lt;p&gt;這時候建議搭配 Python &lt;code&gt;typing&lt;/code&gt; 模組中的 &lt;code&gt;Optional&lt;/code&gt; 來寫，這可以讓編輯器的提示更準確，程式碼也更有可讀性：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; typing &lt;span style="color:#f92672"&gt;import&lt;/span&gt; Optional
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@app.get&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/products&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;get_products&lt;/span&gt;(category: Optional[str] &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; category:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; {&lt;span style="color:#e6db74"&gt;&amp;#34;message&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;顯示 &lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;category&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt; 類別的產品&amp;#34;&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; {&lt;span style="color:#e6db74"&gt;&amp;#34;message&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;顯示所有產品&amp;#34;&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;這裡的 &lt;code&gt;Optional[str] = None&lt;/code&gt; 告訴了任何人（包含編輯器與 FastAPI）：「這個參數是字串，但它是可選的，如果不填，預設就是 None」。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;測試看看：&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;如果造訪 &lt;code&gt;http://127.0.0.1:8000/products&lt;/code&gt;（不提供參數）：
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{&lt;span style="color:#f92672"&gt;&amp;#34;message&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;顯示所有產品&amp;#34;&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;如果造訪 &lt;code&gt;http://127.0.0.1:8000/products?category=3C&lt;/code&gt;（提供參數）：
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{&lt;span style="color:#f92672"&gt;&amp;#34;message&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;顯示 3C 類別的產品&amp;#34;&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h3 id="6-布林值-bool-的自動轉換"&gt;6. 布林值 (bool) 的自動轉換
+&lt;/h3&gt;&lt;p&gt;FastAPI 的資料轉換機制非常聰明，尤其是對於布林值（Boolean）。&lt;/p&gt;
+&lt;p&gt;如果宣告了一個布林型別的查詢參數：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@app.get&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/users/active&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;get_active_users&lt;/span&gt;(short_format: bool &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;False&lt;/span&gt;):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; short_format:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; {&lt;span style="color:#e6db74"&gt;&amp;#34;users&amp;#34;&lt;/span&gt;: [&lt;span style="color:#e6db74"&gt;&amp;#34;Alice&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;Bob&amp;#34;&lt;/span&gt;]}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; {&lt;span style="color:#e6db74"&gt;&amp;#34;users&amp;#34;&lt;/span&gt;: [{&lt;span style="color:#e6db74"&gt;&amp;#34;name&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;Alice&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;age&amp;#34;&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;25&lt;/span&gt;}, {&lt;span style="color:#e6db74"&gt;&amp;#34;name&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;Bob&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;age&amp;#34;&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;30&lt;/span&gt;}]}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;當你要在網址中把 &lt;code&gt;short_format&lt;/code&gt; 設為 &lt;code&gt;True&lt;/code&gt; 時，你不用只打 &lt;code&gt;true&lt;/code&gt;。FastAPI 會自動識別以下所有字眼，並把它們轉換成 Python 的 &lt;code&gt;True&lt;/code&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;?short_format=true&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;?short_format=True&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;?short_format=1&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;?short_format=on&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;?short_format=yes&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;相反地，&lt;code&gt;false&lt;/code&gt;、&lt;code&gt;0&lt;/code&gt;、&lt;code&gt;off&lt;/code&gt;、&lt;code&gt;no&lt;/code&gt; 都會被轉換為 Python 的 &lt;code&gt;False&lt;/code&gt;。這對前端工程師來說是一個極度友善的設計！&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;測試看看：&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;造訪 &lt;code&gt;http://127.0.0.1:8000/users/active?short_format=1&lt;/code&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;#34;users&amp;#34;&lt;/span&gt;: [&lt;span style="color:#e6db74"&gt;&amp;#34;Alice&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;Bob&amp;#34;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;造訪 &lt;code&gt;http://127.0.0.1:8000/users/active?short_format=0&lt;/code&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;#34;users&amp;#34;&lt;/span&gt;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {&lt;span style="color:#f92672"&gt;&amp;#34;name&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;Alice&amp;#34;&lt;/span&gt;,&lt;span style="color:#f92672"&gt;&amp;#34;age&amp;#34;&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;25&lt;/span&gt;},
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {&lt;span style="color:#f92672"&gt;&amp;#34;name&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;Bob&amp;#34;&lt;/span&gt;,&lt;span style="color:#f92672"&gt;&amp;#34;age&amp;#34;&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;30&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h3 id="7-同時使用路徑參數與查詢參數"&gt;7. 同時使用路徑參數與查詢參數
+&lt;/h3&gt;&lt;p&gt;在實務上，最常把「路徑參數」和「查詢參數」混在一起使用。
+例如：若想查看「特定使用者（路徑）」底下的「某些物品，並進行分頁（查詢）」。&lt;/p&gt;
+&lt;p&gt;不用擔心順序問題，FastAPI 會根據變數名稱自動幫你分類：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@app.get&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/users/&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{user_id}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;/items&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;get_user_items&lt;/span&gt;(user_id: int, short: bool &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;False&lt;/span&gt;, skip: int &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; item_data &lt;span style="color:#f92672"&gt;=&lt;/span&gt; {&lt;span style="color:#e6db74"&gt;&amp;#34;user_id&amp;#34;&lt;/span&gt;: user_id, &lt;span style="color:#e6db74"&gt;&amp;#34;items&amp;#34;&lt;/span&gt;: [&lt;span style="color:#e6db74"&gt;&amp;#34;筆電&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;滑鼠&amp;#34;&lt;/span&gt;]}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; short:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; {&lt;span style="color:#e6db74"&gt;&amp;#34;user_id&amp;#34;&lt;/span&gt;: user_id, &lt;span style="color:#e6db74"&gt;&amp;#34;status&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;ok&amp;#34;&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; item_data
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;在這個例子中：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;user_id&lt;/code&gt; 因為出現在 &lt;code&gt;@app.get&lt;/code&gt; 的 &lt;code&gt;{}&lt;/code&gt; 中，所以它是&lt;strong&gt;路徑參數&lt;/strong&gt;。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;short&lt;/code&gt; 和 &lt;code&gt;skip&lt;/code&gt; 沒有出現在路徑中，所以它們是&lt;strong&gt;查詢參數&lt;/strong&gt;。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;如果造訪：&lt;code&gt;http://127.0.0.1:8000/users/5/items?short=yes&amp;amp;skip=1&lt;/code&gt;
+FastAPI 就能將 &lt;code&gt;user_id&lt;/code&gt; 解析為 &lt;code&gt;5&lt;/code&gt;，&lt;code&gt;short&lt;/code&gt; 解析為 &lt;code&gt;True&lt;/code&gt;，&lt;code&gt;skip&lt;/code&gt; 解析為 &lt;code&gt;1&lt;/code&gt;。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="練習題"&gt;練習題
+&lt;/h2&gt;&lt;details&gt;
+&lt;summary&gt;📝 練習題 1：建立排序 API&lt;/summary&gt;
+&lt;p&gt;&lt;strong&gt;題目&lt;/strong&gt;：撰寫一個 API 端點 &lt;code&gt;GET /books&lt;/code&gt;。
+該端點需要接收一個查詢參數 &lt;code&gt;sort_by&lt;/code&gt;。如果使用者沒有提供，預設應該是 &lt;code&gt;&amp;quot;id&amp;quot;&lt;/code&gt;。如果使用者提供，就回傳使用者輸入的排序方式。&lt;/p&gt;
+&lt;hr&gt;
+&lt;details&gt;
+&lt;summary&gt;答案：&lt;/summary&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; fastapi &lt;span style="color:#f92672"&gt;import&lt;/span&gt; FastAPI
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;app &lt;span style="color:#f92672"&gt;=&lt;/span&gt; FastAPI()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@app.get&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/books&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;get_books&lt;/span&gt;(sort_by: str &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;id&amp;#34;&lt;/span&gt;):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; {&lt;span style="color:#e6db74"&gt;&amp;#34;sort_by&amp;#34;&lt;/span&gt;: sort_by}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt; &lt;/details&gt;
+&lt;/details&gt;
+&lt;details&gt;
+&lt;summary&gt;📝 練習題 2：必填與選填混搭&lt;/summary&gt;
+&lt;p&gt;&lt;strong&gt;題目&lt;/strong&gt;：撰寫一個 API 端點 &lt;code&gt;GET /search/videos&lt;/code&gt;。
+該端點需要一個&lt;strong&gt;必填&lt;/strong&gt;的查詢參數 &lt;code&gt;keyword&lt;/code&gt;（字串），以及一個&lt;strong&gt;選填&lt;/strong&gt;的參數 &lt;code&gt;max_results&lt;/code&gt;（整數，預設為 50）。&lt;/p&gt;
+&lt;hr&gt;
+&lt;details&gt;
+&lt;summary&gt;答案：&lt;/summary&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; fastapi &lt;span style="color:#f92672"&gt;import&lt;/span&gt; FastAPI
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;app &lt;span style="color:#f92672"&gt;=&lt;/span&gt; FastAPI()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@app.get&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/search/videos&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;search_videos&lt;/span&gt;(keyword: str, max_results: int &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;50&lt;/span&gt;):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; {&lt;span style="color:#e6db74"&gt;&amp;#34;keyword&amp;#34;&lt;/span&gt;: keyword, &lt;span style="color:#e6db74"&gt;&amp;#34;max_results&amp;#34;&lt;/span&gt;: max_results}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt; &lt;/details&gt;
+&lt;/details&gt;
+&lt;details&gt;
+&lt;summary&gt;📝 練習題 3：如何判斷參數類型？&lt;/summary&gt;
+&lt;p&gt;&lt;strong&gt;題目&lt;/strong&gt;：觀察以下的程式碼，請問 &lt;code&gt;model_id&lt;/code&gt; 和 &lt;code&gt;version&lt;/code&gt; 分別是什麼類型的參數？&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@app.get&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/models/&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{model_id}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;check_model&lt;/span&gt;(model_id: int, version: float):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;pass&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;details&gt;
+&lt;summary&gt;答案：&lt;/summary&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;model_id&lt;/code&gt; 是&lt;strong&gt;路徑參數&lt;/strong&gt;，因為它被宣告在 &lt;code&gt;@app.get&lt;/code&gt; 的路徑字串 &lt;code&gt;{}&lt;/code&gt; 中。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;version&lt;/code&gt; 是&lt;strong&gt;查詢參數&lt;/strong&gt;，因為它沒有出現在路徑字串中，而且它是必填的（沒有預設值）。造訪時的網址會像這樣：&lt;code&gt;/models/10?version=1.5&lt;/code&gt;。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/details&gt;
+&lt;/details&gt;
+&lt;h2 id="參考資料"&gt;參考資料
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="https://fastapi.tiangolo.com/zh-hant/tutorial/query-params/" target="_blank" rel="noopener"
+&gt;FastAPI 官方教學 - 查詢參數&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;</description></item><item><title>使用 Docker-compose 快速建立多個關聯的 container</title><link>https://Dandelionlibra.github.io/2025/07/docker-compose/</link><pubDate>Thu, 17 Jul 2025 10:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/2025/07/docker-compose/</guid><description>&lt;h2 id="內容大綱"&gt;內容大綱
 &lt;/h2&gt;&lt;ol&gt;
 &lt;li&gt;為什麼要用 Docker-compose?&lt;/li&gt;
