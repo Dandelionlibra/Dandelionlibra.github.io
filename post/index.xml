@@ -74,6 +74,61 @@ FastAPI 是一個「網頁框架」，負責處理程式邏輯與路由；但它
 &lt;p&gt;這是另一種風格的 API 文件。它的排版更適合當作純閱讀的參考手冊，不包含互動測試的功能。&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;這樣就成功建立並運行了一個 FastAPI 應用程式！&lt;/p&gt;
+&lt;h2 id="練習題"&gt;練習題
+&lt;/h2&gt;&lt;details&gt;
+&lt;summary&gt;📝 練習題 1：新增一個路由（點擊展開）&lt;/summary&gt;
+&lt;p&gt;&lt;strong&gt;題目&lt;/strong&gt;：在 &lt;code&gt;main.py&lt;/code&gt; 中新增一個 &lt;code&gt;GET /hello/{name}&lt;/code&gt; 的端點，讓它回傳 &lt;code&gt;{&amp;quot;message&amp;quot;: &amp;quot;Hello, {name}!&amp;quot;}&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;例如：呼叫 &lt;code&gt;GET /hello/Alice&lt;/code&gt; 應該回傳 &lt;code&gt;{&amp;quot;message&amp;quot;: &amp;quot;Hello, Alice!&amp;quot;}&lt;/code&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;details&gt;
+&lt;summary&gt;答案：&lt;/summary&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; fastapi &lt;span style="color:#f92672"&gt;import&lt;/span&gt; FastAPI
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;app &lt;span style="color:#f92672"&gt;=&lt;/span&gt; FastAPI()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@app.get&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/hello/&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{name}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;say_hello&lt;/span&gt;(name: str):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; {&lt;span style="color:#e6db74"&gt;&amp;#34;message&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;Hello, &lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;name&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;!&amp;#34;&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt; &lt;/details&gt;
+&lt;/details&gt;
+&lt;details&gt;
+&lt;summary&gt;📝 練習題 2：Swagger UI 操作（點擊展開）&lt;/summary&gt;
+&lt;p&gt;&lt;strong&gt;題目&lt;/strong&gt;：啟動伺服器後，請用 Swagger UI 測試以下兩個端點，並記錄回傳的結果：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;GET /&lt;/code&gt; — 預期回傳什麼？&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;GET /items/42?q=fastapi&lt;/code&gt; — 預期回傳什麼？&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;details&gt;
+&lt;summary&gt;答案：&lt;/summary&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;GET /&lt;/code&gt; 回傳：&lt;code&gt;{&amp;quot;Hello&amp;quot;: &amp;quot;World&amp;quot;}&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;GET /items/42?q=fastapi&lt;/code&gt; 回傳：&lt;code&gt;{&amp;quot;item_id&amp;quot;: 42, &amp;quot;q&amp;quot;: &amp;quot;fastapi&amp;quot;}&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;操作步驟：開啟 &lt;a class="link" href="http://127.0.0.1:8000/docs" target="_blank" rel="noopener"
+&gt;http://127.0.0.1:8000/docs&lt;/a&gt; → 點擊端點 → Try it out → 輸入參數 → Execute → 查看 Responses&lt;/p&gt;
+&lt;/details&gt;
+&lt;/details&gt;
+&lt;details&gt;
+&lt;summary&gt;📝 練習題 3：傳入錯誤型別會怎樣？（點擊展開）&lt;/summary&gt;
+&lt;p&gt;&lt;strong&gt;題目&lt;/strong&gt;：在 Swagger UI 中呼叫 &lt;code&gt;GET /items/{item_id}&lt;/code&gt;，但把 &lt;code&gt;item_id&lt;/code&gt; 填入字串 &lt;code&gt;&amp;quot;abc&amp;quot;&lt;/code&gt; 而不是整數，觀察 FastAPI 回傳什麼？&lt;/p&gt;
+&lt;hr&gt;
+&lt;details&gt;
+&lt;summary&gt;答案：&lt;/summary&gt;
+&lt;p&gt;FastAPI 會自動回傳 &lt;code&gt;422 Unprocessable Entity&lt;/code&gt;，並在 body 中說明哪個欄位驗證失敗：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;detail&amp;#34;&lt;/span&gt;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;type&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;int_parsing&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;loc&amp;#34;&lt;/span&gt;: [&lt;span style="color:#e6db74"&gt;&amp;#34;path&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;item_id&amp;#34;&lt;/span&gt;],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;msg&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;Input should be a valid integer, unable to parse string as an integer&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;input&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;abc&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;這就是 FastAPI 自動驗證型別的威力——完全不需要自己寫驗證邏輯！&lt;/p&gt;
+&lt;/details&gt;
+&lt;/details&gt;
 &lt;h2 id="參考資料"&gt;參考資料
 &lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="https://fastapi.tiangolo.com/zh-hant/tutorial/" target="_blank" rel="noopener"
