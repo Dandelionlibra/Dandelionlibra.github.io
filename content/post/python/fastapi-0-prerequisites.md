@@ -16,13 +16,13 @@ weight: 1
 
 ## 內容大綱
 
-1. 什麼是 API？
-2. HTTP 協定：請求與回應
-3. HTTP 方法（Method）
-4. HTTP 狀態碼
-5. 什麼是 JSON？
-6. 從瀏覽器到 API：完整流程回顧
-7. FastAPI 的分工：框架 vs 伺服器
+1. [什麼是 API？](#1-什麼是-api)
+2. [HTTP 協定：請求與回應](#2-http-協定請求與回應)
+3. [HTTP 方法（Method）](#3-http-方法method)
+4. [HTTP 狀態碼](#4-http-狀態碼)
+5. [什麼是 JSON？](#5-什麼是-json)
+6. [從瀏覽器到 API：完整流程回顧](#6-從瀏覽器到-api完整流程回顧)
+7. [FastAPI 的分工：框架 vs 伺服器](#7-fastapi-的分工框架-vs-伺服器)
 
 ---
 
