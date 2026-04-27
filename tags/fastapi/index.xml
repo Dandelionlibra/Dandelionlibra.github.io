@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>FastAPI on YuChen</title><link>https://Dandelionlibra.github.io/tags/fastapi/</link><description>Recent content in FastAPI on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Mon, 27 Apr 2026 18:55:00 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/tags/fastapi/index.xml" rel="self" type="application/rss+xml"/><item><title>學 FastAPI 前你需要知道的事：HTTP 與 API 基礎</title><link>https://Dandelionlibra.github.io/2026/04/fastapi-http-and-api/</link><pubDate>Mon, 27 Apr 2026 10:32:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/2026/04/fastapi-http-and-api/</guid><description>&lt;h2 id="內容大綱"&gt;內容大綱
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>FastAPI on YuChen</title><link>https://Dandelionlibra.github.io/tags/fastapi/</link><description>Recent content in FastAPI on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Mon, 27 Apr 2026 23:21:00 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/tags/fastapi/index.xml" rel="self" type="application/rss+xml"/><item><title>學 FastAPI 前你需要知道的事：HTTP 與 API 基礎</title><link>https://Dandelionlibra.github.io/2026/04/fastapi-http-and-api/</link><pubDate>Mon, 27 Apr 2026 10:32:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/2026/04/fastapi-http-and-api/</guid><description>&lt;h2 id="內容大綱"&gt;內容大綱
 &lt;/h2&gt;&lt;ol&gt;
 &lt;li&gt;&lt;a class="link" href="#1-%e4%bb%80%e9%ba%bc%e6%98%af-api" &gt;什麼是 API？&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="#2-http-%e5%8d%94%e5%ae%9a%e8%ab%8b%e6%b1%82%e8%88%87%e5%9b%9e%e6%87%89" &gt;HTTP 協定：請求與回應&lt;/a&gt;&lt;/li&gt;
@@ -991,4 +991,188 @@ FastAPI 就能將 &lt;code&gt;user_id&lt;/code&gt; 解析為 &lt;code&gt;5&lt;/c
 &lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="https://fastapi.tiangolo.com/zh-hant/tutorial/query-params/" target="_blank" rel="noopener"
 &gt;FastAPI 官方教學 - 查詢參數&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>FastAPI Request Body</title><link>https://Dandelionlibra.github.io/2026/04/fastapi-request-body/</link><pubDate>Mon, 27 Apr 2026 23:21:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/2026/04/fastapi-request-body/</guid><description>&lt;p&gt;在前幾篇文章中，我們學會了如何透過「網址（URL）」把資料傳給伺服器，例如：路徑參數 &lt;code&gt;/users/123&lt;/code&gt; 或是查詢參數 &lt;code&gt;?skip=10&lt;/code&gt;。
+但如果要傳送&lt;strong&gt;大量資料&lt;/strong&gt;（例如：一整篇部落格文章的內容）或是&lt;strong&gt;機密資料&lt;/strong&gt;（例如：登入的帳號密碼），把它們全部塞進網址裡就不太適合了。這時候需要使用 &lt;strong&gt;Request Body（請求本文）&lt;/strong&gt;。&lt;/p&gt;
+&lt;h2 id="內容大綱"&gt;內容大綱
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;&lt;a class="link" href="#1-%e5%89%8d%e7%bd%ae%e7%9f%a5%e8%ad%98http-%e6%96%b9%e6%b3%95%e8%88%87-pydantic" &gt;前置知識：HTTP 方法與 Pydantic&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#2-%e4%bb%80%e9%ba%bc%e6%98%af-request-body" &gt;什麼是 Request Body？&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#3-%e5%bb%ba%e7%ab%8b%e7%ac%ac%e4%b8%80%e5%80%8b-pydantic-%e6%a8%a1%e5%9e%8b" &gt;建立第一個 Pydantic 模型&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#4-%e5%9c%a8%e8%b7%af%e7%94%b1%e5%87%bd%e5%bc%8f%e4%b8%ad%e5%ae%a3%e5%91%8a-body-%e5%8f%83%e6%95%b8" &gt;在路由函式中宣告 Body 參數&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#5-%e9%81%b8%e5%a1%ab%e6%ac%84%e4%bd%8d%e8%88%87%e9%a0%90%e8%a8%ad%e5%80%bc%e8%a8%ad%e5%ae%9a" &gt;選填欄位與預設值設定&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#6-%e5%9c%a8%e5%87%bd%e5%bc%8f%e5%85%a7%e9%83%a8%e4%bd%bf%e7%94%a8%e6%a8%a1%e5%9e%8b%e8%b3%87%e6%96%99" &gt;在函式內部使用模型資料&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#7-%e4%b8%89%e5%90%88%e4%b8%80%e6%a8%a1%e5%9e%8b--%e8%b7%af%e5%be%91%e5%8f%83%e6%95%b8--%e6%9f%a5%e8%a9%a2%e5%8f%83%e6%95%b8" &gt;三合一：模型 + 路徑參數 + 查詢參數&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#8-pydantic-%e7%9a%84%e8%87%aa%e5%8b%95%e9%a9%97%e8%ad%89%e6%a9%9f%e5%88%b6" &gt;Pydantic 的自動驗證機制&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h3 id="1-前置知識http-方法與-pydantic"&gt;1. 前置知識：HTTP 方法與 Pydantic
+&lt;/h3&gt;&lt;p&gt;在開始實作之前，需要先了解三個重要觀念：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;為什麼要用 POST？&lt;/strong&gt;&lt;br&gt;
+&lt;code&gt;GET&lt;/code&gt; 請求是用來「取得」資料，傳統上不會夾帶 Body。如果要傳送資料給伺服器來「新增」或「修改」東西，通常會使用 &lt;code&gt;POST&lt;/code&gt;、&lt;code&gt;PUT&lt;/code&gt; 或 &lt;code&gt;PATCH&lt;/code&gt; 這些 HTTP 方法。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;什麼是 Pydantic？&lt;/strong&gt;&lt;br&gt;
+FastAPI 的強大，有一半歸功於 &lt;strong&gt;Pydantic&lt;/strong&gt;。Pydantic 是一個 Python 的資料驗證庫，它的核心概念是：&lt;strong&gt;如果資料驗證通過了，拿到的一定是預期的型別&lt;/strong&gt;；如果驗證失敗，它會直接拋出清楚的錯誤，不會讓錯誤的資料跑進系統。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;什麼是 &lt;code&gt;class&lt;/code&gt; 繼承？&lt;/strong&gt;&lt;br&gt;
+在 Python 裡，&lt;code&gt;class&lt;/code&gt;（類別）用來定義一個物件的藍圖。當我們寫 &lt;code&gt;class Item(BaseModel):&lt;/code&gt; 時，代表 &lt;code&gt;Item&lt;/code&gt; 這個模型「繼承」了 Pydantic 提供的 &lt;code&gt;BaseModel&lt;/code&gt;，這讓 &lt;code&gt;Item&lt;/code&gt; 瞬間擁有了自動轉換 JSON、檢查型別的超能力！&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h3 id="2-什麼是-request-body"&gt;2. 什麼是 Request Body？
+&lt;/h3&gt;&lt;p&gt;Request Body（請求本文）是指客戶端（如瀏覽器、手機 App）在發送 HTTP 請求時，夾帶在請求底層的資料，最常見的格式就是 &lt;strong&gt;JSON&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;例如，當想在購物車裡新增一個商品時，客戶端會送出這樣一段 JSON：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;name&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;滑鼠&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;price&amp;#34;&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;999.0&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;is_offer&amp;#34;&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h3 id="3-建立第一個-pydantic-模型"&gt;3. 建立第一個 Pydantic 模型
+&lt;/h3&gt;&lt;p&gt;在 FastAPI 中，要接收並處理上面的 JSON 資料，第一步就是利用 Pydantic 的 &lt;code&gt;BaseModel&lt;/code&gt; 來宣告資料結構。&lt;/p&gt;
+&lt;p&gt;我們可以在檔案的最上方，把需要的工具匯入進來，然後定義一個 &lt;code&gt;Item&lt;/code&gt; 模型：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; fastapi &lt;span style="color:#f92672"&gt;import&lt;/span&gt; FastAPI
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; pydantic &lt;span style="color:#f92672"&gt;import&lt;/span&gt; BaseModel
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;Item&lt;/span&gt;(BaseModel):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; name: str
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; price: float
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; is_offer: bool &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;這裡的寫法與標準的 Python 變數宣告一模一樣：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;name&lt;/code&gt; 必須是字串 (&lt;code&gt;str&lt;/code&gt;)。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;price&lt;/code&gt; 必須是浮點數 (&lt;code&gt;float&lt;/code&gt;)。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;is_offer&lt;/code&gt; 是一個布林值 (&lt;code&gt;bool&lt;/code&gt;)，並且有一個預設值 &lt;code&gt;None&lt;/code&gt;（代表如果前端沒傳這個欄位也沒關係）。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h3 id="4-在路由函式中宣告-body-參數"&gt;4. 在路由函式中宣告 Body 參數
+&lt;/h3&gt;&lt;p&gt;有了模型之後，只要把它當作參數，加進路由函式裡就可以了！&lt;/p&gt;
+&lt;p&gt;請注意，這次要用的是 &lt;code&gt;@app.post&lt;/code&gt;，因為是要「新增」資料：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;app &lt;span style="color:#f92672"&gt;=&lt;/span&gt; FastAPI()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@app.post&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/items/&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;create_item&lt;/span&gt;(item: Item):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; item
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;當 FastAPI 看到 &lt;code&gt;item: Item&lt;/code&gt; 時：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;它知道 &lt;code&gt;Item&lt;/code&gt; 是一個繼承自 &lt;code&gt;BaseModel&lt;/code&gt; 的類別。&lt;/li&gt;
+&lt;li&gt;根據「路徑 vs 查詢」的規則，&lt;code&gt;item&lt;/code&gt; 既不在路徑 &lt;code&gt;{}&lt;/code&gt; 裡，也不是簡單的型別（如 &lt;code&gt;int&lt;/code&gt; 或 &lt;code&gt;str&lt;/code&gt;），所以 FastAPI 會自動把它判定為 &lt;strong&gt;Request Body&lt;/strong&gt;。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;測試看看：&lt;/strong&gt;
+啟動伺服器後，到 Swagger UI (&lt;code&gt;http://127.0.0.1:8000/docs&lt;/code&gt;) 找到 &lt;code&gt;POST /items/&lt;/code&gt;，點擊「Try it out」，你會發現 FastAPI 已經幫你準備好了一個可以填寫的 JSON 框，輸入資料後送出，就會原封不動地回傳你填入的資料。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id="5-選填欄位與預設值設定"&gt;5. 選填欄位與預設值設定
+&lt;/h3&gt;&lt;p&gt;和查詢參數一樣，可以使用 Python 的 &lt;code&gt;Optional&lt;/code&gt; 來讓模型的欄位意圖更清晰：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; typing &lt;span style="color:#f92672"&gt;import&lt;/span&gt; Optional
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; pydantic &lt;span style="color:#f92672"&gt;import&lt;/span&gt; BaseModel
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;Item&lt;/span&gt;(BaseModel):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; name: str
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; description: Optional[str] &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; price: float
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; tax: Optional[float] &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;在這個模型中，&lt;code&gt;name&lt;/code&gt; 和 &lt;code&gt;price&lt;/code&gt; 是&lt;strong&gt;必填的&lt;/strong&gt;。而 &lt;code&gt;description&lt;/code&gt; 和 &lt;code&gt;tax&lt;/code&gt; 是&lt;strong&gt;選填的&lt;/strong&gt;。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id="6-在函式內部使用模型資料"&gt;6. 在函式內部使用模型資料
+&lt;/h3&gt;&lt;p&gt;當 FastAPI 把 JSON 自動轉換為 Pydantic 模型（例如上方的 &lt;code&gt;item&lt;/code&gt; 變數）後，在函式內部就可以直接用「點 (&lt;code&gt;.&lt;/code&gt;)」來存取屬性，而且還有編輯器的自動補全功能！&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@app.post&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/items/&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;create_item&lt;/span&gt;(item: Item):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# 可以直接用 item.price，不需要像字典一樣寫成 item[&amp;#34;price&amp;#34;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; total_price &lt;span style="color:#f92672"&gt;=&lt;/span&gt; item&lt;span style="color:#f92672"&gt;.&lt;/span&gt;price
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; item&lt;span style="color:#f92672"&gt;.&lt;/span&gt;tax:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; total_price &lt;span style="color:#f92672"&gt;+=&lt;/span&gt; item&lt;span style="color:#f92672"&gt;.&lt;/span&gt;tax
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; {&lt;span style="color:#e6db74"&gt;&amp;#34;item_name&amp;#34;&lt;/span&gt;: item&lt;span style="color:#f92672"&gt;.&lt;/span&gt;name, &lt;span style="color:#e6db74"&gt;&amp;#34;total_price&amp;#34;&lt;/span&gt;: total_price}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;這在開發時非常舒服，因為再也不用擔心把欄位名稱打錯，編輯器都會幫忙檢查。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id="7-三合一模型--路徑參數--查詢參數"&gt;7. 三合一：模型 + 路徑參數 + 查詢參數
+&lt;/h3&gt;&lt;p&gt;FastAPI 最厲害的地方在於，可以毫無負擔地把三種參數全部混在一起用，而且依然能清晰地分類。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@app.put&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/items/&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{item_id}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;update_item&lt;/span&gt;(item_id: int, item: Item, q: Optional[str] &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; result &lt;span style="color:#f92672"&gt;=&lt;/span&gt; {&lt;span style="color:#e6db74"&gt;&amp;#34;item_id&amp;#34;&lt;/span&gt;: item_id, &lt;span style="color:#e6db74"&gt;&amp;#34;item&amp;#34;&lt;/span&gt;: item}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; q:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; result&lt;span style="color:#f92672"&gt;.&lt;/span&gt;update({&lt;span style="color:#e6db74"&gt;&amp;#34;q&amp;#34;&lt;/span&gt;: q})
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; result
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;在這個端點中：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;item_id&lt;/code&gt;：有出現在路徑 &lt;code&gt;/items/{item_id}&lt;/code&gt; 裡，所以是&lt;strong&gt;路徑參數&lt;/strong&gt;。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;q&lt;/code&gt;：沒有出現在路徑裡，且型別是簡單的字串，所以是&lt;strong&gt;查詢參數&lt;/strong&gt;。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;item&lt;/code&gt;：型別是 Pydantic 的 &lt;code&gt;Item&lt;/code&gt; 模型，所以是 &lt;strong&gt;Request Body&lt;/strong&gt;。
+ㄋ&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h3 id="8-pydantic-的自動驗證機制"&gt;8. Pydantic 的自動驗證機制
+&lt;/h3&gt;&lt;p&gt;如果客戶端傳來了錯誤型別的資料怎麼辦？例如，&lt;code&gt;price&lt;/code&gt; 應該要是數字，前端卻傳了一個字串：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;name&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;滑鼠&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;price&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;三百塊&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;不用擔心程式崩潰，因為有 Pydantic 把關，FastAPI 會直接攔截下來，並回傳 422 錯誤告訴使用者：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;detail&amp;#34;&lt;/span&gt;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;type&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;float_parsing&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;loc&amp;#34;&lt;/span&gt;: [&lt;span style="color:#e6db74"&gt;&amp;#34;body&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;price&amp;#34;&lt;/span&gt;],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;msg&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;Input should be a valid number, unable to parse string as a number&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;input&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;三百塊&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;注意看這裡的 &lt;code&gt;loc&lt;/code&gt;，它會明確指出錯誤發生在 &lt;code&gt;&amp;quot;body&amp;quot;&lt;/code&gt;（Request Body）裡的 &lt;code&gt;&amp;quot;price&amp;quot;&lt;/code&gt; 欄位，這大大節省除錯的時間。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="練習題"&gt;練習題
+&lt;/h2&gt;&lt;details&gt;
+&lt;summary&gt;📝 練習題 1：建立使用者模型&lt;/summary&gt;
+&lt;p&gt;&lt;strong&gt;題目&lt;/strong&gt;：請利用 Pydantic 建立一個名為 &lt;code&gt;User&lt;/code&gt; 的模型。
+這個模型需要有以下三個欄位：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;username&lt;/code&gt;：字串（必填）&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;email&lt;/code&gt;：字串（必填）&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;age&lt;/code&gt;：整數（選填，預設為 18）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;details&gt;
+&lt;summary&gt;答案：&lt;/summary&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; typing &lt;span style="color:#f92672"&gt;import&lt;/span&gt; Optional
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; pydantic &lt;span style="color:#f92672"&gt;import&lt;/span&gt; BaseModel
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;User&lt;/span&gt;(BaseModel):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; username: str
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; email: str
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; age: Optional[int] &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;18&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt; &lt;/details&gt;
+&lt;/details&gt;
+&lt;details&gt;
+&lt;summary&gt;📝 練習題 2：宣告 POST 路由&lt;/summary&gt;
+&lt;p&gt;&lt;strong&gt;題目&lt;/strong&gt;：接續上一題，請撰寫一個 API 端點 &lt;code&gt;POST /users/&lt;/code&gt;，並使用剛才建立的 &lt;code&gt;User&lt;/code&gt; 模型作為 Request Body。
+在函式內部，請回傳一個包含 &lt;code&gt;message&lt;/code&gt; 和使用者名稱的 JSON，例如：&lt;code&gt;{&amp;quot;message&amp;quot;: &amp;quot;成功建立使用者：Alice&amp;quot;}&lt;/code&gt;。&lt;/p&gt;
+&lt;hr&gt;
+&lt;details&gt;
+&lt;summary&gt;答案：&lt;/summary&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; fastapi &lt;span style="color:#f92672"&gt;import&lt;/span&gt; FastAPI
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;app &lt;span style="color:#f92672"&gt;=&lt;/span&gt; FastAPI()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@app.post&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/users/&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;create_user&lt;/span&gt;(user: User):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; {&lt;span style="color:#e6db74"&gt;&amp;#34;message&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;成功建立使用者：&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;user&lt;span style="color:#f92672"&gt;.&lt;/span&gt;username&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt; &lt;/details&gt;
+&lt;/details&gt;
+&lt;details&gt;
+&lt;summary&gt;📝 練習題 3：參數分類大哉問&lt;/summary&gt;
+&lt;p&gt;&lt;strong&gt;題目&lt;/strong&gt;：觀察以下的程式碼，請問 &lt;code&gt;user_id&lt;/code&gt;、&lt;code&gt;token&lt;/code&gt; 和 &lt;code&gt;profile&lt;/code&gt; 分別屬於哪一種參數（路徑、查詢、還是 Body）？&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@app.patch&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/profile/&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{user_id}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;update_profile&lt;/span&gt;(user_id: int, profile: User, token: str):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;pass&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;details&gt;
+&lt;summary&gt;答案：&lt;/summary&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;user_id&lt;/code&gt; 是&lt;strong&gt;路徑參數&lt;/strong&gt;（因為出現在路徑的 &lt;code&gt;{}&lt;/code&gt; 中）。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;profile&lt;/code&gt; 是 &lt;strong&gt;Request Body&lt;/strong&gt;（因為型別為 Pydantic 模型 &lt;code&gt;User&lt;/code&gt;）。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;token&lt;/code&gt; 是&lt;strong&gt;查詢參數&lt;/strong&gt;（沒有在路徑中，且是基本字串型別）。網址會長得像 &lt;code&gt;/profile/5?token=abc&lt;/code&gt;。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/details&gt;
+&lt;/details&gt;
+&lt;h2 id="參考資料"&gt;參考資料
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="https://fastapi.tiangolo.com/zh-hant/tutorial/body/" target="_blank" rel="noopener"
+&gt;FastAPI 官方教學 - 請求本文&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;</description></item></channel></rss>
