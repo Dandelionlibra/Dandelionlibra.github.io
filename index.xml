@@ -4588,7 +4588,7 @@ Explanation: 7/-3 = -2.33333.. which is truncated to -2.&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; {&lt;span style="color:#e6db74"&gt;&amp;#34;file_path&amp;#34;&lt;/span&gt;: file_path}
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;只要加上 &lt;code&gt;:path&lt;/code&gt;，FastAPI 就不會因為遇到 &lt;code&gt;/&lt;/code&gt; 就把字串切斷，而是會把它一字不漏地全部抓下來。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;測試範例：&lt;/strong&gt;
-如果你在瀏覽器輸入 &lt;code&gt;http://127.0.0.1:8000/files/home/myfile.txt&lt;/code&gt;，你將會收到完整的路徑字串：&lt;/p&gt;
+如果在瀏覽器輸入 &lt;code&gt;http://127.0.0.1:8000/files/home/myfile.txt&lt;/code&gt;，將會收到完整的路徑字串：&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{&lt;span style="color:#f92672"&gt;&amp;#34;file_path&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;home/myfile.txt&amp;#34;&lt;/span&gt;}
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
 &lt;h2 id="練習題"&gt;練習題
