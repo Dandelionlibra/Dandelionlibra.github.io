@@ -1,4 +1,419 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Tutorial on YuChen</title><link>https://Dandelionlibra.github.io/categories/tutorial/</link><description>Recent content in Tutorial on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Sun, 26 Apr 2026 22:15:56 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/categories/tutorial/index.xml" rel="self" type="application/rss+xml"/><item><title>如何使用 FastAPI</title><link>https://Dandelionlibra.github.io/2026/04/how-to-use-fastapi/</link><pubDate>Sun, 26 Apr 2026 22:15:56 +0800</pubDate><guid>https://Dandelionlibra.github.io/2026/04/how-to-use-fastapi/</guid><description>&lt;h2 id="內容大綱"&gt;內容大綱
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Tutorial on YuChen</title><link>https://Dandelionlibra.github.io/categories/tutorial/</link><description>Recent content in Tutorial on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Mon, 27 Apr 2026 10:32:00 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/categories/tutorial/index.xml" rel="self" type="application/rss+xml"/><item><title>學 FastAPI 前你需要知道的事：HTTP 與 API 基礎</title><link>https://Dandelionlibra.github.io/2026/04/fastapi-http-and-api/</link><pubDate>Mon, 27 Apr 2026 10:32:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/2026/04/fastapi-http-and-api/</guid><description>&lt;h2 id="內容大綱"&gt;內容大綱
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;什麼是 API？&lt;/li&gt;
+&lt;li&gt;HTTP 協定：請求與回應&lt;/li&gt;
+&lt;li&gt;HTTP 方法（Method）&lt;/li&gt;
+&lt;li&gt;HTTP 狀態碼&lt;/li&gt;
+&lt;li&gt;什麼是 JSON？&lt;/li&gt;
+&lt;li&gt;從瀏覽器到 API：完整流程回顧&lt;/li&gt;
+&lt;li&gt;FastAPI 的分工：框架 vs 伺服器&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h3 id="1-什麼是-api"&gt;1. 什麼是 API？
+&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;API（Application Programming Interface，應用程式介面）&lt;/strong&gt; 是不同軟體之間溝通的「橋樑」。&lt;/p&gt;
+&lt;p&gt;用生活中的例子來說明：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;想像去餐廳吃飯。&lt;br&gt;
+&lt;strong&gt;你&lt;/strong&gt;（使用者）不需要知道廚房裡怎麼煮菜，只需要看著&lt;strong&gt;菜單&lt;/strong&gt;（API 文件），跟&lt;strong&gt;服務員&lt;/strong&gt;（API）說「我要一份炒飯」（發送請求），廚房處理好後，服務員再把菜端出來（回傳結果）。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;在軟體世界裡：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;你的程式&lt;/strong&gt; = 客戶端（Client）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;菜單&lt;/strong&gt; = API 定義的格式與規則&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;廚房&lt;/strong&gt; = 伺服器（Server）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Web API&lt;/strong&gt; 就是透過網路（HTTP）來溝通的 API，是現在最主流的形式。手機 App 打開時載入的資料、天氣網站顯示的即時溫度，背後都是透過 Web API 取得的。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id="2-http-協定請求與回應"&gt;2. HTTP 協定：請求與回應
+&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;HTTP（HyperText Transfer Protocol，超文本傳輸協定）&lt;/strong&gt; 是網際網路資料傳輸的「語言規則」，規定了客戶端與伺服器之間「怎麼說話」。&lt;/p&gt;
+&lt;p&gt;HTTP 的溝通模式只有一種：&lt;strong&gt;「一問一答」&lt;/strong&gt;。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;客戶端（你的程式） ──── 請求（Request） ────▶ 伺服器
+客戶端（你的程式） ◀─── 回應（Response） ───── 伺服器
+&lt;/code&gt;&lt;/pre&gt;&lt;h4 id="一個-http-請求包含什麼"&gt;一個 HTTP 請求包含什麼？
+&lt;/h4&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;組成部分&lt;/th&gt;
+&lt;th&gt;說明&lt;/th&gt;
+&lt;th&gt;範例&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;URL&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;要存取的資源地址&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;https://api.example.com/users/1&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Method&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;要做什麼操作&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;GET&lt;/code&gt;（取得）、&lt;code&gt;POST&lt;/code&gt;（新增）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Headers&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;附加的元資訊（誰在發？帶什麼格式？）&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Content-Type: application/json&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Body&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;夾帶的資料內容（非所有請求都有）&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;{&amp;quot;name&amp;quot;: &amp;quot;小明&amp;quot;, &amp;quot;age&amp;quot;: 25}&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id="一個-http-回應包含什麼"&gt;一個 HTTP 回應包含什麼？
+&lt;/h4&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;組成部分&lt;/th&gt;
+&lt;th&gt;說明&lt;/th&gt;
+&lt;th&gt;範例&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Status Code&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;請求的處理結果（成功？失敗？）&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;200&lt;/code&gt;、&lt;code&gt;404&lt;/code&gt;、&lt;code&gt;500&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Headers&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;回應的元資訊&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Content-Type: application/json&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Body&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;回傳的資料內容&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;{&amp;quot;id&amp;quot;: 1, &amp;quot;name&amp;quot;: &amp;quot;小明&amp;quot;}&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;hr&gt;
+&lt;h3 id="3-http-方法method"&gt;3. HTTP 方法（Method）
+&lt;/h3&gt;&lt;p&gt;HTTP 方法定義了「要對資源執行什麼動作」。這對應到資料庫操作中常見的 &lt;strong&gt;CRUD（建立、讀取、更新、刪除）&lt;/strong&gt;：&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;HTTP 方法&lt;/th&gt;
+&lt;th&gt;對應 CRUD&lt;/th&gt;
+&lt;th&gt;語意&lt;/th&gt;
+&lt;th&gt;範例&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;GET&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Read（讀取）&lt;/td&gt;
+&lt;td&gt;取得資源，不改變任何東西&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;GET /users&lt;/code&gt; — 取得所有使用者&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;POST&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Create（建立）&lt;/td&gt;
+&lt;td&gt;建立一筆新資源&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;POST /users&lt;/code&gt; — 新增一個使用者&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;PUT&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Update（完整更新）&lt;/td&gt;
+&lt;td&gt;用新資料&lt;strong&gt;完整替換&lt;/strong&gt;一筆資源&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;PUT /users/1&lt;/code&gt; — 完整更新 id=1 的使用者&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;PATCH&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Update（部分更新）&lt;/td&gt;
+&lt;td&gt;只更新資源中的&lt;strong&gt;特定欄位&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;PATCH /users/1&lt;/code&gt; — 只改某個欄位&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;DELETE&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Delete（刪除）&lt;/td&gt;
+&lt;td&gt;刪除一筆資源&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;DELETE /users/1&lt;/code&gt; — 刪除 id=1 的使用者&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;💡 記憶小技巧&lt;/strong&gt;：&lt;br&gt;
+&lt;code&gt;GET&lt;/code&gt; = 取得（不帶 Body）&lt;br&gt;
+&lt;code&gt;POST&lt;/code&gt; = 送出（帶 Body，放新資料）&lt;br&gt;
+&lt;code&gt;PUT&lt;/code&gt; = 放置（完整取代）&lt;br&gt;
+&lt;code&gt;PATCH&lt;/code&gt; = 修補（部分修改）&lt;br&gt;
+&lt;code&gt;DELETE&lt;/code&gt; = 刪除&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h3 id="4-http-狀態碼"&gt;4. HTTP 狀態碼
+&lt;/h3&gt;&lt;p&gt;狀態碼是一個三位數的數字，告訴客戶端「這次請求的結果如何」。&lt;/p&gt;
+&lt;h4 id="分類規則第一個數字決定大類"&gt;分類規則（第一個數字決定大類）
+&lt;/h4&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;類別&lt;/th&gt;
+&lt;th&gt;範圍&lt;/th&gt;
+&lt;th&gt;意義&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;1xx&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;100–199&lt;/td&gt;
+&lt;td&gt;資訊性，請求接收中&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;2xx&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;200–299&lt;/td&gt;
+&lt;td&gt;&lt;strong&gt;成功&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;3xx&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;300–399&lt;/td&gt;
+&lt;td&gt;重新導向&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;4xx&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;400–499&lt;/td&gt;
+&lt;td&gt;&lt;strong&gt;客戶端的錯誤&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;5xx&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;500–599&lt;/td&gt;
+&lt;td&gt;&lt;strong&gt;伺服器端的錯誤&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id="fastapi-開發最常見的狀態碼"&gt;FastAPI 開發最常見的狀態碼
+&lt;/h4&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;狀態碼&lt;/th&gt;
+&lt;th&gt;名稱&lt;/th&gt;
+&lt;th&gt;使用時機&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;200 OK&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;成功&lt;/td&gt;
+&lt;td&gt;最常見，GET 成功回傳資料&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;201 Created&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;已建立&lt;/td&gt;
+&lt;td&gt;POST 成功新增一筆資料&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;204 No Content&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;無內容&lt;/td&gt;
+&lt;td&gt;成功但不回傳任何資料（常用於 DELETE）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;400 Bad Request&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;錯誤請求&lt;/td&gt;
+&lt;td&gt;客戶端傳來的資料格式有問題&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;401 Unauthorized&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;未授權&lt;/td&gt;
+&lt;td&gt;沒有提供身份驗證（如 Token）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;403 Forbidden&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;禁止存取&lt;/td&gt;
+&lt;td&gt;有驗證但&lt;strong&gt;沒有權限&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;404 Not Found&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;找不到&lt;/td&gt;
+&lt;td&gt;要存取的資源不存在&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;422 Unprocessable Entity&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;無法處理&lt;/td&gt;
+&lt;td&gt;資料格式正確但內容驗證失敗（FastAPI 常用）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;500 Internal Server Error&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;伺服器錯誤&lt;/td&gt;
+&lt;td&gt;伺服器端程式碼出錯&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;hr&gt;
+&lt;h3 id="5-什麼是-json"&gt;5. 什麼是 JSON？
+&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;JSON（JavaScript Object Notation）&lt;/strong&gt; 是目前 Web API 最主流的&lt;strong&gt;資料交換格式&lt;/strong&gt;，用來在客戶端與伺服器之間傳遞資料。&lt;/p&gt;
+&lt;h4 id="json-的語法規則"&gt;JSON 的語法規則
+&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;id&amp;#34;&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;name&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;王小明&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;isStudent&amp;#34;&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;true&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;score&amp;#34;&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;95.5&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;hobbies&amp;#34;&lt;/span&gt;: [&lt;span style="color:#e6db74"&gt;&amp;#34;閱讀&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;寫程式&amp;#34;&lt;/span&gt;],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;address&amp;#34;&lt;/span&gt;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;city&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;台北市&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;district&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;信義區&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;nickname&amp;#34;&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;null&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;JSON 規則&lt;/th&gt;
+&lt;th&gt;說明&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;用 &lt;code&gt;{ }&lt;/code&gt; 包住物件&lt;/td&gt;
+&lt;td&gt;一組 Key-Value 的集合&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;用 &lt;code&gt;[ ]&lt;/code&gt; 包住陣列&lt;/td&gt;
+&lt;td&gt;多筆資料的列表&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Key 必須用&lt;strong&gt;雙引號&lt;/strong&gt; &lt;code&gt;&amp;quot;&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;&amp;quot;name&amp;quot;&lt;/code&gt; ✅，&lt;code&gt;name&lt;/code&gt; ❌&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Value 的類型&lt;/td&gt;
+&lt;td&gt;字串、數字、布林（&lt;code&gt;true&lt;/code&gt;/&lt;code&gt;false&lt;/code&gt;）、陣列、物件、&lt;code&gt;null&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id="json-與-python-dict-的對照"&gt;JSON 與 Python dict 的對照
+&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Python dict&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;data &lt;span style="color:#f92672"&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;id&amp;#34;&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;name&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;王小明&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;is_student&amp;#34;&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;, &lt;span style="color:#75715e"&gt;# Python 用 True（大寫）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;hobbies&amp;#34;&lt;/span&gt;: [&lt;span style="color:#e6db74"&gt;&amp;#34;閱讀&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;寫程式&amp;#34;&lt;/span&gt;],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;nickname&amp;#34;&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt; &lt;span style="color:#75715e"&gt;# Python 用 None&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;id&amp;#34;&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;name&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;王小明&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;is_student&amp;#34;&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;true&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;hobbies&amp;#34;&lt;/span&gt;: [&lt;span style="color:#e6db74"&gt;&amp;#34;閱讀&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;寫程式&amp;#34;&lt;/span&gt;],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;nickname&amp;#34;&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;null&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;FastAPI 會自動把 Python dict 轉換成 JSON 格式回傳，完全不需要手動處理。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id="6-從瀏覽器到-api完整流程回顧"&gt;6. 從瀏覽器到 API：完整流程回顧
+&lt;/h3&gt;&lt;p&gt;以開啟「天氣 App」為例，理解一次完整的 API 呼叫：&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;1. 使用者打開 App
+↓
+2. App 發送 HTTP 請求
+GET https://api.weather.com/current?city=Taipei
+Headers: { &amp;#34;Authorization&amp;#34;: &amp;#34;Bearer my-token&amp;#34; }
+↓
+3. 伺服器接收請求、查詢資料庫
+↓
+4. 伺服器回傳 HTTP 回應
+Status: 200 OK
+Body: { &amp;#34;city&amp;#34;: &amp;#34;台北&amp;#34;, &amp;#34;temperature&amp;#34;: 28, &amp;#34;humidity&amp;#34;: 75 }
+↓
+5. App 解析 JSON，顯示在畫面上
+&lt;/code&gt;&lt;/pre&gt;&lt;hr&gt;
+&lt;h3 id="7-fastapi-的分工框架-vs-伺服器"&gt;7. FastAPI 的分工：框架 vs 伺服器
+&lt;/h3&gt;&lt;p&gt;在開始使用 FastAPI 之前，要先理解它和 Uvicorn 的分工：&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;使用者的瀏覽器 / App
+↓ HTTP 請求
+┌─────────────┐
+│ Uvicorn │ ← 負責接收網路連線、處理 HTTP 協定
+└──────┬──────┘
+↓ 轉交給
+┌─────────────┐
+│ FastAPI │ ← 負責路由分配、資料驗證、執行你的程式邏輯
+└──────┬──────┘
+↓ 執行
+┌─────────────┐
+│ 你的程式碼 │ ← def read_item(), def create_user() ...
+└─────────────┘
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;FastAPI&lt;/strong&gt;：決定「收到這個 URL 要做什麼事」——這是你寫的邏輯&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Uvicorn&lt;/strong&gt;：負責在網路上監聽、收發 HTTP 封包——這是底層基礎設施&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="練習題"&gt;練習題
+&lt;/h2&gt;&lt;details&gt;
+&lt;summary&gt;📝 練習題 1：HTTP 方法配對（點擊展開）&lt;/summary&gt;
+&lt;p&gt;&lt;strong&gt;題目&lt;/strong&gt;：請說明以下 API 端點應該使用哪個 HTTP 方法？&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;取得 id=5 的商品資訊&lt;/li&gt;
+&lt;li&gt;新增一筆訂單&lt;/li&gt;
+&lt;li&gt;刪除 id=3 的留言&lt;/li&gt;
+&lt;li&gt;更新使用者的電子郵件（只改一個欄位）&lt;/li&gt;
+&lt;li&gt;完整替換一篇文章的所有內容&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;details&gt;
+&lt;summary&gt;答案：&lt;/summary&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;GET /products/5&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;POST /orders&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;DELETE /comments/3&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;PATCH /users/{id}&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;PUT /articles/{id}&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/details&gt;
+&lt;/details&gt;
+&lt;details&gt;
+&lt;summary&gt;📝 練習題 2：狀態碼判讀（點擊展開）&lt;/summary&gt;
+&lt;p&gt;&lt;strong&gt;題目&lt;/strong&gt;：以下情境應該回傳哪個 HTTP 狀態碼？&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;使用者輸入了帳號密碼，但帳號不存在&lt;/li&gt;
+&lt;li&gt;成功建立了一筆新資料&lt;/li&gt;
+&lt;li&gt;伺服器程式碼發生了 Python 例外（Exception）&lt;/li&gt;
+&lt;li&gt;請求需要登入，但沒有提供 Token&lt;/li&gt;
+&lt;li&gt;請求格式正確，但 email 欄位不符合 email 格式&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;details&gt;
+&lt;summary&gt;答案：&lt;/summary&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;404 Not Found&lt;/code&gt;（找不到此帳號）&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;201 Created&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;500 Internal Server Error&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;401 Unauthorized&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;422 Unprocessable Entity&lt;/code&gt;（FastAPI 的資料驗證失敗）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/details&gt;
+&lt;/details&gt;
+&lt;details&gt;
+&lt;summary&gt;📝 練習題 3：JSON 轉 Python dict（點擊展開）&lt;/summary&gt;
+&lt;p&gt;&lt;strong&gt;題目&lt;/strong&gt;：將以下 JSON 轉換為 Python dict：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;username&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;alice&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;age&amp;#34;&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;30&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;is_active&amp;#34;&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;true&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;tags&amp;#34;&lt;/span&gt;: [&lt;span style="color:#e6db74"&gt;&amp;#34;admin&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;user&amp;#34;&lt;/span&gt;],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;bio&amp;#34;&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;null&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;details&gt;
+&lt;summary&gt;答案：&lt;/summary&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;data &lt;span style="color:#f92672"&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;username&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;alice&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;age&amp;#34;&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;30&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;is_active&amp;#34;&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;, &lt;span style="color:#75715e"&gt;# JSON true → Python True&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;tags&amp;#34;&lt;/span&gt;: [&lt;span style="color:#e6db74"&gt;&amp;#34;admin&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;user&amp;#34;&lt;/span&gt;],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;bio&amp;#34;&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt; &lt;span style="color:#75715e"&gt;# JSON null → Python None&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;注意：&lt;code&gt;true&lt;/code&gt; → &lt;code&gt;True&lt;/code&gt;，&lt;code&gt;false&lt;/code&gt; → &lt;code&gt;False&lt;/code&gt;，&lt;code&gt;null&lt;/code&gt; → &lt;code&gt;None&lt;/code&gt;&lt;/p&gt;
+&lt;/details&gt;
+&lt;/details&gt;
+---
+&lt;h2 id="參考資料"&gt;參考資料
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="https://developer.mozilla.org/zh-TW/docs/Web/HTTP/Overview" target="_blank" rel="noopener"
+&gt;MDN Web Docs - HTTP 概觀&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://developer.mozilla.org/zh-TW/docs/Web/HTTP/Status" target="_blank" rel="noopener"
+&gt;MDN Web Docs - HTTP 狀態碼&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://developer.mozilla.org/zh-TW/docs/Learn/JavaScript/Objects/JSON" target="_blank" rel="noopener"
+&gt;MDN Web Docs - JSON 介紹&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://fastapi.tiangolo.com/zh-hant/tutorial/" target="_blank" rel="noopener"
+&gt;FastAPI 官方教學 - 使用者指南&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>如何使用 FastAPI</title><link>https://Dandelionlibra.github.io/2026/04/how-to-use-fastapi/</link><pubDate>Sun, 26 Apr 2026 22:15:56 +0800</pubDate><guid>https://Dandelionlibra.github.io/2026/04/how-to-use-fastapi/</guid><description>&lt;h2 id="內容大綱"&gt;內容大綱
 &lt;/h2&gt;&lt;ol&gt;
 &lt;li&gt;FastAPI 基本介紹&lt;/li&gt;
 &lt;li&gt;安裝 FastAPI 與 Uvicorn&lt;/li&gt;
