@@ -4235,4 +4235,515 @@ healthcheck 區塊用於設定 Docker 容器的健康檢查機制。
 &gt;Docker Hub&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://dandelionlibra.github.io/post/virtual-environment/docker/setup-jupyter-notebook-with-docker/" target="_blank" rel="noopener"
 &gt;Docker 安裝教學（延伸閱讀）&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description></item></channel></rss>
+&lt;/ul&gt;</description></item><item><title/><link>https://Dandelionlibra.github.io/1/01/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/1/01/</guid><description>&lt;h1 id="fastapi-完整系列課程規劃"&gt;FastAPI 完整系列課程規劃
+&lt;/h1&gt;&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;目標讀者&lt;/strong&gt;：只學過 Python 基礎，沒有任何網頁開發、HTTP 或 API 經驗的初學者。
+&lt;strong&gt;設計原則&lt;/strong&gt;：每個概念在引入前都先解釋「是什麼、為什麼需要它」，再教「怎麼用」。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="第-0-篇前置知識開始前你需要知道的事"&gt;▌第 0 篇（前置知識）：開始前你需要知道的事
+&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;標題&lt;/strong&gt;：學 FastAPI 之前，先搞懂 HTTP 與 API&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;描述&lt;/strong&gt;：在寫第一行 FastAPI 程式碼之前，先建立對 HTTP 協定、API 概念和 JSON 格式的基礎認識，確保後續學習不會卡關。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;大綱&lt;/strong&gt;：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;什麼是 API？（以「餐廳點餐」比喻說明）&lt;/li&gt;
+&lt;li&gt;HTTP 請求與回應的結構（URL、Method、Headers、Body、Status Code）&lt;/li&gt;
+&lt;li&gt;常見 HTTP 方法的語意：&lt;code&gt;GET&lt;/code&gt;、&lt;code&gt;POST&lt;/code&gt;、&lt;code&gt;PUT&lt;/code&gt;、&lt;code&gt;PATCH&lt;/code&gt;、&lt;code&gt;DELETE&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;HTTP 狀態碼速查（&lt;code&gt;2xx&lt;/code&gt; 成功、&lt;code&gt;4xx&lt;/code&gt; 客戶端錯誤、&lt;code&gt;5xx&lt;/code&gt; 伺服器錯誤）&lt;/li&gt;
+&lt;li&gt;什麼是 JSON？JSON 與 Python dict 的對照關係&lt;/li&gt;
+&lt;li&gt;什麼是 ASGI？FastAPI 與 Uvicorn 的分工說明&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;參考&lt;/strong&gt;：&lt;a class="link" href="https://fastapi.tiangolo.com/zh-hant/tutorial/" target="_blank" rel="noopener"
+&gt;FastAPI 使用者指南&lt;/a&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="第-1-篇已完成安裝與第一個-fastapi-應用程式"&gt;▌第 1 篇（已完成）：安裝與第一個 FastAPI 應用程式
+&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;標題&lt;/strong&gt;：如何使用 FastAPI&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;描述&lt;/strong&gt;：介紹 FastAPI 的基本概念、安裝方式、建立第一個 API 應用程式，以及使用 Swagger UI 互動式文件進行測試。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;大綱&lt;/strong&gt;：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;FastAPI 基本介紹&lt;/li&gt;
+&lt;li&gt;安裝 FastAPI 與 Uvicorn（Uvicorn 用途說明）&lt;/li&gt;
+&lt;li&gt;建立第一個 FastAPI 應用程式（&lt;code&gt;main.py&lt;/code&gt;）&lt;/li&gt;
+&lt;li&gt;啟動伺服器與測試（&lt;code&gt;uvicorn&lt;/code&gt; 指令解析）&lt;/li&gt;
+&lt;li&gt;使用 Swagger UI 測試 API（5 步驟操作）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;參考&lt;/strong&gt;：&lt;a class="link" href="https://fastapi.tiangolo.com/zh-hant/tutorial/" target="_blank" rel="noopener"
+&gt;FastAPI 使用者指南&lt;/a&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="第-2-篇路徑參數path-parameters"&gt;▌第 2 篇：路徑參數（Path Parameters）
+&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;標題&lt;/strong&gt;：FastAPI 路徑參數：讓 URL 變得動態&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;描述&lt;/strong&gt;：學習如何在 URL 中嵌入動態值，並讓 FastAPI 自動幫你驗證型別、轉換資料，甚至限制合法的輸入選項。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;前置知識說明&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;什麼是「動態 URL」（vs 靜態 URL）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;大綱&lt;/strong&gt;：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;什麼是路徑參數（以 &lt;code&gt;/users/123&lt;/code&gt; 說明）&lt;/li&gt;
+&lt;li&gt;在路由函式中宣告路徑參數&lt;/li&gt;
+&lt;li&gt;加上型別提示：自動型別轉換（&lt;code&gt;str&lt;/code&gt; → &lt;code&gt;int&lt;/code&gt;）&lt;/li&gt;
+&lt;li&gt;當型別不符時，FastAPI 會自動回傳錯誤（422）&lt;/li&gt;
+&lt;li&gt;使用 &lt;code&gt;Enum&lt;/code&gt; 枚舉型別限制合法值（例如限制只能輸入 &lt;code&gt;&amp;quot;dog&amp;quot;&lt;/code&gt; 或 &lt;code&gt;&amp;quot;cat&amp;quot;&lt;/code&gt;）&lt;/li&gt;
+&lt;li&gt;包含路徑分隔符的路徑參數（&lt;code&gt;path&lt;/code&gt; 型別）&lt;/li&gt;
+&lt;li&gt;路徑順序的重要性（固定路徑 vs 動態路徑的先後問題）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;參考&lt;/strong&gt;：&lt;a class="link" href="https://fastapi.tiangolo.com/zh-hant/tutorial/path-params/" target="_blank" rel="noopener"
+&gt;路徑參數&lt;/a&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="第-3-篇查詢參數query-parameters"&gt;▌第 3 篇：查詢參數（Query Parameters）
+&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;標題&lt;/strong&gt;：FastAPI 查詢參數：&lt;code&gt;?&lt;/code&gt; 後面的秘密&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;描述&lt;/strong&gt;：介紹 URL 中 &lt;code&gt;?&lt;/code&gt; 後面的查詢字串用法，包含選填參數、必填參數、預設值設定，以及如何同時使用多種參數。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;前置知識說明&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;?key=value&amp;amp;key2=value2&lt;/code&gt; 的 URL 格式說明&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;大綱&lt;/strong&gt;：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;什麼是查詢參數（以搜尋引擎 URL 為例）&lt;/li&gt;
+&lt;li&gt;宣告查詢參數（不在 &lt;code&gt;{}&lt;/code&gt; 路徑中的參數自動視為查詢參數）&lt;/li&gt;
+&lt;li&gt;設定預設值（選填參數）&lt;/li&gt;
+&lt;li&gt;必填查詢參數（不給預設值 = 必填）&lt;/li&gt;
+&lt;li&gt;使用 &lt;code&gt;Optional[str] = None&lt;/code&gt; 表示可選的字串&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;bool&lt;/code&gt; 型別的查詢參數（&lt;code&gt;true&lt;/code&gt;/&lt;code&gt;false&lt;/code&gt;/&lt;code&gt;1&lt;/code&gt;/&lt;code&gt;0&lt;/code&gt; 皆可接受）&lt;/li&gt;
+&lt;li&gt;同時宣告路徑參數與查詢參數（FastAPI 如何區分）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;參考&lt;/strong&gt;：&lt;a class="link" href="https://fastapi.tiangolo.com/zh-hant/tutorial/query-params/" target="_blank" rel="noopener"
+&gt;查詢參數&lt;/a&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="第-4-篇request-body-與-pydantic-模型"&gt;▌第 4 篇：Request Body 與 Pydantic 模型
+&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;標題&lt;/strong&gt;：FastAPI Request Body：用 Pydantic 定義資料結構&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;描述&lt;/strong&gt;：學習如何接收 POST 請求夾帶的 JSON 資料，使用 Pydantic 的 &lt;code&gt;BaseModel&lt;/code&gt; 定義清楚的資料結構，讓 FastAPI 自動驗證並產生文件。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;前置知識說明&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;為什麼 GET 請求通常不帶資料，POST/PUT 才帶 Body&lt;/li&gt;
+&lt;li&gt;什麼是 Pydantic（Python 的資料驗證函式庫）&lt;/li&gt;
+&lt;li&gt;什麼是 &lt;code&gt;class&lt;/code&gt; 繼承（&lt;code&gt;class Item(BaseModel):&lt;/code&gt;）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;大綱&lt;/strong&gt;：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;什麼是 Request Body&lt;/li&gt;
+&lt;li&gt;建立第一個 Pydantic 模型（&lt;code&gt;BaseModel&lt;/code&gt;）&lt;/li&gt;
+&lt;li&gt;在路由函式中宣告 Body 參數&lt;/li&gt;
+&lt;li&gt;選填欄位與預設值設定（&lt;code&gt;Optional&lt;/code&gt; 與 &lt;code&gt;None&lt;/code&gt;）&lt;/li&gt;
+&lt;li&gt;在函式內部使用模型資料（&lt;code&gt;item.name&lt;/code&gt;、&lt;code&gt;item.price&lt;/code&gt;）&lt;/li&gt;
+&lt;li&gt;模型 + 路徑參數 + 查詢參數三者並用&lt;/li&gt;
+&lt;li&gt;Pydantic 的自動驗證機制（型別錯誤會回傳 422）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;參考&lt;/strong&gt;：&lt;a class="link" href="https://fastapi.tiangolo.com/zh-hant/tutorial/body/" target="_blank" rel="noopener"
+&gt;請求本文&lt;/a&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="第-5-篇body-進階用法"&gt;▌第 5 篇：Body 進階用法
+&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;標題&lt;/strong&gt;：FastAPI Body 進階：多個模型、巢狀結構與欄位驗證&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;描述&lt;/strong&gt;：深入探索 Request Body 的進階用法，包含同時接收多個 Body 參數、在模型中嵌套另一個模型、使用 &lt;code&gt;Field()&lt;/code&gt; 為欄位加上驗證規則與說明。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;大綱&lt;/strong&gt;：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;同時宣告多個 Body 參數（&lt;code&gt;item: Item, user: User&lt;/code&gt;）&lt;/li&gt;
+&lt;li&gt;使用 &lt;code&gt;Body()&lt;/code&gt; 明確宣告單一 Body 值&lt;/li&gt;
+&lt;li&gt;使用 &lt;code&gt;Field()&lt;/code&gt; 為模型欄位加上驗證（最大值、最小值、描述）&lt;/li&gt;
+&lt;li&gt;巢狀模型：模型中的欄位可以是另一個模型&lt;/li&gt;
+&lt;li&gt;List 型別欄位（&lt;code&gt;tags: list[str]&lt;/code&gt;）&lt;/li&gt;
+&lt;li&gt;使用 &lt;code&gt;set&lt;/code&gt; 型別自動去除重複值&lt;/li&gt;
+&lt;li&gt;複雜的深層巢狀結構&lt;/li&gt;
+&lt;li&gt;使用 &lt;code&gt;dict&lt;/code&gt; 型別接收任意 Key-Value&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;參考&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="https://fastapi.tiangolo.com/zh-hant/tutorial/body-multiple-params/" target="_blank" rel="noopener"
+&gt;Body - 多個參數&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://fastapi.tiangolo.com/zh-hant/tutorial/body-fields/" target="_blank" rel="noopener"
+&gt;Body - 欄位&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://fastapi.tiangolo.com/zh-hant/tutorial/body-nested-models/" target="_blank" rel="noopener"
+&gt;Body - 巢狀模型&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="第-6-篇參數驗證query--path-validation"&gt;▌第 6 篇：參數驗證（Query &amp;amp; Path Validation）
+&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;標題&lt;/strong&gt;：FastAPI 參數驗證：&lt;code&gt;Query()&lt;/code&gt; 與 &lt;code&gt;Path()&lt;/code&gt; 的完整用法&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;描述&lt;/strong&gt;：使用 &lt;code&gt;Query()&lt;/code&gt; 和 &lt;code&gt;Path()&lt;/code&gt; 為查詢參數及路徑參數加上完整的驗證規則（長度、數值範圍、正規表達式），以及如何加上說明文字讓 API 文件更完整。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;前置知識說明&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;什麼是正規表達式（Regex）—簡單介紹概念即可&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;大綱&lt;/strong&gt;：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;為什麼需要 &lt;code&gt;Query()&lt;/code&gt; 和 &lt;code&gt;Path()&lt;/code&gt;（vs 單純型別提示）&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Query()&lt;/code&gt; 的常用參數：
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;min_length&lt;/code&gt;、&lt;code&gt;max_length&lt;/code&gt;（字串長度限制）&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;pattern&lt;/code&gt;（正規表達式驗證）&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;title&lt;/code&gt;、&lt;code&gt;description&lt;/code&gt;（文件說明）&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;alias&lt;/code&gt;（URL 參數別名）&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;deprecated&lt;/code&gt;（標記為已棄用）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;使用 &lt;code&gt;Query()&lt;/code&gt; 接收多個相同名稱的值（List）&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Path()&lt;/code&gt; 的常用參數：
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;ge&lt;/code&gt;（≥）、&lt;code&gt;gt&lt;/code&gt;（&amp;gt;）、&lt;code&gt;le&lt;/code&gt;（≤）、&lt;code&gt;lt&lt;/code&gt;（&amp;lt;）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;查詢參數模型：將多個查詢參數整合成一個 Pydantic 模型&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;參考&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="https://fastapi.tiangolo.com/zh-hant/tutorial/query-params-str-validations/" target="_blank" rel="noopener"
+&gt;查詢參數與字串驗證&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://fastapi.tiangolo.com/zh-hant/tutorial/path-params-numeric-validations/" target="_blank" rel="noopener"
+&gt;路徑參數與數值驗證&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://fastapi.tiangolo.com/zh-hant/tutorial/query-param-models/" target="_blank" rel="noopener"
+&gt;查詢參數模型&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="第-7-篇headercookie-與額外資料型別"&gt;▌第 7 篇：Header、Cookie 與額外資料型別
+&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;標題&lt;/strong&gt;：FastAPI 的其他請求資料來源：Header、Cookie 與特殊型別&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;描述&lt;/strong&gt;：除了路徑、查詢、Body 之外，HTTP 請求還有 Header 和 Cookie。這篇介紹如何讀取這些資料，以及 FastAPI 支援的特殊資料型別（&lt;code&gt;UUID&lt;/code&gt;、&lt;code&gt;datetime&lt;/code&gt;&amp;hellip;）。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;前置知識說明&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;什麼是 HTTP Header（以 &lt;code&gt;Authorization&lt;/code&gt;、&lt;code&gt;Content-Type&lt;/code&gt; 為例）&lt;/li&gt;
+&lt;li&gt;什麼是 Cookie（以購物網站的登入狀態為例）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;大綱&lt;/strong&gt;：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;使用 &lt;code&gt;Header()&lt;/code&gt; 讀取請求標頭（Header）&lt;/li&gt;
+&lt;li&gt;Header 的自動命名轉換（&lt;code&gt;user-agent&lt;/code&gt; → &lt;code&gt;user_agent&lt;/code&gt;）&lt;/li&gt;
+&lt;li&gt;讀取多值 Header&lt;/li&gt;
+&lt;li&gt;使用 &lt;code&gt;Cookie()&lt;/code&gt; 讀取 Cookie 值&lt;/li&gt;
+&lt;li&gt;額外的資料型別：
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;UUID&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;datetime&lt;/code&gt;、&lt;code&gt;date&lt;/code&gt;、&lt;code&gt;time&lt;/code&gt;、&lt;code&gt;timedelta&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Decimal&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Cookie 參數模型 / Header 參數模型&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;參考&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="https://fastapi.tiangolo.com/zh-hant/tutorial/header-params/" target="_blank" rel="noopener"
+&gt;Header 參數&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://fastapi.tiangolo.com/zh-hant/tutorial/cookie-params/" target="_blank" rel="noopener"
+&gt;Cookie 參數&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://fastapi.tiangolo.com/zh-hant/tutorial/extra-data-types/" target="_blank" rel="noopener"
+&gt;額外的資料型別&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="第-8-篇回應模型與狀態碼"&gt;▌第 8 篇：回應模型與狀態碼
+&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;標題&lt;/strong&gt;：FastAPI 回應模型：精確控制 API 的輸出&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;描述&lt;/strong&gt;：學習如何用 &lt;code&gt;response_model&lt;/code&gt; 定義 API 的輸出結構，過濾掉不應該暴露的敏感資料（如密碼），並透過 HTTP 狀態碼傳達正確的語意。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;前置知識說明&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;為什麼輸入模型和輸出模型需要分開（安全性考量）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;大綱&lt;/strong&gt;：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;使用 &lt;code&gt;response_model&lt;/code&gt; 指定回傳型別&lt;/li&gt;
+&lt;li&gt;輸入模型 vs 輸出模型的設計（以 User 新增為例）&lt;/li&gt;
+&lt;li&gt;使用 &lt;code&gt;response_model_exclude_unset&lt;/code&gt; 省略未設定的欄位&lt;/li&gt;
+&lt;li&gt;使用 &lt;code&gt;response_model_include&lt;/code&gt; / &lt;code&gt;response_model_exclude&lt;/code&gt; 動態控制欄位&lt;/li&gt;
+&lt;li&gt;額外的回應模型（Union 型別、&lt;code&gt;None&lt;/code&gt; 回傳）&lt;/li&gt;
+&lt;li&gt;HTTP 狀態碼的完整語意說明&lt;/li&gt;
+&lt;li&gt;使用 &lt;code&gt;status_code&lt;/code&gt; 參數指定成功的回應碼（&lt;code&gt;201&lt;/code&gt;、&lt;code&gt;204&lt;/code&gt;&amp;hellip;）&lt;/li&gt;
+&lt;li&gt;使用 &lt;code&gt;status&lt;/code&gt; 模組避免寫死數字（&lt;code&gt;status.HTTP_201_CREATED&lt;/code&gt;）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;參考&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="https://fastapi.tiangolo.com/zh-hant/tutorial/response-model/" target="_blank" rel="noopener"
+&gt;回應模型 - 回傳型別&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://fastapi.tiangolo.com/zh-hant/tutorial/extra-models/" target="_blank" rel="noopener"
+&gt;額外的模型&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://fastapi.tiangolo.com/zh-hant/tutorial/response-status-code/" target="_blank" rel="noopener"
+&gt;回應狀態碼&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="第-9-篇表單與檔案上傳"&gt;▌第 9 篇：表單與檔案上傳
+&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;標題&lt;/strong&gt;：FastAPI 表單與檔案：處理非 JSON 格式的請求&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;描述&lt;/strong&gt;：不是所有資料都是 JSON——學習如何處理 HTML 表單提交的資料，以及如何接收使用者上傳的檔案（圖片、PDF&amp;hellip;）。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;前置知識說明&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;HTML Form 的 &lt;code&gt;application/x-www-form-urlencoded&lt;/code&gt; 與 &lt;code&gt;multipart/form-data&lt;/code&gt; 的差異&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;大綱&lt;/strong&gt;：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;安裝額外依賴（&lt;code&gt;python-multipart&lt;/code&gt;）&lt;/li&gt;
+&lt;li&gt;使用 &lt;code&gt;Form()&lt;/code&gt; 接收表單欄位&lt;/li&gt;
+&lt;li&gt;表單資料 vs Body JSON 的差異（不能混用）&lt;/li&gt;
+&lt;li&gt;使用 &lt;code&gt;File()&lt;/code&gt; 與 &lt;code&gt;UploadFile&lt;/code&gt; 接收上傳檔案&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;bytes&lt;/code&gt; vs &lt;code&gt;UploadFile&lt;/code&gt; 的選擇（大檔案用 &lt;code&gt;UploadFile&lt;/code&gt;）&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;UploadFile&lt;/code&gt; 的屬性與方法（&lt;code&gt;filename&lt;/code&gt;、&lt;code&gt;content_type&lt;/code&gt;、&lt;code&gt;read()&lt;/code&gt;）&lt;/li&gt;
+&lt;li&gt;同時接收多個上傳檔案&lt;/li&gt;
+&lt;li&gt;表單與檔案同時接收&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;參考&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="https://fastapi.tiangolo.com/zh-hant/tutorial/request-forms/" target="_blank" rel="noopener"
+&gt;表單資料&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://fastapi.tiangolo.com/zh-hant/tutorial/request-files/" target="_blank" rel="noopener"
+&gt;請求中的檔案&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://fastapi.tiangolo.com/zh-hant/tutorial/request-forms-and-files/" target="_blank" rel="noopener"
+&gt;請求中的表單與檔案&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="第-10-篇錯誤處理"&gt;▌第 10 篇：錯誤處理
+&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;標題&lt;/strong&gt;：FastAPI 錯誤處理：優雅地告訴客戶端哪裡出了問題&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;描述&lt;/strong&gt;：學習如何用 &lt;code&gt;HTTPException&lt;/code&gt; 回傳標準錯誤，定義自己的例外類別，以及建立全域的例外處理器讓所有錯誤都有一致的回應格式。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;前置知識說明&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Python 的 &lt;code&gt;raise&lt;/code&gt;、&lt;code&gt;try/except&lt;/code&gt; 例外機制複習&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;大綱&lt;/strong&gt;：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;使用 &lt;code&gt;HTTPException&lt;/code&gt; 拋出 HTTP 錯誤（&lt;code&gt;raise HTTPException(...)&lt;/code&gt;）&lt;/li&gt;
+&lt;li&gt;為錯誤回應加上自定義的 Headers&lt;/li&gt;
+&lt;li&gt;定義自己的例外類別（繼承 &lt;code&gt;Exception&lt;/code&gt;）&lt;/li&gt;
+&lt;li&gt;使用 &lt;code&gt;@app.exception_handler()&lt;/code&gt; 處理自定義例外&lt;/li&gt;
+&lt;li&gt;覆寫 FastAPI 的預設驗證錯誤格式（&lt;code&gt;RequestValidationError&lt;/code&gt;）&lt;/li&gt;
+&lt;li&gt;覆寫 &lt;code&gt;HTTPException&lt;/code&gt; 的全域處理器&lt;/li&gt;
+&lt;li&gt;重複使用 FastAPI 的內建例外處理器&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;參考&lt;/strong&gt;：&lt;a class="link" href="https://fastapi.tiangolo.com/zh-hant/tutorial/handling-errors/" target="_blank" rel="noopener"
+&gt;錯誤處理&lt;/a&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="第-11-篇路徑操作設定與-json-編碼器"&gt;▌第 11 篇：路徑操作設定與 JSON 編碼器
+&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;標題&lt;/strong&gt;：FastAPI 路由設定與資料序列化的細節&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;描述&lt;/strong&gt;：介紹如何為路由加上標籤（tags）、摘要（summary）、描述（description）和棄用標記（deprecated）來豐富 API 文件，以及如何把 Python 物件轉換成 JSON 相容的格式。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;大綱&lt;/strong&gt;：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;路徑操作的額外設定參數：
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;tags&lt;/code&gt;（文件分類）&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;summary&lt;/code&gt;（摘要）&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;description&lt;/code&gt;（詳細描述，支援 Markdown）&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;response_description&lt;/code&gt;（回應的說明）&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;deprecated&lt;/code&gt;（標記為已棄用）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;宣告請求範例資料（&lt;code&gt;schema_extra&lt;/code&gt; / &lt;code&gt;openapi_examples&lt;/code&gt;）&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;jsonable_encoder()&lt;/code&gt;：將 Pydantic 模型或 &lt;code&gt;datetime&lt;/code&gt; 轉換成可序列化的格式&lt;/li&gt;
+&lt;li&gt;Body 更新的最佳實踐：
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;PUT&lt;/code&gt;（完整替換）vs &lt;code&gt;PATCH&lt;/code&gt;（部分更新）&lt;/li&gt;
+&lt;li&gt;使用 &lt;code&gt;model.model_dump(exclude_unset=True)&lt;/code&gt; 實作 PATCH&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;參考&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="https://fastapi.tiangolo.com/zh-hant/tutorial/path-operation-configuration/" target="_blank" rel="noopener"
+&gt;路徑操作設定&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://fastapi.tiangolo.com/zh-hant/tutorial/encoder/" target="_blank" rel="noopener"
+&gt;JSON 相容編碼器&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://fastapi.tiangolo.com/zh-hant/tutorial/body-updates/" target="_blank" rel="noopener"
+&gt;Body - 更新&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://fastapi.tiangolo.com/zh-hant/tutorial/schema-extra-example/" target="_blank" rel="noopener"
+&gt;宣告請求範例資料&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="第-12-篇依賴注入dependency-injection"&gt;▌第 12 篇：依賴注入（Dependency Injection）
+&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;標題&lt;/strong&gt;：FastAPI 依賴注入：讓程式碼可以重複使用&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;描述&lt;/strong&gt;：FastAPI 最強大的功能之一。透過 &lt;code&gt;Depends()&lt;/code&gt; 將共用邏輯（如驗證、資料庫連線、共用參數）抽出來，讓多個路由都能使用，保持程式碼乾淨整潔。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;前置知識說明&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;什麼是「不重複自己（DRY）」原則&lt;/li&gt;
+&lt;li&gt;Python 函式可以當作參數傳遞（First-class function）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;大綱&lt;/strong&gt;：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;什麼是依賴注入？（以「插電」比喻說明）&lt;/li&gt;
+&lt;li&gt;建立一個共用查詢參數的依賴函式&lt;/li&gt;
+&lt;li&gt;使用 &lt;code&gt;Depends()&lt;/code&gt; 將依賴注入到路由中&lt;/li&gt;
+&lt;li&gt;以 Class 作為依賴（更結構化的寫法）&lt;/li&gt;
+&lt;li&gt;子依賴（依賴 A 又依賴 B）&lt;/li&gt;
+&lt;li&gt;在路徑操作裝飾器中加入依賴（不使用回傳值的情況）&lt;/li&gt;
+&lt;li&gt;全域依賴（對所有路由套用）&lt;/li&gt;
+&lt;li&gt;使用 &lt;code&gt;yield&lt;/code&gt; 的依賴（適合資料庫 Session 的開關）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;參考&lt;/strong&gt;：&lt;a class="link" href="https://fastapi.tiangolo.com/zh-hant/tutorial/dependencies/" target="_blank" rel="noopener"
+&gt;依賴&lt;/a&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="第-13-篇安全性與身份驗證"&gt;▌第 13 篇：安全性與身份驗證
+&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;標題&lt;/strong&gt;：FastAPI 安全性：實作 API 的登入驗證機制&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;描述&lt;/strong&gt;：學習如何使用 OAuth2 和 JWT Token 為 API 加上身份驗證，讓只有登入的使用者才能存取特定資源，這是幾乎所有真實產品都必須實作的功能。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;前置知識說明&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Cookie vs Token 的身份驗證機制比較&lt;/li&gt;
+&lt;li&gt;什麼是 OAuth2（以「使用 Google 登入」類比）&lt;/li&gt;
+&lt;li&gt;什麼是 JWT（JSON Web Token）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;大綱&lt;/strong&gt;：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;FastAPI 的安全性工具概覽&lt;/li&gt;
+&lt;li&gt;使用 &lt;code&gt;OAuth2PasswordBearer&lt;/code&gt; 取得 Token&lt;/li&gt;
+&lt;li&gt;使用 &lt;code&gt;OAuth2PasswordRequestForm&lt;/code&gt; 接收帳號密碼&lt;/li&gt;
+&lt;li&gt;安裝 &lt;code&gt;python-jose&lt;/code&gt; 並建立 JWT Token&lt;/li&gt;
+&lt;li&gt;密碼雜湊（使用 &lt;code&gt;passlib&lt;/code&gt; 將明文密碼加密儲存）&lt;/li&gt;
+&lt;li&gt;完整的登入流程實作：
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;POST /token&lt;/code&gt;：驗證帳密、發放 Token&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;GET /users/me&lt;/code&gt;：驗證 Token、回傳目前使用者&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;使用 &lt;code&gt;Depends()&lt;/code&gt; 保護路由（需要登入才能存取）&lt;/li&gt;
+&lt;li&gt;權限範圍（Scopes）的概念介紹&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;參考&lt;/strong&gt;：&lt;a class="link" href="https://fastapi.tiangolo.com/zh-hant/tutorial/security/" target="_blank" rel="noopener"
+&gt;安全性&lt;/a&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="第-14-篇中介軟體cors-與背景任務"&gt;▌第 14 篇：中介軟體、CORS 與背景任務
+&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;標題&lt;/strong&gt;：FastAPI 中介軟體與背景任務：強化 API 的進階功能&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;描述&lt;/strong&gt;：學習如何在請求與回應之間插入共用處理邏輯（Middleware），開放跨來源資源共享（CORS）讓前端可以呼叫 API，以及如何在不延誤回應的情況下執行耗時的背景工作。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;前置知識說明&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;什麼是 CORS？（以瀏覽器的「同源政策」說明）&lt;/li&gt;
+&lt;li&gt;什麼是同步 vs 非同步執行&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;大綱&lt;/strong&gt;：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;什麼是 Middleware（中介軟體）&lt;/li&gt;
+&lt;li&gt;建立自定義 Middleware（加上處理時間的 Header）&lt;/li&gt;
+&lt;li&gt;CORS 的問題根源與解決方式&lt;/li&gt;
+&lt;li&gt;使用 &lt;code&gt;CORSMiddleware&lt;/code&gt; 設定允許的來源、方法與 Headers&lt;/li&gt;
+&lt;li&gt;使用 &lt;code&gt;BackgroundTasks&lt;/code&gt; 執行背景任務&lt;/li&gt;
+&lt;li&gt;在 Depends 中注入背景任務&lt;/li&gt;
+&lt;li&gt;其他常用的內建 Middleware&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;參考&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="https://fastapi.tiangolo.com/zh-hant/tutorial/middleware/" target="_blank" rel="noopener"
+&gt;中介軟體&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://fastapi.tiangolo.com/zh-hant/tutorial/cors/" target="_blank" rel="noopener"
+&gt;CORS（跨來源資源共享）&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://fastapi.tiangolo.com/zh-hant/tutorial/background-tasks/" target="_blank" rel="noopener"
+&gt;背景任務&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="第-15-篇大型專案架構apirouter-與模組化"&gt;▌第 15 篇：大型專案架構（APIRouter 與模組化）
+&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;標題&lt;/strong&gt;：FastAPI 大型專案：用 APIRouter 組織你的程式碼&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;描述&lt;/strong&gt;：當 API 越來越多，把所有路由都放在 &lt;code&gt;main.py&lt;/code&gt; 會變得難以維護。這篇介紹如何用 &lt;code&gt;APIRouter&lt;/code&gt; 將路由分散到不同的模組，並組合成一個健壯的大型應用程式。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;前置知識說明&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Python 的模組（&lt;code&gt;import&lt;/code&gt;）與套件（資料夾）概念&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;大綱&lt;/strong&gt;：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;為什麼大型應用程式需要拆分（單一 &lt;code&gt;main.py&lt;/code&gt; 的問題）&lt;/li&gt;
+&lt;li&gt;專案結構範例（&lt;code&gt;app/&lt;/code&gt;、&lt;code&gt;routers/&lt;/code&gt;、&lt;code&gt;models/&lt;/code&gt;、&lt;code&gt;dependencies/&lt;/code&gt;）&lt;/li&gt;
+&lt;li&gt;建立 &lt;code&gt;APIRouter&lt;/code&gt;（類似小型的 &lt;code&gt;FastAPI&lt;/code&gt; 應用）&lt;/li&gt;
+&lt;li&gt;為 Router 加上共用的 &lt;code&gt;prefix&lt;/code&gt;（前綴）、&lt;code&gt;tags&lt;/code&gt;（標籤）、&lt;code&gt;dependencies&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;在 &lt;code&gt;main.py&lt;/code&gt; 中 &lt;code&gt;include_router()&lt;/code&gt; 組合所有模組&lt;/li&gt;
+&lt;li&gt;在不同模組間共享 Dependency&lt;/li&gt;
+&lt;li&gt;完整的專案目錄結構範例&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;參考&lt;/strong&gt;：&lt;a class="link" href="https://fastapi.tiangolo.com/zh-hant/tutorial/bigger-applications/" target="_blank" rel="noopener"
+&gt;更大的應用程式 - 多個檔案&lt;/a&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="課程總覽"&gt;▌課程總覽
+&lt;/h2&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;篇數&lt;/th&gt;
+&lt;th&gt;主題&lt;/th&gt;
+&lt;th&gt;核心技術&lt;/th&gt;
+&lt;th&gt;難度&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;前置知識：HTTP 與 API&lt;/td&gt;
+&lt;td&gt;HTTP、JSON&lt;/td&gt;
+&lt;td&gt;⭐&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;✅ 安裝與第一個應用&lt;/td&gt;
+&lt;td&gt;FastAPI、Uvicorn&lt;/td&gt;
+&lt;td&gt;⭐&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;td&gt;路徑參數&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;{param}&lt;/code&gt;、Enum&lt;/td&gt;
+&lt;td&gt;⭐⭐&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;3&lt;/td&gt;
+&lt;td&gt;查詢參數&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;?key=value&lt;/code&gt;、Optional&lt;/td&gt;
+&lt;td&gt;⭐⭐&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;4&lt;/td&gt;
+&lt;td&gt;Request Body 基礎&lt;/td&gt;
+&lt;td&gt;Pydantic BaseModel&lt;/td&gt;
+&lt;td&gt;⭐⭐&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;5&lt;/td&gt;
+&lt;td&gt;Body 進階&lt;/td&gt;
+&lt;td&gt;Field、巢狀模型、List&lt;/td&gt;
+&lt;td&gt;⭐⭐⭐&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;6&lt;/td&gt;
+&lt;td&gt;參數驗證&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Query()&lt;/code&gt;、&lt;code&gt;Path()&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;⭐⭐⭐&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;7&lt;/td&gt;
+&lt;td&gt;Header 與 Cookie&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Header()&lt;/code&gt;、&lt;code&gt;Cookie()&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;⭐⭐&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;8&lt;/td&gt;
+&lt;td&gt;回應模型與狀態碼&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;response_model&lt;/code&gt;、狀態碼&lt;/td&gt;
+&lt;td&gt;⭐⭐⭐&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;9&lt;/td&gt;
+&lt;td&gt;表單與檔案上傳&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Form()&lt;/code&gt;、&lt;code&gt;UploadFile&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;⭐⭐⭐&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;10&lt;/td&gt;
+&lt;td&gt;錯誤處理&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;HTTPException&lt;/code&gt;、例外處理器&lt;/td&gt;
+&lt;td&gt;⭐⭐⭐&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;11&lt;/td&gt;
+&lt;td&gt;路由設定與序列化&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;tags&lt;/code&gt;、&lt;code&gt;jsonable_encoder&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;⭐⭐&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;12&lt;/td&gt;
+&lt;td&gt;依賴注入&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Depends()&lt;/code&gt;、&lt;code&gt;yield&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;⭐⭐⭐⭐&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;13&lt;/td&gt;
+&lt;td&gt;安全性與身份驗證&lt;/td&gt;
+&lt;td&gt;OAuth2、JWT、密碼雜湊&lt;/td&gt;
+&lt;td&gt;⭐⭐⭐⭐⭐&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;14&lt;/td&gt;
+&lt;td&gt;Middleware 與背景任務&lt;/td&gt;
+&lt;td&gt;CORS、&lt;code&gt;BackgroundTasks&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;⭐⭐⭐⭐&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;15&lt;/td&gt;
+&lt;td&gt;大型專案架構&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;APIRouter&lt;/code&gt;、模組化&lt;/td&gt;
+&lt;td&gt;⭐⭐⭐⭐&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;建議學習節奏&lt;/strong&gt;：每週完成 2 篇，約 8 週可以完整學完整個系列。&lt;/p&gt;
+&lt;/blockquote&gt;</description></item></channel></rss>
