@@ -336,7 +336,7 @@ Body: { &amp;#34;city&amp;#34;: &amp;#34;台北&amp;#34;, &amp;#34;temperature&a
 &lt;hr&gt;
 &lt;h2 id="練習題"&gt;練習題
 &lt;/h2&gt;&lt;details&gt;
-&lt;summary&gt;📝 練習題 1：HTTP 方法配對（點擊展開）&lt;/summary&gt;
+&lt;summary&gt;📝 練習題 1：HTTP 方法配對&lt;/summary&gt;
 &lt;p&gt;&lt;strong&gt;題目&lt;/strong&gt;：請說明以下 API 端點應該使用哪個 HTTP 方法？&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;取得 id=5 的商品資訊&lt;/li&gt;
@@ -358,7 +358,7 @@ Body: { &amp;#34;city&amp;#34;: &amp;#34;台北&amp;#34;, &amp;#34;temperature&a
 &lt;/details&gt;
 &lt;/details&gt;
 &lt;details&gt;
-&lt;summary&gt;📝 練習題 2：狀態碼判讀（點擊展開）&lt;/summary&gt;
+&lt;summary&gt;📝 練習題 2：狀態碼判讀&lt;/summary&gt;
 &lt;p&gt;&lt;strong&gt;題目&lt;/strong&gt;：以下情境應該回傳哪個 HTTP 狀態碼？&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;使用者輸入了帳號密碼，但帳號不存在&lt;/li&gt;
@@ -380,7 +380,7 @@ Body: { &amp;#34;city&amp;#34;: &amp;#34;台北&amp;#34;, &amp;#34;temperature&a
 &lt;/details&gt;
 &lt;/details&gt;
 &lt;details&gt;
-&lt;summary&gt;📝 練習題 3：JSON 轉 Python dict（點擊展開）&lt;/summary&gt;
+&lt;summary&gt;📝 練習題 3：JSON 轉 Python dict&lt;/summary&gt;
 &lt;p&gt;&lt;strong&gt;題目&lt;/strong&gt;：將以下 JSON 轉換為 Python dict：&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;username&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;alice&amp;#34;&lt;/span&gt;,
@@ -491,7 +491,7 @@ FastAPI 是一個「網頁框架」，負責處理程式邏輯與路由；但它
 &lt;p&gt;這樣就成功建立並運行了一個 FastAPI 應用程式！&lt;/p&gt;
 &lt;h2 id="練習題"&gt;練習題
 &lt;/h2&gt;&lt;details&gt;
-&lt;summary&gt;📝 練習題 1：新增一個路由（點擊展開）&lt;/summary&gt;
+&lt;summary&gt;📝 練習題 1：新增一個路由&lt;/summary&gt;
 &lt;p&gt;&lt;strong&gt;題目&lt;/strong&gt;：在 &lt;code&gt;main.py&lt;/code&gt; 中新增一個 &lt;code&gt;GET /hello/{name}&lt;/code&gt; 的端點，讓它回傳 &lt;code&gt;{&amp;quot;message&amp;quot;: &amp;quot;Hello, {name}!&amp;quot;}&lt;/code&gt;。&lt;/p&gt;
 &lt;p&gt;例如：呼叫 &lt;code&gt;GET /hello/Alice&lt;/code&gt; 應該回傳 &lt;code&gt;{&amp;quot;message&amp;quot;: &amp;quot;Hello, Alice!&amp;quot;}&lt;/code&gt;&lt;/p&gt;
 &lt;hr&gt;
@@ -507,7 +507,7 @@ FastAPI 是一個「網頁框架」，負責處理程式邏輯與路由；但它
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt; &lt;/details&gt;
 &lt;/details&gt;
 &lt;details&gt;
-&lt;summary&gt;📝 練習題 2：Swagger UI 操作（點擊展開）&lt;/summary&gt;
+&lt;summary&gt;📝 練習題 2：Swagger UI 操作&lt;/summary&gt;
 &lt;p&gt;&lt;strong&gt;題目&lt;/strong&gt;：啟動伺服器後，請用 Swagger UI 測試以下兩個端點，並記錄回傳的結果：&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;&lt;code&gt;GET /&lt;/code&gt; — 預期回傳什麼？&lt;/li&gt;
@@ -525,7 +525,7 @@ FastAPI 是一個「網頁框架」，負責處理程式邏輯與路由；但它
 &lt;/details&gt;
 &lt;/details&gt;
 &lt;details&gt;
-&lt;summary&gt;📝 練習題 3：傳入錯誤型別會怎樣？（點擊展開）&lt;/summary&gt;
+&lt;summary&gt;📝 練習題 3：傳入錯誤型別會怎樣？&lt;/summary&gt;
 &lt;p&gt;&lt;strong&gt;題目&lt;/strong&gt;：在 Swagger UI 中呼叫 &lt;code&gt;GET /items/{item_id}&lt;/code&gt;，但把 &lt;code&gt;item_id&lt;/code&gt; 填入字串 &lt;code&gt;&amp;quot;abc&amp;quot;&lt;/code&gt; 而不是整數，觀察 FastAPI 回傳什麼？&lt;/p&gt;
 &lt;hr&gt;
 &lt;details&gt;
@@ -1909,11 +1909,12 @@ pip install --upgrade --force-reinstall openai
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
 &lt;h2 id="練習題"&gt;練習題
 &lt;/h2&gt;&lt;details&gt;
-&lt;summary&gt;📝 練習題 1：撰寫產品分類 API（點擊展開）&lt;/summary&gt;
+&lt;summary&gt;📝 練習題 1：撰寫產品分類 API&lt;/summary&gt;
 &lt;p&gt;&lt;strong&gt;題目&lt;/strong&gt;：撰寫一個 API 端點 &lt;code&gt;GET /categories/{category_name}&lt;/code&gt;。
 這個端點應該接收字串型別的 &lt;code&gt;category_name&lt;/code&gt;，並回傳 JSON 格式的分類名稱。&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;&lt;strong&gt;答案&lt;/strong&gt;：&lt;/p&gt;
+&lt;details&gt;
+&lt;summary&gt;答案：&lt;/summary&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; fastapi &lt;span style="color:#f92672"&gt;import&lt;/span&gt; FastAPI
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;app &lt;span style="color:#f92672"&gt;=&lt;/span&gt; FastAPI()
@@ -1921,9 +1922,10 @@ pip install --upgrade --force-reinstall openai
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@app.get&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/categories/&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{category_name}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;get_category&lt;/span&gt;(category_name: str):
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; {&lt;span style="color:#e6db74"&gt;&amp;#34;category&amp;#34;&lt;/span&gt;: category_name}
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/details&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt; &lt;/details&gt;
+&lt;/details&gt;
 &lt;details&gt;
-&lt;summary&gt;📝 練習題 2：修復順序錯誤（點擊展開）&lt;/summary&gt;
+&lt;summary&gt;📝 練習題 2：修復順序錯誤&lt;/summary&gt;
 &lt;p&gt;&lt;strong&gt;題目&lt;/strong&gt;：以下的程式碼有個問題。如果造訪 &lt;code&gt;/posts/latest&lt;/code&gt; 會發生什麼事？請將程式碼修改成正確的順序。&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; fastapi &lt;span style="color:#f92672"&gt;import&lt;/span&gt; FastAPI
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
@@ -1937,7 +1939,8 @@ pip install --upgrade --force-reinstall openai
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;get_latest_post&lt;/span&gt;():
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; {&lt;span style="color:#e6db74"&gt;&amp;#34;post&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;This is the latest post!&amp;#34;&lt;/span&gt;}
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
-&lt;p&gt;&lt;strong&gt;答案&lt;/strong&gt;：&lt;/p&gt;
+&lt;details&gt;
+&lt;summary&gt;答案：&lt;/summary&gt;
 &lt;p&gt;如果照著原本的寫法，造訪 &lt;code&gt;/posts/latest&lt;/code&gt; 時，FastAPI 會以為 &lt;code&gt;&amp;quot;latest&amp;quot;&lt;/code&gt; 是 &lt;code&gt;post_id&lt;/code&gt;。由於 &lt;code&gt;post_id&lt;/code&gt; 規定要是整數（&lt;code&gt;int&lt;/code&gt;），所以會丟出 &lt;strong&gt;422 Validation Error&lt;/strong&gt; 錯誤。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;正確寫法&lt;/strong&gt;（把固定路徑移到上面）：&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; fastapi &lt;span style="color:#f92672"&gt;import&lt;/span&gt; FastAPI
@@ -1951,27 +1954,30 @@ pip install --upgrade --force-reinstall openai
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@app.get&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/posts/&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{post_id}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;get_post&lt;/span&gt;(post_id: int):
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; {&lt;span style="color:#e6db74"&gt;&amp;#34;post_id&amp;#34;&lt;/span&gt;: post_id}
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/details&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt; &lt;/details&gt;
+&lt;/details&gt;
 &lt;details&gt;
-&lt;summary&gt;📝 練習題 3：使用 Enum 限制顏色（點擊展開）&lt;/summary&gt;
-&lt;p&gt;&lt;strong&gt;題目&lt;/strong&gt;：撰寫一個 API 端點 &lt;code&gt;GET /colors/{color}&lt;/code&gt;。
-請使用 &lt;code&gt;Enum&lt;/code&gt; 來限制 &lt;code&gt;color&lt;/code&gt; 只能是 &lt;code&gt;red&lt;/code&gt;、&lt;code&gt;green&lt;/code&gt; 或 &lt;code&gt;blue&lt;/code&gt;。如果成功，回傳 &lt;code&gt;{&amp;quot;color&amp;quot;: color}&lt;/code&gt;。&lt;/p&gt;
+&lt;summary&gt;📝 練習題 3：使用 Enum 限制顏色&lt;/summary&gt;
+&lt;p&gt;&lt;strong&gt;題目&lt;/strong&gt;：建立一個 &lt;code&gt;GET /items/color/{color_name}&lt;/code&gt; 的端點。
+請使用 &lt;code&gt;Enum&lt;/code&gt; 限制 &lt;code&gt;color_name&lt;/code&gt; 只能是 &lt;code&gt;red&lt;/code&gt;、&lt;code&gt;green&lt;/code&gt; 或 &lt;code&gt;blue&lt;/code&gt; 其中一種。如果輸入合法，回傳對應的顏色名稱。&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;&lt;strong&gt;答案&lt;/strong&gt;：&lt;/p&gt;
+&lt;details&gt;
+&lt;summary&gt;答案：&lt;/summary&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; enum &lt;span style="color:#f92672"&gt;import&lt;/span&gt; Enum
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; fastapi &lt;span style="color:#f92672"&gt;import&lt;/span&gt; FastAPI
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;Color&lt;/span&gt;(str, Enum):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;app &lt;span style="color:#f92672"&gt;=&lt;/span&gt; FastAPI()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;ColorName&lt;/span&gt;(str, Enum):
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; red &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;red&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; green &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;green&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; blue &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;blue&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;app &lt;span style="color:#f92672"&gt;=&lt;/span&gt; FastAPI()
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@app.get&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/colors/&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{color}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;)
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;get_color&lt;/span&gt;(color: Color):
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; {&lt;span style="color:#e6db74"&gt;&amp;#34;color&amp;#34;&lt;/span&gt;: color}
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/details&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@app.get&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/items/color/&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{color_name}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;get_color&lt;/span&gt;(color_name: ColorName):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; {&lt;span style="color:#e6db74"&gt;&amp;#34;selected_color&amp;#34;&lt;/span&gt;: color_name}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt; &lt;/details&gt;
+&lt;/details&gt;
 &lt;h2 id="參考資料"&gt;參考資料
 &lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="https://fastapi.tiangolo.com/zh-hant/tutorial/path-params/" target="_blank" rel="noopener"

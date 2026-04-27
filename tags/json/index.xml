@@ -336,7 +336,7 @@ Body: { &amp;#34;city&amp;#34;: &amp;#34;台北&amp;#34;, &amp;#34;temperature&a
 &lt;hr&gt;
 &lt;h2 id="練習題"&gt;練習題
 &lt;/h2&gt;&lt;details&gt;
-&lt;summary&gt;📝 練習題 1：HTTP 方法配對（點擊展開）&lt;/summary&gt;
+&lt;summary&gt;📝 練習題 1：HTTP 方法配對&lt;/summary&gt;
 &lt;p&gt;&lt;strong&gt;題目&lt;/strong&gt;：請說明以下 API 端點應該使用哪個 HTTP 方法？&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;取得 id=5 的商品資訊&lt;/li&gt;
@@ -358,7 +358,7 @@ Body: { &amp;#34;city&amp;#34;: &amp;#34;台北&amp;#34;, &amp;#34;temperature&a
 &lt;/details&gt;
 &lt;/details&gt;
 &lt;details&gt;
-&lt;summary&gt;📝 練習題 2：狀態碼判讀（點擊展開）&lt;/summary&gt;
+&lt;summary&gt;📝 練習題 2：狀態碼判讀&lt;/summary&gt;
 &lt;p&gt;&lt;strong&gt;題目&lt;/strong&gt;：以下情境應該回傳哪個 HTTP 狀態碼？&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;使用者輸入了帳號密碼，但帳號不存在&lt;/li&gt;
@@ -380,7 +380,7 @@ Body: { &amp;#34;city&amp;#34;: &amp;#34;台北&amp;#34;, &amp;#34;temperature&a
 &lt;/details&gt;
 &lt;/details&gt;
 &lt;details&gt;
-&lt;summary&gt;📝 練習題 3：JSON 轉 Python dict（點擊展開）&lt;/summary&gt;
+&lt;summary&gt;📝 練習題 3：JSON 轉 Python dict&lt;/summary&gt;
 &lt;p&gt;&lt;strong&gt;題目&lt;/strong&gt;：將以下 JSON 轉換為 Python dict：&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;username&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;alice&amp;#34;&lt;/span&gt;,
