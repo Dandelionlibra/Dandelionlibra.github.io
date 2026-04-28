@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Python on YuChen</title><link>https://Dandelionlibra.github.io/tags/python/</link><description>Recent content in Python on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Mon, 27 Apr 2026 23:21:00 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/tags/python/index.xml" rel="self" type="application/rss+xml"/><item><title>學 FastAPI 前你需要知道的事：HTTP 與 API 基礎</title><link>https://Dandelionlibra.github.io/2026/04/fastapi-http-and-api/</link><pubDate>Mon, 27 Apr 2026 10:32:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/2026/04/fastapi-http-and-api/</guid><description>&lt;h2 id="內容大綱"&gt;內容大綱
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Python on YuChen</title><link>https://Dandelionlibra.github.io/tags/python/</link><description>Recent content in Python on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Tue, 28 Apr 2026 00:00:00 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/tags/python/index.xml" rel="self" type="application/rss+xml"/><item><title>學 FastAPI 前你需要知道的事：HTTP 與 API 基礎</title><link>https://Dandelionlibra.github.io/2026/04/fastapi-http-and-api/</link><pubDate>Mon, 27 Apr 2026 10:32:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/2026/04/fastapi-http-and-api/</guid><description>&lt;h2 id="內容大綱"&gt;內容大綱
 &lt;/h2&gt;&lt;ol&gt;
 &lt;li&gt;&lt;a class="link" href="#1-%e4%bb%80%e9%ba%bc%e6%98%af-api" &gt;什麼是 API？&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="#2-http-%e5%8d%94%e5%ae%9a%e8%ab%8b%e6%b1%82%e8%88%87%e5%9b%9e%e6%87%89" &gt;HTTP 協定：請求與回應&lt;/a&gt;&lt;/li&gt;
@@ -1275,4 +1275,172 @@ FastAPI 的強大，有一半歸功於 &lt;strong&gt;Pydantic&lt;/strong&gt;。P
 &lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="https://fastapi.tiangolo.com/zh-hant/tutorial/body/" target="_blank" rel="noopener"
 &gt;FastAPI 官方教學 - 請求本文&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>FastAPI Body 進階：多個模型、巢狀結構與欄位驗證</title><link>https://Dandelionlibra.github.io/2026/04/fastapi-body-advanced/</link><pubDate>Tue, 28 Apr 2026 00:00:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/2026/04/fastapi-body-advanced/</guid><description>&lt;p&gt;上一篇介紹了如何使用 Pydantic 建立基本的 Request Body 模型。然而，真實世界的 API 往往會面臨更複雜的需求：
+如果想在同一個請求中同時接收「商品資料」和「使用者資料」該怎麼辦？如果模型裡面還包含著另一個模型（巢狀結構）呢？&lt;/p&gt;
+&lt;p&gt;這篇將解鎖 FastAPI 與 Pydantic 的進階用法，讓 API 驗證變得更靈活。&lt;/p&gt;
+&lt;h2 id="內容大綱"&gt;內容大綱
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;&lt;a class="link" href="#1-%e5%90%8c%e6%99%82%e6%8e%a5%e6%94%b6%e5%a4%9a%e5%80%8b-body-%e5%8f%83%e6%95%b8" &gt;同時接收多個 Body 參數&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#2-%e4%bd%bf%e7%94%a8-body-%e6%98%8e%e7%a2%ba%e5%ae%a3%e5%91%8a%e5%96%ae%e4%b8%80%e5%80%bc" &gt;使用 Body() 明確宣告單一值&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#3-%e4%bd%bf%e7%94%a8-field-%e7%82%ba%e6%ac%84%e4%bd%8d%e5%8a%a0%e4%b8%8a%e9%a9%97%e8%ad%89" &gt;使用 Field() 為欄位加上驗證&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#4-list-%e8%88%87-set%e8%99%95%e7%90%86%e9%99%a3%e5%88%97%e8%b3%87%e6%96%99" &gt;List 與 Set：處理陣列資料&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#5-%e5%b7%a2%e7%8b%80%e6%a8%a1%e5%9e%8b%e6%a8%a1%e5%9e%8b%e4%b8%ad%e7%9a%84%e6%a8%a1%e5%9e%8b" &gt;巢狀模型：模型中的模型&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h3 id="1-同時接收多個-body-參數"&gt;1. 同時接收多個 Body 參數
+&lt;/h3&gt;&lt;p&gt;如果想在同一個路由中接收兩種不同的資料結構，例如：建立一筆訂單時，同時需要 &lt;code&gt;Item&lt;/code&gt; 商品資訊與 &lt;code&gt;User&lt;/code&gt; 買家資訊，直接把它們都宣告為參數即可，FastAPI 會自動將它們視為 Request Body。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; fastapi &lt;span style="color:#f92672"&gt;import&lt;/span&gt; FastAPI
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; pydantic &lt;span style="color:#f92672"&gt;import&lt;/span&gt; BaseModel
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;app &lt;span style="color:#f92672"&gt;=&lt;/span&gt; FastAPI()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;Item&lt;/span&gt;(BaseModel):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; name: str
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; price: float
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;User&lt;/span&gt;(BaseModel):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; username: str
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; full_name: str
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@app.put&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/orders/&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{order_id}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;update_order&lt;/span&gt;(order_id: int, item: Item, user: User):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; {&lt;span style="color:#e6db74"&gt;&amp;#34;order_id&amp;#34;&lt;/span&gt;: order_id, &lt;span style="color:#e6db74"&gt;&amp;#34;item&amp;#34;&lt;/span&gt;: item, &lt;span style="color:#e6db74"&gt;&amp;#34;user&amp;#34;&lt;/span&gt;: user}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;當 FastAPI 看到兩個繼承自 &lt;code&gt;BaseModel&lt;/code&gt; 的參數時，它會預期客戶端傳來的 JSON 長這樣：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;item&amp;#34;&lt;/span&gt;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;name&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;機械鍵盤&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;price&amp;#34;&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;3000.0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;user&amp;#34;&lt;/span&gt;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;username&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;alice123&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;full_name&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;Alice Wang&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;它會自動使用參數名稱（&lt;code&gt;item&lt;/code&gt; 和 &lt;code&gt;user&lt;/code&gt;）作為 JSON 最外層的 Key，並把資料完美解析出來。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id="2-使用-body-明確宣告單一值"&gt;2. 使用 Body() 明確宣告單一值
+&lt;/h3&gt;&lt;p&gt;有時候，除了完整的 Pydantic 模型之外，可能還想額外接收一個簡單的單一值，例如一個整數 &lt;code&gt;importance&lt;/code&gt;。
+如果直接寫 &lt;code&gt;importance: int&lt;/code&gt;，FastAPI 會把它當作&lt;strong&gt;查詢參數&lt;/strong&gt;，因為它是基本型別。&lt;/p&gt;
+&lt;p&gt;如果堅持要把這個簡單的值也放進 JSON Body 裡面，可以使用 FastAPI 提供的 &lt;code&gt;Body()&lt;/code&gt;：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; fastapi &lt;span style="color:#f92672"&gt;import&lt;/span&gt; Body, FastAPI
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@app.put&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/items/&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{item_id}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;update_item&lt;/span&gt;(item_id: int, item: Item, importance: int &lt;span style="color:#f92672"&gt;=&lt;/span&gt; Body(&lt;span style="color:#f92672"&gt;...&lt;/span&gt;)):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; {&lt;span style="color:#e6db74"&gt;&amp;#34;item_id&amp;#34;&lt;/span&gt;: item_id, &lt;span style="color:#e6db74"&gt;&amp;#34;item&amp;#34;&lt;/span&gt;: item, &lt;span style="color:#e6db74"&gt;&amp;#34;importance&amp;#34;&lt;/span&gt;: importance}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Body(...)&lt;/code&gt; 中的 &lt;code&gt;...&lt;/code&gt; 在 FastAPI 裡代表&lt;strong&gt;必填&lt;/strong&gt;的意思。&lt;/li&gt;
+&lt;li&gt;此時，FastAPI 預期的 JSON 結構會變成：
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;item&amp;#34;&lt;/span&gt;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;name&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;機械鍵盤&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;price&amp;#34;&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;3000.0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;importance&amp;#34;&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;5&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h3 id="3-使用-field-為欄位加上驗證"&gt;3. 使用 Field() 為欄位加上驗證
+&lt;/h3&gt;&lt;p&gt;如果想要對 Pydantic 模型裡面的某個欄位做更嚴格的限制（例如：價格必須大於 0、名字長度最多 50 字元），需要使用 Pydantic 的 &lt;code&gt;Field()&lt;/code&gt;。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; pydantic &lt;span style="color:#f92672"&gt;import&lt;/span&gt; BaseModel, Field
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;Item&lt;/span&gt;(BaseModel):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; name: str &lt;span style="color:#f92672"&gt;=&lt;/span&gt; Field(&lt;span style="color:#f92672"&gt;...&lt;/span&gt;, max_length&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;50&lt;/span&gt;, description&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;商品的名稱&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; description: str &lt;span style="color:#f92672"&gt;|&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; Field(default&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;, title&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;商品詳細描述&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; price: float &lt;span style="color:#f92672"&gt;=&lt;/span&gt; Field(&lt;span style="color:#f92672"&gt;...&lt;/span&gt;, gt&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;, description&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;價格必須大於 0&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;這裡的參數解釋如下：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;...&lt;/code&gt;：代表必填。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;max_length=50&lt;/code&gt;：字串長度不能超過 50。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;default=None&lt;/code&gt;：代表預設值為 &lt;code&gt;None&lt;/code&gt;（可選填）。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;gt=0&lt;/code&gt;：Greater Than，數值必須大於 0。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;description&lt;/code&gt; / &lt;code&gt;title&lt;/code&gt;：這兩個參數不會影響驗證，但會顯示在 Swagger UI 文件上，幫助前端工程師理解欄位意義。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h3 id="4-list-與-set處理陣列資料"&gt;4. List 與 Set：處理陣列資料
+&lt;/h3&gt;&lt;p&gt;如果某個欄位會包含多個值（例如：商品的標籤清單），在 Python 中可以使用 &lt;code&gt;list&lt;/code&gt; 或 &lt;code&gt;set&lt;/code&gt; 型別。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;Item&lt;/span&gt;(BaseModel):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; name: str
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; tags: list[str] &lt;span style="color:#f92672"&gt;=&lt;/span&gt; []
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; unique_tags: set[str] &lt;span style="color:#f92672"&gt;=&lt;/span&gt; set()
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;list[str]&lt;/code&gt; 代表這個欄位必須是一個列表，且裡面的元素都要是字串。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;set[str]&lt;/code&gt; 與 list 類似，但如果是 &lt;code&gt;set&lt;/code&gt;，當前端傳來包含重複值的 JSON（例如 &lt;code&gt;[&amp;quot;電子&amp;quot;, &amp;quot;電子&amp;quot;, &amp;quot;促銷&amp;quot;]&lt;/code&gt;）時，FastAPI 轉成 Python &lt;code&gt;set&lt;/code&gt; 後會自動去重複，變成 &lt;code&gt;{&amp;quot;電子&amp;quot;, &amp;quot;促銷&amp;quot;}&lt;/code&gt;！&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h3 id="5-巢狀模型模型中的模型"&gt;5. 巢狀模型：模型中的模型
+&lt;/h3&gt;&lt;p&gt;Pydantic 最強大的地方在於它的高階組合能力，可以把一個模型當作另一個模型中的欄位型別，創造出「巢狀結構」。&lt;/p&gt;
+&lt;p&gt;例如，一個商品可能包含多個「圖片」：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; pydantic &lt;span style="color:#f92672"&gt;import&lt;/span&gt; BaseModel, HttpUrl
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;Image&lt;/span&gt;(BaseModel):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; url: HttpUrl
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; name: str
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;Item&lt;/span&gt;(BaseModel):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; name: str
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; price: float
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# 這個欄位是一個列表，且裡面的元素必須符合 Image 類&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; images: list[Image] &lt;span style="color:#f92672"&gt;=&lt;/span&gt; []
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;HttpUrl&lt;/code&gt; 是 Pydantic 內建的特殊型別，它會自動驗證傳入的字串是否為合法的網址。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;此時，FastAPI 預期的 JSON 就會是一個深層的巢狀結構：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;name&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;遊戲主機&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;price&amp;#34;&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;15000.0&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;images&amp;#34;&lt;/span&gt;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;url&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;https://example.com/console_front.png&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;name&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;正面照&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;url&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;https://example.com/console_back.png&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;name&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;背面照&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="練習題"&gt;練習題
+&lt;/h2&gt;&lt;details&gt;
+&lt;summary&gt;📝 練習題 1：建立包含清單的模型&lt;/summary&gt;
+&lt;p&gt;&lt;strong&gt;題目&lt;/strong&gt;：建立一個 &lt;code&gt;Post&lt;/code&gt;（部落格文章）模型，包含以下欄位：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;title&lt;/code&gt;：字串&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;content&lt;/code&gt;：字串&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;comments&lt;/code&gt;：字串的列表（預設為空列表）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;details&gt;
+&lt;summary&gt;答案：&lt;/summary&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; pydantic &lt;span style="color:#f92672"&gt;import&lt;/span&gt; BaseModel
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;Post&lt;/span&gt;(BaseModel):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; title: str
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; content: str
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; comments: list[str] &lt;span style="color:#f92672"&gt;=&lt;/span&gt; []
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt; &lt;/details&gt;
+&lt;/details&gt;
+&lt;details&gt;
+&lt;summary&gt;📝 練習題 2：使用 Field() 加上限制&lt;/summary&gt;
+&lt;p&gt;&lt;strong&gt;題目&lt;/strong&gt;：請修改上一題的 &lt;code&gt;Post&lt;/code&gt; 模型，要求 &lt;code&gt;title&lt;/code&gt; 的長度不可超過 100 個字元，並加上描述 &lt;code&gt;&amp;quot;文章的標題&amp;quot;&lt;/code&gt;。&lt;/p&gt;
+&lt;hr&gt;
+&lt;details&gt;
+&lt;summary&gt;答案：&lt;/summary&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; pydantic &lt;span style="color:#f92672"&gt;import&lt;/span&gt; BaseModel, Field
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;Post&lt;/span&gt;(BaseModel):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; title: str &lt;span style="color:#f92672"&gt;=&lt;/span&gt; Field(&lt;span style="color:#f92672"&gt;...&lt;/span&gt;, max_length&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;100&lt;/span&gt;, description&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;文章的標題&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; content: str
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; comments: list[str] &lt;span style="color:#f92672"&gt;=&lt;/span&gt; []
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt; &lt;/details&gt;
+&lt;/details&gt;
+&lt;h2 id="參考資料"&gt;參考資料
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="https://fastapi.tiangolo.com/zh-hant/tutorial/body-multiple-params/" target="_blank" rel="noopener"
+&gt;FastAPI 官方教學 - Body 多個參數&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://fastapi.tiangolo.com/zh-hant/tutorial/body-fields/" target="_blank" rel="noopener"
+&gt;FastAPI 官方教學 - 欄位&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://fastapi.tiangolo.com/zh-hant/tutorial/body-nested-models/" target="_blank" rel="noopener"
+&gt;FastAPI 官方教學 - 巢狀模型&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;</description></item></channel></rss>
