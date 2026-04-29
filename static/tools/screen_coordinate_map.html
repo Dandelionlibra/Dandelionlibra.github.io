@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Screen Coordinate Map — 1920×1080</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: #0d0d0f;
+      color: #e0e0e0;
+      font-family: 'Courier New', monospace;
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+      cursor: crosshair;
+      user-select: none;
+    }
+
+    canvas {
+      display: block;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    #hud {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      pointer-events: none;
+    }
+
+    #coord-box {
+      background: rgba(13, 13, 15, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 6px;
+      padding: 10px 16px;
+      font-size: 15px;
+      font-weight: bold;
+      letter-spacing: 0.03em;
+      color: #7effc8;
+      min-width: 230px;
+    }
+
+    #coord-box span {
+      color: rgba(255, 255, 255, 0.35);
+      font-weight: normal;
+      font-size: 11px;
+      display: block;
+      margin-bottom: 2px;
+      letter-spacing: 0.08em;
+    }
+
+    #info-box {
+      background: rgba(13, 13, 15, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 6px;
+      padding: 8px 14px;
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.4);
+      line-height: 1.8;
+      pointer-events: none;
+    }
+
+    #scale-info {
+      position: absolute;
+      top: 52px;
+      right: 16px;
+      background: rgba(13, 13, 15, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 6px;
+      padding: 8px 14px;
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.35);
+      text-align: right;
+      line-height: 1.7;
+      pointer-events: none;
+    }
+
+    #scale-info b {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    #top-right {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      z-index: 20;
+    }
+
+    .lang-dropdown {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    #lang-icon-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: rgba(255, 255, 255, 0.6);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    #lang-icon-btn:hover,
+    #lang-icon-btn.active {
+      background: rgba(255, 255, 255, 0.16);
+      color: #fff;
+    }
+
+    #lang-icon-btn svg {
+      width: 15px;
+      height: 15px;
+    }
+
+    #lang-menu {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      margin-top: 6px;
+      background: #111114;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 6px;
+      padding: 4px;
+      display: none;
+      flex-direction: column;
+      min-width: 100px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+      z-index: 30;
+    }
+
+    #lang-menu.show {
+      display: flex;
+    }
+
+    .lang-item {
+      padding: 8px 12px;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.6);
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background 0.15s, color 0.15s;
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    .lang-item:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+
+    .lang-item.active {
+      background: rgba(126, 255, 200, 0.12);
+      color: #7effc8;
+    }
+
+    .lang-divider {
+      width: 1px;
+      height: 18px;
+      background: rgba(255, 255, 255, 0.12);
+      margin: 0 2px;
+    }
+
+    #help-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: rgba(255, 255, 255, 0.6);
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    #help-btn:hover {
+      background: rgba(255, 255, 255, 0.16);
+      color: #fff;
+    }
+
+    #help-btn.active {
+      background: rgba(126, 255, 200, 0.15);
+      border-color: rgba(126, 255, 200, 0.5);
+      color: #7effc8;
+    }
+
+    /* 螢幕尺寸重設按鈕 */
+    #res-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: rgba(255, 255, 255, 0.6);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s, color 0.15s;
+    }
+    #res-btn:hover {
+      background: rgba(255, 255, 255, 0.16);
+      color: #fff;
+    }
+    #res-btn svg { width: 15px; height: 15px; }
+
+    #pins-panel {
+      position: absolute;
+      bottom: 16px;
+      left: 16px;
+      right: 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: flex-end;
+      pointer-events: none;
+    }
+
+    .pin-tag {
+      background: rgba(216, 90, 48, 0.15);
+      border: 1px solid rgba(216, 90, 48, 0.5);
+      border-radius: 4px;
+      padding: 4px 10px;
+      font-size: 12px;
+      color: #f0997b;
+      cursor: pointer;
+      pointer-events: auto;
+      transition: background 0.15s;
+    }
+
+    .pin-tag:hover {
+      background: rgba(216, 90, 48, 0.3);
+    }
+
+    #clear-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 4px;
+      padding: 4px 12px;
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.4);
+      cursor: pointer;
+      pointer-events: auto;
+      font-family: 'Courier New', monospace;
+      transition: background 0.15s;
+      display: none;
+    }
+
+    #clear-btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+    }
+
+    #help-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(5, 5, 8, 0.82);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+
+    #help-overlay.visible {
+      display: flex;
+    }
+
+    #help-panel {
+      background: #111114;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 10px;
+      padding: 28px 32px;
+      min-width: 360px;
+      max-width: 500px;
+      font-family: 'Courier New', monospace;
+      color: rgba(255, 255, 255, 0.75);
+    }
+
+    #help-panel h2 {
+      font-size: 13px;
+      font-weight: normal;
+      color: #7effc8;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 10px;
+    }
+
+    .help-section {
+      margin-bottom: 20px;
+    }
+
+    .help-section-title {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      color: rgba(255, 255, 255, 0.3);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .help-row {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 8px;
+      font-size: 12px;
+    }
+
+    .help-key {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 4px;
+      padding: 2px 8px;
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.8);
+      white-space: nowrap;
+      min-width: 88px;
+      text-align: center;
+    }
+
+    .help-desc {
+      color: rgba(255, 255, 255, 0.45);
+      line-height: 1.5;
+    }
+
+    .help-note {
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.25);
+      border-top: 1px solid rgba(255, 255, 255, 0.07);
+      padding-top: 14px;
+      line-height: 1.7;
+    }
+
+    .help-close {
+      display: block;
+      width: 100%;
+      margin-top: 20px;
+      padding: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 5px;
+      color: rgba(255, 255, 255, 0.4);
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .help-close:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+
+    .dot-green {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #7effc8;
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+
+    .dot-orange {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #D85A30;
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+
+    .dot-purple {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #534AB7;
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+
+    /* ── 解析度設定對話框 ── */
+    #res-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 5, 8, 0.92);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+    #res-panel {
+      background: #111114;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 12px;
+      padding: 32px 36px;
+      width: 360px;
+      font-family: 'Courier New', monospace;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.7);
+    }
+    #res-panel h2 {
+      font-size: 13px;
+      font-weight: normal;
+      color: #7effc8;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    #res-panel .res-subtitle {
+      font-size: 11px;
+      color: rgba(255,255,255,0.3);
+      margin-bottom: 22px;
+      line-height: 1.5;
+    }
+    .res-label {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      color: rgba(255,255,255,0.35);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    #res-select {
+      width: 100%;
+      padding: 9px 12px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 6px;
+      color: #e0e0e0;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      cursor: pointer;
+      outline: none;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='rgba(255,255,255,0.4)' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 32px;
+      margin-bottom: 14px;
+      transition: border-color 0.2s;
+    }
+    #res-select:focus { border-color: rgba(126,255,200,0.5); }
+    #res-select option { background: #111114; color: #e0e0e0; }
+    #custom-res {
+      display: none;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    #custom-res.show { display: flex; }
+    #custom-res input {
+      flex: 1;
+      padding: 9px 10px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 6px;
+      color: #e0e0e0;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      outline: none;
+      text-align: center;
+      transition: border-color 0.2s;
+    }
+    #custom-res input:focus { border-color: rgba(126,255,200,0.5); }
+    #custom-res input::placeholder { color: rgba(255,255,255,0.2); }
+    #custom-res .res-x {
+      color: rgba(255,255,255,0.3);
+      font-size: 14px;
+    }
+    #res-error {
+      font-size: 11px;
+      color: #f0997b;
+      margin-bottom: 10px;
+      min-height: 16px;
+    }
+    #res-confirm {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      background: rgba(126,255,200,0.12);
+      border: 1px solid rgba(126,255,200,0.35);
+      border-radius: 6px;
+      color: #7effc8;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+      margin-top: 4px;
+    }
+    #res-confirm:hover {
+      background: rgba(126,255,200,0.22);
+      border-color: rgba(126,255,200,0.6);
+    }
+    .res-presets {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 18px;
+    }
+    .res-chip {
+      padding: 4px 10px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 20px;
+      font-size: 10px;
+      color: rgba(255,255,255,0.4);
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+      white-space: nowrap;
+    }
+    .res-chip:hover {
+      background: rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.8);
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 解析度設定對話框 -->
+  <div id="res-overlay">
+    <div id="res-panel">
+      <h2>Screen Resolution</h2>
+      <div class="res-subtitle">Select the target screen resolution to map coordinates correctly.</div>
+
+      <div class="res-label">Common Resolutions</div>
+      <select id="res-select" onchange="onResSelectChange()">
+        <option value="1920x1080">1920 × 1080 &nbsp; (Full HD / 1080p)</option>
+        <option value="2560x1440">2560 × 1440 &nbsp; (QHD / 1440p)</option>
+        <option value="3840x2160">3840 × 2160 &nbsp; (4K UHD)</option>
+        <option value="1366x768">1366 × 768 &nbsp; (HD — Laptop)</option>
+        <option value="1280x720">1280 × 720 &nbsp; (HD / 720p)</option>
+        <option value="1440x900">1440 × 900 &nbsp; (MacBook Air)</option>
+        <option value="1680x1050">1680 × 1050 &nbsp; (WSXGA+)</option>
+        <option value="2560x1600">2560 × 1600 &nbsp; (MacBook Pro 13")</option>
+        <option value="2880x1800">2880 × 1800 &nbsp; (MacBook Pro 15")</option>
+        <option value="3456x2234">3456 × 2234 &nbsp; (MacBook Pro 14/16")</option>
+        <option value="custom">Custom…</option>
+      </select>
+
+      <div id="custom-res">
+        <input id="custom-w" type="number" placeholder="Width" min="320" max="7680">
+        <span class="res-x">×</span>
+        <input id="custom-h" type="number" placeholder="Height" min="240" max="4320">
+      </div>
+
+      <div id="res-error"></div>
+      <button id="res-confirm" onclick="confirmResolution()">Confirm →</button>
+    </div>
+  </div>
+
+  <canvas id="c"></canvas>
+
+  <div id="hud">
+    <div id="coord-box">
+      <span data-i18n="coord_label"></span>
+      <span id="xy" data-idle="true"></span>
+    </div>
+    <div id="info-box">
+      <span data-i18n="hint_click"></span><br>
+      <span data-i18n="hint_tag"></span><br>
+      <span data-i18n="hint_grid"></span>
+    </div>
+  </div>
+
+  <div id="scale-info">
+    <span data-i18n="label_window"></span> <b id="win-size">—</b><br>
+    <span data-i18n="label_scale"></span> <b id="scale-val">—</b>
+  </div>
+
+    <div id="top-right">
+    <button id="res-btn" onclick="openResDialog()" title="Change Resolution">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+          <line x1="8" y1="21" x2="16" y2="21"></line>
+          <line x1="12" y1="17" x2="12" y2="21"></line>
+        </svg>
+      </button>
+      <div class="lang-divider"></div>
+      <div class="lang-dropdown">
+        <button id="lang-icon-btn" onclick="toggleLangMenu(event)" title="Language">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="2" y1="12" x2="22" y2="12"></line>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+          </svg>
+        </button>
+        <div id="lang-menu">
+          <div class="lang-item" onclick="setLang('en')">English</div>
+          <div class="lang-item" onclick="setLang('zh')">繁體中文</div>
+          <div class="lang-item" onclick="setLang('ja')">日本語</div>
+        </div>
+      </div>
+      <div class="lang-divider"></div>
+      <button id="help-btn" onclick="toggleHelp()">?</button>
+    </div>
+
+  <div id="help-overlay" onclick="closeHelp()">
+    <div id="help-panel" onclick="event.stopPropagation()">
+      <h2 data-i18n="help_heading"></h2>
+
+      <div class="help-section">
+        <div class="help-section-title" data-i18n="sec_mouse"></div>
+        <div class="help-row">
+          <span class="help-key" data-i18n="key_move"></span>
+          <span class="help-desc" data-i18n="desc_move"></span>
+        </div>
+        <div class="help-row">
+          <span class="help-key" data-i18n="key_click"></span>
+          <span class="help-desc" data-i18n="desc_click"></span>
+        </div>
+        <div class="help-row">
+          <span class="help-key" data-i18n="key_tag"></span>
+          <span class="help-desc" data-i18n="desc_tag"></span>
+        </div>
+      </div>
+
+      <div class="help-section">
+        <div class="help-section-title" data-i18n="sec_keys"></div>
+        <div class="help-row">
+          <span class="help-key">F</span>
+          <span class="help-desc" data-i18n="desc_f"></span>
+        </div>
+        <div class="help-row">
+          <span class="help-key">C</span>
+          <span class="help-desc" data-i18n="desc_c"></span>
+        </div>
+        <div class="help-row">
+          <span class="help-key">H / ?</span>
+          <span class="help-desc" data-i18n="desc_h"></span>
+        </div>
+        <div class="help-row">
+          <span class="help-key">Esc</span>
+          <span class="help-desc" data-i18n="desc_esc"></span>
+        </div>
+        <div class="help-row">
+          <span class="help-key">F11</span>
+          <span class="help-desc" data-i18n="desc_f11"></span>
+        </div>
+      </div>
+
+      <div class="help-section">
+        <div class="help-section-title" data-i18n="sec_legend"></div>
+        <div class="help-row">
+          <span><span class="dot-green"></span></span>
+          <span class="help-desc" data-i18n="legend_green"></span>
+        </div>
+        <div class="help-row">
+          <span><span class="dot-orange"></span></span>
+          <span class="help-desc" data-i18n="legend_orange"></span>
+        </div>
+        <div class="help-row">
+          <span><span class="dot-purple"></span></span>
+          <span class="help-desc" data-i18n="legend_purple"></span>
+        </div>
+      </div>
+
+      <div class="help-note" data-i18n="help_note"></div>
+      <button class="help-close" onclick="closeHelp()" data-i18n="btn_close"></button>
+    </div>
+  </div>
+
+  <div id="pins-panel">
+    <div id="pins-wrap" style="display:flex;flex-wrap:wrap;gap:6px;align-items:center"></div>
+    <button id="clear-btn" onclick="clearPins()"></button>
+  </div>
+
+  <script>
+    const I18N = {
+      en: {
+        page_title: 'Screen Coordinate Map — {W}×{H}',
+        html_lang: 'en',
+        coord_label: 'Screen Coordinate ({W}×{H})',
+        idle_hint: '— Move mouse —',
+        hint_click: 'Click → Pin a coordinate',
+        hint_tag: 'Click tag → Remove pin',
+        hint_grid: 'F key → Toggle grid',
+        label_window: 'Window',
+        label_scale: 'Scale',
+        help_heading: 'Screen Coordinate Map — Help',
+        sec_mouse: 'Mouse',
+        key_move: 'Move mouse',
+        desc_move: 'Show real-time {W}×{H} coordinate (top-left)',
+        key_click: 'Left click',
+        desc_click: 'Pin a coordinate point (orange dot + number)',
+        key_tag: 'Click tag',
+        desc_tag: 'Click bottom orange tag to remove that pin',
+        sec_keys: 'Keyboard Shortcuts',
+        desc_f: 'Toggle grid on / off',
+        desc_c: 'Clear all pinned points',
+        desc_h: 'Open / close this help panel',
+        desc_esc: 'Close help panel',
+        desc_f11: 'Browser fullscreen — most accurate coordinates',
+        sec_legend: 'Legend',
+        legend_green: 'Green crosshair — center ({CX},{CY}) & mouse position',
+        legend_orange: 'Orange dot — user-pinned coordinate point',
+        legend_purple: 'Purple dashed — thirds guide ({QX1} / {QX2})',
+        help_note: 'Top-right shows window size and scale ratio.\nCoordinate = click position ÷ scale ratio.\nAt fullscreen (100%), coordinates are most accurate.',
+        btn_close: 'Close (Esc)',
+        btn_clear: 'Clear all',
+        pin_tip: 'Click to remove',
+        center_word: 'Center',
+      },
+      zh: {
+        page_title: '螢幕座標圖 — {W}×{H}',
+        html_lang: 'zh-TW',
+        coord_label: '螢幕座標（{W}×{H}）',
+        idle_hint: '— 移動滑鼠 —',
+        hint_click: '點擊 → 釘選座標點',
+        hint_tag: '點擊標籤 → 移除釘選',
+        hint_grid: 'F 鍵 → 切換格線',
+        label_window: '視窗',
+        label_scale: '比例',
+        help_heading: '螢幕座標圖 — 使用說明',
+        sec_mouse: '滑鼠操作',
+        key_move: '移動滑鼠',
+        desc_move: '左上角即時顯示對應的 {W}×{H} 螢幕座標',
+        key_click: '左鍵點擊',
+        desc_click: '在畫面上釘選一個座標點（橘色圓點 + 編號）',
+        key_tag: '點擊標籤',
+        desc_tag: '底部橘色標籤，點擊可移除對應的釘選點',
+        sec_keys: '鍵盤快捷鍵',
+        desc_f: '切換格線顯示 / 隱藏',
+        desc_c: '清除所有釘選點',
+        desc_h: '開啟 / 關閉本說明面板',
+        desc_esc: '關閉說明面板',
+        desc_f11: '瀏覽器全螢幕（座標最接近真實 {W}×{H}）',
+        sec_legend: '圖示說明',
+        legend_green: '綠色十字線 — 中心點 ({CX},{CY}) 與滑鼠位置',
+        legend_orange: '橘色圓點 — 使用者釘選的座標點',
+        legend_purple: '紫色虛線 — 畫面三等分參考線（{QX1} / {QX2}）',
+        help_note: '右上角顯示目前視窗大小與縮放比例。\n座標計算：實際座標 = 點擊位置 ÷ 縮放比例。\n全螢幕時縮放比例為 100%，座標最精準。',
+        btn_close: '關閉（Esc）',
+        btn_clear: '清除全部',
+        pin_tip: '點擊移除',
+        center_word: '中心',
+      },
+      ja: {
+        page_title: '画面座標マップ — {W}×{H}',
+        html_lang: 'ja',
+        coord_label: '画面座標（{W}×{H}）',
+        idle_hint: '— マウスを動かす —',
+        hint_click: 'クリック → 座標をピン留め',
+        hint_tag: 'タグをクリック → 削除',
+        hint_grid: 'F キー → グリッド切替',
+        label_window: 'ウィンドウ',
+        label_scale: 'スケール',
+        help_heading: '画面座標マップ — 使用方法',
+        sec_mouse: 'マウス操作',
+        key_move: 'マウス移動',
+        desc_move: '左上にリアルタイムで {W}×{H} 座標を表示',
+        key_click: '左クリック',
+        desc_click: '座標をピン留め（オレンジのドット＋番号）',
+        key_tag: 'タグをクリック',
+        desc_tag: '下部のオレンジタグをクリックしてピンを削除',
+        sec_keys: 'キーボードショートカット',
+        desc_f: 'グリッドの表示 / 非表示を切替',
+        desc_c: 'すべてのピンを削除',
+        desc_h: 'ヘルプパネルを開く / 閉じる',
+        desc_esc: 'ヘルプパネルを閉じる',
+        desc_f11: 'ブラウザ全画面 — 最も正確な座標',
+        sec_legend: '凡例',
+        legend_green: '緑の十字線 — 中心点 ({CX},{CY}) とマウス位置',
+        legend_orange: 'オレンジのドット — ピン留めした座標点',
+        legend_purple: '紫の破線 — 3等分ガイドライン（{QX1} / {QX2}）',
+        help_note: '右上に現在のウィンドウサイズとスケールを表示。\n座標 = クリック位置 ÷ スケール倍率。\n全画面時（100%）が最も正確です。',
+        btn_close: '閉じる（Esc）',
+        btn_clear: 'すべて削除',
+        pin_tip: 'クリックで削除',
+        center_word: '中心',
+      }
+    };
+
+    let lang = 'en';
+
+    function formatStr(s) {
+      if (!s) return s;
+      const cx = Math.round(TARGET_W / 2), cy = Math.round(TARGET_H / 2);
+      return s.replace(/\{W\}/g, TARGET_W).replace(/\{H\}/g, TARGET_H)
+               .replace(/\{CX\}/g, cx).replace(/\{CY\}/g, cy)
+               .replace(/\{QX1\}/g, Math.round(TARGET_W / 3))
+               .replace(/\{QX2\}/g, Math.round(TARGET_W * 2 / 3));
+    }
+
+    function t(key) { return formatStr(I18N[lang][key]) || key; }
+
+    function setLang(l) {
+      lang = l;
+      const d = I18N[l];
+      document.documentElement.lang = d.html_lang;
+      document.title = formatStr(d.page_title);
+
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        let val = d[key];
+        if (val === undefined) return;
+        val = formatStr(val);
+        if (key === 'help_note') {
+          el.innerHTML = val.replace(/\n/g, '<br>');
+        } else {
+          el.textContent = val;
+        }
+      });
+
+      document.querySelectorAll('.lang-item').forEach(item => {
+        const map = { en: 'English', zh: '繁體中文', ja: '日本語' };
+        item.classList.toggle('active', item.textContent.trim() === map[l]);
+      });
+      closeLangMenu();
+
+      const xyEl = document.getElementById('xy');
+      if (xyEl.dataset.idle === 'true') xyEl.textContent = d.idle_hint;
+
+      const helpBtn = document.getElementById('help-btn');
+      helpBtn.title = l === 'en' ? 'Help (H)' : l === 'zh' ? '說明 (H)' : 'ヘルプ (H)';
+
+      renderPins();
+      draw();
+    }
+
+    const canvas = document.getElementById('c');
+    const ctx = canvas.getContext('2d');
+    const xyEl = document.getElementById('xy');
+    const winSizeEl = document.getElementById('win-size');
+    const scaleValEl = document.getElementById('scale-val');
+    const pinsWrap = document.getElementById('pins-wrap');
+    const clearBtn = document.getElementById('clear-btn');
+
+    let TARGET_W = 1920, TARGET_H = 1080;
+    let CW, CH, scaleX, scaleY;
+    let mouseX = -1, mouseY = -1;
+    let pins = [];
+    let showGrid = true;
+
+    /* ── 解析度選擇對話框邏輯 ── */
+    function onResSelectChange() {
+      const val = document.getElementById('res-select').value;
+      const customBlock = document.getElementById('custom-res');
+      customBlock.classList.toggle('show', val === 'custom');
+      document.getElementById('res-error').textContent = '';
+    }
+
+    function confirmResolution() {
+      const val = document.getElementById('res-select').value;
+      let w, h;
+      if (val === 'custom') {
+        w = parseInt(document.getElementById('custom-w').value, 10);
+        h = parseInt(document.getElementById('custom-h').value, 10);
+        if (!w || !h || w < 320 || h < 240 || w > 7680 || h > 4320) {
+          document.getElementById('res-error').textContent = '⚠ Please enter a valid resolution (e.g. 1920 × 1080)';
+          return;
+        }
+      } else {
+        [w, h] = val.split('x').map(Number);
+      }
+      TARGET_W = w;
+      TARGET_H = h;
+      document.getElementById('res-overlay').style.display = 'none';
+      setLang(lang);
+      resize();
+    }
+
+    function resize() {
+      CW = window.innerWidth; CH = window.innerHeight;
+      canvas.width = CW; canvas.height = CH;
+      scaleX = CW / TARGET_W; scaleY = CH / TARGET_H;
+      winSizeEl.textContent = `${CW} × ${CH}`;
+      scaleValEl.textContent = `${(scaleX * 100).toFixed(1)}%`;
+      draw();
+    }
+
+    function toScreen(cx, cy) { return [Math.round(cx / scaleX), Math.round(cy / scaleY)]; }
+    function toCanvas(sx, sy) { return [Math.round(sx * scaleX), Math.round(sy * scaleY)]; }
+
+    function draw() {
+      ctx.clearRect(0, 0, CW, CH);
+      ctx.fillStyle = '#0d0d0f';
+      ctx.fillRect(0, 0, CW, CH);
+
+      if (showGrid) {
+        const stepX = TARGET_W / 16, stepY = TARGET_H / 9;
+        for (let gx = 0; gx <= TARGET_W; gx += stepX) {
+          const px = Math.round(gx * scaleX), isMajor = gx % (stepX * 4) === 0;
+          ctx.strokeStyle = isMajor ? 'rgba(255,255,255,0.09)' : 'rgba(255,255,255,0.04)';
+          ctx.lineWidth = isMajor ? 1 : 0.5;
+          ctx.beginPath(); ctx.moveTo(px, 0); ctx.lineTo(px, CH); ctx.stroke();
+        }
+        for (let gy = 0; gy <= TARGET_H; gy += stepY) {
+          const py = Math.round(gy * scaleY), isMajor = gy % (stepY * 3) === 0;
+          ctx.strokeStyle = isMajor ? 'rgba(255,255,255,0.09)' : 'rgba(255,255,255,0.04)';
+          ctx.lineWidth = isMajor ? 1 : 0.5;
+          ctx.beginPath(); ctx.moveTo(0, py); ctx.lineTo(CW, py); ctx.stroke();
+        }
+        ctx.lineWidth = 1; ctx.setLineDash([6, 6]);
+        [Math.round(TARGET_W / 3), Math.round(TARGET_W * 2 / 3)].forEach(gx => {
+          const px = Math.round(gx * scaleX);
+          ctx.strokeStyle = 'rgba(83,74,183,0.18)';
+          ctx.beginPath(); ctx.moveTo(px, 0); ctx.lineTo(px, CH); ctx.stroke();
+        });
+        [Math.round(TARGET_H / 3), Math.round(TARGET_H * 2 / 3)].forEach(gy => {
+          const py = Math.round(gy * scaleY);
+          ctx.strokeStyle = 'rgba(83,74,183,0.18)';
+          ctx.beginPath(); ctx.moveTo(0, py); ctx.lineTo(CW, py); ctx.stroke();
+        });
+        ctx.setLineDash([]);
+      }
+
+      const cx = Math.round(TARGET_W / 2), cy = Math.round(TARGET_H / 2);
+      const [ccx, ccy] = toCanvas(cx, cy);
+      ctx.strokeStyle = 'rgba(126,255,200,0.12)';
+      ctx.lineWidth = 1; ctx.setLineDash([8, 6]);
+      ctx.beginPath(); ctx.moveTo(ccx, 0); ctx.lineTo(ccx, CH); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0, ccy); ctx.lineTo(CW, ccy); ctx.stroke();
+      ctx.setLineDash([]);
+
+      if (mouseX >= 0) {
+        ctx.strokeStyle = 'rgba(126,255,200,0.25)';
+        ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(mouseX, 0); ctx.lineTo(mouseX, CH); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(0, mouseY); ctx.lineTo(CW, mouseY); ctx.stroke();
+        ctx.fillStyle = '#7effc8';
+        ctx.beginPath(); ctx.arc(mouseX, mouseY, 4, 0, Math.PI * 2); ctx.fill();
+      }
+
+      const cw = t('center_word');
+      const landmarks = [
+        { x: 0,        y: 0,        label: '(0, 0)',                              ax: 'right',  ay: 'below' },
+        { x: TARGET_W, y: 0,        label: `(${TARGET_W}, 0)`,                   ax: 'left',   ay: 'below' },
+        { x: 0,        y: TARGET_H, label: `(0, ${TARGET_H})`,                   ax: 'right',  ay: 'above' },
+        { x: TARGET_W, y: TARGET_H, label: `(${TARGET_W}, ${TARGET_H})`,         ax: 'left',   ay: 'above' },
+        { x: cx,       y: cy,       label: `${cw} (${cx}, ${cy})`,               ax: 'right',  ay: 'above', accent: true },
+        { x: cx,       y: 0,        label: `(${cx}, 0)`,                          ax: 'center', ay: 'below' },
+        { x: 0,        y: cy,       label: `(0, ${cy})`,                          ax: 'right',  ay: 'above' },
+        { x: TARGET_W, y: cy,       label: `(${TARGET_W}, ${cy})`,               ax: 'left',   ay: 'above' },
+        { x: cx,       y: TARGET_H, label: `(${cx}, ${TARGET_H})`,               ax: 'center', ay: 'above' },
+      ];
+
+      ctx.font = '11px "Courier New", monospace';
+      landmarks.forEach(lm => {
+        const [px, py] = toCanvas(lm.x, lm.y);
+        ctx.fillStyle = lm.accent ? '#7effc8' : 'rgba(255,255,255,0.4)';
+        ctx.beginPath(); ctx.arc(px, py, lm.accent ? 5 : 3, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = lm.accent ? '#7effc8' : 'rgba(255,255,255,0.3)';
+        ctx.textAlign = lm.ax === 'right' ? 'left' : lm.ax === 'left' ? 'right' : 'center';
+        ctx.fillText(lm.label, px + (lm.ax === 'right' ? 7 : lm.ax === 'left' ? -7 : 0), py + (lm.ay === 'below' ? 14 : -6));
+      });
+
+      ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+      ctx.lineWidth = 1.5;
+      ctx.strokeRect(0.75, 0.75, CW - 1.5, CH - 1.5);
+
+      pins.forEach((p, i) => {
+        const [px, py] = toCanvas(p.x, p.y);
+        ctx.fillStyle = '#D85A30';
+        ctx.beginPath(); ctx.arc(px, py, 6, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 9px "Courier New", monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText(i + 1, px, py + 3);
+        ctx.fillStyle = '#f0997b';
+        ctx.font = '11px "Courier New", monospace';
+        ctx.textAlign = 'left';
+        ctx.fillText(`(${p.x}, ${p.y})`, px + 9, py - 3);
+      });
+    }
+
+    canvas.addEventListener('mousemove', e => {
+      mouseX = e.clientX; mouseY = e.clientY;
+      const [sx, sy] = toScreen(mouseX, mouseY);
+      xyEl.textContent = `x: ${sx}   y: ${sy}`;
+      xyEl.dataset.idle = 'false';
+      draw();
+    });
+    canvas.addEventListener('mouseleave', () => {
+      mouseX = -1; mouseY = -1;
+      xyEl.textContent = t('idle_hint');
+      xyEl.dataset.idle = 'true';
+      draw();
+    });
+    canvas.addEventListener('click', e => {
+      const [sx, sy] = toScreen(e.clientX, e.clientY);
+      pins.push({ x: sx, y: sy });
+      renderPins(); draw();
+    });
+
+    function toggleHelp() {
+      const overlay = document.getElementById('help-overlay');
+      const btn = document.getElementById('help-btn');
+      btn.classList.toggle('active', overlay.classList.toggle('visible'));
+    }
+    function closeHelp() {
+      document.getElementById('help-overlay').classList.remove('visible');
+      document.getElementById('help-btn').classList.remove('active');
+    }
+
+    function openResDialog() {
+      // 重新顯示解析度對話框，並預先選取目前解析度
+      const overlay = document.getElementById('res-overlay');
+      overlay.style.display = 'flex';
+      // 對釜目前解析度
+      const sel = document.getElementById('res-select');
+      const curVal = `${TARGET_W}x${TARGET_H}`;
+      let found = false;
+      for (let i = 0; i < sel.options.length; i++) {
+        if (sel.options[i].value === curVal) {
+          sel.selectedIndex = i;
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        sel.value = 'custom';
+        document.getElementById('custom-w').value = TARGET_W;
+        document.getElementById('custom-h').value = TARGET_H;
+      }
+      document.getElementById('custom-res').classList.toggle('show', sel.value === 'custom');
+      document.getElementById('res-error').textContent = '';
+    }
+
+    function toggleLangMenu(e) {
+      if (e) e.stopPropagation();
+      const menu = document.getElementById('lang-menu');
+      const btn = document.getElementById('lang-icon-btn');
+      const isShowing = menu.classList.toggle('show');
+      btn.classList.toggle('active', isShowing);
+    }
+    function closeLangMenu() {
+      const menu = document.getElementById('lang-menu');
+      if (menu) menu.classList.remove('show');
+      const btn = document.getElementById('lang-icon-btn');
+      if (btn) btn.classList.remove('active');
+    }
+
+    document.addEventListener('click', e => {
+      const dropdown = document.querySelector('.lang-dropdown');
+      if (dropdown && !dropdown.contains(e.target)) {
+        closeLangMenu();
+      }
+    });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'f' || e.key === 'F') { showGrid = !showGrid; draw(); }
+      if (e.key === 'c' || e.key === 'C') { clearPins(); }
+      if (e.key === 'h' || e.key === 'H' || e.key === '?') { toggleHelp(); }
+      if (e.key === 'Escape') { closeHelp(); }
+    });
+
+    function renderPins() {
+      pinsWrap.innerHTML = '';
+      pins.forEach((p, i) => {
+        const tag = document.createElement('span');
+        tag.className = 'pin-tag';
+        tag.textContent = `${i + 1}. (${p.x}, ${p.y})`;
+        tag.title = t('pin_tip');
+        tag.onclick = () => { pins.splice(i, 1); renderPins(); draw(); };
+        pinsWrap.appendChild(tag);
+      });
+      const show = pins.length > 0;
+      clearBtn.style.display = show ? 'inline-block' : 'none';
+      if (show) clearBtn.textContent = t('btn_clear');
+    }
+
+    function clearPins() { pins = []; renderPins(); draw(); }
+
+    window.addEventListener('resize', resize);
+    setLang('en');
+    // 頁面啟動：先讓使用者設定解析度，確認後才初始化畫布
+    // resize() 會在使用者按下「Confirm」後呼叫
+    // 此處不自動呼叫 resize()，等待 confirmResolution()
+  </script>
+</body>
+
+</html>
