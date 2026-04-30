@@ -1093,9 +1093,13 @@
 
     window.addEventListener('resize', resize);
     setLang('en');
-    // 頁面啟動：先讓使用者設定解析度，確認後才初始化畫布
-    // resize() 會在使用者按下「Confirm」後呼叫
-    // 此處不自動呼叫 resize()，等待 confirmResolution()
+
+    // 偵測是否在 iframe 中：若是嵌入模式，跳過解析度對話框，直接初始化
+    if (window.self !== window.top) {
+      document.getElementById('res-overlay').style.display = 'none';
+      resize();
+    }
+    // 獨立開啟時：等待使用者按下「Confirm」後才呼叫 confirmResolution() → resize()
   </script>
 </body>
 
