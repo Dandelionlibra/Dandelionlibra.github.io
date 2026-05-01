@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>YuChen</title><link>https://Dandelionlibra.github.io/</link><description>Recent content on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Thu, 30 Apr 2026 00:00:00 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>如何使用 PyAutoGUI（一）：安裝與滑鼠控制</title><link>https://Dandelionlibra.github.io/2026/04/how-to-use-pyautogui-mouse/</link><pubDate>Thu, 30 Apr 2026 00:00:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/2026/04/how-to-use-pyautogui-mouse/</guid><description>&lt;h2 id="內容大綱"&gt;內容大綱
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>YuChen</title><link>https://Dandelionlibra.github.io/</link><description>Recent content on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Fri, 01 May 2026 19:20:00 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>如何使用 PyAutoGUI（一）：安裝與滑鼠控制</title><link>https://Dandelionlibra.github.io/2026/04/how-to-use-pyautogui-mouse/</link><pubDate>Thu, 30 Apr 2026 00:00:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/2026/04/how-to-use-pyautogui-mouse/</guid><description>&lt;h2 id="內容大綱"&gt;內容大綱
 &lt;/h2&gt;&lt;ol&gt;
 &lt;li&gt;&lt;a class="link" href="#1-pyautogui-%e5%9f%ba%e6%9c%ac%e4%bb%8b%e7%b4%b9" &gt;PyAutoGUI 基本介紹&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="#2-%e5%ae%89%e8%a3%9d-pyautogui" &gt;安裝 PyAutoGUI&lt;/a&gt;&lt;/li&gt;
@@ -4741,7 +4741,299 @@ Explanation: 7/-3 = -2.33333.. which is truncated to -2.&lt;/p&gt;
 &lt;p&gt;Photo by &lt;a class="link" href="https://unsplash.com/@pawel_czerwinski" target="_blank" rel="noopener"
 &gt;Pawel Czerwinski&lt;/a&gt; on &lt;a class="link" href="https://unsplash.com/" target="_blank" rel="noopener"
 &gt;Unsplash&lt;/a&gt;&lt;/p&gt;
-&lt;/blockquote&gt;</description></item><item><title>Profile</title><link>https://Dandelionlibra.github.io/about/</link><pubDate>Sun, 06 Mar 2022 00:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/about/</guid><description>&lt;p&gt;你好:)&lt;/p&gt;</description></item><item><title>FastAPI 路徑參數</title><link>https://Dandelionlibra.github.io/2026/04/fastapi-path-parameters/</link><pubDate>Mon, 27 Apr 2026 14:00:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/2026/04/fastapi-path-parameters/</guid><description>&lt;p&gt;在&lt;a class="link" href="https://Dandelionlibra.github.io/post/python/how-to-use-fastapi/" &gt;第一篇教學&lt;/a&gt;中，我們建立了一個簡單的 &lt;code&gt;/&lt;/code&gt; 根目錄端點。但真實世界的 API 通常需要根據不同的請求回傳不同的資料，例如：取得「特定 ID」的使用者資料。&lt;/p&gt;
+&lt;/blockquote&gt;</description></item><item><title>Profile</title><link>https://Dandelionlibra.github.io/about/</link><pubDate>Sun, 06 Mar 2022 00:00:00 +0000</pubDate><guid>https://Dandelionlibra.github.io/about/</guid><description>&lt;p&gt;你好:)&lt;/p&gt;</description></item><item><title>如何使用 PyAutoGUI（二）：鍵盤控制</title><link>https://Dandelionlibra.github.io/2026/05/how-to-use-pyautogui-keyboard/</link><pubDate>Fri, 01 May 2026 19:20:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/2026/05/how-to-use-pyautogui-keyboard/</guid><description>&lt;h2 id="內容大綱"&gt;內容大綱
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;&lt;a class="link" href="#1-%e6%96%87%e5%ad%97%e8%bc%b8%e5%85%a5" &gt;文字輸入&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#2-%e5%96%ae%e9%8d%b5%e6%93%8d%e4%bd%9c" &gt;單鍵操作&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="#%e6%8c%89%e4%b8%8b%e4%b8%a6%e6%94%be%e9%96%8b%e5%96%ae%e4%b8%80%e6%8c%89%e9%8d%b5-press" &gt;按下並放開單一按鍵&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#%e6%8c%89%e4%bd%8f%e4%b8%8d%e6%94%be%e8%88%87%e6%94%be%e9%96%8b%e6%8c%89%e9%8d%b5-keydown--keyup" &gt;按住不放與放開按鍵&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#%e4%b8%8a%e4%b8%8b%e6%96%87%e7%ae%a1%e7%90%86%e5%99%a8-hold" &gt;上下文管理器&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#%e7%b5%84%e5%90%88%e9%8d%b5%e8%88%87%e7%86%b1%e9%8d%b5-hotkey" &gt;組合鍵與熱鍵&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#3-%e5%b8%b8%e7%94%a8-key-%e5%90%8d%e7%a8%b1%e5%b0%8d%e7%85%a7%e8%a1%a8" &gt;常用 Key 名稱對照表&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#4-%e8%a8%8a%e6%81%af%e5%bd%88%e5%87%ba%e8%a6%96%e7%aa%97" &gt;訊息彈出視窗&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="#%e9%a1%af%e7%a4%ba%e8%a8%8a%e6%81%af-alert" &gt;alert()&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#%e7%a2%ba%e8%aa%8d%e8%a6%96%e7%aa%97-confirm" &gt;confirm()&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#%e6%96%87%e5%ad%97%e8%bc%b8%e5%85%a5%e8%a6%96%e7%aa%97-prompt" &gt;prompt()&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#%e5%af%86%e7%a2%bc%e8%bc%b8%e5%85%a5%e8%a6%96%e7%aa%97-password-%e9%81%ae%e8%94%bd%e9%a1%af%e7%a4%ba" &gt;password()&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#5-%e5%af%a6%e7%94%a8%e7%af%84%e4%be%8b%e8%87%aa%e5%8b%95%e9%96%8b%e5%95%9f%e8%a8%98%e4%ba%8b%e6%9c%ac%e4%b8%a6%e8%bc%b8%e5%85%a5%e6%96%87%e5%ad%97" &gt;實用範例：自動開啟記事本並輸入文字&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h3 id="1-文字輸入"&gt;1. 文字輸入
+&lt;/h3&gt;&lt;h4 id="typewrite--write"&gt;&lt;code&gt;typewrite()&lt;/code&gt; / &lt;code&gt;write()&lt;/code&gt;
+&lt;/h4&gt;&lt;p&gt;兩者完全相同，用於模擬逐鍵輸入文字：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pyautogui
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 在目前焦點位置輸入文字&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;typewrite(&lt;span style="color:#e6db74"&gt;&amp;#39;Hello, World!&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 設定每個字元之間的間隔（秒），模擬真實打字速度&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;typewrite(&lt;span style="color:#e6db74"&gt;&amp;#39;Hello!&amp;#39;&lt;/span&gt;, interval&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;0.1&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# write() 與 typewrite() 完全相同&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;write(&lt;span style="color:#e6db74"&gt;&amp;#39;Python automation&amp;#39;&lt;/span&gt;, interval&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;0.05&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;⚠️ 注意：中文輸入限制&lt;/strong&gt;&lt;br&gt;
+&lt;code&gt;typewrite()&lt;/code&gt; 只支援 ASCII 字元，&lt;strong&gt;無法直接輸入中文&lt;/strong&gt;。若要輸入中文，需改用剪貼簿方式：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pyautogui
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pyperclip &lt;span style="color:#75715e"&gt;# pip install pyperclip&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 將中文複製到剪貼簿，再貼上&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyperclip&lt;span style="color:#f92672"&gt;.&lt;/span&gt;copy(&lt;span style="color:#e6db74"&gt;&amp;#39;你好，世界！&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;hotkey(&lt;span style="color:#e6db74"&gt;&amp;#39;ctrl&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;v&amp;#39;&lt;/span&gt;) &lt;span style="color:#75715e"&gt;# 稍後會介紹 hotkey 函數&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h3 id="2-單鍵操作"&gt;2. 單鍵操作：
+&lt;/h3&gt;&lt;h4 id="按下並放開單一按鍵-press"&gt;按下並放開單一按鍵 &lt;code&gt;press()&lt;/code&gt;：
+&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pyautogui
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 按下 Enter 鍵&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;press(&lt;span style="color:#e6db74"&gt;&amp;#39;enter&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 按下 Tab 鍵&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;press(&lt;span style="color:#e6db74"&gt;&amp;#39;tab&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 按下方向鍵（上下左右）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;press(&lt;span style="color:#e6db74"&gt;&amp;#39;up&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;press(&lt;span style="color:#e6db74"&gt;&amp;#39;down&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;press(&lt;span style="color:#e6db74"&gt;&amp;#39;left&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;press(&lt;span style="color:#e6db74"&gt;&amp;#39;right&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 連續按多次（按 3 次空白鍵）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;press(&lt;span style="color:#e6db74"&gt;&amp;#39;space&amp;#39;&lt;/span&gt;, presses&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;3&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 設定每次按鍵之間的間隔&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;press(&lt;span style="color:#e6db74"&gt;&amp;#39;tab&amp;#39;&lt;/span&gt;, presses&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;5&lt;/span&gt;, interval&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;0.2&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 也可以傳入 list，依序按下多個鍵&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;press([&lt;span style="color:#e6db74"&gt;&amp;#39;up&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;up&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;down&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;down&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;left&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;right&amp;#39;&lt;/span&gt;])
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="按住不放與放開按鍵-keydown--keyup"&gt;按住不放與放開按鍵 &lt;code&gt;keyDown()&lt;/code&gt; / &lt;code&gt;keyUp()&lt;/code&gt;：
+&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pyautogui
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 按住 Shift 鍵不放&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;keyDown(&lt;span style="color:#e6db74"&gt;&amp;#39;shift&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 輸入文字（若無鎖定`CAPSLOCK`，此時會全部變大寫）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;typewrite(&lt;span style="color:#e6db74"&gt;&amp;#39;hello&amp;#39;&lt;/span&gt;) &lt;span style="color:#75715e"&gt;# 實際輸入 HELLO&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 放開 Shift 鍵&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;keyUp(&lt;span style="color:#e6db74"&gt;&amp;#39;shift&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;實際應用：按住 Shift 並點擊以選取文字&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pyautogui
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 先點擊起始位置&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;click(&lt;span style="color:#ae81ff"&gt;200&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;300&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 按住 Shift&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;keyDown(&lt;span style="color:#e6db74"&gt;&amp;#39;shift&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 點擊結束位置（選取這段範圍的文字）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;click(&lt;span style="color:#ae81ff"&gt;600&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;300&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 放開 Shift&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;keyUp(&lt;span style="color:#e6db74"&gt;&amp;#39;shift&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/blockquote&gt;
+&lt;h4 id="上下文管理器-hold"&gt;上下文管理器 &lt;code&gt;hold()&lt;/code&gt;：
+&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pyautogui
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 該shift鍵將在上下文區塊期間保持按住狀態。&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;with&lt;/span&gt; pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;hold(&lt;span style="color:#e6db74"&gt;&amp;#39;shift&amp;#39;&lt;/span&gt;):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;press([&lt;span style="color:#e6db74"&gt;&amp;#39;left&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;left&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;left&amp;#39;&lt;/span&gt;])
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="組合鍵與熱鍵-hotkey"&gt;組合鍵與熱鍵 &lt;code&gt;hotkey()&lt;/code&gt;：
+&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pyautogui
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;hotkey(&lt;span style="color:#e6db74"&gt;&amp;#39;ctrl&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;c&amp;#39;&lt;/span&gt;) &lt;span style="color:#75715e"&gt;# Ctrl + C（複製）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;hotkey(&lt;span style="color:#e6db74"&gt;&amp;#39;ctrl&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;v&amp;#39;&lt;/span&gt;) &lt;span style="color:#75715e"&gt;# Ctrl + V（貼上）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Alt + F4（關閉視窗，Windows）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;hotkey(&lt;span style="color:#e6db74"&gt;&amp;#39;alt&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;f4&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Ctrl + Alt + Delete（Windows）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;hotkey(&lt;span style="color:#e6db74"&gt;&amp;#39;ctrl&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;alt&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;delete&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# macOS 截圖：Cmd + Shift + 4&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;hotkey(&lt;span style="color:#e6db74"&gt;&amp;#39;command&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;shift&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;4&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Ctrl + Shift + T（重開分頁，瀏覽器）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;hotkey(&lt;span style="color:#e6db74"&gt;&amp;#39;ctrl&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;shift&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;t&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h3 id="3-常用-key-名稱對照表"&gt;3. 常用 Key 名稱對照表
+&lt;/h3&gt;&lt;p&gt;以下是 &lt;code&gt;press()&lt;/code&gt;、&lt;code&gt;keyDown()&lt;/code&gt;、&lt;code&gt;keyUp()&lt;/code&gt;、&lt;code&gt;hotkey()&lt;/code&gt; 可接受的常用鍵名：&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;類別&lt;/th&gt;
+&lt;th&gt;Key 名稱&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;修飾鍵&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;shift&lt;/code&gt;、&lt;code&gt;ctrl&lt;/code&gt;、&lt;code&gt;alt&lt;/code&gt;、&lt;code&gt;command&lt;/code&gt;（macOS）、&lt;code&gt;win&lt;/code&gt;（Windows）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;功能鍵&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;f1&lt;/code&gt; ~ &lt;code&gt;f12&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;方向鍵&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;up&lt;/code&gt;、&lt;code&gt;down&lt;/code&gt;、&lt;code&gt;left&lt;/code&gt;、&lt;code&gt;right&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;特殊鍵&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;enter&lt;/code&gt;、&lt;code&gt;esc&lt;/code&gt;、&lt;code&gt;tab&lt;/code&gt;、&lt;code&gt;backspace&lt;/code&gt;、&lt;code&gt;delete&lt;/code&gt;、&lt;code&gt;space&lt;/code&gt;、&lt;code&gt;capslock&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Page 鍵&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;pageup&lt;/code&gt;、&lt;code&gt;pagedown&lt;/code&gt;、&lt;code&gt;home&lt;/code&gt;、&lt;code&gt;end&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;數字鍵盤&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;num0&lt;/code&gt; ~ &lt;code&gt;num9&lt;/code&gt;、&lt;code&gt;numlock&lt;/code&gt;、&lt;code&gt;add&lt;/code&gt;、&lt;code&gt;subtract&lt;/code&gt;、&lt;code&gt;multiply&lt;/code&gt;、&lt;code&gt;divide&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;媒體鍵&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;volumemute&lt;/code&gt;、&lt;code&gt;volumedown&lt;/code&gt;、&lt;code&gt;volumeup&lt;/code&gt;、&lt;code&gt;playpause&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;符號鍵&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;!&lt;/code&gt;、&lt;code&gt;@&lt;/code&gt;、&lt;code&gt;#&lt;/code&gt;、&lt;code&gt;$&lt;/code&gt;、&lt;code&gt;%&lt;/code&gt;、&lt;code&gt;^&lt;/code&gt;、&lt;code&gt;&amp;amp;&lt;/code&gt;、&lt;code&gt;*&lt;/code&gt;、&lt;code&gt;(&lt;/code&gt;、&lt;code&gt;)&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;字母/數字&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;a&lt;/code&gt;～&lt;code&gt;z&lt;/code&gt;、&lt;code&gt;0&lt;/code&gt;～&lt;code&gt;9&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;查看所有支援的鍵名：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pyautogui
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;KEYBOARD_KEYS)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;你也可以使用下方的互動式工具，快速搜尋按鍵名稱與對應的變數寫法：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;互動小工具：鍵盤按鍵對照查詢&lt;/strong&gt;
+支援分類篩選與關鍵字搜尋，點擊按鍵卡片可產生範例程式碼。&lt;br&gt;
+程式碼已開源於：&lt;a class="link" href="https://dandelionlibra.github.io/tools/pynput_key_reference.html" target="_blank" rel="noopener"
+&gt;pynput-key-reference&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;iframe src="https://dandelionlibra.github.io/tools/pynput_key_reference.html" width="100%" height="500px" style="border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; background: #0d0d0f;"&gt;&lt;/iframe&gt;
+&lt;hr&gt;
+&lt;h3 id="4-訊息彈出視窗"&gt;4. 訊息彈出視窗
+&lt;/h3&gt;&lt;p&gt;PyAutoGUI 提供了簡易的 GUI 彈出視窗函式，可在自動化流程中提示使用者或取得確認。&lt;/p&gt;
+&lt;h4 id="顯示訊息-alert"&gt;顯示訊息 &lt;code&gt;alert()&lt;/code&gt;：
+&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pyautogui
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 顯示提示訊息&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;alert(&lt;span style="color:#e6db74"&gt;&amp;#39;操作完成！&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 自訂標題&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;alert(text&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;備份成功。&amp;#39;&lt;/span&gt;, title&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;通知&amp;#39;&lt;/span&gt;, button&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;確定&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="確認視窗-confirm"&gt;確認視窗 &lt;code&gt;confirm()&lt;/code&gt;：
+&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;result &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;confirm(&lt;span style="color:#e6db74"&gt;&amp;#39;確定要刪除嗎？&amp;#39;&lt;/span&gt;, title&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;確認&amp;#39;&lt;/span&gt;, buttons&lt;span style="color:#f92672"&gt;=&lt;/span&gt;[&lt;span style="color:#e6db74"&gt;&amp;#39;確定&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;取消&amp;#39;&lt;/span&gt;])
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(result) &lt;span style="color:#75715e"&gt;# 使用者點了哪個按鈕的文字&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="文字輸入視窗-prompt"&gt;文字輸入視窗 &lt;code&gt;prompt()&lt;/code&gt;：
+&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;name &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;prompt(&lt;span style="color:#e6db74"&gt;&amp;#39;請輸入你的名字：&amp;#39;&lt;/span&gt;, title&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;輸入&amp;#39;&lt;/span&gt;, default&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; name:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; print(&lt;span style="color:#e6db74"&gt;f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;你好，&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;name&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;！&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="密碼輸入視窗-password遮蔽顯示"&gt;密碼輸入視窗 &lt;code&gt;password()&lt;/code&gt;（遮蔽顯示）：
+&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pwd &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;password(&lt;span style="color:#e6db74"&gt;&amp;#39;請輸入密碼：&amp;#39;&lt;/span&gt;, title&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;登入&amp;#39;&lt;/span&gt;, default&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;&amp;#39;&lt;/span&gt;, mask&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;*&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(&lt;span style="color:#e6db74"&gt;f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;輸入的密碼：&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;pwd&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h3 id="5-實用範例自動開啟記事本並輸入文字"&gt;5. 實用範例：自動開啟記事本並輸入文字
+&lt;/h3&gt;&lt;p&gt;以下範例示範如何在 Windows 上自動開啟記事本，並輸入一段文字再儲存：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pyautogui
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; subprocess
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; time
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 開啟記事本&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;subprocess&lt;span style="color:#f92672"&gt;.&lt;/span&gt;Popen([&lt;span style="color:#e6db74"&gt;&amp;#39;notepad.exe&amp;#39;&lt;/span&gt;])
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;time&lt;span style="color:#f92672"&gt;.&lt;/span&gt;sleep(&lt;span style="color:#ae81ff"&gt;1.5&lt;/span&gt;) &lt;span style="color:#75715e"&gt;# 等待視窗開啟&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;press(&lt;span style="color:#e6db74"&gt;&amp;#39;shift&amp;#39;&lt;/span&gt;) &lt;span style="color:#75715e"&gt;# 切換鍵盤成英文&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 輸入文字&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;typewrite(&lt;span style="color:#e6db74"&gt;&amp;#39;Hello from PyAutoGUI!&amp;#39;&lt;/span&gt;, interval&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;0.05&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;press(&lt;span style="color:#e6db74"&gt;&amp;#39;enter&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;typewrite(&lt;span style="color:#e6db74"&gt;&amp;#39;This is automated typing.&amp;#39;&lt;/span&gt;, interval&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;0.05&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 儲存（Ctrl + S）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;hotkey(&lt;span style="color:#e6db74"&gt;&amp;#39;ctrl&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;s&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;time&lt;span style="color:#f92672"&gt;.&lt;/span&gt;sleep(&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 在另存新檔視窗中輸入檔名&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;typewrite(&lt;span style="color:#e6db74"&gt;&amp;#39;auto_test.txt&amp;#39;&lt;/span&gt;, interval&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;0.05&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;press(&lt;span style="color:#e6db74"&gt;&amp;#39;enter&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(&lt;span style="color:#e6db74"&gt;&amp;#34;完成！已儲存為 auto_test.txt&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="練習題"&gt;練習題
+&lt;/h2&gt;&lt;details&gt;
+&lt;summary&gt;📝 練習題 1：自動全選並複製&lt;/summary&gt;
+&lt;p&gt;&lt;strong&gt;題目&lt;/strong&gt;：在任意文字編輯器中，用 PyAutoGUI 執行「全選→複製→游標移至末尾→貼上」的操作序列。&lt;/p&gt;
+&lt;details&gt;
+&lt;summary&gt;答案：&lt;/summary&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pyautogui
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; time
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;time&lt;span style="color:#f92672"&gt;.&lt;/span&gt;sleep(&lt;span style="color:#ae81ff"&gt;2&lt;/span&gt;) &lt;span style="color:#75715e"&gt;# 手動切換到目標視窗&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;hotkey(&lt;span style="color:#e6db74"&gt;&amp;#39;ctrl&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;a&amp;#39;&lt;/span&gt;) &lt;span style="color:#75715e"&gt;# 全選&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;time&lt;span style="color:#f92672"&gt;.&lt;/span&gt;sleep(&lt;span style="color:#ae81ff"&gt;0.3&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;hotkey(&lt;span style="color:#e6db74"&gt;&amp;#39;ctrl&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;c&amp;#39;&lt;/span&gt;) &lt;span style="color:#75715e"&gt;# 複製&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;time&lt;span style="color:#f92672"&gt;.&lt;/span&gt;sleep(&lt;span style="color:#ae81ff"&gt;0.3&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;press(&lt;span style="color:#e6db74"&gt;&amp;#39;end&amp;#39;&lt;/span&gt;) &lt;span style="color:#75715e"&gt;# 移至末尾&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;press(&lt;span style="color:#e6db74"&gt;&amp;#39;enter&amp;#39;&lt;/span&gt;) &lt;span style="color:#75715e"&gt;# 換行&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;hotkey(&lt;span style="color:#e6db74"&gt;&amp;#39;ctrl&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;v&amp;#39;&lt;/span&gt;) &lt;span style="color:#75715e"&gt;# 貼上&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt; &lt;/details&gt;
+&lt;/details&gt;
+&lt;hr&gt;
+&lt;details&gt;
+&lt;summary&gt;📝 練習題 2：詢問使用者再執行&lt;/summary&gt;
+&lt;p&gt;&lt;strong&gt;題目&lt;/strong&gt;：用 &lt;code&gt;confirm()&lt;/code&gt; 彈出確認視窗，若使用者點「確定」，才執行自動輸入文字的動作；若點「取消」，則印出「已取消」。&lt;/p&gt;
+&lt;details&gt;
+&lt;summary&gt;答案：&lt;/summary&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pyautogui
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; time
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;result &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;confirm(&lt;span style="color:#e6db74"&gt;&amp;#39;是否要開始自動輸入？&amp;#39;&lt;/span&gt;, title&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;確認&amp;#39;&lt;/span&gt;, buttons&lt;span style="color:#f92672"&gt;=&lt;/span&gt;[&lt;span style="color:#e6db74"&gt;&amp;#39;確定&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;取消&amp;#39;&lt;/span&gt;])
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; result &lt;span style="color:#f92672"&gt;==&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;確定&amp;#39;&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; time&lt;span style="color:#f92672"&gt;.&lt;/span&gt;sleep(&lt;span style="color:#ae81ff"&gt;2&lt;/span&gt;) &lt;span style="color:#75715e"&gt;# 切換到目標視窗&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;typewrite(&lt;span style="color:#e6db74"&gt;&amp;#39;自動輸入的文字！&amp;#39;&lt;/span&gt;, interval&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;0.1&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;else&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; print(&lt;span style="color:#e6db74"&gt;&amp;#39;已取消&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt; &lt;/details&gt;
+&lt;/details&gt;
+&lt;hr&gt;
+&lt;details&gt;
+&lt;summary&gt;📝 練習題 3：模擬 Vim 儲存並離開&lt;/summary&gt;
+&lt;p&gt;&lt;strong&gt;題目&lt;/strong&gt;：假設 Vim 已開啟並在 Normal mode，用 PyAutoGUI 模擬輸入 &lt;code&gt;:wq&lt;/code&gt; 後按 Enter 來儲存並離開。&lt;/p&gt;
+&lt;details&gt;
+&lt;summary&gt;答案：&lt;/summary&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pyautogui
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; time
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;time&lt;span style="color:#f92672"&gt;.&lt;/span&gt;sleep(&lt;span style="color:#ae81ff"&gt;2&lt;/span&gt;) &lt;span style="color:#75715e"&gt;# 切換到 Vim 視窗&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 確保在 Normal mode&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;press(&lt;span style="color:#e6db74"&gt;&amp;#39;esc&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;time&lt;span style="color:#f92672"&gt;.&lt;/span&gt;sleep(&lt;span style="color:#ae81ff"&gt;0.2&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 輸入 :wq 指令&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;typewrite(&lt;span style="color:#e6db74"&gt;&amp;#39;:wq&amp;#39;&lt;/span&gt;, interval&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;0.1&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;press(&lt;span style="color:#e6db74"&gt;&amp;#39;enter&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt; &lt;/details&gt;
+&lt;/details&gt;
+&lt;hr&gt;
+&lt;h2 id="參考資料"&gt;參考資料
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="https://pyautogui.readthedocs.io/en/latest/keyboard.html" target="_blank" rel="noopener"
+&gt;PyAutoGUI 官方文件 — Keyboard&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://pyautogui.readthedocs.io/en/latest/msgbox.html" target="_blank" rel="noopener"
+&gt;PyAutoGUI 官方文件 — Message Box&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://github.com/asweigart/pyautogui" target="_blank" rel="noopener"
+&gt;PyAutoGUI GitHub 原始碼&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://automatetheboringstuff.com/2e/chapter20/" target="_blank" rel="noopener"
+&gt;Automate the Boring Stuff with Python — Chapter 20&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>FastAPI 路徑參數</title><link>https://Dandelionlibra.github.io/2026/04/fastapi-path-parameters/</link><pubDate>Mon, 27 Apr 2026 14:00:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/2026/04/fastapi-path-parameters/</guid><description>&lt;p&gt;在&lt;a class="link" href="https://Dandelionlibra.github.io/post/python/how-to-use-fastapi/" &gt;第一篇教學&lt;/a&gt;中，我們建立了一個簡單的 &lt;code&gt;/&lt;/code&gt; 根目錄端點。但真實世界的 API 通常需要根據不同的請求回傳不同的資料，例如：取得「特定 ID」的使用者資料。&lt;/p&gt;
 &lt;p&gt;這時候，我們就需要用到&lt;strong&gt;路徑參數（Path Parameters）&lt;/strong&gt;。&lt;/p&gt;
 &lt;h2 id="內容大綱"&gt;內容大綱
 &lt;/h2&gt;&lt;ol&gt;
