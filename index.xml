@@ -1,4 +1,311 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>YuChen</title><link>https://Dandelionlibra.github.io/</link><description>Recent content on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Tue, 28 Apr 2026 10:46:00 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>學 FastAPI 前你需要知道的事：HTTP 與 API 基礎</title><link>https://Dandelionlibra.github.io/2026/04/fastapi-http-and-api/</link><pubDate>Mon, 27 Apr 2026 10:32:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/2026/04/fastapi-http-and-api/</guid><description>&lt;h2 id="內容大綱"&gt;內容大綱
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>YuChen</title><link>https://Dandelionlibra.github.io/</link><description>Recent content on YuChen</description><generator>Hugo -- gohugo.io</generator><language>zh-Hant-TW</language><lastBuildDate>Thu, 30 Apr 2026 00:00:00 +0800</lastBuildDate><atom:link href="https://Dandelionlibra.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>如何使用 PyAutoGUI（一）：安裝與滑鼠控制</title><link>https://Dandelionlibra.github.io/2026/04/how-to-use-pyautogui-mouse/</link><pubDate>Thu, 30 Apr 2026 00:00:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/2026/04/how-to-use-pyautogui-mouse/</guid><description>&lt;h2 id="內容大綱"&gt;內容大綱
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;&lt;a class="link" href="#1-pyautogui-%e5%9f%ba%e6%9c%ac%e4%bb%8b%e7%b4%b9" &gt;PyAutoGUI 基本介紹&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#2-%e5%ae%89%e8%a3%9d-pyautogui" &gt;安裝 PyAutoGUI&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#3-%e8%9e%a2%e5%b9%95%e5%ba%a7%e6%a8%99%e7%b3%bb%e7%b5%b1" &gt;螢幕座標系統&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#4-%e5%ae%89%e5%85%a8%e6%a9%9f%e5%88%b6fail-safe" &gt;安全機制：Fail-Safe&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#5-%e5%8f%96%e5%be%97%e8%9e%a2%e5%b9%95%e8%b3%87%e8%a8%8a" &gt;取得螢幕資訊&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#6-%e6%bb%91%e9%bc%a0%e9%bb%9e%e6%93%8a" &gt;滑鼠點擊&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="#%e9%bb%9e%e6%93%8a-click" &gt;點擊&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#%e9%9b%99%e6%93%8a-doubleclick" &gt;雙擊&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#%e5%8f%b3%e9%8d%b5%e9%bb%9e%e6%93%8a-rightclick" &gt;右鍵點擊&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#%e4%b8%ad%e9%8d%b5%e9%bb%9e%e6%93%8a-middleclick" &gt;中鍵點擊&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#%e5%88%86%e9%96%8b%e6%8c%89%e4%b8%8b%e8%88%87%e6%94%be%e9%96%8b-mousedown--mouseup" &gt;分開按下與放開&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#7-%e6%bb%91%e9%bc%a0%e7%a7%bb%e5%8b%95" &gt;滑鼠移動&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="#%e7%a7%bb%e5%8b%95%e5%88%b0%e7%b5%95%e5%b0%8d%e5%ba%a7%e6%a8%99-movetox-y-durationnum_seconds" &gt;移動到絕對座標&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#%e7%a7%bb%e5%8b%95%e5%88%b0%e7%9b%b8%e5%b0%8d%e5%ba%a7%e6%a8%99-movelrelxoffset-yoffset-durationnum_seconds" &gt;移動到相對座標&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#%e6%8b%96%e6%9b%b3%e5%88%b0%e7%b5%95%e5%b0%8d%e5%ba%a7%e6%a8%99-dragtox-y-durationnum_seconds" &gt;拖曳到絕對座標&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#%e6%8b%96%e6%9b%b3%e5%88%b0%e7%9b%b8%e5%b0%8d%e5%ba%a7%e6%a8%99-dragrelxoffset-yoffset-durationnum_seconds" &gt;拖曳到相對座標&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#8-%e6%bb%be%e8%bc%aa%e6%93%8d%e4%bd%9c" &gt;滾輪操作&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="#%e5%9e%82%e7%9b%b4%e6%bb%be%e5%8b%95-scroll" &gt;垂直滾動&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#%e6%b0%b4%e5%b9%b3%e6%bb%be%e5%8b%95-hscroll" &gt;水平滾動&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h3 id="1-pyautogui-基本介紹"&gt;1. PyAutoGUI 基本介紹
+&lt;/h3&gt;&lt;p&gt;PyAutoGUI 是一個跨平台的 Python GUI 自動化套件，可以程式化地控制&lt;strong&gt;滑鼠&lt;/strong&gt;與&lt;strong&gt;鍵盤&lt;/strong&gt;，適用於 Windows、macOS 和 Linux。常見應用場景包括：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;重複性操作自動化&lt;/strong&gt;：自動填表、批次處理檔案。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;GUI 測試&lt;/strong&gt;：模擬使用者操作，進行介面測試。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;螢幕截圖與圖像辨識&lt;/strong&gt;：截圖並尋找特定圖案位置，再進行點擊。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;⚠️ 注意事項&lt;/strong&gt;&lt;br&gt;
+PyAutoGUI 會直接控制系統的滑鼠與鍵盤，執行時請先確認不會誤操作重要視窗，建議先在測試環境中嘗試。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h3 id="2-安裝-pyautogui"&gt;2. 安裝 PyAutoGUI
+&lt;/h3&gt;&lt;p&gt;在終端機輸入以下指令：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pip install pyautogui
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;若有多個版本的 python 可以指定特定版本：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;py -3.8 -m pip install pyautogui
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;macOS：&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;python3 -m pip install pyautogui
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;Linux：&lt;/strong&gt;&lt;br&gt;
+還需要安裝額外依賴套件。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt-get install python3-tk python3-dev scrot
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;python3 -m pip install pyautogui
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;安裝完成後，驗證是否成功：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pyautogui
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;size()) &lt;span style="color:#75715e"&gt;# 印出螢幕解析度，例如 Size(width=1920, height=1080)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h3 id="3-螢幕座標系統"&gt;3. 螢幕座標系統
+&lt;/h3&gt;&lt;p&gt;在開始自動化之前，我們必須先了解電腦螢幕的座標系統（Coordinate System）：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;原點 (0, 0)&lt;/strong&gt;：位於螢幕的 &lt;strong&gt;左上角 (Top-Left)&lt;/strong&gt;。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;X 軸&lt;/strong&gt;：水平方向，由左向右遞增。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Y 軸&lt;/strong&gt;：垂直方向，由上向下遞增。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;如果你想更直觀地了解座標位置，可以使用下方我開發的小工具。移動滑鼠即可即時顯示座標，點擊畫面則可以釘選座標點。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;互動小工具：螢幕座標地圖&lt;/strong&gt;
+建議點擊右上角的「全螢幕」按鈕或將瀏覽器視窗最大化，以獲得最準確的座標參考。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;iframe src="https://dandelionlibra.github.io/tools/screen_coordinate_map.html" width="100%" height="500px" style="border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; background: #0d0d0f;"&gt;&lt;/iframe&gt;
+&lt;hr&gt;
+&lt;h3 id="4-安全機制fail-safe"&gt;4. 安全機制：Fail-Safe
+&lt;/h3&gt;&lt;p&gt;PyAutoGUI 內建一個防呆安全機制：&lt;strong&gt;當滑鼠快速移動到螢幕左上角（座標 0, 0）時，會自動丟出 &lt;code&gt;FailSafeException&lt;/code&gt; 並中止程式。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;這個機制可以讓你在程式失控時，快速移動滑鼠到左上角以強制停止。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pyautogui
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 安全機制，正式使用時請保持啟用（預設為 True）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;FAILSAFE &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 若確定不需要此機制（不建議）可關閉&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;FAILSAFE &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;False&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;此外，還有一個全域延遲設定，讓每個操作之間自動暫停，避免操作太快：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 每次 PyAutoGUI 函式呼叫後，暫停 0.5 秒（預設為 0.1）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;PAUSE &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0.5&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h3 id="5-取得螢幕資訊"&gt;5. 取得螢幕資訊
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pyautogui
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 取得螢幕解析度&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;width, height &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;size()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(&lt;span style="color:#e6db74"&gt;f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;螢幕寬度：&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;width&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;，高度：&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;height&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 取得滑鼠目前位置&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;x, y &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;position()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(&lt;span style="color:#e6db74"&gt;f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;目前滑鼠座標：(&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;x&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;, &lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;y&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;)&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;💡 小技巧&lt;/strong&gt;：執行以下程式碼，可以即時追蹤滑鼠座標，按 &lt;code&gt;Ctrl+C&lt;/code&gt; 停止：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pyautogui&lt;span style="color:#f92672"&gt;,&lt;/span&gt; time
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;try&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;while&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; x, y &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;position()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; print(&lt;span style="color:#e6db74"&gt;f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;\r&lt;/span&gt;&lt;span style="color:#e6db74"&gt;目前座標：(&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;x&lt;span style="color:#e6db74"&gt;:&lt;/span&gt;&lt;span style="color:#e6db74"&gt;4&lt;/span&gt;&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;, &lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;y&lt;span style="color:#e6db74"&gt;:&lt;/span&gt;&lt;span style="color:#e6db74"&gt;4&lt;/span&gt;&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;)&amp;#34;&lt;/span&gt;, end&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&lt;/span&gt;, flush&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; time&lt;span style="color:#f92672"&gt;.&lt;/span&gt;sleep(&lt;span style="color:#ae81ff"&gt;0.1&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;except&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;KeyboardInterrupt&lt;/span&gt;: &lt;span style="color:#75715e"&gt;# 按下 Ctrl+C 會中斷程式&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; print(&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;\n&lt;/span&gt;&lt;span style="color:#e6db74"&gt;已停止追蹤&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h3 id="6-滑鼠點擊"&gt;6. 滑鼠點擊
+&lt;/h3&gt;&lt;h4 id="點擊-click"&gt;點擊 &lt;code&gt;click()&lt;/code&gt;：
+&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pyautogui
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;click() &lt;span style="color:#75715e"&gt;# 在目前位置點擊左鍵&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;click(&lt;span style="color:#ae81ff"&gt;500&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;300&lt;/span&gt;) &lt;span style="color:#75715e"&gt;# 點擊指定座標&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;click(&lt;span style="color:#ae81ff"&gt;500&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;300&lt;/span&gt;, button&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;right&amp;#39;&lt;/span&gt;) &lt;span style="color:#75715e"&gt;# 指定按鍵 &amp;#39;left&amp;#39;、&amp;#39;right&amp;#39;、&amp;#39;middle&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;click(&lt;span style="color:#ae81ff"&gt;500&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;300&lt;/span&gt;, clicks&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;2&lt;/span&gt;) &lt;span style="color:#75715e"&gt;# 連續點擊&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;click(&lt;span style="color:#ae81ff"&gt;500&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;300&lt;/span&gt;, clicks&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;2&lt;/span&gt;, interval&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;0.25&lt;/span&gt;) &lt;span style="color:#75715e"&gt;# 設定兩次點擊之間的間隔（秒）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;click(button&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;right&amp;#39;&lt;/span&gt;, clicks&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;3&lt;/span&gt;, interval&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;0.25&lt;/span&gt;) &lt;span style="color:#75715e"&gt;# 指定按鍵並連續點擊&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="雙擊-doubleclick"&gt;雙擊 &lt;code&gt;doubleClick()&lt;/code&gt;：
+&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 在指定位置雙擊&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;doubleClick(&lt;span style="color:#ae81ff"&gt;500&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;300&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;註解&lt;/strong&gt;&lt;br&gt;
+也有 &lt;code&gt;tripleClick()&lt;/code&gt; 函數，用以點擊三次螢幕。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id="右鍵點擊-rightclick"&gt;右鍵點擊 &lt;code&gt;rightClick()&lt;/code&gt;：
+&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;rightClick(&lt;span style="color:#ae81ff"&gt;500&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;300&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="中鍵點擊-middleclick"&gt;中鍵點擊 &lt;code&gt;middleClick()&lt;/code&gt;：
+&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;middleClick(&lt;span style="color:#ae81ff"&gt;500&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;300&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="分開按下與放開-mousedown--mouseup"&gt;分開按下與放開 &lt;code&gt;mouseDown()&lt;/code&gt; / &lt;code&gt;mouseUp()&lt;/code&gt;：
+&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 按下與放開皆預設為左鍵&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;mouseDown() &lt;span style="color:#75715e"&gt;# 按下左鍵（不放開）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;mouseUp() &lt;span style="color:#75715e"&gt;# 放開左鍵&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 按下右鍵（不放開）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;mouseDown(&lt;span style="color:#ae81ff"&gt;500&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;300&lt;/span&gt;, button&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;right&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 放開右鍵&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;mouseUp(&lt;span style="color:#ae81ff"&gt;500&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;300&lt;/span&gt;, button&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;right&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h3 id="7-滑鼠移動"&gt;7. 滑鼠移動
+&lt;/h3&gt;&lt;h4 id="移動到絕對座標-movetox-y-durationnum_seconds"&gt;移動到絕對座標 &lt;code&gt;moveTo(x, y, duration=num_seconds)&lt;/code&gt;：
+&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pyautogui
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 移動到螢幕座標 (500, 300)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;moveTo(&lt;span style="color:#ae81ff"&gt;500&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;300&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 移動到 (500, 300)，花費 1 秒（加入緩動效果）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;moveTo(&lt;span style="color:#ae81ff"&gt;500&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;300&lt;/span&gt;, duration&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 使用緩動函式（easing），讓動作更自然&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;moveTo(&lt;span style="color:#ae81ff"&gt;500&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;300&lt;/span&gt;, duration&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;, tween&lt;span style="color:#f92672"&gt;=&lt;/span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;easeInOutQuad)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="移動到相對座標-moverelxoffset-yoffset-durationnum_seconds"&gt;移動到相對座標 &lt;code&gt;moveRel(xOffset, yOffset, duration=num_seconds)&lt;/code&gt;：
+&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 從目前位置，向右移動 100px、向下移動 50px&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;moveRel(&lt;span style="color:#ae81ff"&gt;100&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;50&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# moveRel 與 move 完全相同&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;move(&lt;span style="color:#ae81ff"&gt;100&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;50&lt;/span&gt;, duration&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;0.5&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="拖曳到絕對座標-dragtox-y-durationnum_seconds"&gt;拖曳到絕對座標 &lt;code&gt;dragTo(x, y, duration=num_seconds)&lt;/code&gt;：
+&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pyautogui
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 從目前位置拖曳到 (700, 400)，花費 0.5 秒&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;dragTo(&lt;span style="color:#ae81ff"&gt;700&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;400&lt;/span&gt;, duration&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;0.5&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 指定使用左鍵拖曳&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;dragTo(&lt;span style="color:#ae81ff"&gt;700&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;400&lt;/span&gt;, duration&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;0.5&lt;/span&gt;, button&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;left&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="拖曳到相對座標-dragrelxoffset-yoffset-durationnum_seconds"&gt;拖曳到相對座標 &lt;code&gt;dragRel(xOffset, yOffset, duration=num_seconds)&lt;/code&gt;：
+&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 從目前位置向右拖曳 200px、向下 100px&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;dragRel(&lt;span style="color:#ae81ff"&gt;200&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;100&lt;/span&gt;, duration&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;0.5&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# drag 與 dragRel 完全相同&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;drag(&lt;span style="color:#ae81ff"&gt;200&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;100&lt;/span&gt;, duration&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;0.5&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;實用範例：拖曳視窗&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pyautogui
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; time
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 點擊視窗標題列(假設(400, 30)有視窗標題)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;click(&lt;span style="color:#ae81ff"&gt;400&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;30&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;time&lt;span style="color:#f92672"&gt;.&lt;/span&gt;sleep(&lt;span style="color:#ae81ff"&gt;0.2&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 拖曳視窗到新位置&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;dragTo(&lt;span style="color:#ae81ff"&gt;800&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;200&lt;/span&gt;, duration&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;, button&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;left&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;常用 tween 緩動函式：&lt;/strong&gt;&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;函式&lt;/th&gt;
+&lt;th&gt;效果&lt;/th&gt;
+&lt;th&gt;範例指令&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;pyautogui.linear&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;等速移動（預設）&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;pyautogui.moveTo(x, y, tween=pyautogui.linear)&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;pyautogui.easeInQuad&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;由慢到快&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;pyautogui.moveTo(x, y, tween=pyautogui.easeInQuad)&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;pyautogui.easeOutQuad&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;由快到慢&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;pyautogui.moveTo(x, y, tween=pyautogui.easeOutQuad)&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;pyautogui.easeInOutQuad&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;先慢後快再慢&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;pyautogui.moveTo(x, y, tween=pyautogui.easeInOutQuad)&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;pyautogui.easeInBounce&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;到達目標後反彈&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;pyautogui.moveTo(x, y, tween=pyautogui.easeInBounce)&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;hr&gt;
+&lt;h3 id="8-滾輪操作"&gt;8. 滾輪操作
+&lt;/h3&gt;&lt;h4 id="垂直滾動-scroll"&gt;垂直滾動 &lt;code&gt;scroll()&lt;/code&gt;
+&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pyautogui
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 向上滾動 3 格（正值向上，負值向下）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;scroll(&lt;span style="color:#ae81ff"&gt;3&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 在指定座標向下滾動 5 格&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;scroll(&lt;span style="color:#f92672"&gt;-&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;5&lt;/span&gt;, x&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;500&lt;/span&gt;, y&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;400&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="水平滾動-hscroll"&gt;水平滾動 &lt;code&gt;hscroll()&lt;/code&gt;
+&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 向右水平滾動 3 格&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;hscroll(&lt;span style="color:#ae81ff"&gt;3&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 向左水平滾動 3 格&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;hscroll(&lt;span style="color:#f92672"&gt;-&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;3&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="練習題"&gt;練習題
+&lt;/h2&gt;&lt;details&gt;
+&lt;summary&gt;📝 練習題 1：滑鼠畫正方形&lt;/summary&gt;
+&lt;p&gt;&lt;strong&gt;題目&lt;/strong&gt;：使用 &lt;code&gt;moveTo()&lt;/code&gt; 讓滑鼠依序移動到四個角落，畫出一個邊長 200px 的正方形路徑（從座標 (200, 200) 出發）。&lt;/p&gt;
+&lt;details&gt;
+&lt;summary&gt;答案：&lt;/summary&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pyautogui
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; time
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;PAUSE &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0.5&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;moveTo(&lt;span style="color:#ae81ff"&gt;200&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;200&lt;/span&gt;, duration&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;0.5&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;moveTo(&lt;span style="color:#ae81ff"&gt;400&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;200&lt;/span&gt;, duration&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;0.5&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;moveTo(&lt;span style="color:#ae81ff"&gt;400&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;400&lt;/span&gt;, duration&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;0.5&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;moveTo(&lt;span style="color:#ae81ff"&gt;200&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;400&lt;/span&gt;, duration&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;0.5&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;moveTo(&lt;span style="color:#ae81ff"&gt;200&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;200&lt;/span&gt;, duration&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;0.5&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(&lt;span style="color:#e6db74"&gt;&amp;#34;正方形路徑完成！&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt; &lt;/details&gt;
+&lt;/details&gt;
+&lt;hr&gt;
+&lt;details&gt;
+&lt;summary&gt;📝 練習題 2：自動右鍵選單&lt;/summary&gt;
+&lt;p&gt;&lt;strong&gt;題目&lt;/strong&gt;：在桌面空白處模擬右鍵點擊，然後按下 &lt;code&gt;Escape&lt;/code&gt; 關閉選單（需搭配第二篇的鍵盤操作）。&lt;/p&gt;
+&lt;details&gt;
+&lt;summary&gt;答案：&lt;/summary&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pyautogui
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; time
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;time&lt;span style="color:#f92672"&gt;.&lt;/span&gt;sleep(&lt;span style="color:#ae81ff"&gt;2&lt;/span&gt;) &lt;span style="color:#75715e"&gt;# 給自己時間切換到桌面&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 在桌面中央右鍵點擊&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;screen_w, screen_h &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;size()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;rightClick(screen_w &lt;span style="color:#f92672"&gt;//&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;2&lt;/span&gt;, screen_h &lt;span style="color:#f92672"&gt;//&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;2&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;time&lt;span style="color:#f92672"&gt;.&lt;/span&gt;sleep(&lt;span style="color:#ae81ff"&gt;0.5&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 按 Escape 關閉選單&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;press(&lt;span style="color:#e6db74"&gt;&amp;#39;escape&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt; &lt;/details&gt;
+&lt;/details&gt;
+&lt;hr&gt;
+&lt;details&gt;
+&lt;summary&gt;📝 練習題 3：計算並移動到螢幕中心&lt;/summary&gt;
+&lt;p&gt;&lt;strong&gt;題目&lt;/strong&gt;：用程式取得螢幕解析度後，計算出螢幕中心點，並將滑鼠移動過去。&lt;/p&gt;
+&lt;details&gt;
+&lt;summary&gt;答案：&lt;/summary&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pyautogui
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;width, height &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;size()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;center_x &lt;span style="color:#f92672"&gt;=&lt;/span&gt; width &lt;span style="color:#f92672"&gt;//&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;2&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;center_y &lt;span style="color:#f92672"&gt;=&lt;/span&gt; height &lt;span style="color:#f92672"&gt;//&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;2&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(&lt;span style="color:#e6db74"&gt;f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;螢幕中心：(&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;center_x&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;, &lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;center_y&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;)&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;moveTo(center_x, center_y, duration&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt; &lt;/details&gt;
+&lt;/details&gt;
+&lt;hr&gt;
+&lt;h2 id="參考資料"&gt;參考資料
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="https://pyautogui.readthedocs.io/en/latest/" target="_blank" rel="noopener"
+&gt;PyAutoGUI 官方文件&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://github.com/asweigart/pyautogui" target="_blank" rel="noopener"
+&gt;PyAutoGUI GitHub 原始碼&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://automatetheboringstuff.com/2e/chapter20/" target="_blank" rel="noopener"
+&gt;Al Sweigart 的 PyAutoGUI 教學（英文）&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>學 FastAPI 前你需要知道的事：HTTP 與 API 基礎</title><link>https://Dandelionlibra.github.io/2026/04/fastapi-http-and-api/</link><pubDate>Mon, 27 Apr 2026 10:32:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/2026/04/fastapi-http-and-api/</guid><description>&lt;h2 id="內容大綱"&gt;內容大綱
 &lt;/h2&gt;&lt;ol&gt;
 &lt;li&gt;&lt;a class="link" href="#1-%e4%bb%80%e9%ba%bc%e6%98%af-api" &gt;什麼是 API？&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="#2-http-%e5%8d%94%e5%ae%9a%e8%ab%8b%e6%b1%82%e8%88%87%e5%9b%9e%e6%87%89" &gt;HTTP 協定：請求與回應&lt;/a&gt;&lt;/li&gt;
