@@ -1,0 +1,240 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans)}
+.wrap{padding:1rem 0}
+.tabs{display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap}
+.tab{padding:5px 14px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);font-size:13px;cursor:pointer;background:transparent;color:var(--color-text-secondary);transition:background 0.1s}
+.tab.active{background:var(--color-background-secondary);color:var(--color-text-primary);font-weight:500}
+.search-row{display:flex;gap:8px;margin-bottom:1rem}
+.search-row input{flex:1;font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:6px}
+.kcard{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:8px 10px;cursor:pointer;transition:border-color 0.15s}
+.kcard:hover{border-color:var(--color-border-secondary)}
+.kcard.selected{border-color:#534AB7;background:#EEEDFE}
+.kcard .key{font-family:var(--font-mono);font-size:12px;font-weight:500;color:var(--color-text-primary)}
+.kcard .var{font-family:var(--font-mono);font-size:11px;color:#534AB7;margin-top:2px}
+.kcard.selected .key{color:#3C3489}
+.result-panel{background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin-top:1rem}
+.result-panel .rlabel{font-size:12px;color:var(--color-text-secondary);margin-bottom:4px}
+.result-panel .rcode{font-family:var(--font-mono);font-size:13px;color:var(--color-text-primary);background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:8px 12px;margin-bottom:8px;word-break:break-all}
+.copy-btn{font-size:12px;padding:4px 12px}
+.count{font-size:12px;color:var(--color-text-tertiary);margin-bottom:8px}
+.no-result{font-size:13px;color:var(--color-text-secondary);padding:1rem 0;text-align:center}
+</style>
+<div class="wrap">
+<h2 class="sr-only">pynput 鍵盤按鍵對應變數查詢工具（1920×1080）</h2>
+<div class="tabs" id="tabs"></div>
+<div class="search-row">
+  <input type="text" id="search" placeholder="搜尋按鍵名稱或變數..." />
+</div>
+<div class="count" id="count"></div>
+<div class="grid" id="grid"></div>
+<div class="result-panel" id="result-panel" style="display:none">
+  <div class="rlabel">選取的按鍵 — 複製到 HOTKEY_MAP</div>
+  <div class="rcode" id="result-code"></div>
+  <button class="copy-btn" onclick="copyCode()">複製</button>
+</div>
+</div>
+<script>
+const W=1920,H=1080;
+const categories = [
+  {
+    label:'功能鍵',
+    keys:[
+      {name:'F1',var:"'f1'",note:'功能鍵'},
+      {name:'F2',var:"'f2'"},
+      {name:'F3',var:"'f3'"},
+      {name:'F4',var:"'f4'"},
+      {name:'F5',var:"'f5'"},
+      {name:'F6',var:"'f6'"},
+      {name:'F7',var:"'f7'"},
+      {name:'F8',var:"'f8'"},
+      {name:'F9',var:"'f9'"},
+      {name:'F10',var:"'f10'"},
+      {name:'F11',var:"'f11'"},
+      {name:'F12',var:"'f12'"},
+      {name:'F13',var:"'f13'"},
+      {name:'F14',var:"'f14'"},
+      {name:'F15',var:"'f15'"},
+      {name:'F16',var:"'f16'"},
+      {name:'F17',var:"'f17'"},
+      {name:'F18',var:"'f18'"},
+      {name:'F19',var:"'f19'"},
+      {name:'F20',var:"'f20'"},
+    ]
+  },
+  {
+    label:'字母',
+    keys:'abcdefghijklmnopqrstuvwxyz'.split('').map(c=>({name:c.toUpperCase(),var:`'${c}'`}))
+  },
+  {
+    label:'數字',
+    keys:[
+      {name:'0',var:"'0'"},{name:'1',var:"'1'"},{name:'2',var:"'2'"},{name:'3',var:"'3'"},
+      {name:'4',var:"'4'"},{name:'5',var:"'5'"},{name:'6',var:"'6'"},{name:'7',var:"'7'"},
+      {name:'8',var:"'8'"},{name:'9',var:"'9'"},
+    ]
+  },
+  {
+    label:'修飾鍵',
+    keys:[
+      {name:'Ctrl 左',var:'keyboard.Key.ctrl_l'},
+      {name:'Ctrl 右',var:'keyboard.Key.ctrl_r'},
+      {name:'Ctrl（任）',var:'keyboard.Key.ctrl'},
+      {name:'Shift 左',var:'keyboard.Key.shift_l'},
+      {name:'Shift 右',var:'keyboard.Key.shift_r'},
+      {name:'Shift（任）',var:'keyboard.Key.shift'},
+      {name:'Alt 左',var:'keyboard.Key.alt_l'},
+      {name:'Alt 右',var:'keyboard.Key.alt_r'},
+      {name:'Alt（任）',var:'keyboard.Key.alt'},
+      {name:'Alt Gr',var:'keyboard.Key.alt_gr'},
+      {name:'Win / Cmd 左',var:'keyboard.Key.cmd_l'},
+      {name:'Win / Cmd 右',var:'keyboard.Key.cmd_r'},
+      {name:'Win / Cmd（任）',var:'keyboard.Key.cmd'},
+    ]
+  },
+  {
+    label:'控制鍵',
+    keys:[
+      {name:'Enter',var:'keyboard.Key.enter'},
+      {name:'Space',var:'keyboard.Key.space'},
+      {name:'Backspace',var:'keyboard.Key.backspace'},
+      {name:'Delete',var:'keyboard.Key.delete'},
+      {name:'Tab',var:'keyboard.Key.tab'},
+      {name:'Escape',var:'keyboard.Key.esc'},
+      {name:'Insert',var:'keyboard.Key.insert'},
+      {name:'Home',var:'keyboard.Key.home'},
+      {name:'End',var:'keyboard.Key.end'},
+      {name:'Page Up',var:'keyboard.Key.page_up'},
+      {name:'Page Down',var:'keyboard.Key.page_down'},
+      {name:'Caps Lock',var:'keyboard.Key.caps_lock'},
+      {name:'Num Lock',var:'keyboard.Key.num_lock'},
+      {name:'Scroll Lock',var:'keyboard.Key.scroll_lock'},
+      {name:'Print Screen',var:'keyboard.Key.print_screen'},
+      {name:'Pause / Break',var:'keyboard.Key.pause'},
+      {name:'Menu',var:'keyboard.Key.menu'},
+    ]
+  },
+  {
+    label:'方向鍵',
+    keys:[
+      {name:'↑ Up',var:'keyboard.Key.up'},
+      {name:'↓ Down',var:'keyboard.Key.down'},
+      {name:'← Left',var:'keyboard.Key.left'},
+      {name:'→ Right',var:'keyboard.Key.right'},
+    ]
+  },
+  {
+    label:'數字鍵盤',
+    keys:[
+      {name:'Num 0',var:"'0'"},{name:'Num 1',var:"'1'"},{name:'Num 2',var:"'2'"},
+      {name:'Num 3',var:"'3'"},{name:'Num 4',var:"'4'"},{name:'Num 5',var:"'5'"},
+      {name:'Num 6',var:"'6'"},{name:'Num 7',var:"'7'"},{name:'Num 8',var:"'8'"},
+      {name:'Num 9',var:"'9'"},
+    ]
+  },
+  {
+    label:'符號',
+    keys:[
+      {name:"'  (單引號)",var:"\"'\""},
+      {name:'`  (反引號)',var:"'`'"},
+      {name:'-',var:"'-'"},
+      {name:'=',var:"'='"},
+      {name:'[',var:"'['"},
+      {name:']',var:"']'"},
+      {name:'\\\\',var:"'\\\\'"},
+      {name:';',var:"';'"},
+      {name:',',var:"','"},
+      {name:'.',var:"'.'"},
+      {name:'/',var:"'/'"},
+    ]
+  },
+];
+
+const allKeys = categories.flatMap(cat=>cat.keys.map(k=>({...k,cat:cat.label})));
+let activeTab='全部';
+let selectedKey=null;
+
+const tabsEl=document.getElementById('tabs');
+const gridEl=document.getElementById('grid');
+const countEl=document.getElementById('count');
+const searchEl=document.getElementById('search');
+const resultPanel=document.getElementById('result-panel');
+const resultCode=document.getElementById('result-code');
+
+const tabLabels=['全部',...categories.map(c=>c.label)];
+tabLabels.forEach(label=>{
+  const btn=document.createElement('button');
+  btn.className='tab'+(label==='全部'?' active':'');
+  btn.textContent=label;
+  btn.onclick=()=>{
+    activeTab=label;
+    document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    render();
+  };
+  tabsEl.appendChild(btn);
+});
+
+function getCoordHint(v){
+  const cx=Math.round(W/2),cy=Math.round(H/2);
+  return `(${cx}, ${cy})`;
+}
+
+function makeCode(k){
+  const v=k.var;
+  const isStr=v.startsWith("'");
+  const cx=Math.round(W/2),cy=Math.round(H/2);
+  if(isStr){
+    return `HOTKEY_MAP = {\n    ${v}: (${cx}, ${cy}),\n}`;
+  } else {
+    return `# 需在 on_press 中用 keyboard.Key 比對\nif key == ${v}:\n    pyautogui.click(${cx}, ${cy})`;
+  }
+}
+
+function render(){
+  const q=searchEl.value.toLowerCase();
+  let keys=allKeys;
+  if(activeTab!=='全部') keys=keys.filter(k=>k.cat===activeTab);
+  if(q) keys=keys.filter(k=>k.name.toLowerCase().includes(q)||k.var.toLowerCase().includes(q));
+
+  countEl.textContent=`共 ${keys.length} 個按鍵`;
+  gridEl.innerHTML='';
+
+  if(keys.length===0){
+    gridEl.innerHTML='<div class="no-result">找不到符合的按鍵</div>';
+    return;
+  }
+
+  keys.forEach(k=>{
+    const card=document.createElement('div');
+    card.className='kcard'+(selectedKey&&selectedKey.var===k.var?' selected':'');
+    card.innerHTML=`<div class="key">${k.name}</div><div class="var">${k.var}</div>`;
+    card.onclick=()=>{
+      selectedKey=k;
+      resultPanel.style.display='block';
+      resultCode.textContent=makeCode(k);
+      render();
+      resultPanel.scrollIntoView({behavior:'smooth',block:'nearest'});
+    };
+    gridEl.appendChild(card);
+  });
+}
+
+function copyCode(){
+  navigator.clipboard.writeText(resultCode.textContent).catch(()=>{
+    const ta=document.createElement('textarea');
+    ta.value=resultCode.textContent;
+    document.body.appendChild(ta);ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+  });
+  const btn=document.querySelector('.copy-btn');
+  btn.textContent='已複製';
+  setTimeout(()=>btn.textContent='複製',1500);
+}
+
+searchEl.addEventListener('input',render);
+render();
+</script>
