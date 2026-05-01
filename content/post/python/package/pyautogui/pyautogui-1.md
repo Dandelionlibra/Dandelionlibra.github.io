@@ -95,7 +95,8 @@ print(pyautogui.size())  # 印出螢幕解析度，例如 Size(width=1920, heigh
 如果你想更直觀地了解座標位置，可以使用下方我開發的小工具。移動滑鼠即可即時顯示座標，點擊畫面則可以釘選座標點。
 
 > **互動小工具：螢幕座標地圖**
-> 建議點擊右上角的「全螢幕」按鈕或將瀏覽器視窗最大化，以獲得最準確的座標參考。
+> 建議點擊右上角的「全螢幕」按鈕或將瀏覽器視窗最大化，以獲得最準確的座標參考。  
+程式碼已開源於：[screen-coordinate-map](https://dandelionlibra.github.io/tools/screen_coordinate_map.html)
 
 <iframe src="https://dandelionlibra.github.io/tools/screen_coordinate_map.html" width="100%" height="500px" style="border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; background: #0d0d0f;"></iframe>
 
