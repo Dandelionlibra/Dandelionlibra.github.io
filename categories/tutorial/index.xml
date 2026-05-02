@@ -2349,6 +2349,369 @@ pip install --upgrade --force-reinstall openai
 &gt;PyAutoGUI GitHub 原始碼&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://automatetheboringstuff.com/2e/chapter20/" target="_blank" rel="noopener"
 &gt;Automate the Boring Stuff with Python — Chapter 20&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>如何使用 PyAutoGUI（三）：螢幕截圖與圖像辨識</title><link>https://Dandelionlibra.github.io/2026/04/how-to-use-pyautogui-screenshot/</link><pubDate>Thu, 30 Apr 2026 00:00:02 +0800</pubDate><guid>https://Dandelionlibra.github.io/2026/04/how-to-use-pyautogui-screenshot/</guid><description>&lt;h2 id="內容大綱"&gt;內容大綱
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;&lt;a class="link" href="#1-%e6%88%aa%e5%8f%96%e8%9e%a2%e5%b9%95%e7%95%ab%e9%9d%a2" &gt;截取螢幕畫面&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="#%e5%85%a8%e8%9e%a2%e5%b9%95%e6%88%aa%e5%9c%96-screenshot" &gt;全螢幕截圖&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#%e5%8d%80%e5%9f%9f%e6%88%aa%e5%9c%96-screenshotregion" &gt;區域截圖&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#2-%e5%9c%96%e5%83%8f%e8%be%a8%e8%ad%98%e5%9c%a8%e8%9e%a2%e5%b9%95%e4%b8%8a%e5%b0%8b%e6%89%be%e5%9c%96%e7%89%87" &gt;圖像辨識：在螢幕上尋找圖片&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="#%e5%b0%8b%e6%89%be%e5%9c%96%e7%89%87%e4%bd%8d%e7%bd%ae-locateonscreen" &gt;尋找圖片位置&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#%e5%8f%96%e5%be%97%e5%9c%96%e7%89%87%e4%b8%ad%e5%bf%83%e5%ba%a7%e6%a8%99-locatecentersonscreen" &gt;取得圖片中心座標&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#%e5%b0%8b%e6%89%be%e6%89%80%e6%9c%89%e7%ac%a6%e5%90%88%e4%bd%8d%e7%bd%ae-locateallonscreen" &gt;尋找所有符合位置&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#%e5%9c%a8%e5%9c%96%e7%89%87%e4%b8%ad%e6%90%9c%e5%b0%8b-locate%e9%9d%9e%e8%9e%a2%e5%b9%95" &gt;在圖片中搜尋&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#3-%e5%83%8f%e7%b4%a0%e9%a1%8f%e8%89%b2%e5%81%b5%e6%b8%ac" &gt;像素顏色偵測&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="#%e5%8f%96%e5%be%97%e6%8c%87%e5%ae%9a%e5%ba%a7%e6%a8%99%e7%9a%84%e5%83%8f%e7%b4%a0%e9%a1%8f%e8%89%b2-pixel" &gt;取得指定座標的像素顏色&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#%e5%88%a4%e6%96%b7%e5%83%8f%e7%b4%a0%e9%a1%8f%e8%89%b2%e6%98%af%e5%90%a6%e7%ac%a6%e5%90%88-pixelmatchescolor" &gt;判斷像素顏色是否符合&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#4-%e5%af%a6%e6%88%b0%e7%af%84%e4%be%8b%e8%87%aa%e5%8b%95%e9%bb%9e%e6%93%8a%e6%8c%87%e5%ae%9a%e6%8c%89%e9%88%95" &gt;實戰範例：自動點擊指定按鈕&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#5-%e5%af%a6%e6%88%b0%e7%af%84%e4%be%8b%e7%ad%89%e5%be%85%e5%9c%96%e6%a1%88%e5%87%ba%e7%8f%be%e5%86%8d%e5%9f%b7%e8%a1%8c" &gt;實戰範例：等待圖案出現再執行&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#6-%e5%b8%b8%e8%a6%8b%e5%95%8f%e9%a1%8c%e8%88%87%e9%99%a4%e9%8c%af%e6%8a%80%e5%b7%a7" &gt;常見問題與除錯技巧&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h3 id="1-截取螢幕畫面"&gt;1. 截取螢幕畫面
+&lt;/h3&gt;&lt;h4 id="全螢幕截圖-screenshot"&gt;全螢幕截圖 &lt;code&gt;screenshot()&lt;/code&gt;：
+&lt;/h4&gt;&lt;p&gt;在 1920 x 1080 的螢幕上，&lt;code&gt;screenshot()&lt;/code&gt;大約需要 100 毫秒。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pyautogui
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 截取全螢幕，回傳 PIL Image 物件&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;img &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;screenshot()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 顯示圖片（需安裝 Pillow）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;img&lt;span style="color:#f92672"&gt;.&lt;/span&gt;show()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 直接儲存為檔案&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;screenshot(&lt;span style="color:#e6db74"&gt;&amp;#39;screenshot.png&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 截圖並儲存&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;img &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;screenshot(&lt;span style="color:#e6db74"&gt;&amp;#39;my_screen.png&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(&lt;span style="color:#e6db74"&gt;f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;截圖尺寸：&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;img&lt;span style="color:#f92672"&gt;.&lt;/span&gt;size&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;) &lt;span style="color:#75715e"&gt;# (寬, 高)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="區域截圖-screenshotregion"&gt;區域截圖 &lt;code&gt;screenshot(region=(...)))&lt;/code&gt;：
+&lt;/h4&gt;&lt;p&gt;&lt;code&gt;region&lt;/code&gt; 參數格式為 &lt;code&gt;(left, top, width, height)&lt;/code&gt;，分別表示要截圖區域的左側、頂部、寬度和高度。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pyautogui
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 截取左上角 400x300 的區域&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;img &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;screenshot(region&lt;span style="color:#f92672"&gt;=&lt;/span&gt;(&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;400&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;300&lt;/span&gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 截取螢幕中央的 200x200 區域&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;screen_w, screen_h &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;size()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cx &lt;span style="color:#f92672"&gt;=&lt;/span&gt; screen_w &lt;span style="color:#f92672"&gt;//&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;2&lt;/span&gt; &lt;span style="color:#f92672"&gt;-&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;100&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cy &lt;span style="color:#f92672"&gt;=&lt;/span&gt; screen_h &lt;span style="color:#f92672"&gt;//&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;2&lt;/span&gt; &lt;span style="color:#f92672"&gt;-&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;100&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;img &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;screenshot(region&lt;span style="color:#f92672"&gt;=&lt;/span&gt;(cx, cy, &lt;span style="color:#ae81ff"&gt;200&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;200&lt;/span&gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;img&lt;span style="color:#f92672"&gt;.&lt;/span&gt;save(&lt;span style="color:#e6db74"&gt;&amp;#39;center_crop.png&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;💡 補充說明：PIL Image 物件&lt;/strong&gt;&lt;br&gt;
+&lt;code&gt;screenshot()&lt;/code&gt; 回傳的是 &lt;a class="link" href="https://pillow.readthedocs.io/" target="_blank" rel="noopener"
+&gt;Pillow&lt;/a&gt; 的 &lt;code&gt;Image&lt;/code&gt; 物件，可以進一步進行旋轉、裁切、濾鏡等影像處理，也可以轉成 NumPy 陣列配合 OpenCV 使用：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; numpy &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; np
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; cv2
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;img &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;screenshot()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;frame &lt;span style="color:#f92672"&gt;=&lt;/span&gt; np&lt;span style="color:#f92672"&gt;.&lt;/span&gt;array(img)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;frame &lt;span style="color:#f92672"&gt;=&lt;/span&gt; cv2&lt;span style="color:#f92672"&gt;.&lt;/span&gt;cvtColor(frame, cv2&lt;span style="color:#f92672"&gt;.&lt;/span&gt;COLOR_RGB2BGR)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cv2&lt;span style="color:#f92672"&gt;.&lt;/span&gt;imwrite(&lt;span style="color:#e6db74"&gt;&amp;#39;screen_cv2.png&amp;#39;&lt;/span&gt;, frame)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h3 id="2-圖像辨識在螢幕上尋找圖片"&gt;2. 圖像辨識：在螢幕上尋找圖片
+&lt;/h3&gt;&lt;p&gt;PyAutoGUI 可以在當前螢幕畫面中搜尋指定圖片，回傳其位置。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;前置條件&lt;/strong&gt;：需先準備好要搜尋的圖片（&lt;code&gt;.png&lt;/code&gt; 格式最佳），可用截圖工具截取目標按鈕或圖案。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;⚠️ 注意：新舊版本差異&lt;/strong&gt;&lt;br&gt;
+在新版 PyAutoGUI 中，若找不到圖片會拋出 &lt;code&gt;pyautogui.ImageNotFoundException&lt;/code&gt;；如果是舊版，則會回傳 &lt;code&gt;None&lt;/code&gt;，可以使用 &lt;code&gt;if location:&lt;/code&gt; 來判斷。&lt;br&gt;
+建議統一使用 &lt;code&gt;try...except&lt;/code&gt; 來確保程式不會崩潰。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id="尋找圖片位置-locateonscreen"&gt;尋找圖片位置 &lt;code&gt;locateOnScreen()&lt;/code&gt;：
+&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pyautogui
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;try&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# 在螢幕上尋找 button.png，找到則回傳 Box(left, top, width, height)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; location &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;locateOnScreen(&lt;span style="color:#e6db74"&gt;&amp;#39;button.png&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; print(&lt;span style="color:#e6db74"&gt;f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;找到圖片：&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;location&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# location.left, location.top, location.width, location.height&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;except&lt;/span&gt; pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;ImageNotFoundException:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; print(&lt;span style="color:#e6db74"&gt;&amp;#34;找不到圖片&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="取得圖片中心座標-locatecenteronscreen"&gt;取得圖片中心座標 &lt;code&gt;locateCenterOnScreen()&lt;/code&gt;：
+&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pyautogui
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;try&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# 找到圖片並直接回傳中心點座標 (x, y)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; center &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;locateCenterOnScreen(&lt;span style="color:#e6db74"&gt;&amp;#39;button.png&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; x, y &lt;span style="color:#f92672"&gt;=&lt;/span&gt; center
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; print(&lt;span style="color:#e6db74"&gt;f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;圖片中心：(&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;x&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;, &lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;y&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;)&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;click(x, y)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;except&lt;/span&gt; pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;ImageNotFoundException:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; print(&lt;span style="color:#e6db74"&gt;&amp;#34;找不到圖片&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="調整信心值confidence"&gt;調整信心值（confidence）
+&lt;/h4&gt;&lt;p&gt;當截圖與螢幕畫面因縮放或顯示設定略有差異時，可調整 &lt;code&gt;confidence&lt;/code&gt; 參數（需安裝 &lt;code&gt;opencv-python&lt;/code&gt;）：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pip install opencv-python
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pyautogui
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# confidence 介於 0~1，預設為 1.0（完全相符）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 降低至 0.8 可接受 80% 的相似度&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;try&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; location &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;locateOnScreen(&lt;span style="color:#e6db74"&gt;&amp;#39;button.png&amp;#39;&lt;/span&gt;, confidence&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;0.8&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; print(&lt;span style="color:#e6db74"&gt;f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;找到圖片：&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;location&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;except&lt;/span&gt; pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;ImageNotFoundException:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; print(&lt;span style="color:#e6db74"&gt;&amp;#34;找不到圖片&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="尋找所有符合位置-locateallonscreen"&gt;尋找所有符合位置 &lt;code&gt;locateAllOnScreen()&lt;/code&gt;：
+&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pyautogui
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;try&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# 回傳所有符合位置的 generator&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; all_locations &lt;span style="color:#f92672"&gt;=&lt;/span&gt; list(pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;locateAllOnScreen(&lt;span style="color:#e6db74"&gt;&amp;#39;icon.png&amp;#39;&lt;/span&gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; print(&lt;span style="color:#e6db74"&gt;f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;共找到 &lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;len(all_locations)&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt; 個符合位置&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; loc &lt;span style="color:#f92672"&gt;in&lt;/span&gt; all_locations:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; print(loc)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;except&lt;/span&gt; pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;ImageNotFoundException:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; print(&lt;span style="color:#e6db74"&gt;&amp;#34;找不到任何符合的圖片&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="在圖片中搜尋-locate非螢幕"&gt;在圖片中搜尋 &lt;code&gt;locate()&lt;/code&gt;（非螢幕）：
+&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; PIL &lt;span style="color:#f92672"&gt;import&lt;/span&gt; Image
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pyautogui
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 在一張截圖檔案中搜尋另一張圖片&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;haystack &lt;span style="color:#f92672"&gt;=&lt;/span&gt; Image&lt;span style="color:#f92672"&gt;.&lt;/span&gt;open(&lt;span style="color:#e6db74"&gt;&amp;#39;fullscreen.png&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;needle &lt;span style="color:#f92672"&gt;=&lt;/span&gt; Image&lt;span style="color:#f92672"&gt;.&lt;/span&gt;open(&lt;span style="color:#e6db74"&gt;&amp;#39;button.png&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;try&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; location &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;locate(needle, haystack, confidence&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;0.9&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; print(location)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;except&lt;/span&gt; pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;ImageNotFoundException:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; print(&lt;span style="color:#e6db74"&gt;&amp;#34;在圖片中找不到目標圖案&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h3 id="3-像素顏色偵測"&gt;3. 像素顏色偵測
+&lt;/h3&gt;&lt;h4 id="取得指定座標的像素顏色-pixel"&gt;取得指定座標的像素顏色 &lt;code&gt;pixel()&lt;/code&gt;：
+&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pyautogui
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 取得座標 (100, 200) 的 RGB 顏色值&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;r, g, b &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;pixel(&lt;span style="color:#ae81ff"&gt;100&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;200&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(&lt;span style="color:#e6db74"&gt;f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;顏色：RGB(&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;r&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;, &lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;g&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;, &lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;b&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;)&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="判斷像素顏色是否符合-pixelmatchescolor"&gt;判斷像素顏色是否符合 &lt;code&gt;pixelMatchesColor()&lt;/code&gt;：
+&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pyautogui
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 判斷 (100, 200) 是否為紅色 (255, 0, 0)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;is_red &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;pixelMatchesColor(&lt;span style="color:#ae81ff"&gt;100&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;200&lt;/span&gt;, (&lt;span style="color:#ae81ff"&gt;255&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(&lt;span style="color:#e6db74"&gt;f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;是紅色嗎？&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;is_red&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 允許一定的顏色誤差（tolerance 預設為 0）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;is_approx_red &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;pixelMatchesColor(&lt;span style="color:#ae81ff"&gt;100&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;200&lt;/span&gt;, (&lt;span style="color:#ae81ff"&gt;255&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;), tolerance&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;30&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(&lt;span style="color:#e6db74"&gt;f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;接近紅色嗎？&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;is_approx_red&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;實用應用：偵測載入完成&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pyautogui
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; time
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 等待某個座標的顏色變成綠色（表示載入完成）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(&lt;span style="color:#e6db74"&gt;&amp;#34;等待載入完成...&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;while&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; r, g, b &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;pixel(&lt;span style="color:#ae81ff"&gt;500&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;300&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; g &lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;200&lt;/span&gt; &lt;span style="color:#f92672"&gt;and&lt;/span&gt; r &lt;span style="color:#f92672"&gt;&amp;lt;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;100&lt;/span&gt; &lt;span style="color:#f92672"&gt;and&lt;/span&gt; b &lt;span style="color:#f92672"&gt;&amp;lt;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;100&lt;/span&gt;: &lt;span style="color:#75715e"&gt;# 接近綠色&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; print(&lt;span style="color:#e6db74"&gt;&amp;#34;載入完成！&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;break&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; time&lt;span style="color:#f92672"&gt;.&lt;/span&gt;sleep(&lt;span style="color:#ae81ff"&gt;0.5&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h3 id="4-實戰範例自動點擊指定按鈕"&gt;4. 實戰範例：自動點擊指定按鈕
+&lt;/h3&gt;&lt;p&gt;以下範例示範如何找到螢幕上的「送出」按鈕圖片並自動點擊：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pyautogui
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; time
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;click_button&lt;/span&gt;(image_path, confidence&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;0.9&lt;/span&gt;, timeout&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;10&lt;/span&gt;):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; 在螢幕上搜尋圖片並點擊，若超過 timeout 秒仍找不到則拋出例外。
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; &amp;#34;&amp;#34;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; start_time &lt;span style="color:#f92672"&gt;=&lt;/span&gt; time&lt;span style="color:#f92672"&gt;.&lt;/span&gt;time()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;while&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;try&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; location &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;locateCenterOnScreen(image_path, confidence&lt;span style="color:#f92672"&gt;=&lt;/span&gt;confidence)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; location:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;click(location)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; print(&lt;span style="color:#e6db74"&gt;f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;成功點擊：&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;image_path&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;except&lt;/span&gt; pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;ImageNotFoundException:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;pass&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; time&lt;span style="color:#f92672"&gt;.&lt;/span&gt;time() &lt;span style="color:#f92672"&gt;-&lt;/span&gt; start_time &lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt; timeout:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;raise&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;TimeoutError&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;超過 &lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;timeout&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt; 秒仍找不到：&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;image_path&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; time&lt;span style="color:#f92672"&gt;.&lt;/span&gt;sleep(&lt;span style="color:#ae81ff"&gt;0.5&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 使用範例&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;try&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; click_button(&lt;span style="color:#e6db74"&gt;&amp;#39;submit_button.png&amp;#39;&lt;/span&gt;, confidence&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;0.85&lt;/span&gt;, timeout&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;15&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;except&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;TimeoutError&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; e:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; print(&lt;span style="color:#e6db74"&gt;f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;錯誤：&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;e&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h3 id="5-實戰範例等待圖案出現再執行"&gt;5. 實戰範例：等待圖案出現再執行
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pyautogui
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; time
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;wait_for_image&lt;/span&gt;(image_path, confidence&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;0.85&lt;/span&gt;, check_interval&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;1.0&lt;/span&gt;):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; 持續等待直到螢幕出現指定圖片，回傳中心座標。
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; &amp;#34;&amp;#34;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; print(&lt;span style="color:#e6db74"&gt;f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;等待出現：&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;image_path&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;while&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;try&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; center &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;locateCenterOnScreen(image_path, confidence&lt;span style="color:#f92672"&gt;=&lt;/span&gt;confidence)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; center:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; print(&lt;span style="color:#e6db74"&gt;f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;已找到，座標：&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;center&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; center
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;except&lt;/span&gt; pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;ImageNotFoundException:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;pass&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; time&lt;span style="color:#f92672"&gt;.&lt;/span&gt;sleep(check_interval)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 完整自動化流程範例&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pyautogui&lt;span style="color:#f92672"&gt;,&lt;/span&gt; time
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;time&lt;span style="color:#f92672"&gt;.&lt;/span&gt;sleep(&lt;span style="color:#ae81ff"&gt;3&lt;/span&gt;) &lt;span style="color:#75715e"&gt;# 等待目標程式啟動&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 等待「登入」按鈕出現&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;login_btn &lt;span style="color:#f92672"&gt;=&lt;/span&gt; wait_for_image(&lt;span style="color:#e6db74"&gt;&amp;#39;login_button.png&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;click(login_btn)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;time&lt;span style="color:#f92672"&gt;.&lt;/span&gt;sleep(&lt;span style="color:#ae81ff"&gt;0.5&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 輸入帳號密碼&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;typewrite(&lt;span style="color:#e6db74"&gt;&amp;#39;user@example.com&amp;#39;&lt;/span&gt;, interval&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;0.05&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;press(&lt;span style="color:#e6db74"&gt;&amp;#39;tab&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;typewrite(&lt;span style="color:#e6db74"&gt;&amp;#39;mypassword&amp;#39;&lt;/span&gt;, interval&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;0.05&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 等待「送出」按鈕出現並點擊&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;submit_btn &lt;span style="color:#f92672"&gt;=&lt;/span&gt; wait_for_image(&lt;span style="color:#e6db74"&gt;&amp;#39;submit_button.png&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;click(submit_btn)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 等待「歡迎」畫面出現，確認登入成功&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;wait_for_image(&lt;span style="color:#e6db74"&gt;&amp;#39;welcome_screen.png&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(&lt;span style="color:#e6db74"&gt;&amp;#34;登入成功！&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h3 id="6-常見問題與除錯技巧"&gt;6. 常見問題與除錯技巧
+&lt;/h3&gt;&lt;h4 id="問題-1locateonscreen-找不到圖片"&gt;問題 1：&lt;code&gt;locateOnScreen()&lt;/code&gt; 找不到圖片
+&lt;/h4&gt;&lt;p&gt;可能原因與解決方式：&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;原因&lt;/th&gt;
+&lt;th&gt;解決方式&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;螢幕縮放不同（HiDPI / Retina）&lt;/td&gt;
+&lt;td&gt;降低 &lt;code&gt;confidence&lt;/code&gt; 值，例如 &lt;code&gt;0.8&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;圖片有些微色差&lt;/td&gt;
+&lt;td&gt;加入 &lt;code&gt;grayscale=True&lt;/code&gt; 進行灰階比對&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;圖片不在當前可視範圍&lt;/td&gt;
+&lt;td&gt;確認視窗是否最小化或被遮擋&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;圖片解析度不符&lt;/td&gt;
+&lt;td&gt;重新截取在目標機器上的按鈕圖片&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 灰階比對，對顏色差異更有容忍度&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;location &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;locateOnScreen(&lt;span style="color:#e6db74"&gt;&amp;#39;button.png&amp;#39;&lt;/span&gt;, grayscale&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;, confidence&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;0.8&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="問題-2macos-截圖需要授權"&gt;問題 2：macOS 截圖需要授權
+&lt;/h4&gt;&lt;p&gt;在 macOS 上，需至「系統設定 → 隱私權與安全性 → 螢幕錄製」，將執行 Python 的終端機加入允許清單。&lt;/p&gt;
+&lt;h4 id="問題-3速度太快造成錯誤"&gt;問題 3：速度太快造成錯誤
+&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pyautogui
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 增加全域延遲&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;PAUSE &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0.3&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 或在關鍵步驟加入 time.sleep()&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; time
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;time&lt;span style="color:#f92672"&gt;.&lt;/span&gt;sleep(&lt;span style="color:#ae81ff"&gt;0.5&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="取得當前像素顏色的小工具"&gt;取得當前像素顏色的小工具
+&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pyautogui&lt;span style="color:#f92672"&gt;,&lt;/span&gt; time
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(&lt;span style="color:#e6db74"&gt;&amp;#34;移動滑鼠到目標位置，3 秒後擷取顏色&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;time&lt;span style="color:#f92672"&gt;.&lt;/span&gt;sleep(&lt;span style="color:#ae81ff"&gt;3&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;x, y &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;position()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;r, g, b &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;pixel(x, y)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(&lt;span style="color:#e6db74"&gt;f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;座標 (&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;x&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;, &lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;y&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;) 的顏色：RGB(&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;r&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;, &lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;g&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;, &lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;b&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;)&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="練習題"&gt;練習題
+&lt;/h2&gt;&lt;details&gt;
+&lt;summary&gt;📝 練習題 1：截取並儲存指定區域&lt;/summary&gt;
+&lt;p&gt;&lt;strong&gt;題目&lt;/strong&gt;：截取螢幕右下角 300x200 的區域，儲存為 &lt;code&gt;corner.png&lt;/code&gt;。&lt;/p&gt;
+&lt;details&gt;
+&lt;summary&gt;答案：&lt;/summary&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pyautogui
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;w, h &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;size()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;region &lt;span style="color:#f92672"&gt;=&lt;/span&gt; (w &lt;span style="color:#f92672"&gt;-&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;300&lt;/span&gt;, h &lt;span style="color:#f92672"&gt;-&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;200&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;300&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;200&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;screenshot(&lt;span style="color:#e6db74"&gt;&amp;#39;corner.png&amp;#39;&lt;/span&gt;, region&lt;span style="color:#f92672"&gt;=&lt;/span&gt;region)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(&lt;span style="color:#e6db74"&gt;&amp;#34;已儲存右下角截圖：corner.png&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt; &lt;/details&gt;
+&lt;/details&gt;
+&lt;hr&gt;
+&lt;details&gt;
+&lt;summary&gt;📝 練習題 2：確認按鈕存在才點擊&lt;/summary&gt;
+&lt;p&gt;&lt;strong&gt;題目&lt;/strong&gt;：嘗試在螢幕上尋找 &lt;code&gt;ok_button.png&lt;/code&gt;，若找到則點擊，否則印出「找不到按鈕」。&lt;/p&gt;
+&lt;details&gt;
+&lt;summary&gt;答案：&lt;/summary&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pyautogui
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;try&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; center &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;locateCenterOnScreen(&lt;span style="color:#e6db74"&gt;&amp;#39;ok_button.png&amp;#39;&lt;/span&gt;, confidence&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;0.85&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; center:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;click(center)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; print(&lt;span style="color:#e6db74"&gt;&amp;#34;已點擊 OK 按鈕&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;except&lt;/span&gt; pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;ImageNotFoundException:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; print(&lt;span style="color:#e6db74"&gt;&amp;#34;找不到按鈕&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt; &lt;/details&gt;
+&lt;/details&gt;
+&lt;hr&gt;
+&lt;details&gt;
+&lt;summary&gt;📝 練習題 3：像素顏色監控&lt;/summary&gt;
+&lt;p&gt;&lt;strong&gt;題目&lt;/strong&gt;：每秒偵測座標 (960, 540) 的像素顏色，若 R 值超過 200 則印出警告訊息並停止，最多監控 30 秒。&lt;/p&gt;
+&lt;details&gt;
+&lt;summary&gt;答案：&lt;/summary&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pyautogui
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; time
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(&lt;span style="color:#e6db74"&gt;&amp;#34;開始監控像素顏色...&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; i &lt;span style="color:#f92672"&gt;in&lt;/span&gt; range(&lt;span style="color:#ae81ff"&gt;30&lt;/span&gt;):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; r, g, b &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pyautogui&lt;span style="color:#f92672"&gt;.&lt;/span&gt;pixel(&lt;span style="color:#ae81ff"&gt;960&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;540&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; print(&lt;span style="color:#e6db74"&gt;f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;第 &lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;i&lt;span style="color:#f92672"&gt;+&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt; 秒：RGB(&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;r&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;, &lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;g&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;, &lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;b&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;)&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; r &lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;200&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; print(&lt;span style="color:#e6db74"&gt;&amp;#34;⚠️ 警告：R 值超過 200！&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;break&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; time&lt;span style="color:#f92672"&gt;.&lt;/span&gt;sleep(&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;else&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; print(&lt;span style="color:#e6db74"&gt;&amp;#34;監控結束，未觸發警告&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt; &lt;/details&gt;
+&lt;/details&gt;
+&lt;hr&gt;
+&lt;h2 id="參考資料"&gt;參考資料
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="https://pyautogui.readthedocs.io/en/latest/screenshot.html" target="_blank" rel="noopener"
+&gt;PyAutoGUI 官方文件 — Screenshot&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://pyautogui.readthedocs.io/en/latest/screenshot.html#locating-on-screen" target="_blank" rel="noopener"
+&gt;PyAutoGUI 官方文件 — Locating&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://pillow.readthedocs.io/en/stable/" target="_blank" rel="noopener"
+&gt;Pillow 官方文件&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://docs.opencv.org/4.x/d6/d00/tutorial_py_root.html" target="_blank" rel="noopener"
+&gt;OpenCV-Python 教學&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://github.com/asweigart/pyautogui" target="_blank" rel="noopener"
+&gt;PyAutoGUI GitHub 原始碼&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://automatetheboringstuff.com/2e/chapter20/" target="_blank" rel="noopener"
+&gt;Automate the Boring Stuff with Python — Chapter 20&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;</description></item><item><title>FastAPI 路徑參數</title><link>https://Dandelionlibra.github.io/2026/04/fastapi-path-parameters/</link><pubDate>Mon, 27 Apr 2026 14:00:00 +0800</pubDate><guid>https://Dandelionlibra.github.io/2026/04/fastapi-path-parameters/</guid><description>&lt;p&gt;在&lt;a class="link" href="https://Dandelionlibra.github.io/post/python/how-to-use-fastapi/" &gt;第一篇教學&lt;/a&gt;中，我們建立了一個簡單的 &lt;code&gt;/&lt;/code&gt; 根目錄端點。但真實世界的 API 通常需要根據不同的請求回傳不同的資料，例如：取得「特定 ID」的使用者資料。&lt;/p&gt;
 &lt;p&gt;這時候，我們就需要用到&lt;strong&gt;路徑參數（Path Parameters）&lt;/strong&gt;。&lt;/p&gt;
 &lt;h2 id="內容大綱"&gt;內容大綱
