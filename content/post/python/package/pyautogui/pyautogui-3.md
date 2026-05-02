@@ -2,7 +2,7 @@
 title: 如何使用 PyAutoGUI（三）：螢幕截圖與圖像辨識
 description: 本文介紹 PyAutoGUI 的截圖功能與圖像辨識技術，包含全螢幕截圖、區域截圖、尋找圖案位置，以及像素顏色偵測，並結合完整的自動化實戰範例。
 slug: how-to-use-pyautogui-screenshot
-date: 2026-04-30 00:00:02+0800
+date: 2026-05-02 21:40:44+0800
 categories:
     - tutorial
 tags:
